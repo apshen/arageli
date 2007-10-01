@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-    _pattern.cpp
+    _pattern.hpp
 
     This file is a part of the Arageli library test base.
 
@@ -30,55 +30,20 @@
 *****************************************************************************/
 
 /**
-    \file _pattern.cpp
-    \brief This file includes test for _pattern.
+    \file _pattern.hpp
+    \brief <!--ADD BRIEF HEADER DESCRIPTION HERE-->
 
     <!--ADD ADDITIONAL FILE DESCRIPTION HERE-->
 */
 
 
+#ifndef _ARAGELI_TEST__pattern_hpp_
+#define _ARAGELI_TEST__pattern_hpp_
+
 #include "stdafx.hpp"
 
-using namespace Arageli;
+
+// PLACE ALL DECLARATIONS AND INLINE IMPLEMENTATIONS HERE
 
 
-namespace
-{
-
-// PLACE AUXILIARY CODE HERE
-
-}
-
-
-// CHOOSE ONE OF THE FOLLOWING THREE HEADERS
-
-TEST
-(
-    /*CLASS NAME*/,
-    /*FUNCTION NAME*/,
-    "Test for blank_pattern."
-)
-TEST_FUNCTION
-(
-    /*FUNCTION NAME*/,
-    "Test for blank_pattern function."
-)
-TEST_CLASS
-(
-    /*CLASS NAME*/,
-    "Test for blank_pattern class."
-)
-{
-    bool is_ok = true;
-
-    ARAGELI_TS_ALLEXCEPT_CATCH_REGION_BEGIN
-    {
-        // PLACE TEST CODE HERE
-
-        // FOR EXAMPLE:
-        // is_ok &= your_test();
-    }
-    ARAGELI_TS_ALLEXCEPT_CATCH_REGION_END
-
-    return is_ok ? resOK : resFAIL;
-}
+#endif    // #ifndef _ARAGELI_TEST__pattern_hpp_
