@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-    _pattern.hpp
+    test/_pattern.hpp
 
     This file is a part of the Arageli library test base.
 
