@@ -30,7 +30,7 @@
 
 /**
     \file logarithm.hpp
-    \brief ADD BRIEF HEADER DESCRIPTION HERE
+    \brief  <!--ADD BRIEF HEADER DESCRIPTION HERE-->
 
     <!--ADD ADDITIONAL FILE DESCRIPTION HERE-->
 */

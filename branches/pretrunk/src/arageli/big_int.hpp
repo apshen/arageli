@@ -94,6 +94,8 @@ void input_binary (std::basic_istream<Ch, ChT>& in, big_int& x);
 
 
 /// Big integer number.
+/** Integer number with arbitrary big size. Only available memory
+    limits the maximum value of a number. */
 class big_int
 {
     // A type for one elementary digit.
