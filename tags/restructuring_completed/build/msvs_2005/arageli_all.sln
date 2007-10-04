@@ -1,0 +1,59 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "arageli", "arageli\arageli.vcproj", "{D790993A-0F94-40DA-9CB5-794BECD05B9B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test_system", "test_system", "{F6FB555A-8BF2-4034-A318-D9A96D050439}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{39E2B808-777E-47DF-AA5B-02E3DC6755E4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{A007912D-91F7-4D42-8CAE-AEFBA5FA5444}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ts", "..\..\tool\ts\build\msvs_2005\ts\ts.vcproj", "{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcproj", "{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B} = {D790993A-0F94-40DA-9CB5-794BECD05B9B}
+		{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8} = {FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Fast|Win32 = Fast|Win32
+		Release|Win32 = Release|Win32
+		Test|Win32 = Test|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Debug|Win32.Build.0 = Debug|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Fast|Win32.ActiveCfg = Fast|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Fast|Win32.Build.0 = Fast|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Release|Win32.ActiveCfg = Release|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Release|Win32.Build.0 = Release|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Test|Win32.ActiveCfg = Test|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Test|Win32.Build.0 = Test|Win32
+		{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8}.Debug|Win32.Build.0 = Debug|Win32
+		{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8}.Fast|Win32.ActiveCfg = Fast|Win32
+		{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8}.Fast|Win32.Build.0 = Fast|Win32
+		{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8}.Release|Win32.ActiveCfg = Release|Win32
+		{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8}.Release|Win32.Build.0 = Release|Win32
+		{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8}.Test|Win32.ActiveCfg = Release|Win32
+		{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8}.Test|Win32.Build.0 = Release|Win32
+		{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF}.Debug|Win32.Build.0 = Debug|Win32
+		{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF}.Fast|Win32.ActiveCfg = Fast|Win32
+		{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF}.Fast|Win32.Build.0 = Fast|Win32
+		{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF}.Release|Win32.ActiveCfg = Release|Win32
+		{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF}.Release|Win32.Build.0 = Release|Win32
+		{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF}.Test|Win32.ActiveCfg = Test|Win32
+		{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF}.Test|Win32.Build.0 = Test|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FFFE8DB7-5D5E-4651-9BA3-37669E8A5AD8} = {F6FB555A-8BF2-4034-A318-D9A96D050439}
+		{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF} = {F6FB555A-8BF2-4034-A318-D9A96D050439}
+	EndGlobalSection
+EndGlobal
