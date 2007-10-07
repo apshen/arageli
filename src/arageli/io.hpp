@@ -184,47 +184,160 @@ inline std::basic_ostream<Ch, ChT>& output_pow_default
 // They suppose the object can read/write in raw mode,
 // i.e. the corresponding type have only trivial constructor/destructor.
 
-/// Binary seft-delimeted serialization for raw objects -- store.
-template <typename T, typename Ch, typename ChT>
-inline void output_binary (std::basic_ostream<Ch, ChT>& out, const T& x)
+/// Stores a raw object state to a binary stream. Seft-delimeted binary serialization.
+/** This function supposes T doesn't have a non trivial constructor/destructor pair.
+    The format that this function uses is call The Simple Binary format. */
+template <typename Stream, typename T>
+inline Stream& output_binary_stream (Stream& out, const T& x)
 {
     out.write(reinterpret_cast<const char*>(&x), sizeof(T));
+    return out;
 }
 
 
-/// Binary seft-delimeted serialization for raw objects -- load.
-template <typename T, typename Ch, typename ChT>
-inline void input_binary (std::basic_istream<Ch, ChT>& in, T& x)
+/// Loads a raw object state from a binary stream. Compatible with output_binary_stream.
+/** This function supposes T doesn't have a non trivial constructor/destructor pair.
+    The format that this function uses is call The Simple Binary format. */
+template <typename Stream, typename T>
+inline Stream& input_binary_stream (Stream& in, T& x)
 {
     in.read(reinterpret_cast<char*>(&x), sizeof(T));
+    return in;
 }
 
 
-/// Binary seft-delimeted serialization for arrays of raw objects -- store.
-template <typename T, typename Ch, typename ChT>
-inline void output_binary
+/// Stores an array of a raw object states to a binary stream. Seft-delimeted binary serialization.
+/** This function supposes T doesn't have a non trivial constructor/destructor pair.
+    The format that this function uses is call The Simple Binary format. */
+template <typename Stream, typename T>
+inline Stream& output_binary_stream
 (
-    std::basic_ostream<Ch, ChT>& out,
+    Stream& out,
     const T* x,
     std::size_t n
 )
 {
     if(n)
         out.write(reinterpret_cast<const char*>(x), n*sizeof(T));
+    return out;
 }
 
 
-/// Binary seft-delimeted serialization for arrays of raw objects -- load.
-template <typename T, typename Ch, typename ChT>
-inline void input_binary
+/// Loads an array of a raw object states from a binary stream. Compatible with output_binary_stream.
+/** This function supposes T doesn't have a non trivial constructor/destructor pair.
+    The format that this function uses is call The Simple Binary format. */
+template <typename Stream, typename T>
+inline Stream& input_binary_stream
 (
-    std::basic_istream<Ch, ChT>& in,
+    Stream& in,
     T* x,
     std::size_t n
 )
 {
     if(n)
         in.read(reinterpret_cast<char*>(x), n*sizeof(T));
+    return in;
+}
+
+
+/// Calculates the number of chars required to store a given object in The Simple Binary form.
+/** This function calculates precise number of chars that will emit
+    any function outputs in The Simple Binary format for one object,
+    for example, output_binary_mem function. */
+template <typename T>
+inline std::size_t calc_binary (const T& x)
+{
+    return sizeof(T);
+}
+
+/// Calculates the number of chars required to store a given array of objects in The Simple Binary form.
+/** This function calculates precise number of chars that will emit
+    any function outputs in The Simple Binary format for an array of
+    objects, for example, output_binary_mem function. */
+template <typename T>
+inline std::size_t calc_binary (const T* x, std::size_t n)
+{
+    return n*sizeof(T);
+}
+
+
+/// Stores a raw object state to a memory location. Seft-delimeted binary serialization.
+/** This function supposes T doesn't have a non trivial constructor/destructor pair.
+    The format that this function uses is call The Simple Binary format. */
+template <typename T>
+inline char* output_binary_mem (char* out, const T& x)
+{
+    return
+        std::copy
+        (
+            reinterpret_cast<const char*>(&x),
+            reinterpret_cast<const char*>(&x) + sizeof(T),
+            out
+        );
+}
+
+
+/// Loads a raw object state from a memory location. Compatible with output_binary_stream.
+/** This function supposes T doesn't have a non trivial constructor/destructor pair.
+    The format that this function uses is call The Simple Binary format. */
+template <typename T>
+inline const char* input_binary_mem (const char* in, T& x)
+{
+    const char* in_end = in + sizeof(T);
+
+    std::copy
+    (
+        in,
+        in_end,
+        reinterpret_cast<char*>(&x)
+    );
+
+    return in_end;
+}
+
+
+/// Stores an array of a raw object states to a memory location. Seft-delimeted binary serialization.
+/** This function supposes T doesn't have a non trivial constructor/destructor pair.
+    The format that this function uses is call The Simple Binary format. */
+template <typename T>
+inline char* output_binary_mem
+(
+    char* out,
+    const T* x,
+    std::size_t n
+)
+{
+    return
+        std::copy
+        (
+            reinterpret_cast<const char*>(x),
+            reinterpret_cast<const char*>(x) + n*sizeof(T),
+            out
+        );
+}
+
+
+/// Loads an array of a raw object states from a memory location. Compatible with output_binary_stream.
+/** This function supposes T doesn't have a non trivial constructor/destructor pair.
+    The format that this function uses is call The Simple Binary format. */
+template <typename T>
+inline const char* input_binary_mem
+(
+    const char* in,
+    T* x,
+    std::size_t n
+)
+{
+    const char* in_end = in + n*sizeof(T);
+
+    std::copy
+    (
+        in,
+        in_end,
+        reinterpret_cast<char*>(x)
+    );
+
+    return in_end;
 }
 
 

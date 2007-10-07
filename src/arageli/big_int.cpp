@@ -341,53 +341,93 @@ T big_int::to_native_float () const
 #endif
 
 
-template <typename Ch, typename ChT>
-void output_binary (std::basic_ostream<Ch, ChT>& out, const big_int& x)
+template <typename Stream>
+Stream& output_binary_stream (Stream& out, const big_int& x)
 {
-    // store one char for the sign
-    output_binary(out, static_cast<signed char>(x.number->sign));
+    int sign = x.number->sign;
+    output_binary_stream(out, sign);
+    if(sign)
+    {
+        std::size_t len = x.number->len;    // length in limbs
+        output_binary_stream(out, len);
+        output_binary_stream(out, x.number->data, len);
+    }
 
-    // store the length in digits
-    output_binary(out, x.number->len);
-
-    // store the digits
-    output_binary(out, x.number->data, x.number->len);
+    return out;
 }
 
 
-template <typename Ch, typename ChT>
-void input_binary (std::basic_istream<Ch, ChT>& in, big_int& x)
+template <typename Stream>
+Stream& input_binary_stream (Stream& in, big_int& x)
 {
-    // read the sign as one char
-    signed char s;
-    input_binary(in, s);
-    ARAGELI_ASSERT_0(s == 0 || s == -1 || s == +1);
+    // The following first reads of SIGN and LEN can't break x value.
 
-    // read the length in digits
-    std::size_t len;
-    input_binary(in, len);
-    ARAGELI_ASSERT_0((len == 0) ? (s == 0) : (s != 0));
+    int sign;
+    if(!input_binary_stream(in, sign))
+        return in;
+    ARAGELI_ASSERT_ALWAYS(sign == 0 || sign == -1 || sign == +1);
 
-    if(len == 0)
+    if(sign)
     {
-        x = big_int();  // WARNING! Is it efficient?
-        return;
+        // The number isn't zero. Read LEN and DIGITS.
+
+        std::size_t len;
+        if(!input_binary_stream(in, len))
+            return in;
+        ARAGELI_ASSERT_ALWAYS(len > 0);
+
+        if(x.number->refs == 1 && x.number->len == len)
+            x.number->sign = sign;
+        else
+            x.free_mem_and_alloc_number(sign, x.get_mem_for_data(len), len);
+
+        // Load DIGITS.
+        if(!input_binary_stream(in, x.number->data, len))
+        {
+            // A new value load fails and an old value is lost.
+            // Make sure that x object is in correct state.
+            x.number->data[len - 1] = 1;    // kills all leading zeros
+        }
+    }
+    else
+    {
+        // The number is zero.
+        x = big_int();  // WARNING! replace by big_int::assign_null()
     }
 
-    // allocate memory for the required number of digits
-    big_int::digit* data = big_int::get_mem_for_data(len);
+    return in;
+}
 
-    try // the stream object can throw an exception while reading
-    {
-        // read all digits
-        input_binary(in, data, len);
-        x.free_mem_and_alloc_number(s, data, len);
-    }
-    catch(...)
-    {
-        big_int::free_data(data);
-        in.clear(std::ios_base::badbit);
-    }
+
+/// Stores an array of big_int objects to a binary stream. Seft-delimeted binary serialization.
+/** Function produces output in The Simple Binary format. */
+template <typename Stream>
+Stream& output_binary_stream
+(
+    Stream& out,
+    const big_int* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        output_binary_stream(out, x[i]);
+    return out;
+}
+
+
+/// Loads an array of big_int objects from a binary stream. Compatible with output_binary_stream.
+/** Function takes input in The Simple Binary format. */
+template <typename Stream>
+Stream& input_binary_stream
+(
+    Stream& in,
+    big_int* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        input_binary_stream(in, x[i]);
+    return in;
 }
 
 
@@ -1555,6 +1595,101 @@ big_int operator& (const big_int& a, const big_int& b)
         return big_int();
     }
 }
+
+
+std::size_t calc_binary (const big_int& x)
+{
+    if(x.number->sign)
+        return
+            sizeof(int) +
+            sizeof(std::size_t) +
+            x.number->len * sizeof(big_int::digit);
+    else
+        return sizeof(int);
+}
+
+
+std::size_t calc_binary (const big_int* x, std::size_t n)
+{
+    std::size_t res = 0;
+    for(std::size_t i = 0; i < n; ++i)
+        res += calc_binary(x[i]);
+    return res;
+}
+
+
+char* output_binary_mem (char* out, const big_int& x)
+{
+    int sign = x.number->sign;
+    out = output_binary_mem(out, sign);
+    if(sign)
+    {
+        std::size_t len = x.number->len;    // length in limbs
+        out = output_binary_mem(out, len);
+        out = output_binary_mem(out, x.number->data, len);
+    }
+
+    return out;
+}
+
+
+const char* input_binary_mem (const char* in, big_int& x)
+{
+    int sign;
+    in = input_binary_mem(in, sign);
+    ARAGELI_ASSERT_ALWAYS(sign == 0 || sign == -1 || sign == +1);
+
+    if(sign)
+    {
+        // The number isn't zero. Read LEN and DIGITS.
+
+        std::size_t len;
+        in = input_binary_mem(in, len);
+        ARAGELI_ASSERT_ALWAYS(len > 0);
+
+        if(x.number->refs == 1 && x.number->len == len)
+            x.number->sign = sign;
+        else
+            x.free_mem_and_alloc_number(sign, x.get_mem_for_data(len), len);
+
+        // Load DIGITS.
+        in = input_binary_mem(in, x.number->data, len);
+    }
+    else
+    {
+        // The number is zero.
+        x = big_int();  // WARNING! replace by big_int::assign_null()
+    }
+
+    return in;
+}
+
+
+char* output_binary_mem
+(
+    char* out,
+    const big_int* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        out = output_binary_mem(out, x[i]);
+    return out;
+}
+
+
+const char* input_binary_mem
+(
+    const char* in,
+    big_int* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        in = input_binary_mem(in, x[i]);
+    return in;
+}
+
 
 }
 
