@@ -3972,6 +3972,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\..\test\io_simple_binary.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\test\matrix_ops.hpp"
 				>
 				<FileConfiguration

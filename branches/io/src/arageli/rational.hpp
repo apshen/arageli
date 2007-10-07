@@ -43,6 +43,7 @@
 #include "type_traits.hpp"
 #include "type_pair_traits.hpp"
 #include "basefuncs.hpp"
+#include "frwrddecl.hpp"
 #include "exception.hpp"
 #include "factory.hpp"
 #include "cmp.hpp"
@@ -517,6 +518,123 @@ inline std::basic_istream<Ch, ChT>& operator>>
 {
     return input_default(in, x);
 }
+
+
+/// Stores rational object state to a binary stream. Seft-delimeted binary serialization.
+/** This functions uses the following format:
+        NUMERATOR DENOMINATOR
+    where NUMERATOR and DENOMINATOR are output by The Simple Binary
+    format rules corresponding their types. */
+template <typename Stream, typename T>
+inline Stream& output_binary_stream (Stream& out, const rational<T>& x)
+{
+    output_binary_stream(out, x.numerator());
+    output_binary_stream(out, x.denominator());
+    return out;
+}
+
+
+/// Loads rational object state from a binary stream. Compatible with output_binary_stream.
+/** See output_binary_stream(stream, rational) function for detailes on the format.
+    If the function fails to read some of state components, an old value of x
+    may be lost. All depends on input_binary_stream function for T.
+    So, do not relay on the value of x when a given stream is not in a good state
+    after call returns.
+
+    The function takes input in The Simple Binary format.
+*/
+template <typename Stream, typename T>
+inline Stream& input_binary_stream (Stream& in, rational<T>& x)
+{
+    input_binary_stream(in, x.numerator());
+    input_binary_stream(in, x.denominator());
+    return in;
+}
+
+
+/// Stores an array of rational objects to a binary stream. Seft-delimeted binary serialization.
+/** The function produces output in The Simple Binary format. */
+template <typename Stream, typename T>
+Stream& output_binary_stream
+(
+    Stream& out,
+    const rational<T>* x,
+    std::size_t n
+);
+
+
+/// Loads an array of rational objects from a binary stream. Compatible with output_binary_stream.
+/** The function takes input in The Simple Binary format. */
+template <typename Stream, typename T>
+Stream& input_binary_stream
+(
+    Stream& in,
+    rational<T>* x,
+    std::size_t n
+);
+
+
+/// Calculates the number of chars required to store a given rational object in The Simple Binary form.
+/** This function calculates precise number of chars that will emit
+    any function outputs in The Simple Binary format for one rational object,
+    for example, output_binary_mem function. */
+template <typename T>
+inline std::size_t calc_binary (const rational<T>& x)
+{
+    return calc_binary(x.numerator()) + calc_binary(x.denominator());
+}
+
+
+/// Calculates the number of chars required to store a given array of rational objects in The Simple Binary form.
+/** This function calculates precise number of chars that will emit
+    any function outputs in The Simple Binary format for an array of
+    rational objects, for example, output_binary_mem function. */
+template <typename T>
+std::size_t calc_binary (const rational<T>* x, std::size_t n);
+
+
+/// Stores rational object state to a memory location. Seft-delimeted binary serialization.
+/** The function produces output in The Simple Binary format. */
+template <typename T>
+inline char* output_binary_mem (char* out, const rational<T>& x)
+{
+    out = output_binary_mem(out, x.numerator());
+    out = output_binary_mem(out, x.denominator());
+    return out;
+}
+
+
+/// Loads rational object state from a binary stream. Compatible with output_binary_stream.
+/** The function takes input in The Simple Binary format. */
+template <typename T>
+inline const char* input_binary_mem (const char* in, rational<T>& x)
+{
+    in = input_binary_mem(in, x.numerator());
+    in = input_binary_mem(in, x.denominator());
+    return in;
+}
+
+
+/// Stores an array of rational objects to a memory location. Seft-delimeted binary serialization.
+/** The function produces output in The Simple Binary format. */
+template <typename T>
+char* output_binary_mem
+(
+    char* out,
+    const rational<T>* x,
+    std::size_t n
+);
+
+
+/// Loads an array of rational objects from a memory location. Compatible with output_binary_stream.
+/** The function takes input in The Simple Binary format. */
+template <typename T>
+const char* input_binary_mem
+(
+    const char* in,
+    rational<T>* x,
+    std::size_t n
+);
 
 
 /// @name Standard arithmetic operations.
