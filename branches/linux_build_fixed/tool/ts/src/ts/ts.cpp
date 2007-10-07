@@ -13,6 +13,7 @@
 
 #include "config.hpp"
 #include <iostream>
+#include <iterator>
 #include <fstream>
 
 std::ostringstream tout;
