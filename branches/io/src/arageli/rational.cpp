@@ -223,7 +223,7 @@ std::size_t calc_binary (const rational<T>* x, std::size_t n)
 {
     std::size_t res = 0;
     for(std::size_t i = 0; i < n; ++i)
-        res += calc_binary(in, x[i]);
+        res += calc_binary(x[i]);
     return res;
 }
 
