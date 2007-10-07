@@ -31,6 +31,7 @@
 
 #include "test1.hpp"
 
+#define _ARAGELI_TEST_VECTOR_SWAP_BUG
 
 namespace std
 {
@@ -609,6 +610,17 @@ void test1_23 ()
 }
 
 
+void test1_23_5 ()
+{
+    vector<big_int, true> a;
+    vector<big_int, false> b;
+    std::swap(a, b);
+#ifndef _ARAGELI_TEST_VECTOR_SWAP_BUG
+    swap(a, b);
+#endif
+}
+
+
 void test1_24 ()
 {
     refcntr_proxy<vector<big_int, true> > a;
@@ -621,6 +633,7 @@ void test1_24 ()
     std::swap(b, a);
     std::swap(a, a);
     std::swap(b, b);
+#ifndef _ARAGELI_TEST_VECTOR_SWAP_BUG
     std::swap(a, c);
     std::swap(b, c);
     std::swap(a, d);
@@ -629,6 +642,7 @@ void test1_24 ()
     std::swap(c, a);
     std::swap(d, a);
     std::swap(d, b);
+#endif
 
     std::cout << std::endl;
 }

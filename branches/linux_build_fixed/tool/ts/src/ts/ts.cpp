@@ -15,10 +15,14 @@
 #include <iostream>
 #include <iterator>
 #include <fstream>
-
-std::ostringstream tout;
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <iterator>
 
 using namespace std;
+
+ostringstream tout;
 
 #ifndef TS_WITHOUT_BOOST
     namespace po = boost::program_options;
@@ -145,21 +149,22 @@ int main(int argc, char* argv[])
         cerr << "Exception of unknown type!\n";
     }
 
-    std::cout << "\nTest finished\n-------------\n";
-    std::cout << "total      = " << (unsigned int)rstat.totalCount << "\n";
-    std::cout << "passed     = " << (unsigned int)rstat.passCount << "\n";
-    std::cout << "failed     = " << (unsigned int)rstat.failCount << "\n";
-    std::cout << "exceptions = " << (unsigned int)rstat.exceptCount << "\n";
-    std::cout << "hanged     = " << (unsigned int)rstat.hangCount << "\n";
+    cout << "\nTest finished\n-------------\n";
+    cout << "total      = " << (unsigned int)rstat.totalCount << "\n";
+    cout << "passed     = " << (unsigned int)rstat.passCount << "\n";
+    cout << "failed     = " << (unsigned int)rstat.failCount << "\n";
+    cout << "exceptions = " << (unsigned int)rstat.exceptCount << "\n";
+    cout << "hanged     = " << (unsigned int)rstat.hangCount << "\n";
 
     if(!rstat.not_passed.empty())
     {
-        std::cout << "Not passed tests:\n";
-        std::copy
+        cout << "Not passed tests:\n";
+
+        copy
         (
             rstat.not_passed.begin(),
             rstat.not_passed.end(),
-            std::ostream_iterator<std::string>(std::cout, "\n")
+            ostream_iterator<string>(cout, "\n")
         );
     }
 

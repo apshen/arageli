@@ -100,7 +100,7 @@ bool perv_inner_product_sparse
         {
             const HH& h=H[iter->degree()-st];
             // //com std::cout<<"iterdegst="<<iter->degree()-st<<"h="<<h<<"\n";
-            const HH::coef_type& gi=iter->coef();
+            const typename HH::coef_type& gi=iter->coef();
             typedef typename HH::monom_const_iterator hmonoms;
             //main actions
             for(hmonoms j=h.monoms_begin(),h_last_monom=h.monoms_end();j!=h_last_monom;++j)
@@ -141,7 +141,7 @@ void fast_poly_composition_sparse(const P1& g, const P2& h, const P3& f,P4& res)
         typedef typename P3::degree_type fdeg_type;
         gdeg_type deg_g=g.degree();
         fdeg_type deg_f=f.degree();
-        gcoef_type::module_type p=g.leading_coef().module();
+        typename gcoef_type::module_type p=g.leading_coef().module();
         ARAGELI_ASSERT_0(h.degree()<deg_f);
         ARAGELI_ASSERT_1(deg_g<deg_f);//is it needed?
         gdeg_type gdeg_1=factory<gdeg_type>::unit();
@@ -152,7 +152,7 @@ void fast_poly_composition_sparse(const P1& g, const P2& h, const P3& f,P4& res)
         (
             P2
             (
-                hcoef_type(factory<hcoef_type::value_type>::unit(), p),
+                hcoef_type(factory<typename hcoef_type::value_type>::unit(), p),
                 factory<hdeg_type>::null()
             )
         );//H[0]=1(mod p)*x^0 in Z_p[x]
@@ -180,7 +180,7 @@ void fast_poly_composition_sparse(const P1& g, const P2& h, const P3& f,P4& res)
             if(do_next_perv_inner_product)
             {
                 for(fdeg_type ii=factory<fdeg_type>::null();ii<deg_f;ii++)//clear vt
-                    vt[ii].value()=factory<gcoef_type::value_type>::null();
+                    vt[ii].value()=factory<typename gcoef_type::value_type>::null();
                 ////com std::cout<<"!";
                 do_next_perv_inner_product=
                     _Internal::perv_inner_product_sparse<P2>(s,g,m*i,H,vt,iter);
@@ -268,9 +268,9 @@ void DDF_sparse(const P& f_in, V& res,V2& v_deg)
     ARAGELI_ASSERT_0(!is_null(p));//incorrect module
     deg_type n=f.degree();//n <- deg(f)
     if(!is_null(res.size()))
-        res.resize(factory<V::size_type>::null());
+        res.resize(factory<typename V::size_type>::null());
     if(!is_null(v_deg.size()))
-        v_deg.resize(factory<V2::size_type>::null());
+        v_deg.resize(factory<typename V2::size_type>::null());
     //if(is_null(n))//input polynomial const?
     if(!is_unit(lc))// lc==1 ?
     {
@@ -421,17 +421,17 @@ namespace _Internal
     {
         //com std::cout<<"\nin_pr started g="<<g<<"\n st="<<st<<"\n H="<<H<<"\n vt="<<vt<<"\n\n";//<<" iter="<<iter;
         //com std::cout<<"\nst="<<st<<"\n";
-        PG::degree_type g_deg=g.degree();
+        typename PG::degree_type g_deg=g.degree();
         T2 fin=min(fin_in,g_deg);
         for (T2 i = fin; i >= st; i--)
         {
-            const HH::coef_type& gi = g[i];
+            const typename HH::coef_type& gi = g[i];
             //com std::cout<<"\np_i_p h="<<h<<"\n gi="<<gi<<"\n m="<<m<<"\n";
             if(!is_null(gi))
             {
                 const HH& h=H[i-st];
-                HH::degree_type m = h.degree();
-                for (HH::degree_type j = factory<HH::degree_type>::null(); j <= m; j++)
+                typename HH::degree_type m = h.degree();
+                for (typename HH::degree_type j = factory<typename HH::degree_type>::null(); j <= m; j++)
                 {
                     //com std::cout<<"p_i_p main for. gi="<<gi<<" h[j]="<<h[j]<<"\n";
                     vt[j]+=gi*h[j];
@@ -455,7 +455,7 @@ namespace _Internal
             typedef typename PF::degree_type fdeg_type;
             gdeg_type deg_g=g.degree();
             fdeg_type deg_f=f.degree();
-            gcoef_type::module_type p=g.leading_coef().module();
+            typename gcoef_type::module_type p=g.leading_coef().module();
             ARAGELI_ASSERT_0(h.degree()<deg_f);
             ARAGELI_ASSERT_1(deg_g<deg_f);//is it needed?
             gdeg_type gdeg_1=factory<gdeg_type>::unit();
@@ -466,7 +466,7 @@ namespace _Internal
             (
                 PH
                 (
-                    hcoef_type(factory<hcoef_type::value_type>::unit(),p),
+                    hcoef_type(factory<typename hcoef_type::value_type>::unit(),p),
                     fromval
                 )
             );//H[0]=1(mod p)*x^0 in Z_p[x]
@@ -489,7 +489,7 @@ namespace _Internal
             for(gdeg_type i=--l; i>=factory<gdeg_type>::null(); i--)
             {
                 for(fdeg_type ii=factory<fdeg_type>::null();ii<deg_f;ii++)//clear vt
-                    vt[ii].value()=factory<gcoef_type::value_type>::null();
+                    vt[ii].value()=factory<typename gcoef_type::value_type>::null();
                 _Internal::perv_inner_product_dense<PH>(s,g,m*i,m+m*i-1,H,vt);
                 t*=Hm;
                 t%=f;
@@ -527,9 +527,9 @@ void DDF_dense(const P& f_in, V& res,V2& v_deg)
     ARAGELI_ASSERT_0(!is_null(p));//incorrect module
     deg_type n=f.degree();//n <- deg(f)
     if(!is_null(res.size()))
-        res.resize(factory<V::size_type>::null());
+        res.resize(factory<typename V::size_type>::null());
     if(!is_null(v_deg.size()))
-        v_deg.resize(factory<V2::size_type>::null());
+        v_deg.resize(factory<typename V2::size_type>::null());
     //if(is_null(n))//input polynomial const?
     if(!is_unit(lc))// lc==1 ?
     {
