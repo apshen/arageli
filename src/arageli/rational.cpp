@@ -190,6 +190,72 @@ std::basic_istream<Ch, ChT>& input_default
 }
 
 
+template <typename Stream, typename T>
+Stream& output_binary_stream
+(
+    Stream& out,
+    const rational<T>* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        output_binary_stream(out, x[i]);
+    return out;
+}
+
+
+template <typename Stream, typename T>
+Stream& input_binary_stream
+(
+    Stream& in,
+    rational<T>* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        input_binary_stream(in, x[i]);
+    return in;
+}
+
+
+template <typename T>
+std::size_t calc_binary (const rational<T>* x, std::size_t n)
+{
+    std::size_t res = 0;
+    for(std::size_t i = 0; i < n; ++i)
+        res += calc_binary(in, x[i]);
+    return res;
+}
+
+
+template <typename T>
+char* output_binary_mem
+(
+    char* out,
+    const rational<T>* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        out = output_binary_mem(out, x[i]);
+    return out;
+}
+
+
+template <typename T>
+const char* input_binary_mem
+(
+    const char* in,
+    rational<T>* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        in = input_binary_mem(in, x[i]);
+    return in;
+}
+
+
 template <typename T1, typename T2>
 rational<T1> operator+
 (const rational<T1>& b, const rational<T2>& c)
