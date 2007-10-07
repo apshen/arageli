@@ -753,6 +753,10 @@ inline big_float & operator/= (big_float & b, const big_float & c)
     return b = b / c;
 }
 
+
+big_float fsqrt( const big_float & b );
+
+
 }
 
 namespace std
