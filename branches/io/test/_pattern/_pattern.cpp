@@ -56,17 +56,17 @@ TEST
 (
     /*CLASS NAME*/,
     /*FUNCTION NAME*/,
-    "Test for blank_pattern."
+    "Test for _pattern."
 )
 TEST_FUNCTION
 (
     /*FUNCTION NAME*/,
-    "Test for blank_pattern function."
+    "Test for _pattern function."
 )
 TEST_CLASS
 (
     /*CLASS NAME*/,
-    "Test for blank_pattern class."
+    "Test for _pattern class."
 )
 {
     bool is_ok = true;

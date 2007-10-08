@@ -46,6 +46,8 @@ using namespace Arageli;
 namespace
 {
 
+//#define ARAGELI_TEST_OUTPUT_STATISTICS
+
 
 template <typename M, typename SRnd, typename VRnd>
 void random_matrix (M& a, SRnd& srnd, VRnd& vrnd)
@@ -208,6 +210,7 @@ bool random_test_1 (std::size_t maxsize, const T& maxabsval, std::size_t n)
         }
     }
 
+#ifdef ARAGELI_TEST_OUTPUT_STATISTICS
     tout << "Original matrices: (" << stat_a.size() << "):\n";
     output_map(stat_a);
     tout << "Smith's normal matrices: (" << stat_b.size() << "):\n";
@@ -216,6 +219,7 @@ bool random_test_1 (std::size_t maxsize, const T& maxabsval, std::size_t n)
     output_map(stat_rank);
     tout << "Dets: (" << stat_det.size() << "):\n";
     output_map(stat_det);
+#endif
 
     return num_of_err == 0;
 }
