@@ -1926,7 +1926,7 @@ void test4_22 ()
 void test4_23 ()
 {
     typedef sparse_polynom<big_int> P;
-    P p = 1; P x("x");
+    P p = big_int(1); P x("x");
     for(int a = 1; a <= 50; ++a)
         p *= x - a;
 
