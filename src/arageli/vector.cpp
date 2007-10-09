@@ -532,6 +532,100 @@ std::istream& input_polynom_internal
 }
 
 
+template <typename Stream, typename T, bool REFCNT>
+Stream& input_binary_stream (Stream& in, vector<T, REFCNT>& x)
+{
+    typename vector<T, REFCNT>::size_type size;
+    if(!input_binary_stream(in, size))
+        return in;  // fail without losing an old value
+    x.resize(size);
+
+    // this can lose an old value without new one have been loaded successfully
+    if(size)
+        input_binary_stream(in, &*x.begin(), size);
+
+    return in;
+}
+
+
+template <typename Stream, typename T, bool REFCNT>
+Stream& output_binary_stream
+(
+    Stream& out,
+    const vector<T, REFCNT>* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        output_binary_stream(out, x[i]);
+    return out;
+}
+
+
+template <typename Stream, typename T, bool REFCNT>
+Stream& input_binary_stream
+(
+    Stream& in,
+    vector<T, REFCNT>* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        input_binary_stream(in, x[i]);
+    return in;
+}
+
+
+template <typename T, bool REFCNT>
+std::size_t calc_binary (const vector<T, REFCNT>* x, std::size_t n)
+{
+    std::size_t res = 0;
+    for(std::size_t i = 0; i < n; ++i)
+        res += calc_binary(x[i]);
+    return res;
+}
+
+
+template <typename T, bool REFCNT>
+const char* input_binary_mem (const char* in, vector<T, REFCNT>& x)
+{
+    typename vector<T, REFCNT>::size_type size;
+    in = input_binary_mem(in, size);
+    x.resize(size);
+    if(size)
+        in = input_binary_mem(in, &*x.begin(), size);
+    return in;
+}
+
+
+template <typename T, bool REFCNT>
+char* output_binary_mem
+(
+    char* out,
+    const vector<T, REFCNT>* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        out = output_binary_mem(out, x[i]);
+    return out;
+}
+
+
+template <typename T, bool REFCNT>
+const char* input_binary_mem
+(
+    const char* in,
+    vector<T, REFCNT>* x,
+    std::size_t n
+)
+{
+    for(std::size_t i = 0; i < n; ++i)
+        in = input_binary_mem(in, x[i]);
+    return in;
+}
+
+
 #define ARAGELI_VECTOR_MATH_FUNCS1_IMPL(NAME)    \
     template <typename T, bool REFCNT>    \
     vector<T, true> NAME    \

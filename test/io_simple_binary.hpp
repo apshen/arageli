@@ -73,12 +73,12 @@ bool test_io_simple_binary
         }
 
         {
-            std::ofstream file("big_int_io_binary.cpp.tmp", std::ios_base::binary);
+            std::ofstream file("io_simple_binary.hpp.tmp", std::ios_base::binary);
             output_binary_stream(file, a);
             nam = output_binary_mem(mem, am) - mem;
         }
         {
-            std::ifstream file("big_int_io_binary.cpp.tmp", std::ios_base::binary);
+            std::ifstream file("io_simple_binary.hpp.tmp", std::ios_base::binary);
             input_binary_stream(file, b);
             nbm = input_binary_mem(mem, bm) - mem;
         }
@@ -162,12 +162,12 @@ bool test_io_simple_binary
         }
 
         {
-            std::ofstream file("big_int_io_binary.cpp.tmp", std::ios_base::binary);
+            std::ofstream file("io_simple_binary.hpp.tmp", std::ios_base::binary);
             output_binary_stream(file, c, n);
             ncm = output_binary_mem(mem, cm, n) - mem;
         }
         {
-            std::ifstream file("big_int_io_binary.cpp.tmp", std::ios_base::binary);
+            std::ifstream file("io_simple_binary.hpp.tmp", std::ios_base::binary);
             input_binary_stream(file, d, n);
             ndm = input_binary_mem(mem, dm, n) - mem;
         }
