@@ -65,7 +65,7 @@ TEST
         for(std::size_t n = 0; n < 5 && is_ok; ++n)
         {
             typedef vector<int> T;
-            
+
             is_ok &= test_io_simple_binary(T(), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(1), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(2, "(14567890)"), n, mem_reserve);
@@ -80,7 +80,7 @@ TEST
         for(std::size_t n = 0; n < 5 && is_ok; ++n)
         {
             typedef vector<float> T;
-            
+
             is_ok &= test_io_simple_binary(T(), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(1), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(2, "(14567.890)"), n, mem_reserve);
@@ -95,7 +95,7 @@ TEST
         for(std::size_t n = 0; n < 5 && is_ok; ++n)
         {
             typedef vector<double> T;
-            
+
             is_ok &= test_io_simple_binary(T(), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(1), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(2, "(14567.890)"), n, mem_reserve);
@@ -110,7 +110,7 @@ TEST
         for(std::size_t n = 0; n < 3 && is_ok; ++n)
         {
             typedef vector<big_int> T;
-            
+
             is_ok &= test_io_simple_binary(T(), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(1), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(2, "(12323741923723444567890)"), n, mem_reserve);
@@ -128,7 +128,7 @@ TEST
         for(std::size_t n = 0; n < 3 && is_ok; ++n)
         {
             typedef vector<rational<> > T;
-            
+
             is_ok &= test_io_simple_binary(T(), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(1), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(2, "(1234567890)"), n, mem_reserve);

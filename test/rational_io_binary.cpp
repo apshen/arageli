@@ -65,7 +65,7 @@ TEST
         for(std::size_t n = 0; n < 10 && is_ok; ++n)
         {
             typedef rational<int> T;
-            
+
             is_ok &= test_io_simple_binary(T(), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(1), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(-1), n, mem_reserve);
@@ -79,7 +79,7 @@ TEST
         for(std::size_t n = 0; n < 10 && is_ok; ++n)
         {
             typedef rational<big_int> T;
-            
+
             is_ok &= test_io_simple_binary(T(), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(1), n, mem_reserve);
             is_ok &= test_io_simple_binary(T(-1), n, mem_reserve);
