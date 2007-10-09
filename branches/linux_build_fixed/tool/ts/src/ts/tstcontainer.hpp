@@ -31,6 +31,8 @@ typedef struct SRunStatistic
     size_t exceptCount;
     size_t hangCount;
 
+    double all_duration;
+
     std::list<std::string> not_passed;
 
     SRunStatistic()

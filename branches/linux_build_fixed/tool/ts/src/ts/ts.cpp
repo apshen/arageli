@@ -149,17 +149,18 @@ int main(int argc, char* argv[])
         cerr << "Exception of unknown type!\n";
     }
 
-    cout << "\nTest finished\n-------------\n";
-    cout << "total      = " << (unsigned int)rstat.totalCount << "\n";
-    cout << "passed     = " << (unsigned int)rstat.passCount << "\n";
-    cout << "failed     = " << (unsigned int)rstat.failCount << "\n";
-    cout << "exceptions = " << (unsigned int)rstat.exceptCount << "\n";
-    cout << "hanged     = " << (unsigned int)rstat.hangCount << "\n";
+    cout << "\n-------------\nTest finished\n";
+    cout << "total duration = " << rstat.all_duration << " sec\n";
+    cout << "Results:\n";
+    cout << "TOTAL  = " << rstat.totalCount << "\n";
+    cout << "PASSED = " << rstat.passCount << "   (" << 100.0*rstat.passCount/rstat.totalCount << "%)\n";
+    cout << "FAILED = " << rstat.failCount << "   (" << 100.0*rstat.failCount/rstat.totalCount << "%)\n";
+    cout << "EXCEPT = " << rstat.exceptCount << "   (" << 100.0*rstat.exceptCount/rstat.totalCount << "%)\n";
+    cout << "HANGED = " << rstat.hangCount << "   (" << 100.0*rstat.hangCount/rstat.totalCount << "%)\n";
 
     if(!rstat.not_passed.empty())
     {
-        cout << "Not passed tests:\n";
-
+        cout << "-----------------\nNot passed tests:\n";
         copy
         (
             rstat.not_passed.begin(),
