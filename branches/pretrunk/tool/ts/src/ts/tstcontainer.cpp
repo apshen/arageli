@@ -8,6 +8,7 @@
 */
 
 #include <ctime>
+#include <iostream>
 
 #include "tstcontainer.hpp"
 #include "tsstream.hpp"
@@ -74,28 +75,35 @@ void CTestCollection::runTest(std::ostream& os, const STest& test, SRunStatistic
         result = resEXCEPT;
     }
 #endif //TS_DONT_CATCH_EXCEPTIONS_FROM_TEST
-    os << "  duration = " << duration;
+    os << "  duration = " << duration << " sec";
     os << "\n  result = ";
-    switch(result) {
+    std::string status;
+    switch(result)
+    {
     case resOK:
-        os << "PASSED";
+        status = "PASSED";
         rstat.passCount++;
         break;
     case resFAIL:
-        os << "FAILED";
+        status = "FAILED";
         rstat.failCount++;
         break;
     case resHANG:
-        os << "HANGED";
+        status = "HANGED";
         rstat.hangCount++;
         break;
-    default: // resEXCEPT:
-        os << "EXCEPTION";
+    case resEXCEPT:
+        status = "EXCEPT";
         rstat.exceptCount++;
+    default:
+        std::cerr << "\nUnknown type of the result. Aborting.\n";
+        std::abort();
     }
 
+    os << status;
+
     if(result != resOK)
-        rstat.not_passed.push_back(test.className + "::" + test.functionName);
+        rstat.not_passed.push_back(status + "  " + test.className + "::" + test.functionName);
 
     if(!tout.str().empty())
     {
@@ -149,10 +157,15 @@ SRunStatistic CTestCollection::runAll(std::ostream& os)
 
     CTestFunctions& tests = getTests();
 
+    std::clock_t start_time = std::clock();
+
     for (CTestFunctions::iterator it = tests.begin();
         it != tests.end();
         it++)
         runTest(os, *it, rstat);
+
+    std::clock_t end_time = std::clock();
+    rstat.all_duration = double(end_time - start_time)/CLOCKS_PER_SEC;
 
     TS_ASSERT(rstat.passCount+rstat.failCount+rstat.exceptCount+rstat.hangCount == rstat.totalCount);
 
