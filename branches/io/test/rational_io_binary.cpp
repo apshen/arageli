@@ -64,6 +64,20 @@ TEST
     {
         for(std::size_t n = 0; n < 10 && is_ok; ++n)
         {
+            typedef rational<int> T;
+            
+            is_ok &= test_io_simple_binary(T(), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T(1), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T(-1), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T("12345"), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T("-13456"), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T("123/65"), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T("-10/6321"), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T("1/6"), n, mem_reserve);
+        }
+
+        for(std::size_t n = 0; n < 10 && is_ok; ++n)
+        {
             typedef rational<big_int> T;
             
             is_ok &= test_io_simple_binary(T(), n, mem_reserve);
