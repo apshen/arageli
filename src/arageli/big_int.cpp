@@ -342,7 +342,7 @@ T big_int::to_native_float () const
 
 
 template <typename Stream>
-Stream& output_binary_stream (Stream& out, const big_int& x)
+Stream& io_binary<big_int>::output_stream (Stream& out, const big_int& x)
 {
     int sign = x.number->sign;
     output_binary_stream(out, sign);
@@ -358,7 +358,7 @@ Stream& output_binary_stream (Stream& out, const big_int& x)
 
 
 template <typename Stream>
-Stream& input_binary_stream (Stream& in, big_int& x)
+Stream& io_binary<big_int>::input_stream (Stream& in, big_int& x)
 {
     // The following first reads of SIGN and LEN can't break x value.
 
@@ -402,7 +402,7 @@ Stream& input_binary_stream (Stream& in, big_int& x)
 /// Stores an array of big_int objects to a binary stream. Seft-delimeted binary serialization.
 /** Function produces output in The Simple Binary format. */
 template <typename Stream>
-Stream& output_binary_stream
+Stream& io_binary<big_int>::output_stream
 (
     Stream& out,
     const big_int* x,
@@ -418,7 +418,7 @@ Stream& output_binary_stream
 /// Loads an array of big_int objects from a binary stream. Compatible with output_binary_stream.
 /** Function takes input in The Simple Binary format. */
 template <typename Stream>
-Stream& input_binary_stream
+Stream& io_binary<big_int>::input_stream
 (
     Stream& in,
     big_int* x,
@@ -1597,7 +1597,7 @@ big_int operator& (const big_int& a, const big_int& b)
 }
 
 
-std::size_t calc_binary (const big_int& x)
+std::size_t io_binary<big_int>::calc (const big_int& x)
 {
     if(x.number->sign)
         return
@@ -1609,7 +1609,7 @@ std::size_t calc_binary (const big_int& x)
 }
 
 
-std::size_t calc_binary (const big_int* x, std::size_t n)
+std::size_t io_binary<big_int>::calc (const big_int* x, std::size_t n)
 {
     std::size_t res = 0;
     for(std::size_t i = 0; i < n; ++i)
@@ -1618,7 +1618,7 @@ std::size_t calc_binary (const big_int* x, std::size_t n)
 }
 
 
-char* output_binary_mem (char* out, const big_int& x)
+char* io_binary<big_int>::output_mem (char* out, const big_int& x)
 {
     int sign = x.number->sign;
     out = output_binary_mem(out, sign);
@@ -1633,7 +1633,7 @@ char* output_binary_mem (char* out, const big_int& x)
 }
 
 
-const char* input_binary_mem (const char* in, big_int& x)
+const char* io_binary<big_int>::input_mem (const char* in, big_int& x)
 {
     int sign;
     in = input_binary_mem(in, sign);
@@ -1665,7 +1665,7 @@ const char* input_binary_mem (const char* in, big_int& x)
 }
 
 
-char* output_binary_mem
+char* io_binary<big_int>::output_mem
 (
     char* out,
     const big_int* x,
@@ -1678,7 +1678,7 @@ char* output_binary_mem
 }
 
 
-const char* input_binary_mem
+const char* io_binary<big_int>::input_mem
 (
     const char* in,
     big_int* x,
