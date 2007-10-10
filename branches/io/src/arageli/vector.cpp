@@ -532,8 +532,9 @@ std::istream& input_polynom_internal
 }
 
 
-template <typename Stream, typename T, bool REFCNT>
-Stream& input_binary_stream (Stream& in, vector<T, REFCNT>& x)
+template <typename T, bool REFCNT>
+template <typename Stream>
+Stream& io_binary<vector<T, REFCNT> >::input_stream (Stream& in, vector<T, REFCNT>& x)
 {
     typename vector<T, REFCNT>::size_type size;
     if(!input_binary_stream(in, size))
@@ -548,8 +549,9 @@ Stream& input_binary_stream (Stream& in, vector<T, REFCNT>& x)
 }
 
 
-template <typename Stream, typename T, bool REFCNT>
-Stream& output_binary_stream
+template <typename T, bool REFCNT>
+template <typename Stream>
+Stream& io_binary<vector<T, REFCNT> >::output_stream
 (
     Stream& out,
     const vector<T, REFCNT>* x,
@@ -562,8 +564,9 @@ Stream& output_binary_stream
 }
 
 
-template <typename Stream, typename T, bool REFCNT>
-Stream& input_binary_stream
+template <typename T, bool REFCNT>
+template <typename Stream>
+Stream& io_binary<vector<T, REFCNT> >::input_stream
 (
     Stream& in,
     vector<T, REFCNT>* x,
@@ -577,7 +580,7 @@ Stream& input_binary_stream
 
 
 template <typename T, bool REFCNT>
-std::size_t calc_binary (const vector<T, REFCNT>* x, std::size_t n)
+std::size_t io_binary<vector<T, REFCNT> >::calc (const vector<T, REFCNT>* x, std::size_t n)
 {
     std::size_t res = 0;
     for(std::size_t i = 0; i < n; ++i)
@@ -587,7 +590,7 @@ std::size_t calc_binary (const vector<T, REFCNT>* x, std::size_t n)
 
 
 template <typename T, bool REFCNT>
-const char* input_binary_mem (const char* in, vector<T, REFCNT>& x)
+const char* io_binary<vector<T, REFCNT> >::input_mem (const char* in, vector<T, REFCNT>& x)
 {
     typename vector<T, REFCNT>::size_type size;
     in = input_binary_mem(in, size);
@@ -599,7 +602,7 @@ const char* input_binary_mem (const char* in, vector<T, REFCNT>& x)
 
 
 template <typename T, bool REFCNT>
-char* output_binary_mem
+char* io_binary<vector<T, REFCNT> >::output_mem
 (
     char* out,
     const vector<T, REFCNT>* x,
@@ -613,7 +616,7 @@ char* output_binary_mem
 
 
 template <typename T, bool REFCNT>
-const char* input_binary_mem
+const char* io_binary<vector<T, REFCNT> >::input_mem
 (
     const char* in,
     vector<T, REFCNT>* x,

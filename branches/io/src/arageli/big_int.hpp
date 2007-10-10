@@ -82,99 +82,8 @@ namespace _Internal
 // template <typename T> class rational;    // see rational.hpp
 
 
-/// Stores big_int object state to a binary stream. Seft-delimeted binary serialization.
-/** This functions uses the following format:
-        SIGN [LEN DIGITS]
-    where SIGN is in {-1,0,+1};
-    LEN (optional) is a number of limbs used by a given big_int object;
-    DIGITS is a dump of all limbs.
-    All fields of the format are stored in binary format without any delimeters.
-    The optional part LEN DIGITS is emitted only if SIGN != 0.
-    This format is The Simple Binary format for big_int.
-*/
-template <typename Stream>
-Stream& output_binary_stream (Stream& out, const big_int& x);
-
-
-/// Loads big_int object state from a binary stream. Compatible with output_binary_stream.
-/** See output_binary_stream(stream, big_int) function for detailes on the format.
-    If the function fails to read some bytes from a stream, an old value of x
-    may be lost (but a given big_int object x remains in the correct state).
-    So, do not relay on the value of x when a given stream is not in a good state
-    after call returns.
-
-    The function takes input in The Simple Binary format.
-
-    \todo What is a correct way to handle errors in format when we read from a binary stream?
-*/
-template <typename Stream>
-Stream& input_binary_stream (Stream& in, big_int& x);
-
-
-/// Stores an array of big_int objects to a binary stream. Seft-delimeted binary serialization.
-/** The function produces output in The Simple Binary format. */
-template <typename Stream>
-Stream& output_binary_stream
-(
-    Stream& out,
-    const big_int* x,
-    std::size_t n
-);
-
-
-/// Loads an array of big_int objects from a binary stream. Compatible with output_binary_stream.
-/** The function takes input in The Simple Binary format. */
-template <typename Stream>
-Stream& input_binary_stream
-(
-    Stream& in,
-    big_int* x,
-    std::size_t n
-);
-
-
-/// Calculates the number of chars required to store a given big_int object in The Simple Binary form.
-/** This function calculates precise number of chars that will emit
-    any function outputs in The Simple Binary format for one big_int object,
-    for example, output_binary_mem function. */
-std::size_t calc_binary (const big_int& x);
-
-
-/// Calculates the number of chars required to store a given array of big_int objects in The Simple Binary form.
-/** This function calculates precise number of chars that will emit
-    any function outputs in The Simple Binary format for an array of
-    big_int objects, for example, output_binary_mem function. */
-std::size_t calc_binary (const big_int* x, std::size_t n);
-
-
-/// Stores big_int object state to a memory location. Seft-delimeted binary serialization.
-/** The function produces output in The Simple Binary format. */
-char* output_binary_mem (char* out, const big_int& x);
-
-
-/// Loads big_int object state from a binary stream. Compatible with output_binary_stream.
-/** The function takes input in The Simple Binary format. */
-const char* input_binary_mem (const char* in, big_int& x);
-
-
-/// Stores an array of big_int objects to a memory location. Seft-delimeted binary serialization.
-/** The function produces output in The Simple Binary format. */
-char* output_binary_mem
-(
-    char* out,
-    const big_int* x,
-    std::size_t n
-);
-
-
-/// Loads an array of big_int objects from a memory location. Compatible with output_binary_stream.
-/** The function takes input in The Simple Binary format. */
-const char* input_binary_mem
-(
-    const char* in,
-    big_int* x,
-    std::size_t n
-);
+template <>
+class io_binary<big_int>;   // see implementation below in this file
 
 
 /// Big integer number.
@@ -186,31 +95,7 @@ class big_int
     // Number consist of sequence of objects of this type.
     typedef _Internal::digit digit;
 
-    template <typename Stream>
-    friend Stream& output_binary_stream (Stream& out, const big_int& x);
-
-    template <typename Stream>
-    friend Stream& input_binary_stream (Stream& in, big_int& x);
-
-    friend char* output_binary_mem (char* out, const big_int& x);
-    friend const char* input_binary_mem (const char* in, big_int& x);
-
-    friend char* output_binary_mem
-    (
-        char* out,
-        const big_int* x,
-        std::size_t n
-    );
-
-    friend const char* input_binary_mem
-    (
-        const char* in,
-        big_int* x,
-        std::size_t n
-    );
-
-    friend std::size_t calc_binary (const big_int& x);
-    friend std::size_t calc_binary (const big_int* x, std::size_t n);
+    friend class io_binary<big_int>;
 
 public:
 
@@ -873,6 +758,108 @@ std::ostream & operator<< (std::ostream & s, const big_int & x);
 
 /// Writes a number to a string notation.
 std::istream & operator>> (std::istream & s, big_int & x);
+
+
+/// Serialization in the Simple Binary format for big_int.
+template <>
+class io_binary<big_int>
+{
+public:
+    /// Stores big_int object state to a binary stream. Seft-delimeted binary serialization.
+    /** This functions uses the following format:
+            SIGN [LEN DIGITS]
+        where SIGN is in {-1,0,+1};
+        LEN (optional) is a number of limbs used by a given big_int object;
+        DIGITS is a dump of all limbs.
+        All fields of the format are stored in binary format without any delimeters.
+        The optional part LEN DIGITS is emitted only if SIGN != 0.
+        This format is The Simple Binary format for big_int.
+    */
+    template <typename Stream>
+    static Stream& output_stream (Stream& out, const big_int& x);
+
+
+    /// Loads big_int object state from a binary stream. Compatible with output_binary_stream.
+    /** See output_binary_stream(stream, big_int) function for detailes on the format.
+        If the function fails to read some bytes from a stream, an old value of x
+        may be lost (but a given big_int object x remains in the correct state).
+        So, do not relay on the value of x when a given stream is not in a good state
+        after call returns.
+
+        The function takes input in The Simple Binary format.
+
+        \todo What is a correct way to handle errors in format when we read from a binary stream?
+    */
+    template <typename Stream>
+    static Stream& input_stream (Stream& in, big_int& x);
+
+
+    /// Stores an array of big_int objects to a binary stream. Seft-delimeted binary serialization.
+    /** The function produces output in The Simple Binary format. */
+    template <typename Stream>
+    static Stream& output_stream
+    (
+        Stream& out,
+        const big_int* x,
+        std::size_t n
+    );
+
+
+    /// Loads an array of big_int objects from a binary stream. Compatible with output_binary_stream.
+    /** The function takes input in The Simple Binary format. */
+    template <typename Stream>
+    static Stream& input_stream
+    (
+        Stream& in,
+        big_int* x,
+        std::size_t n
+    );
+
+
+    /// Calculates the number of chars required to store a given big_int object in The Simple Binary form.
+    /** This function calculates precise number of chars that will emit
+        any function outputs in The Simple Binary format for one big_int object,
+        for example, output_binary_mem function. */
+    static std::size_t calc (const big_int& x);
+
+
+    /// Calculates the number of chars required to store a given array of big_int objects in The Simple Binary form.
+    /** This function calculates precise number of chars that will emit
+        any function outputs in The Simple Binary format for an array of
+        big_int objects, for example, output_binary_mem function. */
+    static std::size_t calc (const big_int* x, std::size_t n);
+
+
+    /// Stores big_int object state to a memory location. Seft-delimeted binary serialization.
+    /** The function produces output in The Simple Binary format. */
+    static char* output_mem (char* out, const big_int& x);
+
+
+    /// Loads big_int object state from a binary stream. Compatible with output_binary_stream.
+    /** The function takes input in The Simple Binary format. */
+    static const char* input_mem (const char* in, big_int& x);
+
+
+    /// Stores an array of big_int objects to a memory location. Seft-delimeted binary serialization.
+    /** The function produces output in The Simple Binary format. */
+    static char* output_mem
+    (
+        char* out,
+        const big_int* x,
+        std::size_t n
+    );
+
+
+    /// Loads an array of big_int objects from a memory location. Compatible with output_binary_stream.
+    /** The function takes input in The Simple Binary format. */
+    static const char* input_mem
+    (
+        const char* in,
+        big_int* x,
+        std::size_t n
+    );
+};
+
 
 /// Compares two big integers
 /**

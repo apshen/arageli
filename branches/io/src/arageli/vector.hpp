@@ -2665,120 +2665,120 @@ inline std::istringstream& operator>> (std::istringstream& in, vector<T, REFCNT>
 }
 
 
-/// Stores vector object state to a binary stream. Seft-delimeted binary serialization.
-/** This functions uses the following format:
-        SIZE ELEMENTS
-    where SIZE is a size of a given vector and ELEMENTS is
-    all elements of the vector stored as an array of length SIZE
-    All output is in The Simple Binary format. */
-template <typename Stream, typename T, bool REFCNT>
-inline Stream& output_binary_stream (Stream& out, const vector<T, REFCNT>& x)
+template <typename T, bool REFCNT>
+class io_binary<vector<T, REFCNT> >
 {
-    typename vector<T, REFCNT>::size_type size = x.size();
-    output_binary_stream(out, size);
-    if(size)
-        output_binary_stream(out, &*x.begin(), size);
-    return out;
-}
+public:
+
+    /// Stores vector object state to a binary stream. Seft-delimeted binary serialization.
+    /** This functions uses the following format:
+            SIZE ELEMENTS
+        where SIZE is a size of a given vector and ELEMENTS is
+        all elements of the vector stored as an array of length SIZE
+        All output is in The Simple Binary format. */
+    template <typename Stream>
+    static inline Stream& output_stream (Stream& out, const vector<T, REFCNT>& x)
+    {
+        typename vector<T, REFCNT>::size_type size = x.size();
+        output_binary_stream(out, size);
+        if(size)
+            output_binary_stream(out, &*x.begin(), size);
+        return out;
+    }
 
 
-/// Loads vector object state from a binary stream. Compatible with output_binary_stream.
-/** See output_binary_stream(stream, vector) function for detailes on the format.
-    If the function fails to read some of state components, an old value of x
-    may be lost. All depends on input_binary_stream function for T.
-    So, do not relay on the value of x when a given stream is not in a good state
-    after call returns.
+    /// Loads vector object state from a binary stream. Compatible with output_binary_stream.
+    /** See output_binary_stream(stream, vector) function for detailes on the format.
+        If the function fails to read some of state components, an old value of x
+        may be lost. All depends on input_binary_stream function for T.
+        So, do not relay on the value of x when a given stream is not in a good state
+        after call returns.
 
-    The function takes input in The Simple Binary format.
-*/
-template <typename Stream, typename T, bool REFCNT>
-Stream& input_binary_stream (Stream& in, vector<T, REFCNT>& x);
-
-
-/// Stores an array of vector objects to a binary stream. Seft-delimeted binary serialization.
-/** The function produces output in The Simple Binary format. */
-template <typename Stream, typename T, bool REFCNT>
-Stream& output_binary_stream
-(
-    Stream& out,
-    const vector<T, REFCNT>* x,
-    std::size_t n
-);
+        The function takes input in The Simple Binary format.
+    */
+    template <typename Stream>
+    static Stream& input_stream (Stream& in, vector<T, REFCNT>& x);
 
 
-/// Loads an array of vector objects from a binary stream. Compatible with output_binary_stream.
-/** The function takes input in The Simple Binary format. */
-template <typename Stream, typename T, bool REFCNT>
-Stream& input_binary_stream
-(
-    Stream& in,
-    vector<T, REFCNT>* x,
-    std::size_t n
-);
+    /// Stores an array of vector objects to a binary stream. Seft-delimeted binary serialization.
+    /** The function produces output in The Simple Binary format. */
+    template <typename Stream>
+    static Stream& output_stream
+    (
+        Stream& out,
+        const vector<T, REFCNT>* x,
+        std::size_t n
+    );
 
 
-/// Calculates the number of chars required to store a given vector object in The Simple Binary form.
-/** This function calculates precise number of chars that will emit
-    any function outputs in The Simple Binary format for one rational object,
-    for example, output_binary_mem function. */
-template <typename T, bool REFCNT>
-inline std::size_t calc_binary (const vector<T, REFCNT>& x)
-{
-    typename vector<T, REFCNT>::size_type size = x.size();
-    if(size)
-        return calc_binary(size) + calc_binary(&*x.begin(), size);
-    else
-        return calc_binary(size);
-}
+    /// Loads an array of vector objects from a binary stream. Compatible with output_binary_stream.
+    /** The function takes input in The Simple Binary format. */
+    template <typename Stream>
+    static Stream& input_stream
+    (
+        Stream& in,
+        vector<T, REFCNT>* x,
+        std::size_t n
+    );
 
 
-/// Calculates the number of chars required to store a given array of vector objects in The Simple Binary form.
-/** This function calculates precise number of chars that will emit
-    any function outputs in The Simple Binary format for an array of
-    rational objects, for example, output_binary_mem function. */
-template <typename T, bool REFCNT>
-std::size_t calc_binary (const vector<T, REFCNT>* x, std::size_t n);
+    /// Calculates the number of chars required to store a given vector object in The Simple Binary form.
+    /** This function calculates precise number of chars that will emit
+        any function outputs in The Simple Binary format for one rational object,
+        for example, output_binary_mem function. */
+    static inline std::size_t calc (const vector<T, REFCNT>& x)
+    {
+        typename vector<T, REFCNT>::size_type size = x.size();
+        if(size)
+            return calc_binary(size) + calc_binary(&*x.begin(), size);
+        else
+            return calc_binary(size);
+    }
 
 
-/// Stores vector object state to a memory location. Seft-delimeted binary serialization.
-/** The function produces output in The Simple Binary format. */
-template <typename T, bool REFCNT>
-inline char* output_binary_mem (char* out, const vector<T, REFCNT>& x)
-{
-    typename vector<T, REFCNT>::size_type size = x.size();
-    out = output_binary_mem(out, size);
-    if(size)
-        out = output_binary_mem(out, &*x.begin(), x.size());
-    return out;
-}
+    /// Calculates the number of chars required to store a given array of vector objects in The Simple Binary form.
+    /** This function calculates precise number of chars that will emit
+        any function outputs in The Simple Binary format for an array of
+        rational objects, for example, output_binary_mem function. */
+    static std::size_t calc (const vector<T, REFCNT>* x, std::size_t n);
 
 
-/// Loads vector object state from a binary stream. Compatible with output_binary_stream.
-/** The function takes input in The Simple Binary format. */
-template <typename T, bool REFCNT>
-const char* input_binary_mem (const char* in, vector<T, REFCNT>& x);
+    /// Stores vector object state to a memory location. Seft-delimeted binary serialization.
+    /** The function produces output in The Simple Binary format. */
+    static inline char* output_mem (char* out, const vector<T, REFCNT>& x)
+    {
+        typename vector<T, REFCNT>::size_type size = x.size();
+        out = output_binary_mem(out, size);
+        if(size)
+            out = output_binary_mem(out, &*x.begin(), x.size());
+        return out;
+    }
 
 
-/// Stores an array of vector objects to a memory location. Seft-delimeted binary serialization.
-/** The function produces output in The Simple Binary format. */
-template <typename T, bool REFCNT>
-char* output_binary_mem
-(
-    char* out,
-    const vector<T, REFCNT>* x,
-    std::size_t n
-);
+    /// Loads vector object state from a binary stream. Compatible with output_binary_stream.
+    /** The function takes input in The Simple Binary format. */
+    static const char* input_mem (const char* in, vector<T, REFCNT>& x);
 
 
-/// Loads an array of vector objects from a memory location. Compatible with output_binary_stream.
-/** The function takes input in The Simple Binary format. */
-template <typename T, bool REFCNT>
-const char* input_binary_mem
-(
-    const char* in,
-    vector<T, REFCNT>* x,
-    std::size_t n
-);
+    /// Stores an array of vector objects to a memory location. Seft-delimeted binary serialization.
+    /** The function produces output in The Simple Binary format. */
+    static char* output_mem
+    (
+        char* out,
+        const vector<T, REFCNT>* x,
+        std::size_t n
+    );
+
+
+    /// Loads an array of vector objects from a memory location. Compatible with output_binary_stream.
+    /** The function takes input in The Simple Binary format. */
+    static const char* input_mem
+    (
+        const char* in,
+        vector<T, REFCNT>* x,
+        std::size_t n
+    );
+};
 
 
 /// Specialization of the template 'factory' for the Arageli::vector template.

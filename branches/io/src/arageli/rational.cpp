@@ -190,8 +190,9 @@ std::basic_istream<Ch, ChT>& input_default
 }
 
 
-template <typename Stream, typename T>
-Stream& output_binary_stream
+template <typename T>
+template <typename Stream>
+Stream& io_binary<rational<T> >::output_stream
 (
     Stream& out,
     const rational<T>* x,
@@ -204,8 +205,9 @@ Stream& output_binary_stream
 }
 
 
-template <typename Stream, typename T>
-Stream& input_binary_stream
+template <typename T>
+template <typename Stream>
+Stream& io_binary<rational<T> >::input_stream
 (
     Stream& in,
     rational<T>* x,
@@ -219,7 +221,7 @@ Stream& input_binary_stream
 
 
 template <typename T>
-std::size_t calc_binary (const rational<T>* x, std::size_t n)
+std::size_t io_binary<rational<T> >::calc (const rational<T>* x, std::size_t n)
 {
     std::size_t res = 0;
     for(std::size_t i = 0; i < n; ++i)
@@ -229,7 +231,7 @@ std::size_t calc_binary (const rational<T>* x, std::size_t n)
 
 
 template <typename T>
-char* output_binary_mem
+char* io_binary<rational<T> >::output_mem
 (
     char* out,
     const rational<T>* x,
@@ -243,7 +245,7 @@ char* output_binary_mem
 
 
 template <typename T>
-const char* input_binary_mem
+const char* io_binary<rational<T> >::input_mem
 (
     const char* in,
     rational<T>* x,
