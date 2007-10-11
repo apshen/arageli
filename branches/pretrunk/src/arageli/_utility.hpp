@@ -49,6 +49,7 @@
 #include "functional.hpp"
 #include "std_import.hpp"
 #include "interval.hpp"
+#include "powerest.hpp"
 
 
 namespace Arageli

@@ -71,7 +71,7 @@ inline T1 pow (const T1& x, const T2& y)
 template <typename T1, typename T2>
 inline void swap (T1& x, T2& y)
 {
-    return std::swap(x, y);
+    std::swap(x, y);
 }
 
 #undef min

@@ -70,12 +70,23 @@ extern int table_on_one_line;
 
 }
 
+#if 0
+// The following commented out block based on one of the old
+// versions of the library and cannot be compiled.
+
+/// Definition of this class is depricated. Do not use it.
 template <typename Stream>
 struct rref_latexlog : public rref_slog<Stream>
 {
     class abort :
         public rref_int_idler::abort
     {};
+
+    #if 0
+    // Neither these names are in rref_slog defined.
+    // This block remains from one of the old versions
+    // of rref_slog.
+    // TODO Indestigate reasonable replacment for rref_latexlog.
 
     using rref_slog<Stream>::stream_m;
     using rref_slog<Stream>::preamble_on;
@@ -93,6 +104,8 @@ struct rref_latexlog : public rref_slog<Stream>
     using rref_slog<Stream>::pivot_item_name;
     using rref_slog<Stream>::swap_rows_name;
     using rref_slog<Stream>::eliminate_col_name;
+
+    #endif
 
 
 private:
@@ -362,6 +375,7 @@ inline rref_latexlog<Stream> make_rref_latexlog (Stream& stream)
     return rref_latexlog<Stream>(stream);
 }
 
+#endif
 
 namespace simplex_method
 {

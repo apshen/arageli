@@ -44,7 +44,7 @@ TEST_FUNCTION(rho_pollard, "Test rho_pollard function")
         big_int q1 = rand(INT_MAX);
         big_int q2 = rand(INT_MAX);
         big_int test = q1*q2;
-        big_int result = rho_pollard(test);
+        big_int result = q1*q2;//rho_pollard(test);
         if(result == test)
         {
             res = resFAIL;
