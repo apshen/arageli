@@ -249,11 +249,13 @@ matrix<T1, REFCNT1>& matrix<T1, REFCNT1>::mul_matrix
         reinterpret_cast<const void*>(&right)
     )
     {
+        // If left and right agruments are NOT the same object.
+
         matrix left;
         swap(left);
         assign_fromsize(left.nrows(), right.ncols());
 
-        // WARNING. This is slow implementation. It can be very quickly.
+        // WARNING. This is slow implementation.
 
         for(size_type i = 0; i < nrows(); ++i)
             for(size_type j = 0; j < ncols(); ++j)
@@ -262,6 +264,8 @@ matrix<T1, REFCNT1>& matrix<T1, REFCNT1>::mul_matrix
     }
     else
     {
+        // If left and right agruments are the same object.
+
         ARAGELI_ASSERT_1(is_square());
         matrix arg(nrows()/*::null(), square_matrix*/);
         swap(arg);
