@@ -117,7 +117,7 @@ void intconvex_simple (const Gen& gen, IntGen& intgen)
 
     ARAGELI_ASSERT_0
     (
-        verts.nrows()*pow(big_int(2), reces.size()) <=
+        verts.nrows()*power(big_int(2), reces.size()) <=
         big_int(std::numeric_limits<size_type>::max())
     );
 

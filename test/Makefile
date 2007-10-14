@@ -32,7 +32,7 @@
 ##############################################################################
 
 test_dirs = . ITLab-produced
-CXXFLAGS = -MD -g -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXEPTION
+CXXFLAGS = -MD -g -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
 tests_name = test
 
 all: ../bin/$(tests_name)
@@ -65,11 +65,9 @@ TAGS:
 
 clean:
 	rm -f ../bin/$(tests_name)
-
-cleanobj:
 	rm -f $(wildcard $(addsuffix /*.o,$(test_dirs))) $(wildcard $(addsuffix /*.d,$(test_dirs)))
 
-cleanall: clean cleanobj
+cleanall: clean
 	rm -f tags
 
 include $(wildcard *.d)

@@ -158,12 +158,12 @@ public:
     #endif
 
     #ifdef ARAGELI_LONG_LONG_SUPPORT
-        big_int (signed long long i)
+        big_float (signed long long i)
         {
             from_native_int(i);
         }
 
-        big_int (unsigned long long i)
+        big_float (unsigned long long i)
         {
             from_native_int(i);
         }
@@ -752,6 +752,10 @@ inline big_float & operator/= (big_float & b, const big_float & c)
 {
     return b = b / c;
 }
+
+
+big_float fsqrt( const big_float & b );
+
 
 }
 
