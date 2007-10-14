@@ -13,11 +13,16 @@
 
 #include "config.hpp"
 #include <iostream>
+#include <iterator>
 #include <fstream>
-
-std::ostringstream tout;
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <iterator>
 
 using namespace std;
+
+ostringstream tout;
 
 #ifndef TS_WITHOUT_BOOST
     namespace po = boost::program_options;
@@ -144,23 +149,23 @@ int main(int argc, char* argv[])
         cerr << "Exception of unknown type!\n";
     }
 
-    std::cout << "\n-------------\nTest finished\n";
-    std::cout << "total duration = " << rstat.all_duration << " sec\n";
-    std::cout << "Results:\n";
-    std::cout << "TOTAL  = " << rstat.totalCount << "\n";
-    std::cout << "PASSED = " << rstat.passCount << "   (" << 100.0*rstat.passCount/rstat.totalCount << "%)\n";
-    std::cout << "FAILED = " << rstat.failCount << "   (" << 100.0*rstat.failCount/rstat.totalCount << "%)\n";
-    std::cout << "EXCEPT = " << rstat.exceptCount << "   (" << 100.0*rstat.exceptCount/rstat.totalCount << "%)\n";
-    std::cout << "HANGED = " << rstat.hangCount << "   (" << 100.0*rstat.hangCount/rstat.totalCount << "%)\n";
+    cout << "\n-------------\nTest finished\n";
+    cout << "total duration = " << rstat.all_duration << " sec\n";
+    cout << "Results:\n";
+    cout << "TOTAL  = " << rstat.totalCount << "\n";
+    cout << "PASSED = " << rstat.passCount << "   (" << 100.0*rstat.passCount/rstat.totalCount << "%)\n";
+    cout << "FAILED = " << rstat.failCount << "   (" << 100.0*rstat.failCount/rstat.totalCount << "%)\n";
+    cout << "EXCEPT = " << rstat.exceptCount << "   (" << 100.0*rstat.exceptCount/rstat.totalCount << "%)\n";
+    cout << "HANGED = " << rstat.hangCount << "   (" << 100.0*rstat.hangCount/rstat.totalCount << "%)\n";
 
     if(!rstat.not_passed.empty())
     {
-        std::cout << "-----------------\nNot passed tests:\n";
-        std::copy
+        cout << "-----------------\nNot passed tests:\n";
+        copy
         (
             rstat.not_passed.begin(),
             rstat.not_passed.end(),
-            std::ostream_iterator<std::string>(std::cout, "\n")
+            ostream_iterator<string>(cout, "\n")
         );
     }
 

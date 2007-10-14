@@ -94,10 +94,44 @@ private:
 };
 
 
+inline const char* slr_name (solve_linsys_result status)
+{
+    static const char* names[] =
+    {
+        "SLR_EMPTY",
+        "SLR_UNIQUE",
+        "SLR_MULTIPLE"
+    };
 
+    return names[status];
+}
+
+
+inline const char* neir_name (nei_result status)
+{
+    static const char* names[] =
+    {
+        "NEIR_EMPTY",
+        "NEIR_ALL_VERTS",
+        "NEIR_AMONG_VERTS",
+        "NEIR_NEW"
+    };
+
+    return names[status];
+}
 
 
 } // namespace Arageli
+
+
+namespace std
+{
+
+template <typename T1, typename T2>
+inline ostream& operator<< (ostream& out, const pair<T1, T2>& x)
+{ return out << "key = " << x.first << ", value = " << x.second; }
+
+}
 
 
 #endif  //  #ifndef _ARAGELI_sparse_polynom_test_hpp_

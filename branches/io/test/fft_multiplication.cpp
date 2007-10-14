@@ -39,7 +39,7 @@
 
 using namespace Arageli;
 
-TEST_FUNCTION(do_mult_fft, "Description for blank_pattern test")
+TEST_FUNCTION(do_mult_fft, "Test FFT based multiplication.")
 {
     bool is_ok = true;
 
@@ -51,8 +51,8 @@ TEST_FUNCTION(do_mult_fft, "Description for blank_pattern test")
             big_int a = big_int::random_with_length(num_lengths),
                     b = big_int::random_with_length(num_lengths);
 #ifdef PRINT_OUTPUTS
-            std::cerr << "a = " << a << std::endl;
-            std::cerr << "b = " << b << std::endl;
+            tout << "a = " << a << std::endl;
+            tout << "b = " << b << std::endl;
 #endif
             // compute digit length
             const unsigned digit_len = sizeof(_Internal::digit)*8;
@@ -101,7 +101,7 @@ TEST_FUNCTION(do_mult_fft, "Description for blank_pattern test")
             do_mult_pollard<_Internal::digit,unsigned long>(a_digits, b_digits, w_digits, a_len, b_len);
 #ifdef CHECK_TIME
             s.stop();
-            std::cerr << "Pollard time: " << s.time() << "\n";
+            tout << "Pollard time: " << s.time() << "\n";
 #endif
             out = 0;
             for (i = 0; i < w_len; ++i)
@@ -109,8 +109,8 @@ TEST_FUNCTION(do_mult_fft, "Description for blank_pattern test")
                 out += big_int(w_digits[i])<<(i*digit_len);
             }
 #ifdef PRINT_OUTPUTS
-            std::cerr << "result = " << out << std::endl;
-            std::cerr << "a*b =    " << a*b << std::endl;
+            tout << "result = " << out << std::endl;
+            tout << "a*b =    " << a*b << std::endl;
 #endif
             // compare result with trivial multiplication
             if (out != a*b)
@@ -134,6 +134,4 @@ TEST_FUNCTION(do_mult_fft, "Description for blank_pattern test")
     }
 
     return is_ok ? resOK : resFAIL;
-
-    return resOK;
 }

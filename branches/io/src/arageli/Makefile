@@ -31,8 +31,8 @@
 ##############################################################################
 
 ARAGELICXXFLAGS += -MD -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=1
-TESTSCXXFLAGS += -MD -DARAGELI_SOURCE -g -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXEPTION
-PERFCXXFLAGS += -MD -pg -DARAGELI_SOURCE -g -O2 -DARAGELI_DEBUG_LEVEL=0 -DARAGELI_ASSERT_THROW_EXEPTION
+TESTSCXXFLAGS += -MD -DARAGELI_SOURCE -g -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
+PERFCXXFLAGS += -MD -pg -DARAGELI_SOURCE -g -O2 -DARAGELI_DEBUG_LEVEL=0 -DARAGELI_ASSERT_THROW_EXCEPTION
 obj_dirs = . hermite smith
 
 all: ../../lib/libarageli.a
@@ -53,12 +53,10 @@ TAGS:
 	ctags $(wildcard $(addsuffix /*.cpp,$(obj_dirs))) $(wildcard $(addsuffix /*.hpp,$(obj_dirs)))
 
 clean:
-	rm -f ../../lib/libarageli.a ../../lib/libtestarageli.a
-
-cleanobj:
+	rm -f ../../lib/libarageli.a ../../lib/libtestarageli.a ../../lib/libperfarageli.a
 	rm -f $(wildcard $(addsuffix /*.o,$(obj_dirs))) $(wildcard $(addsuffix /*.d,$(obj_dirs)))
 
-cleanall: clean cleanobj
+cleanall: clean
 	rm -f tags
 
 ../../lib/libtestarageli.a: $(patsubst %.cpp,%t.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))

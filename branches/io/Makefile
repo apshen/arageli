@@ -37,19 +37,19 @@
 .PHONY: all check install clean example dvi TAGS
 
 all:
-	mkdir -p lib
 	$(MAKE) -C src/arageli
 
 check:
-	mkdir -p lib
 	$(MAKE) -C tool/ts/src/ts/
 	$(MAKE) -C test
+	make runtests
 
-runtests: check
-	bin/test
+runtests:
+	if ls bin/test; then bin/test; else echo \*\*\* Try make check before running tests! \*\*\*; fi;
+#	bin/test
 
-example:
-	$(MAKE) -C example/
+#example:
+#	$(MAKE) -C example/
 
 # call 'make install' only with root previlegues
 install:
@@ -82,13 +82,6 @@ cleanall:
 	$(MAKE) -C src/arageli cleanall
 	$(MAKE) -C tool/ts/src/ts cleanall
 	$(MAKE) -C test cleanall
-	$(MAKE) -C src/doc cleanall
-	$(MAKE) -C example cleanall
+	$(MAKE) -C doc/src cleanall
+#	$(MAKE) -C example cleanall
 	rm -rf doc/dvi
-	rm -rf lib
-
-cleanobj:
-	$(MAKE) -C src/arageli cleanobj
-	$(MAKE) -C tool/ts/src/ts cleanobj
-	$(MAKE) -C test cleanobj
-	$(MAKE) -C example cleanobj
