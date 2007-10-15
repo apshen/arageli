@@ -399,38 +399,6 @@ Stream& io_binary<big_int>::input_stream (Stream& in, big_int& x)
 }
 
 
-/// Stores an array of big_int objects to a binary stream. Seft-delimeted binary serialization.
-/** Function produces output in The Simple Binary format. */
-template <typename Stream>
-Stream& io_binary<big_int>::output_stream
-(
-    Stream& out,
-    const big_int* x,
-    std::size_t n
-)
-{
-    for(std::size_t i = 0; i < n; ++i)
-        output_binary_stream(out, x[i]);
-    return out;
-}
-
-
-/// Loads an array of big_int objects from a binary stream. Compatible with output_binary_stream.
-/** Function takes input in The Simple Binary format. */
-template <typename Stream>
-Stream& io_binary<big_int>::input_stream
-(
-    Stream& in,
-    big_int* x,
-    std::size_t n
-)
-{
-    for(std::size_t i = 0; i < n; ++i)
-        input_binary_stream(in, x[i]);
-    return in;
-}
-
-
 }
 
 
@@ -1609,15 +1577,6 @@ std::size_t io_binary<big_int>::calc (const big_int& x)
 }
 
 
-std::size_t io_binary<big_int>::calc (const big_int* x, std::size_t n)
-{
-    std::size_t res = 0;
-    for(std::size_t i = 0; i < n; ++i)
-        res += calc_binary(x[i]);
-    return res;
-}
-
-
 char* io_binary<big_int>::output_mem (char* out, const big_int& x)
 {
     int sign = x.number->sign;
@@ -1661,32 +1620,6 @@ const char* io_binary<big_int>::input_mem (const char* in, big_int& x)
         x = big_int();  // WARNING! replace by big_int::assign_null()
     }
 
-    return in;
-}
-
-
-char* io_binary<big_int>::output_mem
-(
-    char* out,
-    const big_int* x,
-    std::size_t n
-)
-{
-    for(std::size_t i = 0; i < n; ++i)
-        out = output_binary_mem(out, x[i]);
-    return out;
-}
-
-
-const char* io_binary<big_int>::input_mem
-(
-    const char* in,
-    big_int* x,
-    std::size_t n
-)
-{
-    for(std::size_t i = 0; i < n; ++i)
-        in = input_binary_mem(in, x[i]);
     return in;
 }
 

@@ -265,6 +265,61 @@ public:
 };
 
 
+/// Implements those functions of io_binary that deal with arrays.
+/** This class template implements some of the functions of io_binary
+    class template. Those functions input and output arrays of objects.
+    This class provides typical implementation of those functions for
+    not raw objects but can be used for raw objects too (for raw
+    objects we can do this better, see io_binary_raw class template). */
+template <typename T>
+class io_binary_base
+{
+public:
+
+    /// Stores an array of object states to a binary stream.
+    /** The functions do that by means of a simple loop. */
+    template <typename Stream>
+    static Stream& output_stream
+    (
+        Stream& out,
+        const T* x,
+        std::size_t n
+    );
+
+    /// Stores an array of object states from a binary stream.
+    /** The functions do that by means of a simple loop. */
+    template <typename Stream>
+    static Stream& input_stream
+    (
+        Stream& in,
+        T* x,
+        std::size_t n
+    );
+
+    /// Calculates the number of chars required to store a given array of objects.
+    /** The functions do that by means of a simple loop. */
+    static std::size_t calc (const T* x, std::size_t n);
+
+    /// Stores an array of object states to a memory location.
+    /** The functions do that by means of a simple loop. */
+    static char* output_mem
+    (
+        char* out,
+        const T* x,
+        std::size_t n
+    );
+
+    /// Loads an array of object states from a memory location.
+    /** The functions do that by means of a simple loop. */
+    static const char* input_mem
+    (
+        const char* in,
+        T* x,
+        std::size_t n
+    );
+};
+
+
 /// Collection of functions to do seft-delimeted binary serialization for raw objects.
 /** Serialization is in the Simple Binary format.
     Type T is supposed to be a raw type, i.e. state of any variable of

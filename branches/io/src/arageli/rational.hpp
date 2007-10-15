@@ -520,9 +520,15 @@ inline std::basic_istream<Ch, ChT>& operator>>
 }
 
 template <typename T>
-class io_binary<rational<T> >
+class io_binary<rational<T> > : public io_binary_base<rational<T> >
 {
 public:
+
+    using io_binary_base<rational<T> >::output_stream;
+    using io_binary_base<rational<T> >::input_stream;
+    using io_binary_base<rational<T> >::calc;
+    using io_binary_base<rational<T> >::input_mem;
+    using io_binary_base<rational<T> >::output_mem;
 
     /// Stores rational object state to a binary stream. Seft-delimeted binary serialization.
     /** This functions uses the following format:
@@ -556,28 +562,6 @@ public:
     }
 
 
-    /// Stores an array of rational objects to a binary stream. Seft-delimeted binary serialization.
-    /** The function produces output in The Simple Binary format. */
-    template <typename Stream>
-    static Stream& output_stream
-    (
-        Stream& out,
-        const rational<T>* x,
-        std::size_t n
-    );
-
-
-    /// Loads an array of rational objects from a binary stream. Compatible with output_binary_stream.
-    /** The function takes input in The Simple Binary format. */
-    template <typename Stream>
-    static Stream& input_stream
-    (
-        Stream& in,
-        rational<T>* x,
-        std::size_t n
-    );
-
-
     /// Calculates the number of chars required to store a given rational object in The Simple Binary form.
     /** This function calculates precise number of chars that will emit
         any function outputs in The Simple Binary format for one rational object,
@@ -586,13 +570,6 @@ public:
     {
         return calc_binary(x.numerator()) + calc_binary(x.denominator());
     }
-
-
-    /// Calculates the number of chars required to store a given array of rational objects in The Simple Binary form.
-    /** This function calculates precise number of chars that will emit
-        any function outputs in The Simple Binary format for an array of
-        rational objects, for example, output_binary_mem function. */
-    static std::size_t calc (const rational<T>* x, std::size_t n);
 
 
     /// Stores rational object state to a memory location. Seft-delimeted binary serialization.
@@ -613,26 +590,6 @@ public:
         in = input_binary_mem(in, x.denominator());
         return in;
     }
-
-
-    /// Stores an array of rational objects to a memory location. Seft-delimeted binary serialization.
-    /** The function produces output in The Simple Binary format. */
-    static char* output_mem
-    (
-        char* out,
-        const rational<T>* x,
-        std::size_t n
-    );
-
-
-    /// Loads an array of rational objects from a memory location. Compatible with output_binary_stream.
-    /** The function takes input in The Simple Binary format. */
-    static const char* input_mem
-    (
-        const char* in,
-        rational<T>* x,
-        std::size_t n
-    );
 };
 
 
