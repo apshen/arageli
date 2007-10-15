@@ -2936,6 +2936,81 @@ std::istream& operator>> (std::istringstream& out, matrix<T, REFCNT>& x)
 // END OF TEMPORARY EXTENTION
 
 
+/// Specialization of io_binary for matrix.
+template <typename T, bool REFCNT>
+class io_binary<matrix<T, REFCNT> > :
+    public io_binary_base<matrix<T, REFCNT> >
+{
+public:
+
+    using io_binary_base<matrix<T, REFCNT> >::output_stream;
+    using io_binary_base<matrix<T, REFCNT> >::input_stream;
+    using io_binary_base<matrix<T, REFCNT> >::calc;
+    using io_binary_base<matrix<T, REFCNT> >::input_mem;
+    using io_binary_base<matrix<T, REFCNT> >::output_mem;
+
+    /// Stores matrix object state to a binary stream. Seft-delimeted binary serialization.
+    /** This functions uses the following format:
+            NROWS NCOLS ELEMENTS
+        where NROWS and NCOLS are dimentions of a given matrix and ELEMENTS is
+        all elements of the matrix stored as an array of length NROWS*NCOLS
+        All output is in The Simple Binary format. */
+    template <typename Stream>
+    static inline Stream& output_stream (Stream& out, const matrix<T, REFCNT>& x)
+    {
+        output_binary_stream(out, x.nrows());
+        output_binary_stream(out, x.ncols());
+        if(x.size())
+            output_binary_stream(out, &*x.begin(), x.size());
+        return out;
+    }
+
+
+    /// Loads matrix object state from a binary stream. Compatible with output_binary_stream.
+    /** See output_stream(stream, matrix) function for detailes on the format.
+        If the function fails to read some of state components, an old value of x
+        may be lost. All depends on input_binary_stream function for T.
+        So, do not relay on the value of x when a given stream is not in a good state
+        after call returns.
+
+        The function takes input in The Simple Binary format.
+    */
+    template <typename Stream>
+    static Stream& input_stream (Stream& in, matrix<T, REFCNT>& x);
+
+
+    /// Calculates the number of chars required to store a given matrix object in The Simple Binary form.
+    /** This function calculates precise number of chars that will emit
+        any function outputs in The Simple Binary format for one rational object,
+        for example, output_binary_mem function. */
+    static inline std::size_t calc (const matrix<T, REFCNT>& x)
+    {
+        typename matrix<T, REFCNT>::size_type size = x.size();
+        if(size)
+            return 2*calc_binary(size) + calc_binary(&*x.begin(), size);
+        else
+            return 2*calc_binary(size);
+    }
+
+
+    /// Stores matrix object state to a memory location. Seft-delimeted binary serialization.
+    /** The function produces output in The Simple Binary format. */
+    static inline char* output_mem (char* out, const matrix<T, REFCNT>& x)
+    {
+        out = output_binary_mem(out, x.nrows());
+        out = output_binary_mem(out, x.ncols());
+        if(x.size())
+            out = output_binary_mem(out, &*x.begin(), x.size());
+        return out;
+    }
+
+
+    /// Loads matrix object state from a binary stream. Compatible with output_binary_stream.
+    /** The function takes input in The Simple Binary format. */
+    static const char* input_mem (const char* in, matrix<T, REFCNT>& x);
+};
+
+
 /// Specialization of the template 'factory' for the Arageli::matrix template.
 template <typename T, bool REFCNT>
 struct factory<matrix<T, REFCNT> >

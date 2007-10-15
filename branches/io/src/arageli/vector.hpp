@@ -2665,6 +2665,7 @@ inline std::istringstream& operator>> (std::istringstream& in, vector<T, REFCNT>
 }
 
 
+/// Specialization of io_binary for vector.
 template <typename T, bool REFCNT>
 class io_binary<vector<T, REFCNT> > :
     public io_binary_base<vector<T, REFCNT> >
@@ -2695,7 +2696,7 @@ public:
 
 
     /// Loads vector object state from a binary stream. Compatible with output_binary_stream.
-    /** See output_binary_stream(stream, vector) function for detailes on the format.
+    /** See output_stream(stream, vector) function for detailes on the format.
         If the function fails to read some of state components, an old value of x
         may be lost. All depends on input_binary_stream function for T.
         So, do not relay on the value of x when a given stream is not in a good state
@@ -2728,7 +2729,7 @@ public:
         typename vector<T, REFCNT>::size_type size = x.size();
         out = output_binary_mem(out, size);
         if(size)
-            out = output_binary_mem(out, &*x.begin(), x.size());
+            out = output_binary_mem(out, &*x.begin(), size);
         return out;
     }
 
