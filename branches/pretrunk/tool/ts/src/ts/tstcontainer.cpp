@@ -95,6 +95,7 @@ void CTestCollection::runTest(std::ostream& os, const STest& test, SRunStatistic
     case resEXCEPT:
         status = "EXCEPT";
         rstat.exceptCount++;
+        break;
     default:
         std::cerr << "\nUnknown type of the result. Aborting.\n";
         std::abort();
