@@ -62,7 +62,7 @@ TEST
 
     ARAGELI_TS_ALLEXCEPT_CATCH_REGION_BEGIN
     {
-        for(std::size_t n = 0; n < 5 && is_ok; ++n)
+        for(std::size_t n = 0; n < 4 && is_ok; ++n)
         {
             typedef vector<int> T;
 
@@ -77,7 +77,7 @@ TEST
             //is_ok &= test_io_simple_binary(T("(-10:10)"), n, mem_reserve);
         }
 
-        for(std::size_t n = 0; n < 5 && is_ok; ++n)
+        for(std::size_t n = 0; n < 4 && is_ok; ++n)
         {
             typedef vector<float> T;
 
@@ -92,7 +92,7 @@ TEST
             //is_ok &= test_io_simple_binary(T("(-1:0.1:1)"), n, mem_reserve);
         }
 
-        for(std::size_t n = 0; n < 5 && is_ok; ++n)
+        for(std::size_t n = 0; n < 4 && is_ok; ++n)
         {
             typedef vector<double> T;
 
@@ -107,7 +107,7 @@ TEST
             //is_ok &= test_io_simple_binary(T("(-1:0.1:1)"), n, mem_reserve);
         }
 
-        for(std::size_t n = 0; n < 3 && is_ok; ++n)
+        for(std::size_t n = 0; n < 4 && is_ok; ++n)
         {
             typedef vector<big_int> T;
 
@@ -125,7 +125,7 @@ TEST
             //is_ok &= test_io_simple_binary(T("(10000000000010:10000000000030)"), n, mem_reserve);
         }
 
-        for(std::size_t n = 0; n < 3 && is_ok; ++n)
+        for(std::size_t n = 0; n < 4 && is_ok; ++n)
         {
             typedef vector<rational<> > T;
 
@@ -147,6 +147,17 @@ TEST
             is_ok &= test_io_simple_binary(T("(-1234,5,6,-78901,-234567890/65432165)"), n, mem_reserve);
             is_ok &= test_io_simple_binary(T("(123456789012345678901234,5678,90/6543219873,24,1/2)"), n, mem_reserve);
             is_ok &= test_io_simple_binary(T("(-123456789012345678901234567890/654321781827334234)"), n, mem_reserve);
+        }
+
+        for(std::size_t n = 0; n < 3 && is_ok; ++n)
+        {
+            typedef vector<vector<int> > T;
+
+            is_ok &= test_io_simple_binary(T(), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T(1), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T(2, "((1234567890))"), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T(10, "((12),(345), (6,7,890))"), n, mem_reserve);
+            is_ok &= test_io_simple_binary(T(2, "((-1234, 56,-78,901,-234,-56), (789012345,6543217,81827334), (2), (3), (4))"), n, mem_reserve);
         }
     }
     ARAGELI_TS_ALLEXCEPT_CATCH_REGION_END

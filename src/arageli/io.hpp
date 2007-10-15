@@ -537,12 +537,26 @@ inline Stream& output_binary_stream (Stream& out, const T& x)
 }
 
 
+template <typename Out, typename T>
+inline Out& output_binary (Out& out, const T& x)
+{
+    return output_binary_stream(out, x);
+}
+
+
 /// Loads an object state from a binary stream. Compatible with output_stream.
 /** Serialization in the Simple Binary format corresponding to type T. */
 template <typename Stream, typename T>
 inline Stream& input_binary_stream (Stream& in, T& x)
 {
     return io_binary<T>::input_stream(in, x);
+}
+
+
+template <typename In, typename T>
+inline In& input_binary (In& in, T& x)
+{
+    return input_binary_stream(in, x);
 }
 
 
@@ -560,6 +574,18 @@ inline Stream& output_binary_stream
 }
 
 
+template <typename Out, typename T>
+inline Out& output_binary
+(
+    Out& out,
+    const T* x,
+    std::size_t n
+)
+{
+    return output_binary_stream(out, x, n);
+}
+
+
 /// Loads an array of object states from a binary stream. Compatible with output_stream.
 /** Serialization in the Simple Binary format corresponding to type T. */
 template <typename Stream, typename T>
@@ -571,6 +597,18 @@ inline Stream& input_binary_stream
 )
 {
     return io_binary<T>::input_stream(in, x, n);
+}
+
+
+template <typename In, typename T>
+inline In& input_binary
+(
+    In& in,
+    T* x,
+    std::size_t n
+)
+{
+    return input_binary_stream(in, x, n);
 }
 
 
@@ -600,12 +638,26 @@ inline char* output_binary_mem (char* out, const T& x)
 }
 
 
+template <typename T>
+inline char* output_binary (char* out, const T& x)
+{
+    return output_binary_mem(out, x);
+}
+
+
 /// Loads an object state from a memory location. Compatible with output_stream.
 /** Serialization in the Simple Binary format corresponding to type T. */
 template <typename T>
 inline const char* input_binary_mem (const char* in, T& x)
 {
     return io_binary<T>::input_mem(in, x);
+}
+
+
+template <typename T>
+inline const char* input_binary (const char* in, T& x)
+{
+    return input_binary_mem(in, x);
 }
 
 
@@ -623,6 +675,18 @@ inline char* output_binary_mem
 }
 
 
+template <typename T>
+inline char* output_binary
+(
+    char* out,
+    const T* x,
+    std::size_t n
+)
+{
+    return output_binary_mem(out, x, n);
+}
+
+
 /// Loads an array of object states from a memory location. Compatible with output_stream.
 /** Serialization in the Simple Binary format corresponding to type T. */
 template <typename T>
@@ -634,6 +698,18 @@ inline const char* input_binary_mem
 )
 {
     return io_binary<T>::input_mem(in, x, n);
+}
+
+
+template <typename T>
+inline const char* input_binary
+(
+    const char* in,
+    T* x,
+    std::size_t n
+)
+{
+    return input_binary_mem(in, x, n);
 }
 
 
