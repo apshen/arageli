@@ -550,46 +550,6 @@ Stream& io_binary<vector<T, REFCNT> >::input_stream (Stream& in, vector<T, REFCN
 
 
 template <typename T, bool REFCNT>
-template <typename Stream>
-Stream& io_binary<vector<T, REFCNT> >::output_stream
-(
-    Stream& out,
-    const vector<T, REFCNT>* x,
-    std::size_t n
-)
-{
-    for(std::size_t i = 0; i < n; ++i)
-        output_binary_stream(out, x[i]);
-    return out;
-}
-
-
-template <typename T, bool REFCNT>
-template <typename Stream>
-Stream& io_binary<vector<T, REFCNT> >::input_stream
-(
-    Stream& in,
-    vector<T, REFCNT>* x,
-    std::size_t n
-)
-{
-    for(std::size_t i = 0; i < n; ++i)
-        input_binary_stream(in, x[i]);
-    return in;
-}
-
-
-template <typename T, bool REFCNT>
-std::size_t io_binary<vector<T, REFCNT> >::calc (const vector<T, REFCNT>* x, std::size_t n)
-{
-    std::size_t res = 0;
-    for(std::size_t i = 0; i < n; ++i)
-        res += calc_binary(x[i]);
-    return res;
-}
-
-
-template <typename T, bool REFCNT>
 const char* io_binary<vector<T, REFCNT> >::input_mem (const char* in, vector<T, REFCNT>& x)
 {
     typename vector<T, REFCNT>::size_type size;
@@ -597,34 +557,6 @@ const char* io_binary<vector<T, REFCNT> >::input_mem (const char* in, vector<T, 
     x.resize(size);
     if(size)
         in = input_binary_mem(in, &*x.begin(), size);
-    return in;
-}
-
-
-template <typename T, bool REFCNT>
-char* io_binary<vector<T, REFCNT> >::output_mem
-(
-    char* out,
-    const vector<T, REFCNT>* x,
-    std::size_t n
-)
-{
-    for(std::size_t i = 0; i < n; ++i)
-        out = output_binary_mem(out, x[i]);
-    return out;
-}
-
-
-template <typename T, bool REFCNT>
-const char* io_binary<vector<T, REFCNT> >::input_mem
-(
-    const char* in,
-    vector<T, REFCNT>* x,
-    std::size_t n
-)
-{
-    for(std::size_t i = 0; i < n; ++i)
-        in = input_binary_mem(in, x[i]);
     return in;
 }
 

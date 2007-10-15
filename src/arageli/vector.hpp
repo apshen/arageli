@@ -2666,9 +2666,16 @@ inline std::istringstream& operator>> (std::istringstream& in, vector<T, REFCNT>
 
 
 template <typename T, bool REFCNT>
-class io_binary<vector<T, REFCNT> >
+class io_binary<vector<T, REFCNT> > :
+    public io_binary_base<vector<T, REFCNT> >
 {
 public:
+
+    using io_binary_base<vector<T, REFCNT> >::output_stream;
+    using io_binary_base<vector<T, REFCNT> >::input_stream;
+    using io_binary_base<vector<T, REFCNT> >::calc;
+    using io_binary_base<vector<T, REFCNT> >::input_mem;
+    using io_binary_base<vector<T, REFCNT> >::output_mem;
 
     /// Stores vector object state to a binary stream. Seft-delimeted binary serialization.
     /** This functions uses the following format:
@@ -2700,28 +2707,6 @@ public:
     static Stream& input_stream (Stream& in, vector<T, REFCNT>& x);
 
 
-    /// Stores an array of vector objects to a binary stream. Seft-delimeted binary serialization.
-    /** The function produces output in The Simple Binary format. */
-    template <typename Stream>
-    static Stream& output_stream
-    (
-        Stream& out,
-        const vector<T, REFCNT>* x,
-        std::size_t n
-    );
-
-
-    /// Loads an array of vector objects from a binary stream. Compatible with output_binary_stream.
-    /** The function takes input in The Simple Binary format. */
-    template <typename Stream>
-    static Stream& input_stream
-    (
-        Stream& in,
-        vector<T, REFCNT>* x,
-        std::size_t n
-    );
-
-
     /// Calculates the number of chars required to store a given vector object in The Simple Binary form.
     /** This function calculates precise number of chars that will emit
         any function outputs in The Simple Binary format for one rational object,
@@ -2734,13 +2719,6 @@ public:
         else
             return calc_binary(size);
     }
-
-
-    /// Calculates the number of chars required to store a given array of vector objects in The Simple Binary form.
-    /** This function calculates precise number of chars that will emit
-        any function outputs in The Simple Binary format for an array of
-        rational objects, for example, output_binary_mem function. */
-    static std::size_t calc (const vector<T, REFCNT>* x, std::size_t n);
 
 
     /// Stores vector object state to a memory location. Seft-delimeted binary serialization.
@@ -2758,26 +2736,6 @@ public:
     /// Loads vector object state from a binary stream. Compatible with output_binary_stream.
     /** The function takes input in The Simple Binary format. */
     static const char* input_mem (const char* in, vector<T, REFCNT>& x);
-
-
-    /// Stores an array of vector objects to a memory location. Seft-delimeted binary serialization.
-    /** The function produces output in The Simple Binary format. */
-    static char* output_mem
-    (
-        char* out,
-        const vector<T, REFCNT>* x,
-        std::size_t n
-    );
-
-
-    /// Loads an array of vector objects from a memory location. Compatible with output_binary_stream.
-    /** The function takes input in The Simple Binary format. */
-    static const char* input_mem
-    (
-        const char* in,
-        vector<T, REFCNT>* x,
-        std::size_t n
-    );
 };
 
 
