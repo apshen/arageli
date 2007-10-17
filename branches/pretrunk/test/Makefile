@@ -40,7 +40,7 @@ all: ../bin/$(tests_name)
 ../bin/$(tests_name): ../tool/ts/bin/libts.a ../lib/libtestarageli.a $(patsubst %.cpp,%.o, $(wildcard $(addsuffix \
                 /*.cpp,$(test_dirs))))
 	$(CXX) -o ../bin/$(tests_name) $(patsubst %.cpp,%.o, $(wildcard \
-    $(addsuffix /*.cpp,$(test_dirs)))) -L "../lib" -L "../tool/ts/bin/" -l "testarageli" -l "ts"
+    $(addsuffix /*.cpp,$(test_dirs)))) -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
 
 ../tool/ts/bin/libts.a:
 	$(MAKE) -C ../tool/ts/src/ts/
