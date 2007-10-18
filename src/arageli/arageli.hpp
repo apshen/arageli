@@ -199,6 +199,7 @@
 #include "polyhedron_relation.hpp"
 #include "orthogonal.hpp"
 #include "cantor_zassenhaus.hpp"
+#include "hgcd.hpp"
 
 
 /// All definitions of the library.
