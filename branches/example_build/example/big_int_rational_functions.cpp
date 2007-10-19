@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     cout << fermas_number << " is composite" << endl;
 
     // Find its fractorisation
-    vector<big_int> factorization;
+    Arageli::vector<big_int> factorization;
     factorize(fermas_number, factorization);
     cout << fermas_number << " = ";
     output_list(cout, factorization, "", "", "*");
