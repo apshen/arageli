@@ -1,12 +1,16 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
+using std::boolalpha;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
-
-    matrix< rational<> > A, A_inv;
+    matrix<rational<> > A, A_inv;
     rational<> d;
 
     A = "((2/3, -3/5, 1) , (-4/7, 5/8, 1/12) , (-3, 5, -6/7))";

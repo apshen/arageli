@@ -1,10 +1,9 @@
-#include <iostream.h>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
 
-int main()
+
+int main ()
 {
     const big_int seed = 1298347343;
     big_int x = seed;

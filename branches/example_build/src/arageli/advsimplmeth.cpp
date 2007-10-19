@@ -45,6 +45,7 @@
 #include <fstream>
 #include <map>
 
+#include "exception.hpp"
 #include "factory.hpp"
 #include "advsimplmeth.hpp"
 
@@ -837,6 +838,16 @@ int adv_simplex_method_alg<T, Ctrler>::LoadTaskFromFile(char* filename)
     // TODO: Attempt to divide this whole function into smaller ones.
 
     std::fstream lp_file(filename);
+    if(!lp_file)
+    {
+        // Temporary we use a common exception class.
+        invalid_argument e;
+        ARAGELI_EXCEPT_LOC_DESC
+        (
+            e,
+            std::string("Cannot open the file ") + filename + "."
+        );
+    }
     std::string curr_string, curr_token, curr_var_name;
     std::string curr_constraint_name;
     bool is_opt_direction_defined = false;

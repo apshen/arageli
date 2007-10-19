@@ -1,15 +1,20 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::cin;
+using std::endl;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
     sparse_polynom<int> S;
     cout << "Enter a polynomial with integer coefficients "
         << endl << endl;
 
-    cin >> S; // 5*x^2-7*x^6+5+x^8-3*x^2+0*x
+    cin >> S;
 
     cout << "Standard form: " << S << endl;
 

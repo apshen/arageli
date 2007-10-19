@@ -1,22 +1,40 @@
+#include <fstream>
 #include <arageli/arageli.hpp>
 
 using namespace Arageli;
+using ctrl::simplex_method::adv_simplex_method_alg_slog;
 
 void SolveFromFile()
 {
-    std::ofstream outfile("output1.txt");
-    ctrl::simplex_method::adv_simplex_method_alg_slog<std::ofstream> ctrl_sm_slog(outfile);
-    simplex_method::adv_simplex_method_alg<rational<>, ctrl::simplex_method::adv_simplex_method_alg_slog<std::ofstream> > sm(ctrl_sm_slog);
+    std::ofstream outfile("../example/adv_simplex_method.task.output1.txt");
 
-    sm.LoadTaskFromFile("task.txt");
+    adv_simplex_method_alg_slog<std::ofstream>
+        ctrl_sm_slog(outfile);
+
+    simplex_method::adv_simplex_method_alg
+    <
+        rational<>,
+        adv_simplex_method_alg_slog<std::ofstream>
+    >
+        sm(ctrl_sm_slog);
+
+    sm.LoadTaskFromFile("../example/adv_simplex_method.task.txt");
     sm.SimplexDriver();
 }
 
 void SolveFromInput()
 {
-    std::ofstream outfile("output2.txt"); // output file
-    ctrl::simplex_method::adv_simplex_method_alg_slog<std::ofstream> ctrl_sm_slog(outfile); // controller
-    simplex_method::adv_simplex_method_alg<rational<>, ctrl::simplex_method::adv_simplex_method_alg_slog<std::ofstream> > sm(ctrl_sm_slog);
+    std::ofstream outfile("../example/adv_simplex_method.task.output2.txt"); // output file
+
+    adv_simplex_method_alg_slog<std::ofstream>
+        ctrl_sm_slog(outfile); // controller
+
+    simplex_method::adv_simplex_method_alg
+    <
+        rational<>,
+        adv_simplex_method_alg_slog<std::ofstream>
+    >
+        sm(ctrl_sm_slog);
 
     int i = 0;
 

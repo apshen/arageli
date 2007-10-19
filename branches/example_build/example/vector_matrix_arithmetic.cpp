@@ -1,12 +1,16 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
 
-typedef rational<> Q;
 
-int main(int argc, char *argv[])
+int main ()
 {
+    typedef rational<> Q;
+
     matrix<Q> A, B;
     vector<Q> c, d, res;
     Q alpha;

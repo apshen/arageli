@@ -1,9 +1,14 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
+using std::boolalpha;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
     sparse_polynom<rational<> > f = "1/15*x^4+5/7*x^3+7*x";
     sparse_polynom<rational<> > g = "20/53*x^3-1/9*x-1/8";
@@ -17,10 +22,11 @@ int main(int argc, char *argv[])
     cout << "Division: f = q*h + r where" << endl;
     sparse_polynom<rational<> > q = f/h;
     sparse_polynom<rational<> > r = f%h;
-        cout << "q = " << q << endl;
-        cout << "r = " << r << endl;
-        // Check the result
-        cout << "It's " << boolalpha << (f == q*h + r) << endl << endl;
+
+    cout << "q = " << q << endl;
+    cout << "r = " << r << endl;
+    // Check the result
+    cout << "It's " << boolalpha << (f == q*h + r) << endl << endl;
 
     typedef sparse_polynom<rational<> >::monom ratmonom;
 

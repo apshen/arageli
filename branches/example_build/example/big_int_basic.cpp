@@ -1,9 +1,11 @@
 #include <iostream>
-#include <cctype>
-#include "arageli/arageli.hpp"
+#include <iomanip>
+#include <arageli/arageli.hpp>
 
 using namespace Arageli;
-using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
 
 void test(big_int a, big_int b, int echo = 1)
 {

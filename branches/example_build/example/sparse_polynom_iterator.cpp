@@ -1,9 +1,13 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
     typedef sparse_polynom<big_int> poly;
     typedef poly::coef_iterator coefs;
@@ -37,7 +41,7 @@ int main(int argc, char *argv[])
     for(degrees di = S.degrees_begin(), dj = S.degrees_end(); di != dj; ++di)
         *di %= 5;
 
-    // Now S can contain monomials this equal degrees
+    // Now S can contain monomials with equal degrees
     // We have to reduce S to its canonical form
     S.normalize();
     cout << "All degrees modulo 5 = " << S << endl << endl;

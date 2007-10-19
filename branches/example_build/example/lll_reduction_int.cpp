@@ -1,9 +1,14 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
+using std::boolalpha;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
     typedef big_int T;
     typedef matrix<T> MT;
