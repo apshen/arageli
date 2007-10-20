@@ -2,7 +2,7 @@
 #
 #    Makefile
 #
-#    This makefile builds examples of arageli using
+#    This makefile builds examples of arageli using.
 #
 #    This file is a part of the Arageli library.
 #
@@ -38,6 +38,36 @@ all: \
      $(BIN)/big_int_rational_creation\
      $(BIN)/big_int_rational_functions\
      $(BIN)/big_int_rational_operations\
+     $(BIN)/gram_schmidt\
+     $(BIN)/knuth_supergenerator\
+     $(BIN)/lll_reduction\
+     $(BIN)/lll_reduction_int\
+     $(BIN)/matrix_basic\
+     $(BIN)/matrix_column_row\
+     $(BIN)/matrix_gauss\
+     $(BIN)/matrix_linear_system\
+     $(BIN)/matrix_rref\
+     $(BIN)/matrix_smith\
+     $(BIN)/polynom_basic\
+     $(BIN)/residue\
+     $(BIN)/residue_linear_system\
+     $(BIN)/sparse_polynom_algorithms\
+     $(BIN)/sparse_polynom_basic\
+     $(BIN)/sparse_polynom_creation\
+     $(BIN)/sparse_polynom_io\
+     $(BIN)/sparse_polynom_iterator\
+     $(BIN)/sparse_polynom_kroneker\
+     $(BIN)/sparse_polynom_lagrange\
+     $(BIN)/sparse_polynom_matrix\
+     $(BIN)/sparse_polynom_matrix_smith\
+     $(BIN)/sparse_polynom_operations\
+     $(BIN)/sparse_polynom_other_operations\
+     $(BIN)/sparse_polynom_properties\
+     $(BIN)/vector_entries\
+     $(BIN)/vector_lcm_gcd\
+     $(BIN)/vector_matrix_arithmetic\
+     $(BIN)/vector_matrix_creation\
+     $(BIN)/vector_matrix_io\
      $(BIN)/adv_simplex_method\
 
 $(BIN)/adv_simplex_method: adv_simplex_method.cpp adv_simplex_method.task.txt
@@ -54,3 +84,93 @@ $(BIN)/big_int_rational_functions: big_int_rational_functions.cpp
 
 $(BIN)/big_int_rational_operations: big_int_rational_operations.cpp
 	$(CXX) -I"$(INCLUDE_DIR)" big_int_rational_operations.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/gram_schmidt: gram_schmidt.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" gram_schmidt.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/knuth_supergenerator: knuth_supergenerator.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" knuth_supergenerator.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/lll_reduction: lll_reduction.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" lll_reduction.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/lll_reduction_int: lll_reduction_int.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" lll_reduction_int.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/matrix_basic: matrix_basic.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" matrix_basic.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/matrix_column_row: matrix_column_row.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" matrix_column_row.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/matrix_gauss: matrix_gauss.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" matrix_gauss.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/matrix_linear_system: matrix_linear_system.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" matrix_linear_system.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/matrix_rref: matrix_rref.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" matrix_rref.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/matrix_smith: matrix_smith.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" matrix_smith.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/polynom_basic: polynom_basic.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" polynom_basic.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/residue: residue.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" residue.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/residue_linear_system: residue_linear_system.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" residue_linear_system.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_algorithms: sparse_polynom_algorithms.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_algorithms.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_basic: sparse_polynom_basic.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_basic.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_creation: sparse_polynom_creation.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_creation.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_io: sparse_polynom_io.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_io.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_iterator: sparse_polynom_iterator.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_iterator.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_kroneker: sparse_polynom_kroneker.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_kroneker.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_lagrange: sparse_polynom_lagrange.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_lagrange.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_matrix: sparse_polynom_matrix.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_matrix.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_matrix_smith: sparse_polynom_matrix_smith.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_matrix_smith.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_operations: sparse_polynom_operations.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_operations.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_other_operations: sparse_polynom_other_operations.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_other_operations.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/sparse_polynom_properties: sparse_polynom_properties.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" sparse_polynom_properties.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/vector_entries: vector_entries.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" vector_entries.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/vector_lcm_gcd: vector_lcm_gcd.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" vector_lcm_gcd.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/vector_matrix_arithmetic: vector_matrix_arithmetic.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" vector_matrix_arithmetic.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/vector_matrix_creation: vector_matrix_creation.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" vector_matrix_creation.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/vector_matrix_io: vector_matrix_io.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" vector_matrix_io.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli

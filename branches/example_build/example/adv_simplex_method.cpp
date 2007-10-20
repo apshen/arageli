@@ -69,8 +69,9 @@ void SolveFromInput()
 }
 
 
-void main()
+int main()
 {
     SolveFromFile();
     SolveFromInput();
+    return 0;
 }
