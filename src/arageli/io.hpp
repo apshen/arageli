@@ -180,6 +180,74 @@ inline std::basic_ostream<Ch, ChT>& output_pow_default
 }
 
 
+/// Represents a pointer as a stream in memory for writing.
+class memory_ostream
+{
+    char* mem;
+
+public:
+
+    memory_ostream (char* addr) :
+        mem(addr)
+    {}
+
+    operator char* () const
+    {
+        return mem;
+    }
+
+    bool operator! () const
+    {
+        return false;
+    }
+
+    operator bool () const
+    {
+        return true;
+    }
+
+    void write (const char* x, std::size_t n)
+    {
+        mem = std::copy(x, x + n, mem);
+    }
+};
+
+
+/// Represents a pointer as a stream in memory for reading.
+class memory_istream
+{
+    const char* mem;
+
+public:
+
+    memory_istream (const char* addr) :
+        mem(addr)
+    {}
+
+    operator const char* () const
+    {
+        return mem;
+    }
+
+    bool operator! () const
+    {
+        return false;
+    }
+
+    operator bool () const
+    {
+        return true;
+    }
+
+    void read (char* x, std::size_t n)
+    {
+        const char* end = mem + n;
+        std::copy(mem, end, x);
+        mem = end;
+    }
+};
+
+
 /// Interface for a collection of functions to do seft-delimeted binary serialization.
 /** Serialization is in the Simple Binary format.
     It is just a common template with required interface.
@@ -265,9 +333,10 @@ public:
 };
 
 
-/// Implements those functions of io_binary that deal with arrays.
+/// Implements those functions of io_binary that deal with memory and arrays.
 /** This class template implements some of the functions of io_binary
-    class template. Those functions input and output arrays of objects.
+    class template. Those functions are: memory functions, input and
+    output arrays of objects.
     This class provides typical implementation of those functions for
     not raw objects but can be used for raw objects too (for raw
     objects we can do this better, see io_binary_raw class template). */
@@ -299,6 +368,12 @@ public:
     /// Calculates the number of chars required to store a given array of objects.
     /** The functions do that by means of a simple loop. */
     static std::size_t calc (const T* x, std::size_t n);
+
+    /// Stores an object state to a memory location.
+    static char* output_mem (char* out, const T& x);
+
+    /// Loads an object state from a memory location.
+    static const char* input_mem (const char* in, T& x);
 
     /// Stores an array of object states to a memory location.
     /** The functions do that by means of a simple loop. */
@@ -395,6 +470,7 @@ public:
     {
         return sizeof(T);
     }
+
 
     /// Calculates the number of chars required to store a given array of objects in The Simple Binary form.
     /** This function calculates precise number of chars that will emit
@@ -711,6 +787,25 @@ inline const char* input_binary
 {
     return input_binary_mem(in, x, n);
 }
+
+
+template <typename T>
+inline char* io_binary_base<T>::output_mem (char* out, const T& x)
+{
+    memory_ostream ms(out);
+    output_binary_stream(ms, x);
+    return ms;
+}
+
+
+template <typename T>
+inline const char* io_binary_base<T>::input_mem (const char* in, T& x)
+{
+    memory_istream ms(in);
+    input_binary_stream(ms, x);
+    return ms;
+}
+
 
 
 } // namespace Arageli

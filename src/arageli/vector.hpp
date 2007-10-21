@@ -2720,23 +2720,6 @@ public:
         else
             return calc_binary(size);
     }
-
-
-    /// Stores vector object state to a memory location. Seft-delimeted binary serialization.
-    /** The function produces output in The Simple Binary format. */
-    static inline char* output_mem (char* out, const vector<T, REFCNT>& x)
-    {
-        typename vector<T, REFCNT>::size_type size = x.size();
-        out = output_binary_mem(out, size);
-        if(size)
-            out = output_binary_mem(out, &*x.begin(), size);
-        return out;
-    }
-
-
-    /// Loads vector object state from a binary stream. Compatible with output_binary_stream.
-    /** The function takes input in The Simple Binary format. */
-    static const char* input_mem (const char* in, vector<T, REFCNT>& x);
 };
 
 

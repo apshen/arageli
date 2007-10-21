@@ -1929,19 +1929,6 @@ Stream& io_binary<matrix<T, REFCNT> >::input_stream (Stream& in, matrix<T, REFCN
 }
 
 
-template <typename T, bool REFCNT>
-const char* io_binary<matrix<T, REFCNT> >::input_mem (const char* in, matrix<T, REFCNT>& x)
-{
-    typename matrix<T, REFCNT>::size_type nrows, ncols;
-    in = input_binary_mem(in, nrows);
-    in = input_binary_mem(in, ncols);
-    x.resize(nrows, ncols);
-    if(x.size())
-        in = input_binary_mem(in, &*x.begin(), x.size());
-    return in;
-}
-
-
 } // namespace Arageli
 
 

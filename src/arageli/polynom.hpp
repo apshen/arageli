@@ -814,22 +814,6 @@ public:
     {
         return calc_binary(x.store);
     }
-
-
-    /// Stores polynom object state to a memory location. Seft-delimeted binary serialization.
-    /** The function produces output in The Simple Binary format. */
-    static inline char* output_mem (char* out, const polynom<F, Config>& x)
-    {
-        return output_binary_mem(out, x.store);
-    }
-
-
-    /// Loads polynom object state from a binary stream. Compatible with output_binary_stream.
-    /** The function takes input in The Simple Binary format. */
-    static const char* input_mem (const char* in, polynom<F, Config>& x)
-    {
-        return input_binary_mem(in, x.store);
-    }
 };
 
 

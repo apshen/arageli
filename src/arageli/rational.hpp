@@ -570,26 +570,6 @@ public:
     {
         return calc_binary(x.numerator()) + calc_binary(x.denominator());
     }
-
-
-    /// Stores rational object state to a memory location. Seft-delimeted binary serialization.
-    /** The function produces output in The Simple Binary format. */
-    static inline char* output_mem (char* out, const rational<T>& x)
-    {
-        out = output_binary_mem(out, x.numerator());
-        out = output_binary_mem(out, x.denominator());
-        return out;
-    }
-
-
-    /// Loads rational object state from a binary stream. Compatible with output_binary_stream.
-    /** The function takes input in The Simple Binary format. */
-    static inline const char* input_mem (const char* in, rational<T>& x)
-    {
-        in = input_binary_mem(in, x.numerator());
-        in = input_binary_mem(in, x.denominator());
-        return in;
-    }
 };
 
 
