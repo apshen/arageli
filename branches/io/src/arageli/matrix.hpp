@@ -2991,23 +2991,6 @@ public:
         else
             return 2*calc_binary(size);
     }
-
-
-    /// Stores matrix object state to a memory location. Seft-delimeted binary serialization.
-    /** The function produces output in The Simple Binary format. */
-    static inline char* output_mem (char* out, const matrix<T, REFCNT>& x)
-    {
-        out = output_binary_mem(out, x.nrows());
-        out = output_binary_mem(out, x.ncols());
-        if(x.size())
-            out = output_binary_mem(out, &*x.begin(), x.size());
-        return out;
-    }
-
-
-    /// Loads matrix object state from a binary stream. Compatible with output_binary_stream.
-    /** The function takes input in The Simple Binary format. */
-    static const char* input_mem (const char* in, matrix<T, REFCNT>& x);
 };
 
 

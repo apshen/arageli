@@ -549,18 +549,6 @@ Stream& io_binary<vector<T, REFCNT> >::input_stream (Stream& in, vector<T, REFCN
 }
 
 
-template <typename T, bool REFCNT>
-const char* io_binary<vector<T, REFCNT> >::input_mem (const char* in, vector<T, REFCNT>& x)
-{
-    typename vector<T, REFCNT>::size_type size;
-    in = input_binary_mem(in, size);
-    x.resize(size);
-    if(size)
-        in = input_binary_mem(in, &*x.begin(), size);
-    return in;
-}
-
-
 #define ARAGELI_VECTOR_MATH_FUNCS1_IMPL(NAME)    \
     template <typename T, bool REFCNT>    \
     vector<T, true> NAME    \

@@ -1577,53 +1577,6 @@ std::size_t io_binary<big_int>::calc (const big_int& x)
 }
 
 
-char* io_binary<big_int>::output_mem (char* out, const big_int& x)
-{
-    int sign = x.number->sign;
-    out = output_binary_mem(out, sign);
-    if(sign)
-    {
-        std::size_t len = x.number->len;    // length in limbs
-        out = output_binary_mem(out, len);
-        out = output_binary_mem(out, x.number->data, len);
-    }
-
-    return out;
-}
-
-
-const char* io_binary<big_int>::input_mem (const char* in, big_int& x)
-{
-    int sign;
-    in = input_binary_mem(in, sign);
-    ARAGELI_ASSERT_ALWAYS(sign == 0 || sign == -1 || sign == +1);
-
-    if(sign)
-    {
-        // The number isn't zero. Read LEN and DIGITS.
-
-        std::size_t len;
-        in = input_binary_mem(in, len);
-        ARAGELI_ASSERT_ALWAYS(len > 0);
-
-        if(x.number->refs == 1 && x.number->len == len)
-            x.number->sign = sign;
-        else
-            x.free_mem_and_alloc_number(sign, x.get_mem_for_data(len), len);
-
-        // Load DIGITS.
-        in = input_binary_mem(in, x.number->data, len);
-    }
-    else
-    {
-        // The number is zero.
-        x = big_int();  // WARNING! replace by big_int::assign_null()
-    }
-
-    return in;
-}
-
-
 }
 
 

@@ -806,16 +806,6 @@ public:
         any function outputs in The Simple Binary format for one big_int object,
         for example, output_binary_mem function. */
     static std::size_t calc (const big_int& x);
-
-
-    /// Stores big_int object state to a memory location. Seft-delimeted binary serialization.
-    /** The function produces output in The Simple Binary format. */
-    static char* output_mem (char* out, const big_int& x);
-
-
-    /// Loads big_int object state from a binary stream. Compatible with output_binary_stream.
-    /** The function takes input in The Simple Binary format. */
-    static const char* input_mem (const char* in, big_int& x);
 };
 
 
