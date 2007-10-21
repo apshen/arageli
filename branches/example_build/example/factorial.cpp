@@ -68,9 +68,9 @@ int main ()
     // But for big numbers (such as our n) the second one takes
     // much less time than the first one:
     cout
-        << "factorial_successive_multiplication takes "
+        << "factorial_successive_multiplication took "
         << tm_fsm.time() << " seconds,\n"
-        << "factorial_even_odd_multiplication takes "
+        << "factorial_even_odd_multiplication took "
         << tm_feom.time() << " seconds.\n"
         << "The second algorithm is " << tm_fsm.time()/tm_feom.time()
         << " times as fast than the first one." << endl;
