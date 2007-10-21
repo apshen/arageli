@@ -64,7 +64,7 @@ int main ()
     // The difference is that the first algorithm relay only on
     // multiplication and increment but the second requires
     // division, shift and other operations.
-    
+
     // But for big numbers (such as our n) the second one takes
     // much less time than the first one:
     cout

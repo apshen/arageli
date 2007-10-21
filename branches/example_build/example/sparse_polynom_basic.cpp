@@ -51,7 +51,7 @@ public:
     GF2 () :
         val(0)
     {}
-    
+
     GF2 (int x) :
         val(x&1)
     {}
@@ -77,13 +77,13 @@ public:
         val = (val-b)&1;
         return *this;
     }
-    
+
     GF2& operator*= (const GF2& b)
     {
         val = (val*b)&1;
         return *this;
     }
-    
+
     GF2& operator/= (const GF2& b)
     {
         val = (val/b)&1;
