@@ -44,6 +44,7 @@
 
 #include <fstream>
 #include <map>
+#include <cmath>
 
 #include "exception.hpp"
 #include "factory.hpp"
@@ -225,7 +226,7 @@ void adv_simplex_method_alg<T, Ctrler>::InitInitialData()
                 m_VarsStatus[i] = VS_ON_UPPER_BOUND;
                 break;
             case VT_DOUBLE_BOUNDED:
-                if (abs<T>(m_LowerBounds[i]) < abs<T>(m_UpperBounds[i]))
+                if (std::abs(m_LowerBounds[i]) < std::abs(m_UpperBounds[i]))
                     m_VarsStatus[i] = VS_ON_LOWER_BOUND;
                 else
                     m_VarsStatus[i] = VS_ON_UPPER_BOUND;
