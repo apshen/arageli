@@ -40,6 +40,7 @@
 #define _ARAGELI__hgcd_hpp_
 
 #include "config.hpp"
+#include "sparse_polynom.hpp"
 
 // REFERENCE ADDITIONAL HEADERS HERE
 
@@ -58,12 +59,48 @@ void emgcd_0(X& x, Y& y,M& u1,M& u2);//truncated version
 template<typename P0,typename P1,typename M>
 void gcd_emgcd_0(P0& p0,P1& p1,M& p2);//,M& p3,M& v1,M& v2,M& w1,M& w2)
 
-//it's wrapper. How to return value by reference?
-//
+//it's wrapper.
 template<typename P>
 P gcd_emgcd(P p0,P p1);
 
 // PLACE ALL DECLARATIONS AND INLINE IMPLEMENTATIONS HERE
+
+namespace _Internal
+{
+    //THESE FUCNTIONS ARE TEMPORARY
+
+    ///P = P * x^m
+    template<typename P,typename D>
+    void poly_mul_1xm(P& poly, const D& m);
+
+    //TODO: make poly_mul_1xm for dense polynom
+
+    ///P = P * x^m for sparse_polynom
+    template<typename T1,typename T2,bool REFCNT,typename D>
+    void poly_mul_1xm(sparse_polynom<T1,T2,REFCNT>& poly, const D& m);
+
+    ///g = u / x^m, u %= x^m , deg(g)=[input]=-1???
+    template<typename G,typename U,typename D>
+    void poly_div_mod_1xm(G& g, U& u,const D& m);
+
+    ///c = u % x^m, u /= x^m , deg(g)=[input]=-1???
+    template<typename G,typename U,typename D>
+    void poly_mod_div_1xm(G& c, U& u,const D& m);
+
+#if 1
+
+    ///g = u / x^m, u %= x^m
+    template<typename GC,typename GD,bool GREFCNT,typename UC, typename UD, bool UREFCNT,typename D>
+    void poly_div_mod_1xm(sparse_polynom<GC, GD, GREFCNT>& g, sparse_polynom<UC, UD, UREFCNT>& u,const D& m);
+
+    ///c = u % x^m, u /= x^m
+    template<typename CC,typename CD,bool CREFCNT,typename UC, typename UD, bool UREFCNT,typename D>
+    void poly_mod_div_1xm(sparse_polynom<CC, CD, CREFCNT>& c, sparse_polynom<UC, UD, UREFCNT>& u,const D& m);
+
+#endif
+
+}//namespace _Internal
+
 
 
 } // namespace Arageli

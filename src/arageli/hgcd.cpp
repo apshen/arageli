@@ -5,7 +5,7 @@
     This file is a part of the Arageli library.
 
     Copyright (C) 2007 Sergey V. Lobanov
-    REFERENCE ADDITIONAL COPYRIGHTS HERE
+
     University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
@@ -61,59 +61,55 @@ void emgcd_0(X& x, Y& y,M& u1,M& u2,M& v1,M& v2,M& w1,M& w2)
 
     X_deg y_deg=y.degree();
     X_deg x_deg=x.degree();
-    //* how to proof correctness with this modification?
-    if(is_null(y_deg)&&(x_deg<=2))//with "&&x_deg<=2" algorithm is correct
+    //*
+    if(is_null(y_deg)&&(x_deg<=2))//
     {
-        //std::cout<<" | x="<<x<<" | y="<<y<<"\n";
-        u1=unit<M>();//1*x^0
-        u2=null<M>();//0*x^0
-        w1=null<M>();
+        //std::cout<<"PERF2\n";
+        u1=unit<M>(x);//1*x^0
+        u2=null<M>(x);//0*x^0
+        w1=null<M>(x);
         v1=inverse(y);//(1/y)*x^0
         v2.swap(-x);//v2=-x;//is it optimal construction?
         w2.swap(y);
         return;
     }
-    /**/
-    ////if(prn) std::cout<<"Start emgcd.x="<<x<<" y="<<y<<"\n";
+
     ARAGELI_ASSERT_0(x_deg>y_deg);//y=0 is correct
     X_deg m=(x_deg/2)+(x_deg%2);
 
     if(y_deg<m/*||is_opposite_unit(y_deg)*/)
     {
+        //std::cout<<"PERF\n";
         //exit
-        u1.swap(x);//u1=x;
-        u2.swap(y);
-        w1=unit<M>();
-        w2=null<M>();
-        v1=null<M>();
-        v2=unit<M>();
+        u1.swap(x);
+        u2.swap(y);//u2=y;
+        w1=unit<M>(u1);//w1=1*x^0
+        w2=null<M>(u1);//w2=0*x^0
+        v1=null<M>(u1);
+        v2=unit<M>(u1);
+        //std::cout<<"v2="<<v2<<"\n";
         //return unit matrix
     }
     else
     {
-        //if(prn) std::cout<<"(";
-        X::monom x_m(unit<X::monom::coef_type>(),m);//x^m
-        //X b0=x/x_m;//TODO: optimize it!
-        X c0=x%x_m;//TODO: optimize it!
-        x/=x_m;//TODO: optimize it!
-        //Y b1=y/x_m;
-        Y c1=y%x_m;//TODO: optimize it!
-        y/=x_m;//TODO: optimize it!
+		X c0;
+		_Internal::poly_mod_div_1xm(c0,x,m);
+		X c1;
+		_Internal::poly_mod_div_1xm(c1,y,m);
         M u11,u12,v11,v12,w11,w12;
         //if(prn) std::cout<<")\n";
-        emgcd_0(x,y,u11,u12,v11,v12,w11,w12);//(x,y) was (b0,b1)
+        emgcd_0(x,y,u11,u12,v11,v12,w11,w12);
         //if(prn) std::cout<<"&";
-        u11*=x_m;//TODO: optimize it!
+		_Internal::poly_mul_1xm(u11,m);
         u11+=w11*c0;
         u11+=v11*c1;
-        u12*=x_m;//TODO: optimize it!
+		_Internal::poly_mul_1xm(u12,m);
         c0*=w12;//TODO: maybe change to u12+=w12*c0,...
         c1*=v12;
         u12+=c0;
         u12+=c1;
-        //M e=u12;
+
         M::degree_type e_deg=u12.degree();
-        //if(prn) std::cout<<"@\n";
         if(e_deg<m)
         {
             u1.swap(u11);//u1=u11;
@@ -125,33 +121,30 @@ void emgcd_0(X& x, Y& y,M& u1,M& u2,M& v1,M& v2,M& w1,M& w2)
         }
         else
         {
-            //if(prn) std::cout<<"$";
             M q=u11/u12;//quotient
-            u11-=q*u12;
-            //M f=u11-q*u12;//remainder
+            u11-=q*u12;//remainder
             X_deg k=m*2-e_deg;
-            X::monom x_k(unit<X::monom::coef_type>(),k);
-            M g0=u12/x_k;//TODO: optimize it!
-            M g1=u11/x_k;//TODO: optimize it!
-            //M h0=u12%x_k;//TODO: optimize it!
-            //M h1=u11%x_k;//TODO: optimize it!
-            u12%=x_k;//TODO: optimize it!
-            u11%=x_k;//TODO: optimize it!
+			M g0;
+			_Internal::poly_div_mod_1xm(g0,u12,k);
+			M g1;
+			_Internal::poly_div_mod_1xm(g1,u11,k);
+
             M u21,u22,v21,v22,w21,w22;
-            //if(prn) std::cout<<"?\n";
             emgcd_0(g0,g1,u21,u22,v21,v22,w21,w22);
             //writing results: matrix [w21 w22; v21 v22]*[0 1;1 -q]*[w11 w12;v21 v22]
-            //if(prn) std::cout<<"!";
-            u21*=x_k;//TODO: optimize it!
-            u22*=x_k;//TODO: optimize it!
+			_Internal::poly_mul_1xm(u21,k);
+			_Internal::poly_mul_1xm(u22,k);
+
             u21+=w21*u12;
             u21+=v21*u11;
             u1.swap(u21);//u1=u21;
+
             u12*=w22;
             u11*=v22;
             u22+=u12;
             u22+=u11;
             u2.swap(u22);//u2=u22;
+
             //M w11mqw12=w11-q*w12;
             //M v11mqv12=v11-q*v12;
             w11-=q*w12;
@@ -173,13 +166,10 @@ void emgcd_0(X& x, Y& y,M& u1,M& u2,M& v1,M& v2,M& w1,M& w2)
             v11+=v12;
             v2=v11;
             v2.swap(v11);//v2=v11;
-            //if(prn) std::cout<<"%\n";
-            //debug in release mode
             //__asm int 3
             //exit
         }
     }
-    ////if(prn) std::cout<<"Finish emgcd.x="<<x<<" y="<<y<<" "<<" u1="<<u1<<" u2="<<u2<<"\n";
     ARAGELI_ASSERT_1((u1.degree()>=m)&&(m>u2.degree()));//additional verification for algorithm correctness
 }
 
@@ -189,20 +179,15 @@ void emgcd_0(X& x, Y& y,M& u1,M& u2)//truncated version
 {
     typedef typename X::degree_type X_deg;
     typedef typename Y::degree_type Y_deg;
-    ////if(prn) std::cout<<"x="<<x<<"\ny="<<y<<"\n";
 
     X_deg y_deg=y.degree();
     X_deg x_deg=x.degree();
-    //* how to proof correctness with this modification?
     if(is_null(y_deg)&&(x_deg<=2))//with "&&x_deg<=2" algorithm is correct
     {
-        //std::cout<<" | x="<<x<<" | y="<<y<<"\n";
-        u1=unit<M>();//1*x^0
-        u2=null<M>();//0*x^0
+        u1=unit<M>(x);//1*x^0
+        u2=null<M>(x);//0*x^0
         return;
     }
-    /**/
-    ////if(prn) std::cout<<"Start emgcd.x="<<x<<" y="<<y<<"\n";
     ARAGELI_ASSERT_0(x_deg>y_deg);//y=0 is correct
     X_deg m=(x_deg/2)+(x_deg%2);
 
@@ -215,30 +200,26 @@ void emgcd_0(X& x, Y& y,M& u1,M& u2)//truncated version
     }
     else
     {
-        //if(prn) std::cout<<"(";
-        X::monom x_m(unit<X::monom::coef_type>(),m);//x^m
-        //X b0=x/x_m;//TODO: optimize it!
-        X c0=x%x_m;//TODO: optimize it!
-        x/=x_m;//TODO: optimize it!
-        //Y b1=y/x_m;
-        Y c1=y%x_m;//TODO: optimize it!
-        y/=x_m;//TODO: optimize it!
+        X c0;
+        _Internal::poly_mod_div_1xm(c0,x,m);
+        X c1;
+        _Internal::poly_mod_div_1xm(c1,y,m);
         M u11,u12,v11,v12,w11,w12;
-        //if(prn) std::cout<<")\n";
-        emgcd_0(x,y,u11,u12,v11,v12,w11,w12);//(x,y) was (b0,b1)
-        //if(prn) std::cout<<"&";
-        u11*=x_m;//TODO: optimize it!
+
+        emgcd_0(x,y,u11,u12,v11,v12,w11,w12);//call "full" version
+
+        _Internal::poly_mul_1xm(u11,m);
+
         u11+=w11*c0;
         u11+=v11*c1;
-        //M d=u11;//copy?
-        u12*=x_m;//TODO: optimize it!
+
+        _Internal::poly_mul_1xm(u12,m);
+
         c0*=w12;//TODO: maybe change to u12+=w12*c0,...
         c1*=v12;
         u12+=c0;
         u12+=c1;
-        //M e=u12;
         M::degree_type e_deg=u12.degree();
-        //if(prn) std::cout<<"@\n";
         if(e_deg<m)
         {
             u1.swap(u11);//u1=u11;
@@ -246,32 +227,34 @@ void emgcd_0(X& x, Y& y,M& u1,M& u2)//truncated version
         }
         else
         {
-            //if(prn) std::cout<<"$";
             M q=u11/u12;//quotient
-            u11-=q*u12;
-            //M f=u11-q*u12;//remainder
+            u11-=q*u12;//remainder
+
             X_deg k=m*2-e_deg;
-            X::monom x_k(unit<X::monom::coef_type>(),k);
-            M g0=u12/x_k;//TODO: optimize it!
-            M g1=u11/x_k;//TODO: optimize it!
-            u12%=x_k;//TODO: optimize it!
-            u11%=x_k;//TODO: optimize it!
+
+			M g0;
+			_Internal::poly_div_mod_1xm(g0,u12,k);
+
+            M g1;
+			_Internal::poly_div_mod_1xm(g1,u11,k);
+
             M u21,u22,v21,v22,w21,w22;
-            ////if(prn) std::cout<<"?\n";
             emgcd_0(g0,g1,u21,u22,v21,v22,w21,w22);
-            //writing results: matrix [w21 w22; v21 v22]*[0 1;1 -q]*[w11 w12;v21 v22]
-            ////if(prn) std::cout<<"!";
-            u21*=x_k;//TODO: optimize it!
-            u22*=x_k;//TODO: optimize it!
+
+			_Internal::poly_mul_1xm(u21,k);
+
+			_Internal::poly_mul_1xm(u22,k);
+
             u21+=w21*u12;
             u21+=v21*u11;
             u1.swap(u21);//u1=u21;
+
             u12*=w22;
             u11*=v22;
             u22+=u12;
             u22+=u11;
             u2.swap(u22);//u2=u22;
-            ////if(prn) std::cout<<"%\n";
+
             //exit
         }
     }
@@ -328,22 +311,149 @@ P gcd_emgcd(P p0,P p1)
         P tmp=p1%p0;//it is not cheap operation
         if(is_null(tmp))
         {
-            return p1/(p1.leading_coef_cpy());
+            //return p1/(p1.leading_coef_cpy());
+			p1*=inverse(p1.leading_coef());
+			ARAGELI_ASSERT_1(is_unit(p1.leading_coef()));
+			return p1;
+
             //std::cout<<" # ";
         }
         else
             gcd_emgcd_0(p1,tmp,p2);//,p3,v1,v2,w1,w2);
     }
 
-    ARAGELI_ASSERT_1(is_null(p3));
+    //ARAGELI_ASSERT_1(is_null(p3));
     //std::cout<<"!!!"<<p2<<"\n";
-    p2/=p2.leading_coef_cpy();
+    //p2/=p2.leading_coef_cpy();
+	p2*=inverse(p2.leading_coef());
+	ARAGELI_ASSERT_1(is_unit(p2.leading_coef()));
     //std::cout<<"!!!!"<<p2<<"\n";
     //std::cout<<" ^ ";
     return p2;
 
 }
 
+
+namespace _Internal
+{
+
+
+    template<typename P,typename D>
+    void poly_mul_1xm(P& poly, const D& m)
+    {
+        ARAGELI_ASSERT_0(!is_negative(m));
+        //ARAGELI_ASSERT_ALWAYS(!"ERROR");
+        poly*=monom<P::coef_type,P::degree_type>(unit<P::coef_type>(p),m);
+    }
+
+    //TODO: make poly_mul_1xm for dense polynom
+
+
+    template<typename T1,typename T2,bool REFCNT,typename D>
+    void poly_mul_1xm(sparse_polynom<T1,T2,REFCNT>& poly, const D& m)
+    {
+        ARAGELI_ASSERT_0(!is_negative(m));
+        typedef typename sparse_polynom<T1,T2,REFCNT>::monom_iterator iter;
+        for (iter i = poly.monoms_begin(), j = poly.monoms_end(); i != j; ++i)
+            i->degree() += m;
+    }
+
+    template<typename G,typename U,typename D>
+    void poly_div_mod_1xm(G& g, U& u,const D& m)
+    {
+        if(is_null(u))
+            return;
+        monom<U::coef_type,U::degree_type> x_m(unit<U::coef_type>(u.leading_coef()),m);
+        g = u / x_m;
+        u %= x_m;
+    }
+
+    template<typename G,typename U,typename D>
+    void poly_mod_div_1xm(G& c, U& u,const D& m)
+    {
+        if(is_null(u))
+            return;
+        monom<U::coef_type,U::degree_type> x_m(unit<U::coef_type>(u.leading_coef()),m);
+        c = u % x_m;
+        u /= x_m;
+    }
+
+#if 1
+
+    //Функция будет работать, если мономы хранятся в прямом порядке и доступен оператор-- для итератора
+    template<typename GC,typename GD,bool GREFCNT,typename UC, typename UD, bool UREFCNT,typename D>
+    void poly_div_mod_1xm(sparse_polynom<GC, GD, GREFCNT>& g, sparse_polynom<UC, UD, UREFCNT>& u,const D& m)
+    {
+        ARAGELI_ASSERT_0(is_null(g));//deg(g) must be .eq. -1
+        //ARAGELI_ASSERT_0(!is_null(u.degree()));
+        //ARAGELI_ASSERT_0(!is_null(u));
+        if(is_null(u))
+            return;
+
+        if(is_null(m))
+        {
+            u.swap(g);
+            return;
+        }
+
+        typedef sparse_polynom<UC, UD, UREFCNT>::monom_iterator iter;
+        iter i=u.monoms_end();
+        iter f=u.monoms_begin();
+        //std::cout<<"m="<<m<<" deg_u="<<u.degree()<<" deg_g="<<g.degree()<<"\n";
+        do 
+        {
+
+            i--;
+            if(i->degree() >= m)
+                i->degree() -= m;
+            else
+            {
+                g.addsub(u,++i,u.monoms_end(),norm_monom_seq);//move u/x^m to g
+                return;
+            }
+
+        } while(i!=f);
+
+        u.swap(g);//в случае если степень младшего монома .ge. m
+    }
+
+    //Функция будет работать, если мономы хранятся в прямом порядке и доступен оператор-- для итератора
+    template<typename CC,typename CD,bool CREFCNT,typename UC, typename UD, bool UREFCNT,typename D>
+    void poly_mod_div_1xm(sparse_polynom<CC, CD, CREFCNT>& c, sparse_polynom<UC, UD, UREFCNT>& u,const D& m)
+    {
+        ARAGELI_ASSERT_0(is_null(c));//deg(c) must be .eq. -1
+        //ARAGELI_ASSERT_0(!is_null(u.degree()));
+        //ARAGELI_ASSERT_0(!is_null(u));
+        if(is_null(u)||is_null(m))
+            return;
+
+        //if(is_null(m))
+        //	return;
+
+        //std::cout<<"m="<<m<<"\n";
+
+        typedef sparse_polynom<UC, UD, UREFCNT>::monom_iterator iter;
+        iter i=u.monoms_end();
+        iter f=u.monoms_begin();
+        do 
+        {
+
+            i--;
+            if(i->degree() >= m)
+                i->degree() -= m;
+            else
+            {
+                c.addsub(u,f,++i,norm_monom_seq);//move u%x^m to c
+                return;
+            }
+
+        } while(i!=f);
+
+        //swap is not required!
+    }
+#endif
+
+}//namespace _Internal
 
 
 // PLACE ALL TEMPLATE NOT INLINE IMPLEMENTATIONS HERE
