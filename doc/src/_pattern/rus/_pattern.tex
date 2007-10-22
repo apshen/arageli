@@ -1,0 +1,102 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   _pattern.tex
+%
+%   ADD A BRIEF DESCRIPTION OF THE FILE HERE
+%
+%   This is a part of the Arageli library documentation.
+%
+%   REFERENCE YOUR COPYRIGHTS HERE
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[oneside,a4paper,10pt]{book}
+
+\usepackage[cp1251]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{listings}
+\usepackage{afterpage}
+\usepackage{amsmath}
+\usepackage[unicode,bookmarks,ps2pdf]{hyperref}
+\usepackage{pstricks}
+
+
+% Для создания предметного указателя.
+% См. ниже включение предметного указателя в текст.
+%\makeindex
+
+
+\frenchspacing
+\righthyphenmin=2
+\widowpenalty=1000
+
+
+% Для включения только некоторых глав и секций.
+%\includeonly{
+%}
+
+
+\lstdefinestyle{ArageliLstDefault}{
+    language=C++,
+    tabsize=4,
+    showstringspaces=false,
+    breaklines=true,
+    commentstyle=\textup,
+    identifierstyle=\textit,
+    columns=fullflexible,
+    mathescape=true,
+    escapechar=\@,
+    numberblanklines=false,
+    numberstyle=\tiny,
+    numbersep=5pt,
+    escapeinside={/*-}{-*/}     % для пометок строк исходного кода командой \label
+}
+
+\lstdefinestyle{LstSmallStyle}{}
+
+\lstdefinestyle{LstMiddleStyle}{
+    float=ht,
+    frame=tb,
+    numbers=left
+}
+
+\lstdefinestyle{LstLongStyle}{
+    frame=tb,
+    numbers=left
+}
+
+\renewcommand\lstlistingname{Листинг}
+
+\lstset{style=ArageliLstDefault}
+
+
+\begin{document}
+
+\title{
+    {
+        \fontsize{35.83}{42.996}\sffamily\bfseries
+        Заголовок
+    }
+    \\[1cm]
+    \sffamily\bfseries
+    Подзаголовок
+    \vspace{2cm}
+}
+
+\author{А.\,А.\,Автор}
+\date{Нижний Новгород, 2007}
+
+\maketitle
+\tableofcontents
+
+
+% Разместите здесь весь текст документа или включите
+% все необходимые файлы с главами и секциями.
+%\include{included_pattern}
+
+
+% Для включения предметного указателя.
+%\input{_pattern.ind}
+
+\end{document}
