@@ -34,10 +34,12 @@ INCLUDE_DIR=../src
 LIBRARY_DIR=../lib
 
 all: \
+     $(BIN)/adv_simplex_method\
      $(BIN)/big_int_basic\
      $(BIN)/big_int_rational_creation\
      $(BIN)/big_int_rational_functions\
      $(BIN)/big_int_rational_operations\
+     $(BIN)/factorial\
      $(BIN)/gram_schmidt\
      $(BIN)/knuth_supergenerator\
      $(BIN)/lll_reduction\
@@ -68,7 +70,6 @@ all: \
      $(BIN)/vector_matrix_arithmetic\
      $(BIN)/vector_matrix_creation\
      $(BIN)/vector_matrix_io\
-     $(BIN)/adv_simplex_method\
 
 $(BIN)/adv_simplex_method: adv_simplex_method.cpp adv_simplex_method.task.txt
 	$(CXX) -I"$(INCLUDE_DIR)" adv_simplex_method.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
@@ -84,6 +85,9 @@ $(BIN)/big_int_rational_functions: big_int_rational_functions.cpp
 
 $(BIN)/big_int_rational_operations: big_int_rational_operations.cpp
 	$(CXX) -I"$(INCLUDE_DIR)" big_int_rational_operations.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+$(BIN)/factorial: factorial.cpp
+	$(CXX) -I"$(INCLUDE_DIR)" factorial.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
 
 $(BIN)/gram_schmidt: gram_schmidt.cpp
 	$(CXX) -I"$(INCLUDE_DIR)" gram_schmidt.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
