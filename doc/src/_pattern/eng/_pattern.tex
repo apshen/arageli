@@ -1,0 +1,98 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   _pattern.tex
+%
+%   ADD A BRIEF DESCRIPTION OF THE FILE HERE
+%
+%   This is a part of the Arageli library documentation.
+%
+%   REFERENCE YOUR COPYRIGHTS HERE
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[oneside,a4paper,10pt]{book}
+
+\usepackage{listings}
+\usepackage{afterpage}
+\usepackage{amsmath}
+\usepackage[unicode,bookmarks,ps2pdf]{hyperref}
+\usepackage{pstricks}
+
+
+% To create subject index.
+% See including of the index below.
+%\makeindex
+
+
+\widowpenalty=1000
+
+
+% To include particular files only.
+%\includeonly{
+%}
+
+
+\lstdefinestyle{ArageliLstDefault}{
+    language=C++,
+    tabsize=4,
+    showstringspaces=false,
+    breaklines=true,
+    commentstyle=\textup,
+    identifierstyle=\textit,
+    columns=fullflexible,
+    mathescape=true,
+    escapechar=\@,
+    numberblanklines=false,
+    numberstyle=\tiny,
+    numbersep=5pt,
+    escapeinside={/*-}{-*/}     % useful to mark source lines by \label command
+}
+
+\lstdefinestyle{LstSmallStyle}{}
+
+\lstdefinestyle{LstMiddleStyle}{
+    float=ht,
+    frame=tb,
+    numbers=left
+}
+
+\lstdefinestyle{LstLongStyle}{
+    frame=tb,
+    numbers=left
+}
+
+\renewcommand\lstlistingname{Listing}
+
+\lstset{style=ArageliLstDefault}
+
+
+\begin{document}
+
+\title{
+    {
+        \fontsize{35.83}{42.996}\sffamily\bfseries
+        Title
+    }
+    \\[1cm]
+    \sffamily\bfseries
+    Subtitle
+    \vspace{2cm}
+}
+
+\author{A.\,A.\,Author}
+\date{Nizhni Novgorod, 2007}
+
+\maketitle
+\tableofcontents
+
+
+% Place the whole text of the document here or include
+% all necesary files with chapters and sections.
+%\include{included_pattern}
+
+
+% To include the subject index.
+%\input{_pattern.ind}
+
+\end{document}
