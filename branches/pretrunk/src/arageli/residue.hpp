@@ -46,6 +46,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <limits>
 
 #include "_utility.hpp"
 #include "factory.hpp"
@@ -89,7 +90,8 @@ struct residue_config_default
 };
 
 
-// Residue class.
+/// Residue class.
+/** If T is a number, it should be a signed type. */
 template
 <
     typename T,
@@ -115,14 +117,26 @@ public:
     residue () :
         value_m(null<T>()),
         module_m(null<M>())
-    {}
+    {
+        ARAGELI_ASSERT_0
+        (
+            !std::numeric_limits<T>::is_specialized ||
+            std::numeric_limits<T>::is_signed
+        );
+    }
 
     /// Creates common object of type T. Without module assigned.
     template <typename T1>
     residue (const T1& x) :
         value_m(x),
         module_m(null<M>())
-    {}
+    {
+        ARAGELI_ASSERT_0
+        (
+            !std::numeric_limits<T>::is_specialized ||
+            std::numeric_limits<T>::is_signed
+        );
+    }
 
     // Special copy constructor.
     template <typename T1>
@@ -130,6 +144,12 @@ public:
         value_m(x.value()),
         module_m(x.module())
     {
+        ARAGELI_ASSERT_0
+        (
+            !std::numeric_limits<T>::is_specialized ||
+            std::numeric_limits<T>::is_signed
+        );
+
         config_m.init(value_m, module_m);
     }
 
@@ -330,6 +350,60 @@ public:
     operator T () const
     {
         return value();
+    }
+};
+
+
+/// Specialization of a common factory template for residue.
+/** All members with additional optional parameter gives
+    an object with the same module value as the argument has. */
+template <typename T, typename M, typename Config>
+struct factory<residue<T, M, Config> >
+{
+private:
+    typedef residue<T, M, Config> TT;
+public:
+
+    /// True iff the functions of this class has a meaning.
+    static const bool is_specialized = true;
+
+    /// Unit element (1).
+    static const TT& unit ()
+    {
+        static const TT unit_s = TT(Arageli::unit<T>());
+        return unit_s;
+    }
+
+    /// Unit element (1) by a pattern.
+    static TT unit (const TT& x)
+    {
+        return TT(Arageli::unit(x.value()), x.module());
+    }
+
+    /// Minus unit element (-1).
+    static const TT& opposite_unit ()
+    {
+        static const TT opposite_unit_s = TT(Arageli::opposite_unit<T>());
+        return opposite_unit_s;
+    }
+
+    /// Minus unit element (-1) by a pattern.
+    static TT opposite_unit (const TT& x)
+    {
+        return TT(Arageli::opposite_unit(x.value()), x.module());
+    }
+
+    /// Null element (0).
+    static const TT& null ()
+    {
+        static const TT null_s = TT(Arageli::null<T>());
+        return null_s;
+    }
+
+    /// Null element (0) by a pattern.
+    static TT null (const TT& x)
+    {
+        return TT(Arageli::null(x.value()), x.module());
     }
 };
 
