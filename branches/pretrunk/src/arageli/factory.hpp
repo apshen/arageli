@@ -60,7 +60,8 @@ namespace Arageli
 /// Common implementation of factory for the specific type.
 /** This default implementaion uses literals 1, 0 and -1 to construct
     unit, null and opposite_unit respectively. */
-template <typename T> struct factory
+template <typename T>
+struct factory
 {
     /// True iff the functions of this class has a meaning.
     static const bool is_specialized = true;
