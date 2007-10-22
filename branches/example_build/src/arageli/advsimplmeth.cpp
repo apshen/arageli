@@ -848,6 +848,7 @@ int adv_simplex_method_alg<T, Ctrler>::LoadTaskFromFile(char* filename)
             e,
             std::string("Cannot open the file ") + filename + "."
         );
+        throw e;
     }
     std::string curr_string, curr_token, curr_var_name;
     std::string curr_constraint_name;
