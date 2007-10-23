@@ -29,10 +29,10 @@
 
 cd ../bin
 
-IF EXIST ../examples/%1.cpp.in.txt (
-%1.exe < ../examples/%1.cpp.in.txt > %1.exe.out
+IF EXIST ../example/%1.cpp.in.txt (
+%1.exe < ../example/%1.cpp.in.txt > %1.exe.out.txt
 ) ELSE (
-%1.exe > %1.exe.out
+%1.exe > %1.exe.out.txt
 )
 
 cd ../build
