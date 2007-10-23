@@ -38,7 +38,7 @@ int main ()
     // and the algorithm based on 2s isolation --
     // factorial_even_odd_multiplication.
 
-    big_int n = 50000;
+    big_int n = 20000;
 
     // Compute factorial of n with two algorithms and measure
     // how long it takes.
