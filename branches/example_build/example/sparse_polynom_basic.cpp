@@ -125,6 +125,19 @@ inline std::ostream& operator<< (std::ostream& out, GF2& a)
     return out << int(a);
 }
 
+// The following several functions are necessary to correct printing of
+// polynomial with coefficient from GF2.
+
+inline bool is_negative (const GF2& a)
+{
+    return false;
+}
+
+inline bool is_opposite_unit (const GF2& a)
+{
+    return false;
+}
+
 
 void over_GF2 ()
 {
@@ -181,7 +194,7 @@ void the_second_simple_example ()
 
 int main ()
 {
-    the_first_simple_example();
+    //the_first_simple_example();
     over_GF2();
     the_second_simple_example();
 }
