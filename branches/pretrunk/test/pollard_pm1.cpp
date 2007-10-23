@@ -39,8 +39,8 @@ TEST_FUNCTION(pollard_pm1, "Test pollard_pm1 algorithm.")
     int i = 10;
     while(i)
     {
-        big_int q1 = rand(INT_MAX);
-        big_int q2 = rand(INT_MAX);
+        big_int q1 = rand(INT_MAX-1);
+        big_int q2 = rand(INT_MAX-1);
         big_int test = q1*q2;
         long inter_num = 1000;
         big_int result = pollard_pm1(test, inter_num);
