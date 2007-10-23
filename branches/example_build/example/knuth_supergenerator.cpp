@@ -1,6 +1,8 @@
+#include <iostream>
 #include <arageli/arageli.hpp>
 
 using namespace Arageli;
+using std::cout;
 
 
 int main ()
@@ -90,5 +92,8 @@ int main ()
     K12:
         x = ((x * (x - 1)) / 100000) % big_int("10000000000");
     }
+
+    cout << x << '\n';
+
     return 0;
 }
