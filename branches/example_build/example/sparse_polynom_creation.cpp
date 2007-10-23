@@ -61,7 +61,7 @@ int main ()
 
     sparse_polynom<double> FR = R;
     cout << "A polynomial converted from another = "
-        << endl << FR << endl << endl;
+        << endl << FR << endl;
 
     return 0;
 }

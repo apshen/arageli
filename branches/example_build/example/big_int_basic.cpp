@@ -112,10 +112,12 @@ int main()
 
     for(;;)
     {
-        cout << "a..";
+        cout << '\n';
+        cout << "a: ";
         cin >> a;
-        cout << "b..";
+        cout << "b: ";
         cin >> b;
+        cout << '\n';
 
         if (a == 0 && b == 0)break;
 

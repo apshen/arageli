@@ -32,6 +32,7 @@ int main ()
     factorize(fermas_number, factorization);
     cout << fermas_number << " = ";
     output_list(cout, factorization, "", "", "*");
+    cout << endl;
 
     return 0;
 }

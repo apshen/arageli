@@ -21,7 +21,8 @@ int main ()
         << "\nf(x)/g(x) = " << f/g
         << "\nf(x)%g(x) = " << f%g
         << "\nGCD(f(x), g(x)) = " << gcd(f, g)
-        << "\ndividing is valid: " << boolalpha << ((f/g)*g + f%g == f);
+        << "\ndividing is valid: " << boolalpha << ((f/g)*g + f%g == f)
+        << "\n";
 
     return 0;
 }

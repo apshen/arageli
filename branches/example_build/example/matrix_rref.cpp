@@ -33,6 +33,7 @@ int main ()
     cout << "det(A) = " << d << endl << endl;
 
     cout << "The result is " << boolalpha << (A*A_inv).is_unit();
+    cout << endl;
 
     return 0;
 }

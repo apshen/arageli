@@ -34,6 +34,7 @@ int main()
     cout << "V = " << V << endl << endl;
     cout << "Check for gcd(P, Q) == P*U + Q*V: ";
     cout << boolalpha << (pq == P*U + Q*V);
+    cout << endl;
 
     return 0;
 }

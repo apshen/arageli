@@ -44,7 +44,7 @@ int main ()
     // Now S can contain monomials with equal degrees
     // We have to reduce S to its canonical form
     S.normalize();
-    cout << "All degrees modulo 5 = " << S << endl << endl;
+    cout << "All degrees modulo 5 = " << S << endl;
 
     return 0;
 }
