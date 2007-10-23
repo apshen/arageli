@@ -1,3 +1,13 @@
+/*
+    Note for Microsoft Visual Studio users.
+
+    To run this example directly from MSVS IDE you should
+    set correct value for working directory path.
+    In MSVS 2005 IDE go to adv_simple_method Property Pages ->
+    Configuration Properties -> Debugging.
+    Set Working Directory field to "..\.." (without quotes).
+*/
+
 #include <iostream>
 #include <fstream>
 #include <arageli/arageli.hpp>
