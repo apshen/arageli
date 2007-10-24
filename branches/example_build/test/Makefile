@@ -40,7 +40,7 @@ all: ../bin/$(tests_name)
 ../bin/$(tests_name): ../tool/ts/bin/libts.a ../lib/libtestarageli.a $(patsubst %.cpp,%.o, $(wildcard $(addsuffix \
                 /*.cpp,$(test_dirs))))
 	$(CXX) -o ../bin/$(tests_name) $(patsubst %.cpp,%.o, $(wildcard \
-    $(addsuffix /*.cpp,$(test_dirs)))) -L "../lib" -L "../tool/ts/bin/" -l "testarageli" -l "ts"
+    $(addsuffix /*.cpp,$(test_dirs)))) -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
 
 ../tool/ts/bin/libts.a:
 	$(MAKE) -C ../tool/ts/src/ts/
@@ -48,12 +48,20 @@ all: ../bin/$(tests_name)
 %.o:%.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@ -I"../src/" -I"../tool/ts/src/"
 
-pollard: t_fft_multiplication.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
-	$(CXX) -o ../bin/pollard_test t_fft_multiplication.o -L "../lib" -L "../tool/ts/bin/" -l "testarageli" -l "ts"
+pollard_pm1: pollard_pm1.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
+	$(CXX) -o ../bin/pollard_pm1 pollard_pm1.o -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
+	../bin/pollard_pm1
+
+pollard: fft_multiplication.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
+	$(CXX) -o ../bin/pollard_test fft_multiplication.o -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
 	../bin/pollard_test
 
-karatsuba: t_karatsuba.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
-	$(CXX) -o ../bin/karatsuba_test t_karatsuba.o -L "../lib" -L "../tool/ts/bin/" -l "testarageli" -l "ts"
+rho_pollard_function: rho_pollard_function.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
+	$(CXX) -o ../bin/rho_pollard_function rho_pollard_function.o -L "../lib" -L "../tool/ts/bin/" -l "testarageli" -l "ts"
+	../bin/rho_pollard_function
+
+karatsuba: karatsuba.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
+	$(CXX) -o ../bin/karatsuba_test karatsuba.o -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
 	../bin/karatsuba_test
 
 ../lib/libtestarageli.a:

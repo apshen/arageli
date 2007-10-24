@@ -88,6 +88,11 @@ bool test ()
     vector<T1> vt1a = "(1, 2, 3, 4)";
     vector<T2> vt2a = "(5, 6, 7, 8)";
 
+    // This condition is satisfied only if we have mixed computation
+    // mechanism alive. But Arageli doesn't have it now yet; and this
+    // section is commented out.
+    #if 0
+
     if
     (
         typeid(typename binary_function_traits
@@ -106,6 +111,8 @@ bool test ()
 
         return true;
     }
+
+    #endif
 
     return
         test_particular

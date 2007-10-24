@@ -52,7 +52,7 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
         const unsigned int num_lengths = 200000;
         // generate two random integers approximately with equal lengths
         big_int a = big_int::random_with_length(num_lengths),
-            b = big_int::random_with_length(num_lengths);
+                b = big_int::random_with_length(num_lengths);
         // compute digit length
         const unsigned digit_len = sizeof(_Internal::digit)*8;
         unsigned long mask = 0;             // mask for one digit
@@ -131,7 +131,5 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
     }
 
     return is_ok ? resOK : resFAIL;
-
-    return resOK;
 }
 
