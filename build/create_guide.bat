@@ -27,8 +27,26 @@
 @rem
 @rem *****************************************************************************
 
+@rem Building "Arageli: a Library for Algebraic Computations" paper.
+
 pdflatex ..\doc\src\arageli_overview_announce_preprint.tex
 pdflatex ..\doc\src\arageli_overview_announce_preprint.tex
 del arageli_overview_announce_preprint.aux
 del arageli_overview_announce_preprint.log
 move arageli_overview_announce_preprint.pdf ..\doc\
+
+@rem Building "Arageli Coding Guidelines".
+
+cd ..\doc\src\acg\rus
+latex acg.tex
+latex acg.tex
+dvips acg.dvi
+ps2pdf acg.ps
+del acg.aux
+del acg.log
+del acg.toc
+del acg.dvi
+del acg.ps
+del acg.out
+move acg.pdf ..\..\..
+cd ..\..\..\..\build
