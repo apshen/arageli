@@ -189,6 +189,7 @@ vector<sparse_polynom<T> > berlekamp (const sparse_polynom<T>& f)
     ARAGELI_TM_PRINT("Preparing to start null_spase_basis . Time="<<time(0)-stbh);
     //vector< sparse_polynom<T> > v = null_space_basis(Q - matrix<T>(Q.length(), eye));
     vector< sparse_polynom<T> > v = null_space_basis(Q);
+    //output_aligned(std::cerr, v);
     ARAGELI_TM_PRINT("null_spase_basis finished . Time="<<time(0)-stbh);
     Q.assign_fromsize(0);//delete from memory
     //com std::cout << v.length() << " factors" <<std::endl;//COUTCOM
@@ -350,7 +351,22 @@ matrix<T> null_space_basis_into_matrix (const matrix<T>& A)
     //rref(A, rref_A, A_inv, basis, d);
     wrapper_my_rref_mod(A, rref_A, basis);
 
-    matrix<T> Q(A.ncols(), A.ncols() - basis.length());
+    // wrapper_my_rref_mod function doesn't seem to set
+    // correct module value for all the elements. Set them.
+    for(typename matrix<T>::iterator i = rref_A.begin(); i != rref_A.end(); ++i)
+    {
+        i->module() = A(0, 0).module();
+        i->normalize(); // is it necessary?
+    }
+
+    //output_aligned(std::cerr << "\nrref_A = \n", rref_A);
+
+    // This is for the next statment where we take one of the elements
+    // of A matrix. If A is supposed to be sometimes empty,
+    // replace this assert by an if-statement with the next statment.
+    ARAGELI_ASSERT_0(!A.is_empty());
+
+    matrix<T> Q(A.ncols(), A.ncols() - basis.length(), null(A(0, 0)));
 
     for (std::size_t j = 0, bj = 0, nbj = 0; j < rref_A.ncols(); j++)
     {
@@ -388,6 +404,7 @@ vector<sparse_polynom<T> > null_space_basis (const matrix<T>& A)
 {
     ARAGELI_TM_PRINT("null_space_basis(..) started. Time="<<time(0)-stbh);
     matrix<T> Q = null_space_basis_into_matrix(A);
+    //output_aligned(std::cerr << "\ninternal =\n", Q);
 
     vector< sparse_polynom<T> > v(Q.ncols());
 

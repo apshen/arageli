@@ -182,17 +182,18 @@ TEST_FUNCTION(rref_gauss_bareiss_for_mp, "Gauss-Bareiss for multipolynomials.")
         vector<int> basis;
         P det;
 
-        output_aligned(std::cerr, a);
+        //output_aligned(tout, a);
 
         rref_gauss_bareiss(a, b, q, basis, det);
 
-        output_aligned(std::cerr << "\nb = \n", b);
-        std::cerr << "\ndet = " << det << '\n';
+        //output_aligned(tout << "\nb = \n", b);
+        //tout << "\ndet = " << det << '\n';
+        //tout << "\nsolution is valid: " << std::boolalpha << (b == q * a) << '\n';
         return resOK;
     }
     catch(const exception& e)
     {
-        std::cerr << "Exception!\n" << e;
+        tout << "Exception!\n" << e;
         throw;
     }
     catch(...)

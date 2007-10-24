@@ -48,11 +48,13 @@ bool correct_prof (const char* s1)
     typedef matrix<rational<> > M;
     M m(s1), mres;
     orthogonalization_generic_gram_schmidt(m, mres);
+#if 0
     tout
         << "\tinp = " << m << '\n'
         << "\tort = " << mres << '\n';
     output_aligned(tout, mres*transpose(mres));
     tout << '\n';
+#endif
     return true;
 }
 

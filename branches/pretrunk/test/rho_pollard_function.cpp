@@ -38,7 +38,7 @@ TEST_FUNCTION(rho_pollard, "Test rho_pollard function")
     using namespace Arageli;
     srand( (unsigned)time( NULL ) );
     TestResult res = resOK;
-    int i = 10;
+    int i = 1000;
     while(i)
     {
         big_int q1 = rand(INT_MAX-1);

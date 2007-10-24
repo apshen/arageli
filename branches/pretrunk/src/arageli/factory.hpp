@@ -130,7 +130,7 @@ inline T unit (const T& x)
 template <typename T>
 inline bool is_unit (const T& x)
 {
-    return x == unit<T>();
+    return x == factory<T>::unit(x);
 }
 
 /// Minus unit element.
@@ -152,7 +152,7 @@ inline T opposite_unit (const T&x)
 template <typename T>
 inline bool is_opposite_unit (const T& x)
 {
-    return x == opposite_unit<T>();
+    return x == factory<T>::opposite_unit(x);
 }
 
 /// Null element.
@@ -164,17 +164,17 @@ inline const T& null ()
 
 /// Null element by pattern.
 template <typename T>
-inline T null (const T&)
+inline T null (const T& x)
 {
     // WARNING.  Making a copy.
-    return factory<T>::null();
+    return factory<T>::null(x);
 }
 
 /// True iff x is one of the null elements.
 template <typename T>
 inline bool is_null (const T& x)
 {
-    return x == null(x);
+    return x == factory<T>::null(x);
 }
 
 
@@ -319,7 +319,7 @@ public:
         return null_s;
     }
 
-    static const T& null (const T& x)
+    static T null (const T& x)
     {
         return T(TT2::null(x.real()));
     }

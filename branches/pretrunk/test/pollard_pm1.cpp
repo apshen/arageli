@@ -36,7 +36,7 @@ TEST_FUNCTION(pollard_pm1, "Test pollard_pm1 algorithm.")
     using namespace Arageli;
     srand( (unsigned)time( NULL ) );
     TestResult res = resOK;
-    int i = 10;
+    int i = 1000;
     while(i)
     {
         big_int q1 = rand(INT_MAX-1);
