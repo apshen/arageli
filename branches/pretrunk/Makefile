@@ -48,8 +48,8 @@ runtests:
 	if ls bin/test; then bin/test; else echo \*\*\* Try make check before running tests! \*\*\*; fi;
 #	bin/test
 
-#example:
-#	$(MAKE) -C example/
+example:
+	$(MAKE) -C example/
 
 # call 'make install' only with root previlegues
 install:
