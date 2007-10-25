@@ -36,7 +36,7 @@ TEST_FUNCTION(pollard_pm1, "Test pollard_pm1 algorithm.")
     using namespace Arageli;
     srand( (unsigned)time( NULL ) );
     TestResult res = resOK;
-    int i = 100;
+    int i = 10;
     while(i)
     {
 #if 0
@@ -50,13 +50,14 @@ TEST_FUNCTION(pollard_pm1, "Test pollard_pm1 algorithm.")
         big_int q2 = big_int::random_with_length(num_lengths);
 #endif
         big_int test = q1*q2;
-        long inter_num = 10000;
+        long inter_num = 0;
         big_int result = pollard_pm1(test, inter_num);
         if(result == test || is_null(result))
         {
             res = resFAIL;
             tout << "Test fail: " << test << " = " << q1 << '*' << q2 << '\n';
             tout << "Result: " << result << '\n';
+            break;
         }
         --i;
     }

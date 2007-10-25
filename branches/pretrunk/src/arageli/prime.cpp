@@ -540,6 +540,28 @@ template<typename T, typename N, typename T_factory>
 T pollard_pm1(const T& n, const N& no_of_iter, const T_factory& tfctr)
 {
     T b = 2, t = 2, p = unit(n);
+    if (!no_of_iter)
+    {
+        int i = 2;
+    while(true)
+    {
+        //  if (i % 10 == 0) std::cout << " i = " << i << std::endl;
+        t = power_mod(t, i, n); // now t = b^(i!)
+        p = gcd(n, t - 1);
+        if (p > unit(n) && p < n)
+            return p;
+        if (p == n)
+        {
+            i = 2;
+            t = ++b;
+            if (b == 5)
+                return null(n);
+        }
+        ++i;
+    }
+    }
+    else
+    {
     for(N i = 2; i <= no_of_iter; i++)
     {
         //  if (i % 10 == 0) std::cout << " i = " << i << std::endl;
@@ -555,6 +577,8 @@ T pollard_pm1(const T& n, const N& no_of_iter, const T_factory& tfctr)
                 return null(n);
         }
     }
+    }
+    std::cout << "\nIncrease iterations number!\n";
     return null(n);
 }
 
