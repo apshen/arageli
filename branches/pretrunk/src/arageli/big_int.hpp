@@ -93,6 +93,10 @@ template <typename Ch, typename ChT>
 void input_binary (std::basic_istream<Ch, ChT>& in, big_int& x);
 
 
+template <typename T_factory>
+big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
+
+
 /// Big integer number.
 /** Integer number with arbitrary big size. Only available memory
     limits the maximum value of a number. */
@@ -107,6 +111,9 @@ class big_int
 
     template <typename Ch, typename ChT>
     friend void input_binary (std::basic_istream<Ch, ChT>& in, big_int& x);
+
+    template <typename T_factory>
+    friend big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
 
 public:
 
@@ -1212,6 +1219,25 @@ inline big_int log2 (const big_int& x)
 {
     return x.length() - 1;
 }
+
+
+/// Specialization of gcd function for big_int.
+/** Allows more efficient computation with small big_int objects
+    than generic gcd function. */
+template <typename T_factory>
+inline big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr)
+{
+    if(a.number->len == 1 && b.number->len == 1)
+    {
+        // As this is Euclid's algorithm for two integers
+        // we ignore the signs of the numbers.
+
+        return euclid(a.number->data[0], b.number->data[0], tfctr);
+    }
+    else
+        return euclid(a, b, tfctr);
+}
+
 
 }
 

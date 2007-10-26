@@ -211,7 +211,7 @@ TEST_FUNCTION(factorize_berlekamp, "A simple test for factorize_berlekamp functi
 
     bool is_ok = true;
 
-    std::size_t maxdeg = 15;
+    std::size_t maxdeg = 20;
     std::size_t m = 50;
 
     try

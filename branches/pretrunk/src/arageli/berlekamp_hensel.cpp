@@ -1073,7 +1073,8 @@ void factorize_berlekamp_hensel
         stbh=time(0);
     #endif
     ARAGELI_TM_PRINT("factorize_berlekamp_hensel started. input="<<p<<". Time= "<<stbh<<"=0");
-    if(p.is_const())
+
+    if(p.degree() <= 1)
     {
         res.assign_fromval(1, p);
         return;

@@ -38,7 +38,7 @@ TEST_FUNCTION(rho_pollard, "Test rho_pollard function")
     using namespace Arageli;
     srand( (unsigned)time( NULL ) );
     TestResult res = resOK;
-    int i = 100;
+    int i = 20;
     while(i)
     {
 #if 0
@@ -47,7 +47,7 @@ TEST_FUNCTION(rho_pollard, "Test rho_pollard function")
         big_int q2 = rand(INT_MAX-1);
         ARAGELI_ASSERT_1(q2 >= 0);
 #else
-        const unsigned int num_lengths = 100;
+        const unsigned int num_lengths = 50;
         big_int q1 = big_int::random_with_length(num_lengths);
         big_int q2 = big_int::random_with_length(num_lengths);
 #endif

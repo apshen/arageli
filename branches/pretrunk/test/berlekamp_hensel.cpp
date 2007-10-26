@@ -174,6 +174,28 @@ bool simple_test2 ()
         tout << "\n" << e;
         return false;
     }
+
+    try
+    {
+        P p = "400*x^2+360*x-180";
+        vector<P> v = factorize_berlekamp_hensel(p);
+        //std::cout<<v;
+        if(v.size() == 0 || product(v) != v)
+        {
+            tout
+                << "Error at simple_test2:"
+                << "\n\tP = " << typeid(P).name()
+                << "\n\tp     = " << p
+                << "\n\tv = "
+                << "\nproduct(v) = " << product(v) << "\n";
+            output_aligned(tout, v);
+        }
+    }
+    catch(const Arageli::exception& e)
+    {
+        tout << "\n" << e;
+        return false;
+    }
     return true;
 }
 
