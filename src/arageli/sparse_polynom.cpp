@@ -485,10 +485,9 @@ sparse_polynom<F, I, REFCNT>::add_sparse_polynom
     if
     (
         reinterpret_cast<const void*>(this) ==
-        reinterpret_cast<const void*>(&x)
-    )
+        reinterpret_cast<const void*>(&x))
     {
-        ARAGELI_ASSERT_1(!is_null());
+        ARAGELI_ASSERT_0(!is_null());
         for(typename Rep::iterator i = rep().begin(); i != rep().end();)
             if((*i += *i).is_null())
                 i = rep().erase(i);
@@ -555,41 +554,29 @@ sparse_polynom<F, I, REFCNT>::mul_sparse_polynom
     ARAGELI_ASSERT_0(is_normal());
     ARAGELI_ASSERT_0(x.is_normal());
 
-    // It is a simple but slow implementation of polynomial-polynomial
-    // multiplication for sparse polynomials.
+    // ПРЕДУПРЕЖДЕНИЕ. Простая, но медленная реализация, можно быстрее.
 
     if(is_null())
-        return *this;   // leave zero
+        return *this;
     if(x.is_null())
     {
-        // make zero
         if(store.unique_clear())
             rep().clear();
         return *this;
     }
 
-    // Neither this polynomial nor x is zero.
-    // Form the result in res variable.
-
     sparse_polynom res;
-
-    // Cross all monomials of x...
     for
     (
         typename T1::monom_const_iterator i =
-            x.monoms_begin(),
-            iend = x.monoms_end();
+            x.monoms_begin(), iend = x.monoms_end();
         i != iend;
         ++i
     )
     {
-        // ... and for each monomial i multiply
-        // this polynomial by i and accumulate
-        // the result in res variable.
-
         sparse_polynom t(*this);
         t *= *i;
-        res += t;   // common addition -- the cause of inefficiency
+        res += t;
     }
 
     *this = res;
