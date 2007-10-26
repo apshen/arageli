@@ -263,7 +263,7 @@ inline std::vector<bool>::reference inverse (std::vector<bool>::pointer x)
 // is equal to std::vector<bool, A>::pointer, but under Microsoft Visual C++
 // they are different types. So, we are switching off the redifinition
 // in case of Linux.
-#ifndef __linux__
+#ifndef __linux
 
 /// Specialization of inverse for std::vector<bool>::reference*.
 /** We suppose that std::vector<bool, A>::reference are the same for any A. */
