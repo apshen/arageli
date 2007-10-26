@@ -249,18 +249,19 @@ bool test_2 ()
 {
     typedef rational<> T;
     typedef algebraic<T, T, P> Algebr;
+    typedef typename Algebr::interval_type Interv;
 
     ARAGELI_EXCEPT_LOCCTRL_REGION_BEGIN
     Algebr
         a
         (
             P("8*x^0-195*x^1"),
-            Algebr::interval_type("(-3344/6847,3344/6847)")
+            Interv("(-3344/6847,3344/6847)")
         ),
         b
         (
             P("2145*x^0-2252*x^1"),
-            Algebr::interval_type("(4950/6847,9900/6847)")
+            Interv("(4950/6847,9900/6847)")
         );
 
         ARAGELI_ASSERT_ALWAYS(a.is_normal());
