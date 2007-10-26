@@ -83,5 +83,5 @@ cleanall:
 	$(MAKE) -C tool/ts/src/ts cleanall
 	$(MAKE) -C test cleanall
 	$(MAKE) -C doc/src cleanall
-#	$(MAKE) -C example cleanall
+	$(MAKE) -C example cleanall
 	rm -rf doc/dvi
