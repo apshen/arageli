@@ -125,7 +125,7 @@ bool sparse_polynom_multiply_divide_scalar_test(int param, int count)
 
 TEST(sparse_polynom,multiply_divide_scalar,"Test")
 {
-    bool fail=sparse_polynom_multiply_divide_scalar_test(100,10);
+    bool fail=sparse_polynom_multiply_divide_scalar_test(100, 100);
 
     if(fail) return resFAIL;
     return resOK;

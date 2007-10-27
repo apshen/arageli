@@ -58,7 +58,7 @@ bool t_rational(big_int arg, big_int count, Generate generate)
     big_int ind=gen.Rand();
     rational<type>
         per1=*(rational<type>*)generate(ind),
-        per2=*(rational<type>*)generate(ind),
+        per2=*(rational<type>*)generate(ind+1),
         temPer;
 
     if(fail)
