@@ -149,7 +149,7 @@ inline inonnegative<T> make_inonnegative (const T& max)
 }
 
 
-/// All natural numbers representable as given type.
+/// All natural numbers representable as a given type.
 template <typename T>
 class natural
 {
@@ -580,7 +580,7 @@ struct Comppars
 
 /// Generates natural number x <= max with equiprobable outcome.
 /** Set cannot be empty. If the cardinality of the base generator is less
-    than target cardinality, current implementation cannot guarantee that
+    than the target cardinality, current implementation cannot guarantee that
     all target values will be generated. */
 template <typename T, typename Base>
 class equiprob<set::ipositive<T>, Base>
@@ -746,7 +746,7 @@ private:
 
 /// Generates integer number 0 <= x <= max with equiprobable outcome.
 /** Set cannot be empty. If the cardinality of the base generator is less
-    than target cardinality, current implementation cannot guarantee that
+    than the target cardinality, current implementation cannot guarantee that
     all target values will be generated. */
 template <typename T, typename Base>
 class equiprob<set::inonnegative<T>, Base>

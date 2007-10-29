@@ -48,17 +48,27 @@ bool sparse_polynom_multiply_divide_scalar (const sparse_polynom<T> A, const T B
 {
     try
     {
+        //std::cerr << "\nA = " << A;
+        //std::cerr << "\nB = " << B;
         sparse_polynom<T> a=A, x=A, d;
+        //std::cerr << "\na = " << a;
+        //std::cerr << "\nx = " << x;
         T b=B;
+        //std::cerr << "\nb = " << b;
         d=a*b;
+        //std::cerr << "\nd = a*b = " << d;
         a*=b;
+        //std::cerr << "\n(a*=b) = " << a;
+        //std::cerr << "\nMark 1";
 
         if (d!=a)
         {
             tout<<"function multiply_divide_scalar failed on 1 check with A="<<A<<", B="<<B<<'\n';
             return true;
         }
+        //std::cerr << "\nMark 2";
         a/=b;
+        //std::cerr << "\nMark 3";
 
         if (x!=a)
         {
@@ -66,18 +76,27 @@ bool sparse_polynom_multiply_divide_scalar (const sparse_polynom<T> A, const T B
             return true;
         }
 
+        //std::cerr << "\nMark 4";
         if ((a!=(a/b)*b+a%b))
         {
             tout<<"function multiply_divide_scalar failed on 3 check with A="<<A<<", B="<<B<<'\n';
             return true;
         }
 
+        //std::cerr << "\nMark 5";
         return false;
     }
     catch(Arageli::exception& e)
     {
-        tout << "EXCEPTION: ";
-        e.output(tout); tout << '\n';
+        ARAGELI_EXCEPT_LOC(e);
+        tout
+            << "EXCEPTION:"
+            << "\n" << e
+            << "\n\tWhere:"
+            << "\n\tT = " << typeid(T).name()
+            << "\n\tA = " << A
+            << "\n\tB = " << B
+            << "\n";
         return true;
     }
 }
@@ -125,7 +144,7 @@ bool sparse_polynom_multiply_divide_scalar_test(int param, int count)
 
 TEST(sparse_polynom,multiply_divide_scalar,"Test")
 {
-    bool fail=sparse_polynom_multiply_divide_scalar_test(100,10);
+    bool fail=sparse_polynom_multiply_divide_scalar_test(100, 100);
 
     if(fail) return resFAIL;
     return resOK;

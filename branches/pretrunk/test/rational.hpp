@@ -305,9 +305,28 @@ bool t_rational_operator_double_bool(rational<type> a)
 {
     try
     {
-        if( (double)a.numerator()/(double)a.denominator() != (double)a )
+        double manually = (double)a.numerator()/(double)a.denominator();
+        double orig = (double)a;
+        double delta = std::abs(orig - manually);
+
+        // Really epsilon can depend on how near numerator and denominator
+        // to double's max absolute value.
+        double epsilon =
+            2*std::max(std::abs(orig), std::abs(manually))*
+                std::numeric_limits<double>::epsilon();
+
+        if(delta > epsilon)
         {
-            tout<<"Function t_rational_operator_double_bool failed on 1 check with args=("<<a<<") \n";
+            tout
+                << "Function t_rational_operator_double_bool failed on 1 check with: "
+                << "\n\ttype = " << typeid(type).name()
+                << "\n\ta = " << a
+                << "\n\tmanually = " << manually
+                << "\n\torig = " << orig
+                << "\n\tdelta = " << delta
+                << "\n\tepsilon = " << epsilon
+                << "\n\tdelta - epsilon = " << delta - epsilon
+                << "\n";
             return true;
         }
 

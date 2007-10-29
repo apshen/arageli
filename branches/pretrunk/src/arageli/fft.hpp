@@ -283,11 +283,11 @@ public:
         {
             if (alpha_powers[i] != NULL)
             {
-                delete  alpha_powers[i];
+                delete [] alpha_powers[i];
             }
         }
         free(alpha_powers);
-        delete []binary_reverse;
+        delete [] binary_reverse;
     };
 
     // This optimized for polynom multiplication FFT.
