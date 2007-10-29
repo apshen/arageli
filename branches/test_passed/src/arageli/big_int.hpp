@@ -1236,7 +1236,7 @@ inline bool is_odd (const big_int& x)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// WARNING! This function prototype is placed here because header dependences.
+// WARNING! This function prototype is placed here because of header dependences.
 // WARNING! The problem appears only if ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE macro is undefined.
 // TODO: Resolve this problem and delete.
 template <typename T>
