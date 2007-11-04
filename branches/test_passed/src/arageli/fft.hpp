@@ -42,10 +42,12 @@
 #include "bigar.hpp"
 #include "exception.hpp"
 
+#define PRINT_OUTPUTS
+
 namespace Arageli
 {
 // TODO: clarify if this approach speed up the algorithm
-#define BARRETT
+//#define BARRETT
 #ifdef BARRETT
 // precomputed constants for Barrett reduction
 // p_inv = floor(4^k / p), where k --- number of bits for p number representation
@@ -535,6 +537,9 @@ public:
     /* polinom multiplication */
     void poli_multiply(const ET *F, const MT F_Length, const ET *G, const MT G_Length, ET *Result_Out) const
     {
+//#ifdef PRINT_OUTPUTS 
+        std::cout << "u length = " << F_Length << "\nv length = " << G_Length << std::endl;
+//#endif
         static ET F_Copy[n_max];
         static ET G_Copy[n_max];
 
@@ -545,6 +550,7 @@ public:
         MT p_Large = CFFT<ET,MT,p_num,p_inv,b_n>::p;
 #else
         MT p_Large = CFFT<ET,MT>::p;
+        std::cout << "prime p = " << p_Large << std::endl;
 #endif
         MT i;
         typedef typename doubled_type<ET>::d_value dd;
@@ -567,10 +573,10 @@ public:
         memset(&G_Copy[G_Length],0,sizeof(ET)*(Result_Length-G_Length));
 
         /* make images */
-        FFT_h(F_Copy,Result_Length, Hat_F);
-        FFT_h(G_Copy,Result_Length, Hat_G);
-        //FFT(F_Copy,Result_Length, Hat_F);
-        //FFT(G_Copy,Result_Length, Hat_G);
+        //FFT_h(F_Copy,Result_Length, Hat_F);
+        //FFT_h(G_Copy,Result_Length, Hat_G);
+        FFT(F_Copy,Result_Length, Hat_F);
+        FFT(G_Copy,Result_Length, Hat_G);
 
         /* make image of result*/
         for (i=0; i<Result_Length;i++)

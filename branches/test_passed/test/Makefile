@@ -32,7 +32,7 @@
 ##############################################################################
 
 test_dirs = . ITLab-produced
-CXXFLAGS = -MD -g -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
+CXXFLAGS = -MD -g -DARAGELI_SOURCE -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
 tests_name = test
 
 all: ../bin/$(tests_name)
