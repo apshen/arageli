@@ -46,7 +46,6 @@
 // Errors : test shows that testing function works incorrectly with double matrixes
 
 #include "stdafx.hpp"
-#include "rand.hpp"
 
 using namespace Arageli;
 

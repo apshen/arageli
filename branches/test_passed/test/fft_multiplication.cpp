@@ -34,7 +34,7 @@
 */
 
 #include "stdafx.hpp"
-//#define PRINT_OUTPUTS
+#define PRINT_OUTPUTS
 //#define CHECK_TIME
 
 using namespace Arageli;

@@ -37,22 +37,28 @@ tests_name = test
 
 all: ../bin/$(tests_name)
 
-../bin/$(tests_name): ../tool/ts/bin/libts.a ../lib/libtestarageli.a $(patsubst %.cpp,%.o, $(wildcard $(addsuffix \
+../bin/$(tests_name): ../tool/ts/bin/libts.a ../lib/libtestarageli.a stdafx.hpp.gch $(patsubst %.cpp,%.o, $(wildcard $(addsuffix \
                 /*.cpp,$(test_dirs))))
+	make -C ../src/arageli ../../lib/libtestarageli.a
 	$(CXX) -o ../bin/$(tests_name) $(patsubst %.cpp,%.o, $(wildcard \
     $(addsuffix /*.cpp,$(test_dirs)))) -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
 
 ../tool/ts/bin/libts.a:
 	$(MAKE) -C ../tool/ts/src/ts/
 
+stdafx.hpp.gch: stdafx.hpp
+	$(CC) -x c++-header $(CXXFLAGS) -o $@ $< -I"../src/" -I"../tool/ts/src/"
+
 %.o:%.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@ -I"../src/" -I"../tool/ts/src/"
 
 pollard_pm1: pollard_pm1.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
+	make -C ../src/arageli ../../lib/libtestarageli.a
 	$(CXX) -o ../bin/pollard_pm1 pollard_pm1.o -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
 	../bin/pollard_pm1
 
 pollard: fft_multiplication.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
+	make -C ../src/arageli ../../lib/libtestarageli.a
 	$(CXX) -o ../bin/pollard_test fft_multiplication.o -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
 	../bin/pollard_test
 

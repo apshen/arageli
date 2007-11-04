@@ -50,6 +50,12 @@
 
 #include <ts/ts.hpp>
 
+#include "matrix_ops.hpp"
+#include "rand.hpp"
+#include "rational.hpp"
+#include "vector.hpp"
+#include "universal.hpp"
+
 // TODO: reference additional headers your program requires here
 
 

@@ -38,9 +38,6 @@
 
 #include "stdafx.hpp"
 
-#include "rand.hpp"
-#include "universal.hpp"
-
 using namespace Arageli;
 
 bool vector_opposite_test(int param, int count)

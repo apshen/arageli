@@ -40,8 +40,6 @@
 
 
 #include "stdafx.hpp"
-#include "rand.hpp"
-
 
 using namespace Arageli;
 
