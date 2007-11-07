@@ -52,23 +52,9 @@ stdafx.hpp.gch: stdafx.hpp
 %.o:%.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@ -I"../src/" -I"../tool/ts/src/"
 
-pollard_pm1: pollard_pm1.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
-	make -C ../src/arageli ../../lib/libtestarageli.a
-	$(CXX) -o ../bin/pollard_pm1 pollard_pm1.o -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
-	../bin/pollard_pm1
-
-pollard: fft_multiplication.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
-	make -C ../src/arageli ../../lib/libtestarageli.a
-	$(CXX) -o ../bin/pollard_test fft_multiplication.o -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
-	../bin/pollard_test
-
 rho_pollard_function: rho_pollard_function.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
 	$(CXX) -o ../bin/rho_pollard_function rho_pollard_function.o -L "../lib" -L "../tool/ts/bin/" -l "testarageli" -l "ts"
 	../bin/rho_pollard_function
-
-karatsuba: karatsuba.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
-	$(CXX) -o ../bin/karatsuba_test karatsuba.o -L "../lib" -L "../tool/ts/bin/" -ltestarageli -lts
-	../bin/karatsuba_test
 
 ../lib/libtestarageli.a:
 	$(MAKE) -C ../src/arageli ../../lib/libtestarageli.a
