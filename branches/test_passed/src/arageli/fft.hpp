@@ -42,8 +42,6 @@
 #include "bigar.hpp"
 #include "exception.hpp"
 
-#define PRINT_OUTPUTS
-
 namespace Arageli
 {
 // TODO: clarify if this approach speed up the algorithm
@@ -151,16 +149,20 @@ private:
     void alpha_determination(const MT p, const MT root)
     {
         alpha = 1;
-//        unsigned long j;
-//        for (j=1; j <= (p - 1) / n; ++j)
-//        {
-//#ifdef BARRETT
-//            //alpha = barrett_reduction<p_num, p_inv, b_n>(doubled_value(alpha)*root);
-//            alpha = doubled_value(alpha)*root > p ? barrett_reduction<p_num, p_inv, b_n>(doubled_value(alpha)*root): doubled_value(alpha)*root;
-//#else
-//            alpha = MT((doubled_value(alpha)*root) % p);
-//#endif
-//        }
+        unsigned long j;
+        for (j=1; j <= (p - 1) / n; ++j)
+        {
+#ifdef BARRETT
+            //alpha = barrett_reduction<p_num, p_inv, b_n>(doubled_value(alpha)*root);
+            alpha = doubled_value(alpha)*root > p ? barrett_reduction<p_num, p_inv, b_n>(doubled_value(alpha)*root): doubled_value(alpha)*root;
+#else
+            alpha = MT((doubled_value(alpha)*root) % p);
+#endif
+        }
+
+        // Look at this code more thoroughly
+        // It was invented for optimization reasons, but contains bugs!
+        /*
         MT curr_root = root;
         MT curr_power = (p - 1) / n;
         while(curr_power)
@@ -177,6 +179,7 @@ private:
             curr_root = (doubled_value(curr_root)*curr_root > p) ? (doubled_value(curr_root)*curr_root) % p : doubled_value(curr_root)*curr_root;
 #endif
         }
+        */
     };
 
 #ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
@@ -537,9 +540,6 @@ public:
     /* polinom multiplication */
     void poli_multiply(const ET *F, const MT F_Length, const ET *G, const MT G_Length, ET *Result_Out) const
     {
-//#ifdef PRINT_OUTPUTS 
-        std::cout << "u length = " << F_Length << "\nv length = " << G_Length << std::endl;
-//#endif
         static ET F_Copy[n_max];
         static ET G_Copy[n_max];
 
@@ -550,7 +550,6 @@ public:
         MT p_Large = CFFT<ET,MT,p_num,p_inv,b_n>::p;
 #else
         MT p_Large = CFFT<ET,MT>::p;
-        std::cout << "prime p = " << p_Large << std::endl;
 #endif
         MT i;
         typedef typename doubled_type<ET>::d_value dd;

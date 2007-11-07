@@ -42,11 +42,6 @@ ADD WHOLE FILE DESCRIPTION HERE
 #include "config.hpp"
 #include "fft.hpp"
 
-//#define ADDITIONAL_CHECK
-#ifdef ADDITIONAL_CHECK
-#include "karatsuba.hpp"
-#endif
-
 namespace Arageli
 {
 
@@ -234,9 +229,8 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
         v_buffer[i] = v[i] % pollard_p1;
 #endif
     }
-    std::cout << "n = " << n << "\nm = " << m << '\n' << std::flush;
     t1.poli_multiply(u_buffer, n, v_buffer, m, w_buffer1);
-//    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer1, n, m, pollard_p1)));
+    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer1, n, m, pollard_p1)));
 
     for (i = 0; i < n; ++i)
     {
@@ -255,7 +249,7 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
 #endif
     }
     t2.poli_multiply(u_buffer, n, v_buffer, m, w_buffer2);
-//    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer2, n, m, pollard_p2)));
+    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer2, n, m, pollard_p2)));
 
     for (i = 0; i < n; ++i)
     {
@@ -274,20 +268,8 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
 #endif
     }
     t3.poli_multiply(u_buffer, n, v_buffer, m, w_buffer3);
-//    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer3, n, m, pollard_p3)));
+    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer3, n, m, pollard_p3)));
 
-#ifdef ADDITIONAL_CHECK
-    ET* temp_output = new ET[n+m];
-    ET* temp_add = new ET[9*(n+m)];
-    do_mult_karatsuba(u, v, temp_output, &temp_add, n, m);
-    ARAGELI_ASSERT_2(false);
-    for (i = 0; i < n+m; ++i)
-    {
-        ARAGELI_ASSERT_1(temp_output[i]%pollard_p1 == w_buffer1[i]);
-        ARAGELI_ASSERT_1(temp_output[i]%pollard_p2 == w_buffer2[i]);
-        ARAGELI_ASSERT_1(temp_output[i]%pollard_p3 == w_buffer3[i]);
-    }
-#endif //ADDITIONAL_CHECK
     //__int64 y2, y3;
     signed long long y2, y3;
     typename doubled_type<ET>::d_value y3_low, y3_high, betta_low, betta_high;

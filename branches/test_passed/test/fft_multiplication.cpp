@@ -34,7 +34,7 @@
 */
 
 #include "stdafx.hpp"
-#define PRINT_OUTPUTS
+//#define PRINT_OUTPUTS
 //#define CHECK_TIME
 
 using namespace Arageli;
@@ -46,7 +46,7 @@ TEST_FUNCTION(do_mult_fft, "Test FFT based multiplication.")
     try
     {
         {
-            const unsigned int num_lengths = 50;
+            const unsigned int num_lengths = 32000;
             // generate two random integers approximately with equal lengths
             big_int a = big_int::random_with_length(num_lengths),
                     b = big_int::random_with_length(num_lengths);
@@ -96,9 +96,6 @@ TEST_FUNCTION(do_mult_fft, "Test FFT based multiplication.")
 #ifdef CHECK_TIME
             timer s;
             s.start();
-#endif
-#ifdef PRINT_OUTPUTS
-            tout << "a length = " << a_len << "\nb legth = " << b_len << '\n';
 #endif
             unsigned long w_len =
             do_mult_pollard<_Internal::digit,unsigned long>(a_digits, b_digits, w_digits, a_len, b_len);
