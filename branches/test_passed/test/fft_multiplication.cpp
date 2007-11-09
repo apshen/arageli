@@ -45,8 +45,9 @@ TEST_FUNCTION(do_mult_fft, "Test FFT based multiplication.")
 
     try
     {
+        for(int j2 = 0; j2 < 10; ++j2)
         {
-            const unsigned int num_lengths = 32000;
+            const unsigned int num_lengths = 30000*j2 + 100;
             // generate two random integers approximately with equal lengths
             big_int a = big_int::random_with_length(num_lengths),
                     b = big_int::random_with_length(num_lengths);
