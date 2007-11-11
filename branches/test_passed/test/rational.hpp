@@ -41,7 +41,6 @@
 #include "stdafx.hpp"
 
 using namespace Arageli;
-using namespace std;
 
 //ѕроверка метода is_null() и оператора приведени€ типов bool()
 template <typename type>

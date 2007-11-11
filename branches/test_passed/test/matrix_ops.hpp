@@ -74,5 +74,8 @@ inline void output_map (const M& m)
 }
 
 
+#include "matrix_ops.cpp"
+
+
 #endif /*__ta_matrix_ops_hpp__*/
 /* End of file matrix_ops.hpp */
