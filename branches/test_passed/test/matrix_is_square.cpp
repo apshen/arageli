@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-    test/matrix_is_squarte.cpp
+    test/matrix_is_square.cpp
 
     This file is a part of the Arageli library.
 
