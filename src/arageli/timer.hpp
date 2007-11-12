@@ -63,13 +63,17 @@ class timer_isnot_stopped :
 {};
 
 
-/// Fix execution time by marking the begin and the end times by std::clock.
+/// Measures execution time by marking the begin and the end time stamps.
 /** The timer can be switched on and off several times during its life time.
     All time ranges are accumulated. The timer can tell what the current
     relative precision of measured time is.
 
+    The timer uses some system time provider, for example, std::clock,
+    or one that is specific for the target platform.
+
     We do not recommend to use this timer to measure short segments of
-    execution. Use resolution function to obtain the temporal resolution.
+    execution without checking a temporal resolution.
+    Use resolution function to obtain the temporal resolution.
 
     All times are expressed in seconds as a double precision floatting
     point number.
@@ -82,7 +86,7 @@ class timer
 {
 public:
 
-    /// Starts time tracking if turn_on == true.
+    /// Starts time tracking if turn_on == true (it's true by the default).
     timer (bool turn_on = true) :
         turn_on_m(false),
         duration(0),
@@ -101,12 +105,13 @@ public:
     void stop ();
 
     /// Activation flag. If true, the timer counts time.
+    /** Functions start and stop can change this property of the timer. */
     bool is_active () const
     {
         return turn_on_m;
     }
 
-    /// The total elapsed time.
+    /// The total elapsed time (in seconds).
     /** The returned value includes all previous time intervals fixed by
         start-stop calls and the present time interval (if the timer is
         activated at the moment).
@@ -119,21 +124,22 @@ public:
         return double(clock_time())*resolution();
     }
 
-    /// The minimal amount of time that can be measured.
+    /// The minimal amount of time that can be measured (in seconds).
     /** Duration of one tick. The returned value is expressed in seconds. */
     static double resolution ()
     {
         return 1.0/CLOCKS_PER_SEC;
     }
 
-    /// Relative precision of measuring of the total elapsed time.
+    /// Relative precision of measuring value of the total elapsed time.
     /** Determines the maximum relative error of the value returned by
-        the time function. If timer is activated at the moment of call
-        and/or was being activated but the accumulated time is 0,
-        the functions returns std::numeric_limits<double>::max(). */
+        the time function. If the timer hasn't ever been activated by
+        the moment of calling this function and/or has been activated
+        but the accumulated time is 0, the functions returns
+        std::numeric_limits<double>::max() value. */
     double precision () const;
 
-    /// Reinitializes the timer. The same as the constructor.
+    /// Reinitializes the timer. Semantics is the same as for the constructor.
     void reset (bool turn_on = true)
     {
         turn_on_m = false;
