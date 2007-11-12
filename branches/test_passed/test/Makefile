@@ -68,6 +68,7 @@ clean:
 	rm -f $(wildcard $(addsuffix /*.o,$(test_dirs))) $(wildcard $(addsuffix /*.d,$(test_dirs)))
 
 cleanall: clean
+	rm -f stdafx.hpp.gch
 	rm -f tags
 
 include $(wildcard *.d)

@@ -34,6 +34,8 @@ INCLUDE_DIR=../src
 LIBRARY_DIR=../lib
 
 all: \
+     $(LIBRARY_DIR)/libarageli.a\
+	 ../src/arageli/arageli.hpp.gch\
      $(BIN)/adv_simplex_method\
      $(BIN)/big_int_basic\
      $(BIN)/big_int_rational_creation\
@@ -70,6 +72,12 @@ all: \
      $(BIN)/vector_matrix_arithmetic\
      $(BIN)/vector_matrix_creation\
      $(BIN)/vector_matrix_io\
+
+$(LIBRARY_DIR)/libarageli.a:
+	$(MAKE) -C ../src/arageli
+
+../src/arageli/arageli.hpp.gch:../src/arageli/arageli.hpp
+	$(MAKE) -C ../src/arageli arageli.hpp.gch
 
 $(BIN)/adv_simplex_method: adv_simplex_method.cpp adv_simplex_method.task.txt
 	$(CXX) -I"$(INCLUDE_DIR)" adv_simplex_method.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
