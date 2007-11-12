@@ -190,8 +190,8 @@ namespace rnd
 
 /// Random generator with pseudo-uniform disribution on continuous set ST.
 /** This generator is usual for continuous sets, not discrete.
-    Not all elements from ST is generated. Actually the generated
-    values belong to some grid builded on ST in way that depends on
+    Not all elements from ST may be generated. Actually the generated
+    values belong to some grid built on ST in way that depends on
     ST nature and cardinality of Base generator. */
 template <typename ST, typename Base = lcseq_fine1>
 class uniform;
