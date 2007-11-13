@@ -38,9 +38,6 @@
 
 #include "stdafx.hpp"
 
-#include "rand.hpp"
-#include "vector.hpp"
-
 using namespace Arageli;
 
 bool vector_is_null_test(int param, int count)

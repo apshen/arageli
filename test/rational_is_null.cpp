@@ -38,10 +38,6 @@
 
 #include "stdafx.hpp"
 
-#include "universal.hpp"
-#include "rational.hpp"
-#include "rand.hpp"
-
 using namespace Arageli;
 
 bool rational_is_null_test(int param, int count)

@@ -34,6 +34,8 @@ INCLUDE_DIR=../src
 LIBRARY_DIR=../lib
 
 all: \
+     $(LIBRARY_DIR)/libarageli.a\
+	 ../src/arageli/arageli.hpp.gch\
      $(BIN)/adv_simplex_method\
      $(BIN)/big_int_basic\
      $(BIN)/big_int_rational_creation\
@@ -70,6 +72,12 @@ all: \
      $(BIN)/vector_matrix_arithmetic\
      $(BIN)/vector_matrix_creation\
      $(BIN)/vector_matrix_io\
+
+$(LIBRARY_DIR)/libarageli.a:
+	$(MAKE) -C ../src/arageli
+
+../src/arageli/arageli.hpp.gch:../src/arageli/arageli.hpp
+	$(MAKE) -C ../src/arageli arageli.hpp.gch
 
 $(BIN)/adv_simplex_method: adv_simplex_method.cpp adv_simplex_method.task.txt
 	$(CXX) -I"$(INCLUDE_DIR)" adv_simplex_method.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
@@ -178,3 +186,44 @@ $(BIN)/vector_matrix_creation: vector_matrix_creation.cpp
 
 $(BIN)/vector_matrix_io: vector_matrix_io.cpp
 	$(CXX) -I"$(INCLUDE_DIR)" vector_matrix_io.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
+
+clean:
+	rm -f \
+     $(BIN)/adv_simplex_method\
+     $(BIN)/big_int_basic\
+     $(BIN)/big_int_rational_creation\
+     $(BIN)/big_int_rational_functions\
+     $(BIN)/big_int_rational_operations\
+     $(BIN)/factorial\
+     $(BIN)/gram_schmidt\
+     $(BIN)/knuth_supergenerator\
+     $(BIN)/lll_reduction\
+     $(BIN)/lll_reduction_int\
+     $(BIN)/matrix_basic\
+     $(BIN)/matrix_column_row\
+     $(BIN)/matrix_gauss\
+     $(BIN)/matrix_linear_system\
+     $(BIN)/matrix_rref\
+     $(BIN)/matrix_smith\
+     $(BIN)/polynom_basic\
+     $(BIN)/residue\
+     $(BIN)/residue_linear_system\
+     $(BIN)/sparse_polynom_algorithms\
+     $(BIN)/sparse_polynom_basic\
+     $(BIN)/sparse_polynom_creation\
+     $(BIN)/sparse_polynom_io\
+     $(BIN)/sparse_polynom_iterator\
+     $(BIN)/sparse_polynom_kroneker\
+     $(BIN)/sparse_polynom_lagrange\
+     $(BIN)/sparse_polynom_matrix\
+     $(BIN)/sparse_polynom_matrix_smith\
+     $(BIN)/sparse_polynom_operations\
+     $(BIN)/sparse_polynom_other_operations\
+     $(BIN)/sparse_polynom_properties\
+     $(BIN)/vector_entries\
+     $(BIN)/vector_lcm_gcd\
+     $(BIN)/vector_matrix_arithmetic\
+     $(BIN)/vector_matrix_creation\
+     $(BIN)/vector_matrix_io\
+	
+cleanall: clean

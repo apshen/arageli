@@ -39,7 +39,7 @@
 
 
 #include "stdafx.hpp"
-#include "matrix_ops.hpp"
+//#include "matrix_ops.hpp"
 
 using namespace Arageli;
 
