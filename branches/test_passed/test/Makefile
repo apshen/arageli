@@ -32,7 +32,7 @@
 ##############################################################################
 
 test_dirs = . ITLab-produced
-CXXFLAGS = -MD -g -DARAGELI_SOURCE -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
+CXXFLAGS += -MD -g -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
 tests_name = test
 
 all: ../bin/$(tests_name)
@@ -51,10 +51,6 @@ stdafx.hpp.gch: stdafx.hpp
 
 %.o:%.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@ -I"../src/" -I"../tool/ts/src/"
-
-rho_pollard_function: rho_pollard_function.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
-	$(CXX) -o ../bin/rho_pollard_function rho_pollard_function.o -L "../lib" -L "../tool/ts/bin/" -l "testarageli" -l "ts"
-	../bin/rho_pollard_function
 
 ../lib/libtestarageli.a:
 	$(MAKE) -C ../src/arageli ../../lib/libtestarageli.a
