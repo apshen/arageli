@@ -40,47 +40,6 @@ namespace Arageli
     int _my_counter_1 = 0, _my_counter_2 = 0;
 }
 
-
-class Timing
-{
-public:
-
-    Timing (bool on_a = true) : on_m(on_a), time_m(0)
-    { if(on_m)start_m = std::clock(); }
-
-    bool is_on () const { return on_m; }
-
-    void on (bool on_a = true)
-    {
-        if(on_m)return;
-        start_m = std::clock();
-        on_m = true;
-    }
-
-    void off ()
-    {
-        if(!on_m)return;
-        time_m += double(std::clock() - start_m)/CLOCKS_PER_SEC;
-        on_m = false;
-    }
-
-    double time () const
-    {
-        if(on_m)
-            return time_m + double(std::clock() - start_m)/CLOCKS_PER_SEC;
-        else
-            return time_m;
-    }
-
-private:
-
-    bool on_m;
-    std::clock_t start_m;
-    double time_m;
-};
-
-
-
 rational<> rand_rational (size_t len)
 {
     return rational<>

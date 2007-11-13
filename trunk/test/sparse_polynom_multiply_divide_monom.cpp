@@ -40,10 +40,6 @@
 //--Падение теста адекватно
 
 #include "stdafx.hpp"
-#include "rand.hpp"
-
-#include <time.h>
-#include <strstream>
 
 using namespace Arageli;
 
