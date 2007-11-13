@@ -72,8 +72,7 @@ HTML:
 
 # update TAGS for source files
 TAGS:
-	$(MAKE) -C src/arageli TAGS
-	$(MAKE) -C test TAGS
+	ctags -R -h .cpp.hpp
 
 clean:
 	$(MAKE) -C src/arageli clean
