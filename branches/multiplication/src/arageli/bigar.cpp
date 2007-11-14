@@ -287,7 +287,7 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
         n > _Internal::karatsuba_limit_value
     )
     {
-        digit *t = new digit[9 * (n + m)];
+        digit *t = new digit[3 * (n + m)];
         unsigned ret =
             (n > m) ?
             do_mult_karatsuba<digit, unsigned>(v, u, w, &t, n, m) :
