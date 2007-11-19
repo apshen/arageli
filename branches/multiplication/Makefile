@@ -45,8 +45,11 @@ check:
 	make runtests
 
 runtests:
-	if ls bin/test; then bin/test; else echo \*\*\* Try make check before running tests! \*\*\*; fi;
-#	bin/test
+	if [ -x "./bin/test" ]; then 
+	  ./bin/test 
+	else 
+	  echo "*** Try make check before running tests! ***"
+	fi
 
 example:
 	$(MAKE) -C example/

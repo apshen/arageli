@@ -78,6 +78,9 @@
 //#define ARAGELI_ENABLE_POLLARD_MULT
 #define ARAGELI_ENABLE_KARATSUBA_MULT
 
+/// Internal threshold for karatsuba multiplication algorithm
+#define KARATSUBA_INTERNAL_THRESHOLD 50
+
 /// If this macro is defined then assertions throw exception assert_failed.
 //#define ARAGELI_ASSERT_THROW_EXCEPTION
 

@@ -66,7 +66,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n)
 
     T k = m >> 1;
 
-    if (!is_null(k) && n > k && n > 50)
+    if (!is_null(k) && n > k && n > KARATSUBA_INTERNAL_THRESHOLD)
     {
         T k2 = k << 1;
         N *W0 = w+k2;
