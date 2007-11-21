@@ -55,13 +55,11 @@ namespace Arageli
 /** @param u list of digits of the first number
     @param v list of digits of the second number
     @param w list of digits for result number
+    @param t temporary memory
     @param m length of the first number
     @param n length of the second number*/
-template <typename N, typename T>
-T do_mult_karatsuba(N *u, N *v, N *w, T m, T n);
-
 template <typename N,typename T>
-T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n);
+T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n, T threshold = 50);
 } // namesapce Arageli
 
 

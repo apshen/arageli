@@ -49,7 +49,7 @@ namespace Arageli
 Preliminary conditions: w[n+m+1] = 0!
 */
 template <typename N,typename T>
-T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n)
+T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n, T threshold = 50)
 {
     //// make m >= n
     /*
@@ -66,7 +66,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n)
 
     T k = m >> 1;
 
-    if (!is_null(k) && n > k && n > KARATSUBA_INTERNAL_THRESHOLD)
+    if (!is_null(k) && n > k && n > KARATSUBA_THRESHOLD)
     {
         T k2 = k << 1;
         N *W0 = w+k2;

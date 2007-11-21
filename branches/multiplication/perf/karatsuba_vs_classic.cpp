@@ -154,6 +154,7 @@ int main ()
         }
         for (int i = 0; i < repeat; ++i)
         {
+            unsigned int res = 30;
             w_u_digits[2*u_len - 1] = 0;
             {
                 timer t(false);
@@ -166,7 +167,7 @@ int main ()
             {
                 timer t(false);
                 t.start();
-                do_mult_karatsuba(a_l_digits, b_l_digits, w_u_digits, &t_digits, l_len, l_len);
+                do_mult_karatsuba(a_l_digits, b_l_digits, w_u_digits, &t_digits, l_len, l_len, res);
                 t.stop();
                 t2_l += t.time();
             }
@@ -182,7 +183,7 @@ int main ()
             {
                 timer t(false);
                 t.start();
-                do_mult_karatsuba(a_m_digits, b_m_digits, w_u_digits, &t_digits, m_len, m_len);
+                do_mult_karatsuba(a_m_digits, b_m_digits, w_u_digits, &t_digits, m_len, m_len, res);
                 t.stop();
                 t2_m += t.time();
             }
@@ -198,7 +199,7 @@ int main ()
             {
                 timer t(false);
                 t.start();
-                do_mult_karatsuba(a_u_digits, b_u_digits, w_u_digits, &t_digits, u_len, u_len);
+                do_mult_karatsuba(a_u_digits, b_u_digits, w_u_digits, &t_digits, u_len, u_len, res);
                 t.stop();
                 t2_u += t.time();
             }
