@@ -151,10 +151,16 @@ bool is_pseudoprime_miller_rabin (const T& x, const N& n, const T_factory& tfctr
     N k;
     const T unt = unit(x);
     const T start_q = (x - 1) >> 1;
+
+    // We need integer random numbers from [2, x-1].
+    typedef set::grid1<T> int_grid;
+    int_grid int_2_xm1(2, x-1); // integer set from [2, x-1]
+    rnd::equiprob<int_grid> gen_2_xm1(int_2_xm1);   // random generator from [2, x-1]
+
     for (N i = null(n); i < n; ++i)
     {
-        a = rand(x-3);
-        a += 2;
+        a = gen_2_xm1();
+
         if(!is_unit(gcd(a,x)))
             return false;
         q = start_q;

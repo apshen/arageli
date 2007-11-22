@@ -44,12 +44,8 @@
 // Errors :
 
 #include "stdafx.hpp"
-#include "rand.hpp"
-
 
 using namespace Arageli;
-
-
 
 template <typename T>
 bool m_addmul_rows(const char* s, T coef1, T coef2, int a, int m)
