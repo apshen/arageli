@@ -38,10 +38,6 @@
 
 #include "stdafx.hpp"
 
-#include "vector.hpp"
-#include "universal.hpp"
-#include "rand.hpp"
-
 typedef void* (*Generate)(int arg);
 
 #define VECTOR_CASE_COUNT 14

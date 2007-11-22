@@ -1330,7 +1330,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\test\matrix_is_squarte.cpp"
+				RelativePath="..\..\..\test\matrix_is_square.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
