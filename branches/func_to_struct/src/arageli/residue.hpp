@@ -324,7 +324,7 @@ public:
         else
         {
             residue tmp(x.value_m, module_m);
-            value_m *= inverse_mod(tmp.value(), T1(module_m));    // WARNING! A factory needed.
+            value_m *= invmod(tmp.value(), T1(module_m));    // WARNING! A factory needed.
         }
 
         config_m.after_oper(value_m, module_m);

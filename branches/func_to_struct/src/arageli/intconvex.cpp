@@ -781,11 +781,11 @@ void _near_extreme_2_mod
     }
     else if(!is_null(a(0, 0)))
     {
-        near_extreme_2d_mod(div_mod(a(0, 1), a(0, 0), vd[0]), div_mod(b[0], a(0, 0), vd[0]), vd[0], v, ctrler);
+        near_extreme_2d_mod(divmod(a(0, 1), a(0, 0), vd[0]), divmod(b[0], a(0, 0), vd[0]), vd[0], v, ctrler);
     }
     else if(!is_null(a(0, 1)))
     {
-        near_extreme_2d_mod(div_mod(a(0, 0), a(0, 1), vd[0]), div_mod(b[0], a(0, 1), vd[0]), vd[0], v, ctrler);
+        near_extreme_2d_mod(divmod(a(0, 0), a(0, 1), vd[0]), divmod(b[0], a(0, 1), vd[0]), vd[0], v, ctrler);
         v.swap_cols(0, 1);
     }
 }

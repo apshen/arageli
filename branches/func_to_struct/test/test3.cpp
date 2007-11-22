@@ -1693,7 +1693,7 @@ cout<<vi;
 void test3_57 ()
 {
     sparse_polynom<big_int> p1 = "x-1", p2 = "x^23-1",
-        p3 = power_mod(p1, big_int(23), p2);
+        p3 = powmod(p1, big_int(23), p2);
     std::cout << p3;
     sparse_polynom_reduction_mod(p3, big_int(23));
     std::cout << "\n\n" << p3;

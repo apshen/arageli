@@ -148,7 +148,7 @@ void my_rref_mod
 
         basis.push_back(j);
 
-        T inv_pivot = inverse_mod(A(i, j), mod);
+        T inv_pivot = invmod(A(i, j), mod);
 
 
         for (std::size_t jj = j; jj < n; jj++)
@@ -769,7 +769,7 @@ sparse_polynom<T> mul_mod
 
 
 template <class T>
-sparse_polynom<T> div_mod
+sparse_polynom<T> divmod
 (
     const sparse_polynom<T>& f,
     const sparse_polynom<T>& g,
