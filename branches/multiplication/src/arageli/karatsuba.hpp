@@ -59,7 +59,7 @@ namespace Arageli
     @param m length of the first number
     @param n length of the second number*/
 template <typename N,typename T>
-T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n, T threshold = 50);
+T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold = 50);
 } // namesapce Arageli
 
 

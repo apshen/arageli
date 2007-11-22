@@ -49,24 +49,13 @@ namespace Arageli
 Preliminary conditions: w[n+m+1] = 0!
 */
 template <typename N,typename T>
-T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n, T threshold = 50)
+T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
 {
-    //// make m >= n
-    /*
-    if (m < n)
-    {
-        T temp = m;
-        m = n;
-        n = temp;
-        N *tmp = u;
-        u = v;
-        v = tmp;
-    };
-    */
+    ARAGELI_ASSERT_0(m>=n);
 
     T k = m >> 1;
 
-    if (!is_null(k) && n > k && n > KARATSUBA_THRESHOLD)
+    if (!is_null(k) && n > k && n > ARAGELI_KARATSUBA_THRESHOLD)
     {
         T k2 = k << 1;
         N *W0 = w+k2;
@@ -81,23 +70,13 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n, T threshold =
 
         // allocate temprary space
         // N *C1 = new N[k+2];
-        N *C1 = *t;
+        N *C1 = t;
         // N *C2 = new N[k+2];
-        N *C2 = *t+k+2;
-        N *C = *t+m+4;
-        *t += 2*m+6;
+        N *C2 = t+k+2;
+        N *C = t+m+4;
+        t += 2*m+6;
 
-        /*
-        T t;
-        if (n-k > m-k)
-        {
-            UV0len = do_mult_karatsuba(V0, U0, W0, t, n-k, m-k); // mult U0*V0
-        }
-        else
-        {
-        */
-            UV0len = do_mult_karatsuba(U0, V0, W0, t, m-k, n-k); // mult U0*V0
-        //}
+        UV0len = do_mult_karatsuba(U0, V0, W0, t, m-k, n-k); // mult U0*V0
         UV1len = do_mult_karatsuba(U1, V1, W2, t, k, k);     // mult U1*V1
 
         memcpy(C1, U0, sizeof(N)*(m-k));
@@ -114,8 +93,6 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n, T threshold =
             C2len = _Internal::do_add(C2, V0, k, n-k);
         }
 
-        // N *C = new N[C1len+C2len];
-
         if (C2len > C1len)
         {
             Clen = do_mult_karatsuba(C2, C1, C, t, C2len, C1len); // mult C = C1*C2
@@ -124,17 +101,13 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N **t, T m, T n, T threshold =
         {
             Clen = do_mult_karatsuba(C1, C2, C, t, C1len, C2len); // mult C = C1*C2
         }
-        //Clen = do_mult_karatsuba(C1, C2, C, t, C1len, C2len); // mult C = C1*C2
 
         _Internal::do_sub(C, W0, Clen, UV0len);
         _Internal::do_sub(C, W2, Clen, UV1len);
 
         _Internal::do_add(W1, C, m+n-k, Clen);    // W += C
 
-        *t -= 2*m+6;
-        // delete []C;
-        // delete []C1;
-        // delete []C2;
+        t -= 2*m+6;
     }
     else
     {

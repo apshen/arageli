@@ -34,8 +34,8 @@
 BIN=../bin
 ARAGELIPERFFLAGS += -pg -O3
 
-$(BIN)/karatsuba_vs_classic:karatsuba_vs_classic.cpp ../lib/libperfarageli.a
+$(BIN)/karatsuba_vs_classic:karatsuba_vs_classic.cpp perfarageli
 	$(CXX) $(ARAGELIPERFFLAGS) $< -o $@ -I"../src" -L"../lib" -lperfarageli
 
-../lib/libperfarageli.a:
+perfarageli:
 	$(MAKE) -C ../src/arageli ../../lib/libperfarageli.a
