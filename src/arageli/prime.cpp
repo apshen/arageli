@@ -40,6 +40,7 @@
 #include "exception.hpp"
 #include "powerest.hpp"
 #include "rand.hpp"
+#include "setenumrnd/grid.hpp"
 
 
 namespace Arageli
@@ -130,7 +131,7 @@ bool is_pseudoprime_solovay_strassen (const T& x, const N& n, const T_factory& t
         jac = jacobi(a, x);
         if (is_opposite_unit(jac))
             jac += x;
-        if (power_mod(a, (x-1)/2, x) != jac )
+        if (powmod(a, (x-1)/2, x) != jac )
             return false;
     }
     return true;
@@ -163,7 +164,7 @@ bool is_pseudoprime_miller_rabin (const T& x, const N& n, const T_factory& tfctr
             q = q >> 1;
             ++k;
         }
-        c = power_mod(a, q, x);
+        c = powmod(a, q, x);
         if (is_unit(c) || c == x - unt)
             continue;
 
@@ -243,7 +244,7 @@ bool is_prime_AKS_classic (const T& n)
             if
             (
                 (q >= 4*intsqrt(r)+len4) &&
-                (power_mod((n%r),((r-1)/q),r) <= 1)
+                (powmod((n%r),((r-1)/q),r) <= 1)
             )
                 break;
         }
@@ -254,13 +255,13 @@ bool is_prime_AKS_classic (const T& n)
     sparse_polynom<T> mod_part;
     sparse_polynom<T> right_part;
     mod_part = power(sparse_polynom<T>("x"), r)-1;
-    right_part = power_mod(sparse_polynom<T>("x"), n, mod_part);
+    right_part = powmod(sparse_polynom<T>("x"), n, mod_part);
     s = 2*N*len;
     for(i = 1; i <= s; ++i)
     {
         sparse_polynom<T> left_part("x");
         left_part -= i;
-        left_part = power_mod(left_part, n, mod_part);
+        left_part = powmod(left_part, n, mod_part);
         left_part += i;
         sparse_polynom_reduction_mod(left_part, n);
         if (left_part != right_part)
@@ -276,7 +277,7 @@ long primitive_root(T n, T r)
     long r_len = r.length();
     for (i = 1; i <= r_len; ++i)
     {
-        if( is_unit(power_mod(n%r,i,r)) )
+        if( is_unit(powmod(n%r,i,r)) )
             return i;
     }
     return 0;
@@ -310,13 +311,13 @@ bool is_prime_AKS (const T& n)
     sparse_polynom<T> mod_part;
     sparse_polynom<T> right_part;
     mod_part = power(sparse_polynom<T>("x"), r)-1;
-    right_part = power_mod(sparse_polynom<T>("x"), n, mod_part);
+    right_part = powmod(sparse_polynom<T>("x"), n, mod_part);
     s = intsqrt(r)*len;
     for(i = 1; i <= s; ++i)
     {
         sparse_polynom<T> left_part("x");
         left_part -= i;
-        left_part = power_mod(left_part, n, mod_part);
+        left_part = powmod(left_part, n, mod_part);
         left_part += i;
         sparse_polynom_reduction_mod(left_part, n);
         if (left_part != right_part)
@@ -546,7 +547,7 @@ T pollard_pm1(const T& n, const N& no_of_iter, const T_factory& tfctr)
     while(true)
     {
         //  if (i % 10 == 0) std::cout << " i = " << i << std::endl;
-        t = power_mod(t, i, n); // now t = b^(i!)
+        t = powmod(t, i, n); // now t = b^(i!)
         p = gcd(n, t - 1);
         if (p > unit(n) && p < n)
             return p;
@@ -565,7 +566,7 @@ T pollard_pm1(const T& n, const N& no_of_iter, const T_factory& tfctr)
     for(N i = 2; i <= no_of_iter; i++)
     {
         //  if (i % 10 == 0) std::cout << " i = " << i << std::endl;
-        t = power_mod(t, i, n); // now t = b^(i!)
+        t = powmod(t, i, n); // now t = b^(i!)
         p = gcd(n, t - 1);
         if (p > unit(n) && p < n)
             return p;
@@ -782,19 +783,19 @@ void rsa_generate_keys(N l, T& c, T& public_key, T& d)
         c = c + 2
     );
 
-    d = inverse_mod(c, phi);
+    d = invmod(c, phi);
 }
 
 template<typename T>
 T rsa_encyph(const T& x, const T& c, const T& key)
 {
-    return power_mod(x, c, key);
+    return powmod(x, c, key);
 }
 
 template<typename T>
 T rsa_decyph(const T& y, const T& d, const T& key)
 {
-    return power_mod(y, d, key);
+    return powmod(y, d, key);
 }
 
 

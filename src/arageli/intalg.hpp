@@ -62,7 +62,7 @@ namespace Arageli
 /// Returns inversion of a modulo n.
 /** Requirement: n must be prime. */
 template <typename T, typename T_factory>
-inline T inverse_mod (const T& a, const T& m, const T_factory& tfctr)
+inline T invmod (const T& a, const T& m, const T_factory& tfctr)
 {
     ARAGELI_ASSERT_0(is_positive(a));
     ARAGELI_ASSERT_0(m >= 2);
@@ -77,23 +77,23 @@ inline T inverse_mod (const T& a, const T& m, const T_factory& tfctr)
 /// Returns inversion of a modulo n.
 /** Requirement: n must be prime. */
 template <typename T>
-inline T inverse_mod (const T& a, const T& n)
+inline T invmod (const T& a, const T& n)
 {
-    return inverse_mod(a, n, factory<T>());
+    return invmod(a, n, factory<T>());
 }
 
 
 /// Exponentiates a in to power n modulo m via squaring and adding.
 /** Requirements: n and m must be a positive. */
 template <typename T, typename I, typename T_factory>
-T power_mod (T a, I n, const T& m, const T_factory& tfctr);
+T powmod (T a, I n, const T& m, const T_factory& tfctr);
 
 /// Exponentiates a in to power n modulo m via squaring and adding.
 /** Requirements: n and m must be a positive. */
 template <typename T, typename I>
-inline T power_mod (const T& a, const I& n, const T& m)
+inline T powmod (const T& a, const I& n, const T& m)
 {
-    return power_mod(a, n, m, factory<T>());
+    return powmod(a, n, m, factory<T>());
 }
 
 
@@ -128,10 +128,10 @@ T conditioner (const T& _a, const T& _b, const T& N, V &d);
 // WARNING! STRANGE FUNCTION
 // TODO: Document!
 template <typename T1, typename T2, typename T3>
-T3 mod (const T1& a, const T2& b, const T3& d)
+T3 mod_3 (const T1& a, const T2& b, const T3& d)
 {
-    // WARNING! div_mod(unit(a), b, d) is inverse of b modulo d
-    return mod(a*div_mod(unit(a), b, d), d);
+    // WARNING! divmod(unit(a), b, d) is inverse of b modulo d
+    return mod(a*divmod(unit(a), b, d), d);
 }
 
 
@@ -145,7 +145,7 @@ inline T2 mod (const T1& a, const T2& b)
 
 /// Compute a/b modulo d.
 template <typename T1, typename T2, typename T3>
-T3 div_mod (const T1& a, const T2& b, const T3& d);
+T3 divmod (const T1& a, const T2& b, const T3& d);
 
 
 /// Compute residue of division a by b modulo d.

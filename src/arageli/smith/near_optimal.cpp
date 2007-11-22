@@ -333,12 +333,12 @@ void cond_gauss
             B.mult_row(ii, pivot);
             B.addmult_rows(ii, j,  -alpha);
             for(std::size_t jj = 0; jj < n; jj++)
-                B(ii, jj) = div_mod(B(ii, jj), d, N);
+                B(ii, jj) = divmod(B(ii, jj), d, N);
         }
 
         d = B(i, j);
         for(std::size_t jj = 0; jj < n; jj++)
-            B(i, jj) = div_mod(B(i, jj), d, N);
+            B(i, jj) = divmod(B(i, jj), d, N);
         i++;
     }
 
@@ -699,7 +699,7 @@ void bidiagonal_to_smith
                     A(i - 1, k + 1) = mod(A(i - 1, k + 1) + c*A(i, k + 1), N);
                 if(i < k)
                 {
-                    T_A alpha = div_mod(mod(c*A(i, i), N), d, N);
+                    T_A alpha = divmod(mod(c*A(i, i), N), d, N);
                     V.addmult_cols(i, i - 1, -alpha);
                     V.mod_col(i, N);
                 }

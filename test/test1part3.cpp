@@ -768,7 +768,7 @@ void test1_64 ()
     for(T n = 2; n < 100; n = next_prime(n))
         for(T a = 1; a < n; ++a)
         {
-            T r = inverse_mod(a, n);
+            T r = invmod(a, n);
             std::cout
                 << "\n" << a << "^(-1) (mod " << n << ") = "
                 << r;

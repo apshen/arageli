@@ -805,7 +805,7 @@ void solve_mod_2 (vector<big_int> cureq, big_int curb, big_int curmodule, matrix
         if(first != 1)
         {
             // нормировка по первой переменной:
-            big_int invfirst = inverse_mod(first, curmodule);
+            big_int invfirst = invmod(first, curmodule);
             cout
                 << "\nНормируем по первой переменной: (" << first << "^(-1) = "
                 << invfirst << "(mod " << curmodule << "))" << std::flush;

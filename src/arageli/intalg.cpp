@@ -50,6 +50,7 @@
 #include "intalg.hpp"
 #include "powerest.hpp"
 #include "vector.hpp"
+#include "cmp.hpp"
 
 
 namespace Arageli
@@ -71,7 +72,7 @@ std::size_t nbits (T a, const T_factory& tfctr)
 
 
 template <typename T, typename I, typename T_factory>
-T power_mod (T a, I n, const T& m, const T_factory& tfctr)
+T powmod (T a, I n, const T& m, const T_factory& tfctr)
 {
     ARAGELI_ASSERT_0(!is_null(a) || is_positive(n));
 
@@ -174,9 +175,9 @@ T conditioner (const T& a, const T& b, const T& N)
 
 
 template <typename T1, typename T2, typename T3>
-T3 div_mod (const T1& a, const T2& b, const T3& d)
+T3 divmod (const T1& a, const T2& b, const T3& d)
 {
-    // WARNING! Are all variables of type T3.
+    // WARNING! Are all variables of type T3?
     T3 u, v;
     T3 g = euclid_bezout(b, d, u, v);
     return mod(u*a/g, d);
@@ -187,7 +188,7 @@ template <typename T1, typename T2, typename T3>
 T3 quo_mod (const T1& a, const T2& b, const T3& d)
 {
     T3 r = rem_mod(a, b, d);
-    T3 c = div_mod(a - r, b, d);
+    T3 c = divmod(a - r, b, d);
     return mod(c, d);
 }
 
@@ -599,15 +600,15 @@ T sqrt_mod_shenks (const T& a, const T& n, const TT& tt)
         ++alpha;
     }
     T s = temp;
-    r = power_mod(a, (s+1)/2, n);
-    b = power_mod(p, s, n);
+    r = powmod(a, (s+1)/2, n);
+    b = powmod(p, s, n);
 //      find inverse element a^(-1)
-    T inva = inverse_mod(a, n);
+    T inva = invmod(a, n);
     T temp1 = (r*r*inva) % n;
     j = "0";    // WARNING!
     const T two = "2";  // WARNING!
     T t1 = power(two, alpha - two);
-    if (is_null(power_mod(temp1, t1, n) - n-1))
+    if (is_null(powmod(temp1, t1, n) - n-1))
         j=1;
     int i;
     T t2;
@@ -615,7 +616,7 @@ T sqrt_mod_shenks (const T& a, const T& n, const TT& tt)
     {
         j*=2;
         t2 = power(two, alpha-i-two);
-        if (is_null(power_mod(r*r*inva*b*b, t2, n) - n-1))
+        if (is_null(powmod(r*r*inva*b*b, t2, n) - n-1))
         {
             j++;
         }
@@ -645,7 +646,7 @@ T sqrt_mod (const T& a, const T& n, const TT& tt)
     ARAGELI_ASSERT_ALWAYS(n%4 == 3);
 
     AEAGELI_ASSERT_1(is_divisible(n+1, 4, tt, type_traits<int>()));
-    return power_mod(a, (n+1)/4, tt);
+    return powmod(a, (n+1)/4, tt);
 }
 #endif
 ///////////////////////////////////////////////////////////////////////////////
