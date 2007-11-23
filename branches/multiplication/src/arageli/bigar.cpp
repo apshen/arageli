@@ -279,6 +279,8 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
         n > ARAGELI_KARATSUBA_THRESHOLD 
     )
     {
+        digit *t = new digit[3 * (n + m)];
+        std::size_t ret = 0;
         //// make m >= n
         if (m < n)
         {
@@ -289,19 +291,17 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
             u = v;
             v = tmp;
         };
-        digit *t = new digit[2 * (n + m)];
-        std::size_t ret = 0;
         if (m/n > 1)
         {
-            for (std::size_t i = n; i < m; ++i)
+            for (std::size_t i = n; i < m + n; ++i)
             {
                 w[i] = 0;
             }
             do_mult_karatsuba<digit, std::size_t>(u, v, w, t, n, n);
             for (std::size_t i = 1; i < m/n; ++i)
             {
-                std::size_t temp_len = do_mult_karatsuba<digit, std::size_t>(&u[i*n], v, &t[n+m], t, n, n);
-                do_add(&w[(i-1)*n], &t[n+m], temp_len, temp_len);
+                std::size_t temp_len = do_mult_karatsuba<digit, std::size_t>(&u[i*n], v, &t[2*(n+m)], t, n, n);
+                do_add(&w[i*n], &t[2*(n+m)], temp_len, temp_len);
             }
             if (m - (m/n)*n)
             {

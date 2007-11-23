@@ -10,9 +10,9 @@ using std::boolalpha;
 
 int main ()
 {
-    const int nbits_small = 12000;
-    const int nbits_big_delta = 1000;
-    const int nbits_up_big = 36000;
+    const int nbits_small = 120000;
+    const int nbits_big_delta = 10000;
+    const int nbits_up_big = 360000;
     const int measure_iters = 500;
 
     for(int i = nbits_small; i <= nbits_up_big; i += nbits_big_delta)
@@ -22,7 +22,13 @@ int main ()
 
         timer tm;
         for(int j = 0; j < measure_iters; ++j)
+        {
             big_int c = small*big;
+            //if (c/small != big)
+            //{
+            //    std::cout << "\n\nERROR!!!\n\n";
+            //}
+        }
         tm.stop();
         std::cout << i << '\t' << tm.time() << '\n';
     }
