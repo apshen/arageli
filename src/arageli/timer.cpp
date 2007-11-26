@@ -95,6 +95,34 @@ double timer::precision () const
 }
 
 
+void timer::calibrate ()
+{
+    const int ncalibs = 4;  // number of calibration runs
+    ARAGELI_ASSERT_1(ncalibs >= 2); // the first run is partial, so we need at least 2
+
+    std::clock_t curclock = std::clock();
+    if(curclock == std::clock_t(-1))
+        throw time_source_isnot_available();
+
+    std::clock_t maxdelta = 0;
+
+    for(int i = 0; i < ncalibs; ++i)
+    {
+        std::clock_t prevclock = curclock;
+
+        do
+        {
+            curclock = std::clock();
+            ARAGELI_ASSERT_1(curclock != -1);
+        }while(curclock == prevclock);
+
+        ARAGELI_ASSERT_1(curclock > prevclock);
+
+        // to be continued here...
+    }
+}
+
+
 std::ostream& operator<< (std::ostream& s, const timer& t)
 {
     if(t.is_active())
