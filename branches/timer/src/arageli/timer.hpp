@@ -143,6 +143,13 @@ public:
             start();
     }
 
+
+    /// Calibrates the timer class to get correct approximation for resolution value.
+    /** This function is called automatically when one of the timer class functions
+        is called for the first time. The moment when the user can call this function
+        is TBD. */
+    static void calibrate ();
+
 private:
 
     friend std::ostream& operator<< (std::ostream& s, const timer& t);
