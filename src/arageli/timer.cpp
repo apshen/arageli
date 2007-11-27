@@ -40,6 +40,16 @@ namespace Arageli
 {
 
 
+timer::timer (bool turn_on) :
+    turn_on_m(false),
+    duration(0),
+    absprec(0)
+{
+    first_calibrate();
+    if(turn_on)start();
+}
+
+
 void timer::start ()
 {
     if(turn_on_m)return;
@@ -57,7 +67,10 @@ void timer::stop ()
     if(curclock == std::clock_t(-1))
         throw time_source_isnot_available();
     duration += (curclock - start_stamp);
-    ++absprec;
+
+    ARAGELI_ASSERT_1(is_calibrated());
+    absprec += delta;
+
     turn_on_m = false;
 }
 
@@ -83,7 +96,10 @@ double timer::precision () const
     std::clock_t tm = clock_time();
     std::clock_t curabsprec = absprec;
     if(turn_on_m)
-        ++curabsprec;
+    {
+        ARAGELI_ASSERT_1(is_calibrated());
+        curabsprec += delta;
+    }
 
     if(tm == 0)
         if(curabsprec == 0)
@@ -97,19 +113,27 @@ double timer::precision () const
 
 void timer::calibrate ()
 {
-    const int ncalibs = 4;  // number of calibration runs
-    ARAGELI_ASSERT_1(ncalibs >= 2); // the first run is partial, so we need at least 2
+    // It is average approximation for duration of
+    // the minimum measured time interval.
+
+    const int ncalibs = 10;  // number of calibration runs
+    ARAGELI_ASSERT_1(ncalibs >= 1);
 
     std::clock_t curclock = std::clock();
     if(curclock == std::clock_t(-1))
         throw time_source_isnot_available();
 
-    std::clock_t maxdelta = 0;
+    // Pass the first partial period.
+    while(curclock == std::clock());
 
+    std::clock_t startclock = curclock;    // mark start of interval
+
+    // Pass ncalibs whole periods.
     for(int i = 0; i < ncalibs; ++i)
     {
         std::clock_t prevclock = curclock;
 
+        // Wait actively for changing of std::clock returned value.
         do
         {
             curclock = std::clock();
@@ -117,10 +141,15 @@ void timer::calibrate ()
         }while(curclock == prevclock);
 
         ARAGELI_ASSERT_1(curclock > prevclock);
-
-        // to be continued here...
     }
+
+    delta = (std::clock() - startclock)/ncalibs + 1;    // +1 is for the upper estimate
+    sdelta = double(delta)/CLOCKS_PER_SEC;
 }
+
+
+std::clock_t timer::delta = 0;
+double timer::sdelta;
 
 
 std::ostream& operator<< (std::ostream& s, const timer& t)
