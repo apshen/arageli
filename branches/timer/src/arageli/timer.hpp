@@ -77,19 +77,20 @@ class timer_isnot_stopped :
     Some functions may throw an exception of time_source_isnot_available
     type if the system time source isn't available. In this case the timer
     object doesn't work and you cannot use it.
+
+    To obtain actual resolution value, timer class needs to be calibrated.
+    The calibration is invoked automatically only once during the program
+    execution: when the user calls timer::resolution static function or
+    when the timer class object is created in the first time. The user can
+    call calibration function explicitly to control moment of calibration
+    since the calibration needs some time (but less than one second usually).
 */
 class timer
 {
 public:
 
     /// Starts time tracking if turn_on == true.
-    timer (bool turn_on = true) :
-        turn_on_m(false),
-        duration(0),
-        absprec(0)
-    {
-        if(turn_on)start();
-    }
+    timer (bool turn_on = true);
 
     /// Starts new time interval.
     /** If the timer is already activated, the call doesn't have any effect. */
@@ -116,14 +117,15 @@ public:
         function. */
     double time () const
     {
-        return double(clock_time())*resolution();
+        return double(clock_time())/CLOCKS_PER_SEC;
     }
 
     /// The minimal amount of time that can be measured.
     /** Duration of one tick. The returned value is expressed in seconds. */
     static double resolution ()
     {
-        return 1.0/CLOCKS_PER_SEC;
+        first_calibrate();
+        return sdelta;
     }
 
     /// Relative precision of measuring of the total elapsed time.
@@ -143,12 +145,23 @@ public:
             start();
     }
 
-
     /// Calibrates the timer class to get correct approximation for resolution value.
     /** This function is called automatically when one of the timer class functions
         is called for the first time. The moment when the user can call this function
         is TBD. */
     static void calibrate ();
+
+    /// Retruns true iff timer class is calibrated.
+    static bool is_calibrated ()
+    {
+        return delta != 0;
+    }
+
+    static void first_calibrate ()
+    {
+        if(!is_calibrated())
+            calibrate();
+    }
 
 private:
 
@@ -169,6 +182,9 @@ private:
     std::clock_t duration;    ///< Total accumulated time in ticks.
     std::clock_t absprec;    ///< Absolute precision of the total accumulated time in ticks.
     bool turn_on_m;    ///< Activation flag.
+
+    static std::clock_t delta;  ///< Minimum interval that can be measured in ticks.
+    static double sdelta;   ///< Minimum interval that can be measured in seconds.
 
 };
 
@@ -232,4 +248,4 @@ Times& series_timing (Tasks& tasks, Times& times, Timer& timer);
 } // namespace Arageli
 
 
-#endif  // #ifndef _Arageli_timer_hpp_
+#endif  // #ifndef _ARAGELI_timer_hpp_
