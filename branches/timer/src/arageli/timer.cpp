@@ -46,16 +46,15 @@ timer::timer (bool turn_on) :
     absprec(0)
 {
     first_calibrate();
-    if(turn_on)start();
+    if(turn_on)
+        start();
 }
 
 
 void timer::start ()
 {
     if(turn_on_m)return;
-    start_stamp = std::clock();
-    if(start_stamp == std::clock_t(-1))
-        throw time_source_isnot_available();
+    start_stamp = kernel_time();
     turn_on_m = true;
 }
 
@@ -63,9 +62,7 @@ void timer::start ()
 void timer::stop ()
 {
     if(!turn_on_m)return;
-    std::clock_t curclock = std::clock();
-    if(curclock == std::clock_t(-1))
-        throw time_source_isnot_available();
+    tick_type curclock = kernel_time();
     duration += (curclock - start_stamp);
 
     ARAGELI_ASSERT_1(is_calibrated());
@@ -75,15 +72,13 @@ void timer::stop ()
 }
 
 
-std::clock_t timer::clock_time () const
+timer::tick_type timer::clock_time () const
 {
-    std::clock_t tm = duration;
+    tick_type tm = duration;
 
     if(turn_on_m)
     {
-        std::clock_t curclock = std::clock();
-        if(curclock == std::clock_t(-1))
-            throw time_source_isnot_available();
+        tick_type curclock = kernel_time();
         tm += (curclock - start_stamp);
     }
 
@@ -93,8 +88,8 @@ std::clock_t timer::clock_time () const
 
 double timer::precision () const
 {
-    std::clock_t tm = clock_time();
-    std::clock_t curabsprec = absprec;
+    tick_type tm = clock_time();
+    tick_type curabsprec = absprec;
     if(turn_on_m)
     {
         ARAGELI_ASSERT_1(is_calibrated());
@@ -116,40 +111,52 @@ void timer::calibrate ()
     // It is average approximation for duration of
     // the minimum measured time interval.
 
+    #ifdef _ARAGELI_WIN_PERFORMANCE_TIMER
+        if(!QueryPerformanceFrequency(&freq))
+            throw time_source_isnot_available();
+    #endif
+
     const int ncalibs = 10;  // number of calibration runs
     ARAGELI_ASSERT_1(ncalibs >= 1);
 
-    std::clock_t curclock = std::clock();
-    if(curclock == std::clock_t(-1))
-        throw time_source_isnot_available();
+    tick_type curclock = kernel_time();
 
     // Pass the first partial period.
-    while(curclock == std::clock());
+    while(curclock == kernel_time());
 
-    std::clock_t startclock = curclock;    // mark start of interval
+    tick_type startclock = curclock;    // mark start of interval
 
     // Pass ncalibs whole periods.
     for(int i = 0; i < ncalibs; ++i)
     {
-        std::clock_t prevclock = curclock;
+        tick_type prevclock = curclock;
 
-        // Wait actively for changing of std::clock returned value.
+        // Wait actively for changing of kernel_time returned value.
         do
         {
-            curclock = std::clock();
+            curclock = kernel_time();
             ARAGELI_ASSERT_1(curclock != -1);
         }while(curclock == prevclock);
 
         ARAGELI_ASSERT_1(curclock > prevclock);
     }
 
-    delta = (std::clock() - startclock)/ncalibs + 1;    // +1 is for the upper estimate
-    sdelta = double(delta)/CLOCKS_PER_SEC;
+    delta = (kernel_time() - startclock)/ncalibs + 1;    // +1 is for the upper estimate
+    
+    #ifdef _ARAGELI_WIN_PERFORMANCE_TIMER
+        sdelta = double(delta)/freq.QuadPart;
+    #else
+        sdelta = double(delta)/CLOCKS_PER_SEC;
+    #endif
 }
 
 
-std::clock_t timer::delta = 0;
+timer::tick_type timer::delta = 0;
 double timer::sdelta;
+
+#ifdef _ARAGELI_WIN_PERFORMANCE_TIMER
+    LARGE_INTEGER timer::freq;
+#endif
 
 
 std::ostream& operator<< (std::ostream& s, const timer& t)
@@ -165,11 +172,11 @@ std::istream& operator>> (std::istream& s, timer& t)
 {
     if(_Internal::is_bad_read_literal(s, "("))
         return s;
-    std::clock_t duration;
+    timer::tick_type duration;
     s >> duration;
     if(!s || _Internal::is_bad_read_literal(s, ","))
         return s;
-    std::clock_t absprec;
+    timer::tick_type absprec;
     s >> absprec;
     if(!s || _Internal::is_bad_read_literal(s, ")"))
         return s;
