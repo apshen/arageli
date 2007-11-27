@@ -68,8 +68,8 @@ bool multiple_calibrate (int n, int k)
     {
         timer::calibrate();
         double resolution = timer::resolution();
-        //tout << "resolution = " << resolution << '\n';
-        const double eps = 1;
+        //tout << resolution << '\n';
+        const double eps = 2;
         const double reseps = resolution * eps;
         timer tm;
         double mr = average_resolution(k, tm);
