@@ -4,9 +4,10 @@
 
     This file is a part of the Arageli library.
 
-    WARNIG. This file has no complate implementation.
+    WARNIG. This file doesn't have complete implementation.
 
     Copyright (C) 1999 -- 2005 Nikolai Yu. Zolotykh
+    Copyright (C) 2006 -- 2007 Sergey S. Lyalin
     University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
@@ -402,6 +403,7 @@ void input_binary (std::basic_istream<Ch, ChT>& in, big_int& x)
 #include <sstream>
 #include <limits>
 #include <cctype>
+#include <malloc.h>
 
 #include "big_int.hpp"
 #include "rational.hpp"
@@ -432,7 +434,7 @@ void big_arith_error(const char *s)
 
 digit* big_int::get_mem_for_data (std::size_t nitems)
 {
-    digit* p = reinterpret_cast<digit*>(std::malloc(nitems * sizeof(digit)));
+    digit* p = reinterpret_cast<digit*>(_aligned_malloc(nitems * sizeof(digit), 16));
     if(!p)
         big_arith_error("the heap overflow");
     return p;
@@ -441,7 +443,7 @@ digit* big_int::get_mem_for_data (std::size_t nitems)
 
 void big_int::free_data (digit *p)
 {
-    free(p);
+    _aligned_free(p);
 }
 
 
@@ -449,7 +451,7 @@ digit* big_int::realloc_data (digit* p, std::size_t newnitems)
 {
     if(newnitems)
     {
-        p = reinterpret_cast<digit*>(realloc(p, newnitems * sizeof(digit)));
+        p = reinterpret_cast<digit*>(_aligned_realloc(p, newnitems * sizeof(digit), 16));
         if(!p)
             big_arith_error("the heap overflow");
     }
