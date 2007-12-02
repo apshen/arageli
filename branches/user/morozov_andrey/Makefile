@@ -34,7 +34,7 @@
 
 # build arageli library
 
-.PHONY: all check install clean example dvi TAGS
+.PHONY: all check install clean example dvi TAGS perf
 
 all:
 	$(MAKE) -C src/arageli
@@ -44,12 +44,18 @@ check:
 	$(MAKE) -C test
 	make runtests
 
-runtests:
-	if ls bin/test; then bin/test; else echo \*\*\* Try make check before running tests! \*\*\*; fi;
-#	bin/test
+perf:
+	$(MAKE) -C perf
 
-example:
-	$(MAKE) -C example/
+runtests:
+	if [ -x "./bin/test" ]; then 
+	  ./bin/test 
+	else 
+	  echo "*** Try make check before running tests! ***"
+	fi
+
+#example:
+#	$(MAKE) -C example/
 
 # call 'make install' only with root previlegues
 install:
@@ -72,8 +78,7 @@ HTML:
 
 # update TAGS for source files
 TAGS:
-	$(MAKE) -C src/arageli TAGS
-	$(MAKE) -C test TAGS
+	ctags -R -h .cpp.hpp
 
 clean:
 	$(MAKE) -C src/arageli clean

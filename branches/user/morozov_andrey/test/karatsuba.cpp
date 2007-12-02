@@ -91,7 +91,7 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
         big_int out = 0;
         _Internal::digit *w_digits = new _Internal::digit[a_len+b_len];
         _Internal::digit *t_digits = new
-            _Internal::digit[9*(a_len+b_len)];
+            _Internal::digit[2*(a_len+b_len)];
         w_digits[a_len+b_len-1] = 0;
 #ifdef CHECK_TIME
         timer s;
@@ -99,7 +99,7 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
 #endif
         unsigned w_len =
             do_mult_karatsuba<_Internal::digit,unsigned>(a_digits,
-                    b_digits, w_digits, &t_digits, a_len, b_len);
+                    b_digits, w_digits, t_digits, a_len, b_len);
 #ifdef CHECK_TIME
         s.stop();
         std::cerr << "Karatsuba time: " << s.time() << "\n";
