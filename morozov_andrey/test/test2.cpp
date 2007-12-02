@@ -29,8 +29,6 @@
 
 #include "stdafx.hpp"
 
-#include "test1.hpp"
-
 namespace Arageli
 {
 
