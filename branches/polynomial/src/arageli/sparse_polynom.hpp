@@ -1193,7 +1193,7 @@ public:
     sparse_polynom (In first, In last, const norm_monom_seq_t&)
     {
         rep().assign(first, last);
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
     }
 
 
@@ -1264,7 +1264,7 @@ public:
     /** I.e. returns true if polynomial does not containes any monoms. */
     bool is_null () const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
         return rep().empty();
     }
 
@@ -1272,7 +1272,7 @@ public:
     /// Returns true if polynomial has only absolute term that equal to 1.
     bool is_unit () const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
         return rep().size() == 1 && rep().front().is_unit();
     }
 
@@ -1280,7 +1280,7 @@ public:
     /// Returns true if polynomial has only absolute term that equal to -1.
     bool is_opposite_unit () const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
         return rep().size() == 1 && rep().front().is_opposite_unit();
     }
 
@@ -1288,7 +1288,7 @@ public:
     /// Returns true if polynomial have no monoms with positive degree of x.
     bool is_const () const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
         return rep().empty() || rep().size() == 1 && rep().front().is_const();
     }
 
@@ -1298,7 +1298,7 @@ public:
         and coefficient = 1. */
     bool is_x () const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
         return rep().size() == 1 && rep().front().is_x();
     }
 
@@ -1313,7 +1313,7 @@ public:
     /** Requirement: !is_null(). */
     monom& leading_monom ()
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
         ARAGELI_ASSERT_0(!rep().empty());
         store.unique();
         return rep().back();
@@ -1324,7 +1324,7 @@ public:
     /** Requirement: !is_null(). */
     const monom& leading_monom () const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
         ARAGELI_ASSERT_0(!rep().empty());
         return rep().back();
     }
@@ -1334,7 +1334,7 @@ public:
     /** For zeroth polynomial returns zero monom. */
     monom leading_monom_cpy () const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
         return
             rep().empty() ?
@@ -1348,7 +1348,7 @@ public:
     template <typename Factory_degree>
     degree_type degree (const Factory_degree& fctr) const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
         return
             rep().empty() ?
@@ -1360,7 +1360,7 @@ public:
     /** For zeroth polynomial returns -1 from factory. */
     degree_type degree () const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
         return
             rep().empty() ?
@@ -1393,7 +1393,7 @@ public:
     /** For zeroth polynomial returns zero from dafault factory. */
     coef_type leading_coef_cpy () const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
         return
             rep().empty() ?
@@ -1406,7 +1406,7 @@ public:
     template <typename Factory_coef>
     coef_type leading_coef_cpy (const Factory_coef& fctr) const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
         return
             rep().empty() ?
@@ -1446,7 +1446,7 @@ public:
     /// Returns opposite polynomial.
     sparse_polynom operator- () const
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
         sparse_polynom t(*this);
         return t.opposite();
@@ -1460,7 +1460,7 @@ public:
 
     sparse_polynom& operator++ ()
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
         unique();
 
@@ -1474,7 +1474,7 @@ public:
             rep().push_front(unit<F>());
         }
 
-        ARAGELI_ASSERT_1(is_normal());
+        ARAGELI_ASSERT_EX1_1(is_normal(), *this);
         return *this;
     }
 
@@ -1487,7 +1487,7 @@ public:
 
     sparse_polynom& operator-- ()
     {
-        ARAGELI_ASSERT_0(is_normal());
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
         unique();
 
@@ -1501,7 +1501,7 @@ public:
             rep().push_front(opposite_unit<F>());
         }
 
-        ARAGELI_ASSERT_1(is_normal());
+        ARAGELI_ASSERT_EX1_1(is_normal(), *this);
         return *this;
     }
 
@@ -2488,8 +2488,8 @@ inline int cmp
     const sparse_polynom<F2, I2, REFCNT2>& b
 )
 {
-    ARAGELI_ASSERT_0(a.is_normal());
-    ARAGELI_ASSERT_0(b.is_normal());
+    ARAGELI_ASSERT_EX1_0(a.is_normal(), a);
+    ARAGELI_ASSERT_EX1_0(b.is_normal(), b);
 
     typedef
         std::reverse_iterator

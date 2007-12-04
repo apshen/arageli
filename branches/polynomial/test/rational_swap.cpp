@@ -38,10 +38,6 @@
 
 #include "stdafx.hpp"
 
-#include "rand.hpp"
-#include "universal.hpp"
-#include "rational.hpp"
-
 using namespace Arageli;
 
 bool rational_swap_test(int param, int count)

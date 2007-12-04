@@ -43,6 +43,10 @@
 #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) ||    \
     defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_INTALG)
 
+#include <utility>
+#include <stack>
+#include <vector>
+
 #include "intalg.hpp"
 #include "powerest.hpp"
 #include "vector.hpp"
@@ -323,7 +327,7 @@ bool is_invertible_mod (const T& a, const T& N)
 template <typename T, typename T_factory>
 T factorial_successive_multiplication (T a, const T_factory& tfctr)
 {
-    ARAGELI_ASSERT_0(sign(a, tfctr) >= 0);
+    ARAGELI_ASSERT_0(sign(a) >= 0);
 
     if(is_null(a) || is_unit(a))
         return tfctr.unit(a);
@@ -367,12 +371,92 @@ T factorial_even_odd_multiplication (T a, const T_factory& tfctr)
     T t = unit;
     T iend = (n4q << 1u) + unit;
     T i = (n2q << 1u) + unit;
+
+    std::vector<std::pair<T, int> > pairer;
+    std::size_t reserve_size = 2 + nbits(((i - iend) >> 1u) + unit);
+    pairer.reserve(reserve_size);
+    pairer.push_back(std::make_pair(t, 0));
+
+    for(; i != iend; ----i)
+    {
+        ARAGELI_ASSERT_1(!pairer.empty());
+        ARAGELI_ASSERT_1(pairer.size() <= reserve_size);
+
+        T cur = i;  // the current value
+        int level = 0;  // the level of the current value
+
+        while(pairer.back().second == level)
+        {
+            // make a pair
+            cur *= pairer.back().first;
+            ++level;
+            pairer.pop_back();
+            if(pairer.empty())
+                break;
+        }
+
+        ARAGELI_ASSERT_1(pairer.empty() || pairer.back().second > level);
+        pairer.push_back(std::make_pair(cur, level));
+    }
+
+    ARAGELI_ASSERT_1(pairer.size() <= reserve_size);
+    ARAGELI_ASSERT_1(!pairer.empty());
+    ARAGELI_ASSERT_2(is_unit(t));
+
+    while(!pairer.empty())
+    {
+        t *= pairer.back().first;
+        pairer.pop_back();
+    }
+
+#if 0
     for(; i != iend; ----i)
         t *= i;
+#endif
 
     T t1 = unit;
+
+    reserve_size = 2 + nbits((i >> 1u) + unit);
+    pairer.reserve(reserve_size);
+    ARAGELI_ASSERT_1(pairer.empty());
+    pairer.push_back(std::make_pair(t1, 0));
+
+    for(; !is_unit(i); ----i)
+    {
+        ARAGELI_ASSERT_1(!pairer.empty());
+        ARAGELI_ASSERT_1(pairer.size() <= reserve_size);
+
+        T cur = i;  // the current value
+        int level = 0;  // the level of the current value
+
+        while(pairer.back().second == level)
+        {
+            // make a pair
+            cur *= pairer.back().first;
+            ++level;
+            pairer.pop_back();
+            if(pairer.empty())
+                break;
+        }
+
+        ARAGELI_ASSERT_1(pairer.empty() || pairer.back().second > level);
+        pairer.push_back(std::make_pair(cur, level));
+    }
+
+    ARAGELI_ASSERT_1(pairer.size() <= reserve_size);
+    ARAGELI_ASSERT_1(!pairer.empty());
+    ARAGELI_ASSERT_2(is_unit(t1));
+
+    while(!pairer.empty())
+    {
+        t1 *= pairer.back().first;
+        pairer.pop_back();
+    }
+
+#if 0
     for(; !is_unit(i); ----i)
         t1 *= i;
+#endif
 
     return (res*t)*(t1*t1) << (n2q + n4q);
 }

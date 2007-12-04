@@ -1,13 +1,18 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
+using std::setprecision;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
     // Operations with big_int can be performed
     // as with standard C++ types.
-        // You can mix in one operation operands of different types
+    // You can mix in one operation operands of different types
     big_int day_seconds = (big_int(60) * 60) * 24;
     cout << "A day contains " << day_seconds <<" seconds"<< endl;
     big_int year_seconds = day_seconds * 365;
@@ -40,7 +45,7 @@ int main(int argc, char *argv[])
 
     cout << "2^64 = " << (big_int(1) << 64) << endl;
 
-    // Working with rationals is yeasy too
+    // Working with rationals is easy too
     rational<> sqrt_2 = "1/2";
     for(int i = 0; i < 10; i++)
         sqrt_2 = 1 / (2 + sqrt_2);
@@ -57,4 +62,3 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-

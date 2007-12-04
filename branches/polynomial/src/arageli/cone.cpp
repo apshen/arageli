@@ -523,6 +523,12 @@ int cmp
     const cone<T2, M2, CFG2>& b
 )
 {
+    ARAGELI_ASSERT_0
+    (
+        !std::numeric_limits<T1>::is_specialized ||
+        std::numeric_limits<T1>::is_exact
+    );
+
     if(int c = cmp(a.space_dim(), b.space_dim()))
         return c;
     if(int c = cmp(a.dim(), b.dim()))

@@ -40,6 +40,7 @@
 #include "exception.hpp"
 #include "powerest.hpp"
 #include "rand.hpp"
+#include "setenumrnd/grid.hpp"
 
 
 namespace Arageli
@@ -150,10 +151,16 @@ bool is_pseudoprime_miller_rabin (const T& x, const N& n, const T_factory& tfctr
     N k;
     const T unt = unit(x);
     const T start_q = (x - 1) >> 1;
+
+    // We need integer random numbers from [2, x-1].
+    typedef set::grid1<T> int_grid;
+    int_grid int_2_xm1(2, x-1); // integer set from [2, x-1]
+    rnd::equiprob<int_grid> gen_2_xm1(int_2_xm1);   // random generator from [2, x-1]
+
     for (N i = null(n); i < n; ++i)
     {
-        a = rand(x-3);
-        a += 2;
+        a = gen_2_xm1();
+
         if(!is_unit(gcd(a,x)))
             return false;
         q = start_q;
@@ -540,6 +547,28 @@ template<typename T, typename N, typename T_factory>
 T pollard_pm1(const T& n, const N& no_of_iter, const T_factory& tfctr)
 {
     T b = 2, t = 2, p = unit(n);
+    if (!no_of_iter)
+    {
+        int i = 2;
+    while(true)
+    {
+        //  if (i % 10 == 0) std::cout << " i = " << i << std::endl;
+        t = power_mod(t, i, n); // now t = b^(i!)
+        p = gcd(n, t - 1);
+        if (p > unit(n) && p < n)
+            return p;
+        if (p == n)
+        {
+            i = 2;
+            t = ++b;
+            if (b == 5)
+                return null(n);
+        }
+        ++i;
+    }
+    }
+    else
+    {
     for(N i = 2; i <= no_of_iter; i++)
     {
         //  if (i % 10 == 0) std::cout << " i = " << i << std::endl;
@@ -555,6 +584,8 @@ T pollard_pm1(const T& n, const N& no_of_iter, const T_factory& tfctr)
                 return null(n);
         }
     }
+    }
+    std::cout << "\nIncrease iterations number!\n";
     return null(n);
 }
 

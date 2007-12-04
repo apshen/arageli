@@ -39,13 +39,16 @@
 
 
 #include "stdafx.hpp"
-#include "matrix_ops.hpp"
+//#include "matrix_ops.hpp"
 
 using namespace Arageli;
 
 
 namespace
 {
+
+//#define ARAGELI_TEST_OUTPUT_STATISTICS
+
 
 template <typename P>
 bool simple_test1
@@ -134,6 +137,7 @@ bool simple_test1
         }
     }
 
+#ifdef ARAGELI_TEST_OUTPUT_STATISTICS
     tout << "\nStatistics for T = " << typeid(T).name() << "\n";
     tout << "Degrees:\n";
     output_map(hdeg);
@@ -141,6 +145,7 @@ bool simple_test1
     output_map(hnumfact);
     tout << "Different polynomials (" << pols.size() << "):\n";
     output_map(pols);
+#endif
 
     return num_of_err == 0;
 }
@@ -169,6 +174,28 @@ bool simple_test2 ()
         tout << "\n" << e;
         return false;
     }
+
+    try
+    {
+        P p = "400*x^2+360*x-180";
+        vector<P> v = factorize_berlekamp_hensel(p);
+        //std::cout<<v;
+        if(v.size() == 0 || product(v) != v)
+        {
+            tout
+                << "Error at simple_test2:"
+                << "\n\tP = " << typeid(P).name()
+                << "\n\tp     = " << p
+                << "\n\tv = "
+                << "\nproduct(v) = " << product(v) << "\n";
+            output_aligned(tout, v);
+        }
+    }
+    catch(const Arageli::exception& e)
+    {
+        tout << "\n" << e;
+        return false;
+    }
     return true;
 }
 
@@ -178,7 +205,7 @@ bool simple_test2 ()
 
 TEST_FUNCTION(factorize_berlekamp_hensel, "A simple test for factorize_berlekamp_hensel function.")
 {
-    return resHANG;    // buzz
+    //return resHANG;    // buzz
 
     int seed = 1, coverage = ARAGELI_TESTSYS_COVERAGE_DEFAULT;
 

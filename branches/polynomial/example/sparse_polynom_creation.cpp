@@ -1,9 +1,13 @@
-#include "arageli/arageli.hpp"
+#include <iostream>
+#include <iomanip>
+#include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
     // Let's create some polynomials
     sparse_polynom<int> S = "2*x^2+5*x-7+3*x";
@@ -57,7 +61,7 @@ int main(int argc, char *argv[])
 
     sparse_polynom<double> FR = R;
     cout << "A polynomial converted from another = "
-        << endl << FR << endl << endl;
+        << endl << FR << endl;
 
     return 0;
 }

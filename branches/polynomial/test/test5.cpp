@@ -40,47 +40,6 @@ namespace Arageli
     int _my_counter_1 = 0, _my_counter_2 = 0;
 }
 
-
-class Timing
-{
-public:
-
-    Timing (bool on_a = true) : on_m(on_a), time_m(0)
-    { if(on_m)start_m = std::clock(); }
-
-    bool is_on () const { return on_m; }
-
-    void on (bool on_a = true)
-    {
-        if(on_m)return;
-        start_m = std::clock();
-        on_m = true;
-    }
-
-    void off ()
-    {
-        if(!on_m)return;
-        time_m += double(std::clock() - start_m)/CLOCKS_PER_SEC;
-        on_m = false;
-    }
-
-    double time () const
-    {
-        if(on_m)
-            return time_m + double(std::clock() - start_m)/CLOCKS_PER_SEC;
-        else
-            return time_m;
-    }
-
-private:
-
-    bool on_m;
-    std::clock_t start_m;
-    double time_m;
-};
-
-
-
 rational<> rand_rational (size_t len)
 {
     return rational<>
@@ -182,17 +141,18 @@ TEST_FUNCTION(rref_gauss_bareiss_for_mp, "Gauss-Bareiss for multipolynomials.")
         vector<int> basis;
         P det;
 
-        output_aligned(std::cerr, a);
+        //output_aligned(tout, a);
 
         rref_gauss_bareiss(a, b, q, basis, det);
 
-        output_aligned(std::cerr << "\nb = \n", b);
-        std::cerr << "\ndet = " << det << '\n';
+        //output_aligned(tout << "\nb = \n", b);
+        //tout << "\ndet = " << det << '\n';
+        //tout << "\nsolution is valid: " << std::boolalpha << (b == q * a) << '\n';
         return resOK;
     }
     catch(const exception& e)
     {
-        std::cerr << "Exception!\n" << e;
+        tout << "Exception!\n" << e;
         throw;
     }
     catch(...)

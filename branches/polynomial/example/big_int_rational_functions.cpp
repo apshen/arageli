@@ -1,9 +1,13 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
     // Compute a factorial and a root
     big_int f = factorial(big_int(16));
@@ -28,7 +32,7 @@ int main(int argc, char *argv[])
     factorize(fermas_number, factorization);
     cout << fermas_number << " = ";
     output_list(cout, factorization, "", "", "*");
+    cout << endl;
 
     return 0;
 }
-

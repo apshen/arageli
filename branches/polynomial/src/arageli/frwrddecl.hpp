@@ -129,6 +129,14 @@ template
 class sparse_multipolynom;
 
 
+template <typename T, typename T_factory>
+T euclid (T a, T b, const T_factory& tfctr);
+
+
+template <typename T>
+T euclid (const T& a, const T& b);
+
+
 } // namespace Arageli
 
 

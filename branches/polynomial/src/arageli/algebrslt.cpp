@@ -38,6 +38,8 @@
 #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) ||    \
     defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_algebrslt)
 
+#include <sstream>
+
 #include "exception.hpp"
 #include "cmp.hpp"
 #include "vector.hpp"
@@ -165,11 +167,20 @@ void algebraic_func_rslt
         }
 
         if(gsnr == 0)
-            throw invalid_argument
-            (/*
-                "The operation cannot be performed on the specified "
-                "arguments in algebraic number field"
-            */);
+        {
+            invalid_argument e;
+            std::ostringstream msg;
+            msg
+                << "An operation cannot be performed on specified "
+                << "arguments in algebraic number field."
+                << " polyvec = " << polyvec
+                << ", segvec = " << segvec
+                << ", rslt = " << rslt
+                << ", vrslt = " << vrslt;
+
+            ARAGELI_EXCEPT_LOC_DESC(e, msg.str());
+            throw e;
+        }
         else if(gsnr == 1)
         {
             p = vrslt[iglast];
@@ -287,17 +298,19 @@ void algebraic_plus
     segvec.push_back(seg1);
     segvec.push_back(seg2);
 
-    P1 rslt = resultant(p1.subs(Pxy("((x)-x)")), p2);
+    P1 rslt = resultant(p1.subs(Pxy("((x)-x)")), p2.subs(Pxy("x")));
 
-    algebraic_func_rslt
-    (
-        polyvec,
-        segvec,
-        rslt,
-        p3,
-        seg3,
-        _Internal::vector_2_plus_algebraic_helper<Segvec>()
-    );
+    ARAGELI_EXCEPT_LOCCTRL_REGION_BEGIN
+        algebraic_func_rslt
+        (
+            polyvec,
+            segvec,
+            rslt,
+            p3,
+            seg3,
+            _Internal::vector_2_plus_algebraic_helper<Segvec>()
+        );
+    ARAGELI_EXCEPT_LOCCTRL_REGION_END
 }
 
 
@@ -336,17 +349,19 @@ void algebraic_minus
     segvec.push_back(seg1);
     segvec.push_back(seg2);
 
-    P1 rslt = resultant(p1.subs(Pxy("((x)+x)")), p2);
+    P1 rslt = resultant(p1.subs(Pxy("((x)+x)")), p2.subs(Pxy("x")));
 
-    algebraic_func_rslt
-    (
-        polyvec,
-        segvec,
-        rslt,
-        p3,
-        seg3,
-        _Internal::vector_2_minus_algebraic_helper<Segvec>()
-    );
+    ARAGELI_EXCEPT_LOCCTRL_REGION_BEGIN
+        algebraic_func_rslt
+        (
+            polyvec,
+            segvec,
+            rslt,
+            p3,
+            seg3,
+            _Internal::vector_2_minus_algebraic_helper<Segvec>()
+        );
+    ARAGELI_EXCEPT_LOCCTRL_REGION_END
 }
 
 
@@ -401,17 +416,19 @@ void algebraic_multiplies
             );
     //std::cout << "\np1n = " << p1n;
 
-    P1 rslt = resultant(p1n, p2);
+    P1 rslt = resultant(p1n, p2.subs(Pxy("x")));
 
-    algebraic_func_rslt
-    (
-        polyvec,
-        segvec,
-        rslt,
-        p3,
-        seg3,
-        _Internal::vector_2_multiplies_algebraic_helper<Segvec>()
-    );
+    ARAGELI_EXCEPT_LOCCTRL_REGION_BEGIN
+        algebraic_func_rslt
+        (
+            polyvec,
+            segvec,
+            rslt,
+            p3,
+            seg3,
+            _Internal::vector_2_multiplies_algebraic_helper<Segvec>()
+        );
+    ARAGELI_EXCEPT_LOCCTRL_REGION_END
 }
 
 
@@ -461,17 +478,19 @@ void algebraic_divides
     segvec.push_back(seg1);
     segvec.push_back(seg2);
 
-    P1 rslt = resultant(p1.subs(Pxy("((x)*x)")), p2);
+    P1 rslt = resultant(p1.subs(Pxy("((x)*x)")), p2.subs(Pxy("x")));
 
-    algebraic_func_rslt
-    (
-        polyvec,
-        segvec,
-        rslt,
-        p3,
-        seg3,
-        _Internal::vector_2_divides_algebraic_helper<Segvec>()
-    );
+    ARAGELI_EXCEPT_LOCCTRL_REGION_BEGIN
+        algebraic_func_rslt
+        (
+            polyvec,
+            segvec,
+            rslt,
+            p3,
+            seg3,
+            _Internal::vector_2_divides_algebraic_helper<Segvec>()
+        );
+    ARAGELI_EXCEPT_LOCCTRL_REGION_END
 }
 
 
