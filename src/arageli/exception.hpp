@@ -156,6 +156,20 @@ public:
         line_m(line_a)
     {}
 
+    assert_failed
+    (
+        const char* expr_a,
+        const char* source_a,
+        std::size_t line_a,
+        const std::string& desc_a
+    ) :
+        expr_m(expr_a),
+        source_m(source_a),
+        line_m(line_a)
+    {
+        add_description(desc_a);
+    }
+
     /// Returns string notation of an expression that has been failed.
     const char* expr () const throw()
     {
@@ -320,6 +334,13 @@ public:
         throw ::Arageli::assert_failed(#EXPR, __FILE__, __LINE__);    \
     }
 
+    #define ARAGELI_THROW_ASSERT_FAILED_EX1(EXPR, ARG1)    \
+    {    \
+        ::std::ostringstream _arageli_tmp_1;    \
+        _arageli_tmp_1 << "ARG1 = " << ARG1;    \
+        throw ::Arageli::assert_failed(#EXPR, __FILE__, __LINE__, _arageli_tmp_1.str());    \
+    }
+
 #else
 
     #ifdef NDEBUG
@@ -332,10 +353,26 @@ public:
             ::std::abort();    \
         }
 
+        #define ARAGELI_THROW_ASSERT_FAILED_EX1(EXPR, ARG1)    \
+        {    \
+            ::std::ostringstream _arageli_tmp_1;    \
+            _arageli_tmp_1 << "ARG1 = " << ARG1;    \
+            ::std::cerr << '\n' << ::Arageli::assert_failed(#EXPR, __FILE__, __LINE__, _arageli_tmp_1.str());    \
+            ::std::cerr << "\nPress Enter key for exit.";    \
+            ::std::cin.get();    \
+            ::std::abort();    \
+        }
+
     #else
 
         #define ARAGELI_THROW_ASSERT_FAILED(EXPR)    \
         {    \
+            assert(!#EXPR);    \
+        }
+
+        #define ARAGELI_THROW_ASSERT_FAILED_EX1(EXPR, ARG1)    \
+        {    \
+            ::std::cerr << "\nAssertion ARG1 = " << ARG1;    \
             assert(!#EXPR);    \
         }
 
@@ -351,11 +388,23 @@ public:
 }
 
 
-/// Always check assertion with standard reaction when assertion failed.
+/// Always check assertion with standard reaction when assertion fails.
 #define ARAGELI_ASSERT_ALWAYS(EXPR)    \
 {    \
     if(!(EXPR))    \
         ARAGELI_THROW_ASSERT_FAILED(EXPR);    \
+}
+
+
+/// Always check assertion with standard reaction when assertion fails.
+/** This macro takes one additional argument that can be any type and provided
+    by user. It should be able to output by operator<< into stream.
+    This argument is used as an additional piece of information about
+    a failure. */
+#define ARAGELI_ASSERT_ALWAYS_EX1(EXPR, ARG1)    \
+{    \
+    if(!(EXPR))    \
+        ARAGELI_THROW_ASSERT_FAILED_EX1(EXPR, ARG1);    \
 }
 
 
@@ -374,12 +423,16 @@ public:
     #define ARAGELI_ASSERT_0(EXPR)    \
         ARAGELI_ASSERT_ALWAYS(EXPR)
 
+    #define ARAGELI_ASSERT_EX1_0(EXPR, ARG1)    \
+        ARAGELI_ASSERT_ALWAYS_EX1(EXPR, ARG1)
+
     #define ARAGELI_DEBUG_EXEC_0(WHAT) WHAT
 
 #else
 
     #define ARAGELI_ASSERT_0_CUST(EXPR, EXCEPT_OBJ)    _ARAGELI_ASSERT_ASSUME(EXPR)
     #define ARAGELI_ASSERT_0(EXPR)    _ARAGELI_ASSERT_ASSUME(EXPR)
+    #define ARAGELI_ASSERT_EX1_0(EXPR, ARG1)    _ARAGELI_ASSERT_ASSUME(EXPR)
     #define ARAGELI_DEBUG_EXEC_0(WHAT)    /* nothing */
 
 #endif
@@ -393,12 +446,16 @@ public:
     #define ARAGELI_ASSERT_1(EXPR)    \
         ARAGELI_ASSERT_ALWAYS(EXPR)
 
+    #define ARAGELI_ASSERT_EX1_1(EXPR, ARG1)    \
+        ARAGELI_ASSERT_ALWAYS_EX1(EXPR, ARG1)
+
     #define ARAGELI_DEBUG_EXEC_1(WHAT) WHAT
 
 #else
 
     #define ARAGELI_ASSERT_1_CUST(EXPR, EXCEPT_OBJ)    _ARAGELI_ASSERT_ASSUME(EXPR)
     #define ARAGELI_ASSERT_1(EXPR)    _ARAGELI_ASSERT_ASSUME(EXPR)
+    #define ARAGELI_ASSERT_EX1_1(EXPR, ARG1)    _ARAGELI_ASSERT_ASSUME(EXPR)
     #define ARAGELI_DEBUG_EXEC_1(WHAT)    /* nothing */
 
 #endif
@@ -412,12 +469,16 @@ public:
     #define ARAGELI_ASSERT_2(EXPR)    \
         ARAGELI_ASSERT_ALWAYS(EXPR)
 
+    #define ARAGELI_ASSERT_EX1_2(EXPR, ARG1)    \
+        ARAGELI_ASSERT_ALWAYS_EX1(EXPR, ARG1)
+
     #define ARAGELI_DEBUG_EXEC_2(WHAT) WHAT
 
 #else
 
     #define ARAGELI_ASSERT_2_CUST(EXPR, EXCEPT_OBJ)    _ARAGELI_ASSERT_ASSUME(EXPR)
     #define ARAGELI_ASSERT_2(EXPR)    _ARAGELI_ASSERT_ASSUME(EXPR)
+    #define ARAGELI_ASSERT_EX1_2(EXPR, ARG1)    _ARAGELI_ASSERT_ASSUME(EXPR)
     #define ARAGELI_DEBUG_EXEC_2(WHAT)    /* nothing */
 
 #endif
@@ -431,12 +492,16 @@ public:
     #define ARAGELI_ASSERT_3(EXPR)    \
         ARAGELI_ASSERT_ALWAYS(EXPR)
 
+    #define ARAGELI_ASSERT_EX1_3(EXPR, ARG1)    \
+        ARAGELI_ASSERT_ALWAYS_EX1(EXPR, ARG1)
+
     #define ARAGELI_DEBUG_EXEC_3(WHAT) WHAT
 
 #else
 
     #define ARAGELI_ASSERT_3_CUST(EXPR, EXCEPT_OBJ)    _ARAGELI_ASSERT_ASSUME(EXPR)
     #define ARAGELI_ASSERT_3(EXPR)    _ARAGELI_ASSERT_ASSUME(EXPR)
+    #define ARAGELI_ASSERT_EX1_3(EXPR, ARG1)    _ARAGELI_ASSERT_ASSUME(EXPR)
     #define ARAGELI_DEBUG_EXEC_3(WHAT)    /* nothing */
 
 #endif

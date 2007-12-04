@@ -1,7 +1,11 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
+using std::boolalpha;
 
 /*
     Solving the system of linear equations $Ax=b$,
@@ -9,9 +13,9 @@ using namespace Arageli;
     $ b = \left(\begin{array}{ccc} \phantom{+}2/3 \\ -1/5 \\ \phantom{+}4 \end{array}\right)$
 */
 
-int main(int argc, char *argv[])
+int main ()
 {
-    matrix< rational<> > A;
+    matrix<rational<> > A;
     vector<rational<> > b,x;
 
     A = "((-1/2, 2/3, 3/6), (5/7, -6, 7/5), (-8/11, 9/2, -11))";

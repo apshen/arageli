@@ -1330,7 +1330,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\test\matrix_is_squarte.cpp"
+				RelativePath="..\..\..\test\matrix_is_square.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -2451,6 +2451,38 @@
 			</File>
 			<File
 				RelativePath="..\..\..\test\residue.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Fast|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Test|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\test\residue_factory.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"

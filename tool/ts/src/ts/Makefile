@@ -31,7 +31,7 @@
 #
 ##############################################################################
 
-CXXFLAGS = -MD -g -O2
+CXXFLAGS += -MD -g -O2
 
 all: ../../bin/libts.a
 
@@ -43,10 +43,8 @@ all: ../../bin/libts.a
 
 clean:
 	rm -rf ../../bin/libts.a
-
-cleanobj:
 	rm -f *.o *.d
 
-cleanall: clean cleanobj
+cleanall: clean
 
 include $(wildcard *.d)

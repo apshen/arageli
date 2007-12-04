@@ -227,7 +227,11 @@ bool random_test_1 (std::size_t maxsize, const T& maxabsval, std::size_t n)
 }
 
 
-TEST_FUNCTION(smith_integer, "Description for smith function for integer matrices.")
+TEST_FUNCTION
+(
+    smith_integer,
+    "Test for smith function for integer matrices."
+)
 {
     bool is_ok = true;
 

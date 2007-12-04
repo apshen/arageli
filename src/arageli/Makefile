@@ -31,7 +31,7 @@
 ##############################################################################
 
 ARAGELICXXFLAGS += -MD -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=1
-TESTSCXXFLAGS += -MD -DARAGELI_SOURCE -g -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
+TESTSCXXFLAGS += -MD -DARAGELI_SOURCE -g -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
 PERFCXXFLAGS += -MD -pg -DARAGELI_SOURCE -g -O2 -DARAGELI_DEBUG_LEVEL=0 -DARAGELI_ASSERT_THROW_EXCEPTION
 obj_dirs = . hermite smith
 
@@ -39,6 +39,15 @@ all: ../../lib/libarageli.a
 
 ../../lib/libarageli.a: $(patsubst %.cpp,%.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
 	$(AR) -r $@ $(patsubst %.cpp,%.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+
+../../lib/libtestarageli.a: $(patsubst %.cpp,%t.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+	$(AR) -r $@ $(patsubst %.cpp,%t.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+
+../../lib/libperfarageli.a: $(patsubst %.cpp,%p.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+	$(AR) -r $@ $(patsubst %.cpp,%p.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+
+arageli.hpp.gch:arageli.hpp
+	$(CC) -x c++-header $(ARAGELICXXFLAGS) $< -o $@
 
 %.o:%.cpp
 	$(CXX) -c $(ARAGELICXXFLAGS) $< -o $@
@@ -58,12 +67,6 @@ clean:
 
 cleanall: clean
 	rm -f tags
-
-../../lib/libtestarageli.a: $(patsubst %.cpp,%t.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
-	$(AR) -r $@ $(patsubst %.cpp,%t.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
-
-../../lib/libperfarageli.a: $(patsubst %.cpp,%p.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
-	$(AR) -r $@ $(patsubst %.cpp,%p.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
 
 include $(wildcard *.d)
 

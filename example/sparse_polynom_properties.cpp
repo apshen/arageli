@@ -1,9 +1,13 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
     sparse_polynom<rational<> > S =
         "2/55*x^55+5/567*x^28-56/997*x^5+1/18122005*x^2+567";

@@ -41,6 +41,7 @@
 
 #include "config.hpp"
 #include "type_traits.hpp"
+#include "frwrddecl.hpp"
 #include "factory.hpp"
 #include "cmp.hpp"
 #include "vector.hpp"
