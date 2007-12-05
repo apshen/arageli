@@ -540,6 +540,9 @@ public:
     /* polinom multiplication */
     void poli_multiply(const ET *F, const MT F_Length, const ET *G, const MT G_Length, ET *Result_Out) const
     {
+        /* Check input numbers for length. This method has restrictions for max length*/
+        ARAGELI_ASSERT_0(F_Length <= n_max && G_Length <= n_max);
+
         static ET F_Copy[n_max];
         static ET G_Copy[n_max];
 

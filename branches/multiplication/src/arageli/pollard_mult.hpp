@@ -210,118 +210,182 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
     static _Internal::digit w_buffer2[n_max];
     static _Internal::digit w_buffer3[n_max];
 
-    //N3 = pollard_p1;
-    //N3 *= pollard_p2;
-    MT i;
-    for (i = 0; i < n; ++i)
+    /* Analize input data and optimize method for small numbers!*/
+    if (n <= ARAGELI_OPTIMIZED_POLLARD_THRESHOLD && m <= ARAGELI_OPTIMIZED_POLLARD_THRESHOLD)
     {
-#ifdef BARRETT
-        u_buffer[i] = barrett_reduction<pollard_p1, p1_inv, 32>(u[i]);
-#else
-        u_buffer[i] = u[i] % pollard_p1;
-#endif
-    }
-    for (i = 0; i < m; ++i)
-    {
-#ifdef BARRETT
-        v_buffer[i] = barrett_reduction<pollard_p1, p1_inv, 32>(v[i]);
-#else
-        v_buffer[i] = v[i] % pollard_p1;
-#endif
-    }
-    t1.poli_multiply(u_buffer, n, v_buffer, m, w_buffer1);
-    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer1, n, m, pollard_p1)));
-
-    for (i = 0; i < n; ++i)
-    {
-#ifdef BARRETT
-        u_buffer[i] = barrett_reduction<pollard_p2, p2_inv, 30>(u[i]);
-#else
-        u_buffer[i] = u[i] % pollard_p2;
-#endif
-    }
-    for (i = 0; i < m; ++i)
-    {
-#ifdef BARRETT
-        v_buffer[i] = barrett_reduction<pollard_p2, p2_inv, 30>(v[i]);
-#else
-        v_buffer[i] = v[i] % pollard_p2;
-#endif
-    }
-    t2.poli_multiply(u_buffer, n, v_buffer, m, w_buffer2);
-    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer2, n, m, pollard_p2)));
-
-    for (i = 0; i < n; ++i)
-    {
-#ifdef BARRETT
-        u_buffer[i] = barrett_reduction<pollard_p3, p3_inv, 32>(u[i]);
-#else
-        u_buffer[i] = u[i] % pollard_p3;
-#endif
-    }
-    for (i = 0; i < m; ++i)
-    {
-#ifdef BARRETT
-        v_buffer[i] = barrett_reduction<pollard_p3, p3_inv, 32>(v[i]);
-#else
-        v_buffer[i] = v[i] % pollard_p3;
-#endif
-    }
-    t3.poli_multiply(u_buffer, n, v_buffer, m, w_buffer3);
-    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer3, n, m, pollard_p3)));
-
-    //__int64 y2, y3;
-    signed long long y2, y3;
-    typename doubled_type<ET>::d_value y3_low, y3_high, betta_low, betta_high;
-    for (i=0; i < m+n; ++i)
-    {
-        /* y1 = W1 mod n1 = W1*/
-
-        y2 = w_buffer2[i];
-        y2 -= w_buffer1[i];
-        y2 %= pollard_p2;
-        y2 *= C2;
-        y2 %= pollard_p2;
-        if (y2 < 0)
+        MT i;
+        for (i = 0; i < n; ++i)
         {
-            y2 += pollard_p2;
+#ifdef BARRETT
+            u_buffer[i] = barrett_reduction<pollard_p1, p1_inv, 32>(u[i]);
+#else
+            u_buffer[i] = u[i] % pollard_p1;
+#endif
         }
-
-        y2 *= pollard_p1;   // *N2
-        y2 += w_buffer1[i]; // +y1
-
-        // y3 = C3*(W3 - y2) % n3;
-
-        y3 = w_buffer3[i];
-        y3 -= y2;
-        y3 %= pollard_p3;
-        if (y3 < 0)
+        for (i = 0; i < m; ++i)
         {
-            y3 += pollard_p3;
+#ifdef BARRETT
+            v_buffer[i] = barrett_reduction<pollard_p1, p1_inv, 32>(v[i]);
+#else
+            v_buffer[i] = v[i] % pollard_p1;
+#endif
         }
-        y3 *= C3;
-        y3 %= pollard_p3;
+        t1.poli_multiply(u_buffer, n, v_buffer, m, w_buffer1);
+        ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer1, n, m, pollard_p1)));
 
-        /* if (y3 < 0) y3 += n3; */
-        /* y3 *= N3; */
-
-        mult_int64_by_int32<ET, MT>(N3, ET(y3), &y3_low, &y3_high);
-        add_int128<ET, MT>(y3_low, y3_high, y2, 0, &y3_low, &y3_high);
-
-        if (i == 0)
+        for (i = 0; i < n; ++i)
         {
-            betta_low = y3_low;
-            betta_high = y3_high;
+#ifdef BARRETT
+            u_buffer[i] = barrett_reduction<pollard_p3, p3_inv, 32>(u[i]);
+#else
+            u_buffer[i] = u[i] % pollard_p3;
+#endif
         }
-        else
+        for (i = 0; i < m; ++i)
         {
-            /* make carry from prevous betta value */
-            betta_low = (betta_low >> 32) | (betta_high << 32);
-            betta_high = 0;
-            /* add y3 to betta */
-            add_int128<ET, MT>(y3_low, y3_high, betta_low, betta_high, &betta_low, &betta_high);
+#ifdef BARRETT
+            v_buffer[i] = barrett_reduction<pollard_p3, p3_inv, 32>(v[i]);
+#else
+            v_buffer[i] = v[i] % pollard_p3;
+#endif
         }
-        w[i] = (ET) (betta_low & 0xFFFFFFFF);
+        t3.poli_multiply(u_buffer, n, v_buffer, m, w_buffer3);
+        ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer3, n, m, pollard_p3)));
+
+        // TODO: REWRITE!!!
+        signed long long y2, y3;
+        typename doubled_type<ET>::d_value y3_low, y3_high, betta_low, betta_high;
+        for (i=0; i < m+n; ++i)
+        {
+            /* y1 = W1 mod n1 = W1*/
+
+            y2 = w_buffer2[i];
+            y2 -= w_buffer1[i];
+            y2 %= pollard_p2;
+            y2 *= C2;
+            y2 %= pollard_p2;
+            if (y2 < 0)
+            {
+                y2 += pollard_p2;
+            }
+
+            y2 *= pollard_p1;   // *N2
+            y2 += w_buffer1[i]; // +y1
+        }
+    }
+    else
+    {
+        MT i;
+        for (i = 0; i < n; ++i)
+        {
+#ifdef BARRETT
+            u_buffer[i] = barrett_reduction<pollard_p1, p1_inv, 32>(u[i]);
+#else
+            u_buffer[i] = u[i] % pollard_p1;
+#endif
+        }
+        for (i = 0; i < m; ++i)
+        {
+#ifdef BARRETT
+            v_buffer[i] = barrett_reduction<pollard_p1, p1_inv, 32>(v[i]);
+#else
+            v_buffer[i] = v[i] % pollard_p1;
+#endif
+        }
+        t1.poli_multiply(u_buffer, n, v_buffer, m, w_buffer1);
+        ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer1, n, m, pollard_p1)));
+
+        for (i = 0; i < n; ++i)
+        {
+#ifdef BARRETT
+            u_buffer[i] = barrett_reduction<pollard_p2, p2_inv, 30>(u[i]);
+#else
+            u_buffer[i] = u[i] % pollard_p2;
+#endif
+        }
+        for (i = 0; i < m; ++i)
+        {
+#ifdef BARRETT
+            v_buffer[i] = barrett_reduction<pollard_p2, p2_inv, 30>(v[i]);
+#else
+            v_buffer[i] = v[i] % pollard_p2;
+#endif
+        }
+        t2.poli_multiply(u_buffer, n, v_buffer, m, w_buffer2);
+        ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer2, n, m, pollard_p2)));
+
+        for (i = 0; i < n; ++i)
+        {
+#ifdef BARRETT
+            u_buffer[i] = barrett_reduction<pollard_p3, p3_inv, 32>(u[i]);
+#else
+            u_buffer[i] = u[i] % pollard_p3;
+#endif
+        }
+        for (i = 0; i < m; ++i)
+        {
+#ifdef BARRETT
+            v_buffer[i] = barrett_reduction<pollard_p3, p3_inv, 32>(v[i]);
+#else
+            v_buffer[i] = v[i] % pollard_p3;
+#endif
+        }
+        t3.poli_multiply(u_buffer, n, v_buffer, m, w_buffer3);
+        ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer3, n, m, pollard_p3)));
+
+        //__int64 y2, y3;
+        signed long long y2, y3;
+        typename doubled_type<ET>::d_value y3_low, y3_high, betta_low, betta_high;
+        for (i=0; i < m+n; ++i)
+        {
+            /* y1 = W1 mod n1 = W1*/
+
+            y2 = w_buffer2[i];
+            y2 -= w_buffer1[i];
+            y2 %= pollard_p2;
+            y2 *= C2;
+            y2 %= pollard_p2;
+            if (y2 < 0)
+            {
+                y2 += pollard_p2;
+            }
+
+            y2 *= pollard_p1;   // *N2
+            y2 += w_buffer1[i]; // +y1
+
+            // y3 = C3*(W3 - y2) % n3;
+
+            y3 = w_buffer3[i];
+            y3 -= y2;
+            y3 %= pollard_p3;
+            if (y3 < 0)
+            {
+                y3 += pollard_p3;
+            }
+            y3 *= C3;
+            y3 %= pollard_p3;
+
+            /* if (y3 < 0) y3 += n3; */
+            /* y3 *= N3; */
+
+            mult_int64_by_int32<ET, MT>(N3, ET(y3), &y3_low, &y3_high);
+            add_int128<ET, MT>(y3_low, y3_high, y2, 0, &y3_low, &y3_high);
+
+            if (i == 0)
+            {
+                betta_low = y3_low;
+                betta_high = y3_high;
+            }
+            else
+            {
+                /* make carry from prevous betta value */
+                betta_low = (betta_low >> 32) | (betta_high << 32);
+                betta_high = 0;
+                /* add y3 to betta */
+                add_int128<ET, MT>(y3_low, y3_high, betta_low, betta_high, &betta_low, &betta_high);
+            }
+            w[i] = (ET) (betta_low & 0xFFFFFFFF);
+        }
     }
     return (w[m+n-1] != 0) ? (m+n): (m+n-1);
 }
