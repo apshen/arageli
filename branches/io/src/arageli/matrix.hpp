@@ -2966,7 +2966,7 @@ public:
     }
 
 
-    /// Loads matrix object state from a binary stream. Compatible with output_binary_stream.
+    /// Loads matrix object state from a binary stream. Compatible with output_stream.
     /** See output_stream(stream, matrix) function for detailes on the format.
         If the function fails to read some of state components, an old value of x
         may be lost. All depends on input_binary_stream function for T.
