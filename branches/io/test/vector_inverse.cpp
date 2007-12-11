@@ -38,10 +38,6 @@
 
 #include "stdafx.hpp"
 
-#include "rand.hpp"
-#include "universal.hpp"
-#include "vector.hpp"
-
 using namespace Arageli;
 
 bool vector_inverse_test(int param, int count)

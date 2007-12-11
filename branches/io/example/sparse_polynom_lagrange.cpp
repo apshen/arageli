@@ -1,9 +1,13 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
 
-sparse_polynom<rational<> > Lagrange(rational<> *x, rational<> *y, int n)
+
+sparse_polynom<rational<> > Lagrange (rational<> *x, rational<> *y, int n)
 {
     rational<> tmpDenom; // denominator
     sparse_polynom<rational<> >
@@ -30,7 +34,8 @@ sparse_polynom<rational<> > Lagrange(rational<> *x, rational<> *y, int n)
     return poly;
 }
 
-int main(int argc, char *argv[])
+
+int main ()
 {
     int n = 7;
     rational<> x[] = {0, 1, 2, 3, 4, 5, 6};
@@ -58,7 +63,6 @@ int main(int argc, char *argv[])
 
     if (ok)
         cout << "All is Ok" << endl;
-
 
     return 0;
 }

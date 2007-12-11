@@ -1,11 +1,15 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
+using std::boolalpha;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
-
     matrix< rational<> > A, A_inv, B;
     vector< rational<> > basis;
     rational<> d = 0;
@@ -29,6 +33,7 @@ int main(int argc, char *argv[])
     cout << "det(A) = " << d << endl << endl;
 
     cout << "The result is " << boolalpha << (A*A_inv).is_unit();
+    cout << endl;
 
     return 0;
 }

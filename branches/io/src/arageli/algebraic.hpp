@@ -103,30 +103,7 @@ struct algebraic_config_default
     }
 
     /// Normalization of the representation.
-    static void normalize (Poly& poly, Seg& seg)
-    {
-        // WARNING!
-        ARAGELI_ASSERT_0(is_normal(poly, seg));
-
-        poly = sqrfree_poly_rational(poly);
-
-        big_int mult;    // WARNING! big_int
-        polynom_rational_to_int_value(poly, mult);
-
-        typedef typename Poly::template other_coef<big_int>::type PI;
-        PI ipoly;
-        polynom_rational_to_int(poly, ipoly, mult);
-
-        vector<Poly> vp = factorize_berlekamp_hensel(ipoly);
-        for(std::size_t i = 0; i < vp.size(); ++i)
-            if(is_normal(vp[i], seg))
-            {
-                poly = vp[i];
-                break;
-            }
-
-        ARAGELI_ASSERT_0(is_normal(poly, seg));
-    }
+    static void normalize (Poly& poly, Seg& seg);
 };
 
 
@@ -183,7 +160,7 @@ public:
     /** Represents as a zero polynomial and segment (0, 0). */
     algebraic () :
         poly_m(null<TP>()),
-            seg_m(null<TS>())
+        seg_m(null<TS>())
     {}
 
     /// Creates number as just a copy of given value.
@@ -201,21 +178,7 @@ public:
     /** Finds the minimal by value root of given polynomial with
         segment obtained from strum function. The given polynomial
         must have at least one root. */
-    algebraic (const Poly& px) :
-        poly_m(px)
-    {
-        if(Arageli::is_null(poly_m))
-            seg_m = null<Seg>();
-        else
-        {
-            vector<Seg, false> lims;
-            poly_m = sqrfree_poly_rational(poly_m);    // WARNING! Only for rationals.
-            sturm<TS>(poly_m, lims);
-            ARAGELI_ASSERT_0(!lims.is_empty());
-            seg_m = lims.front();
-            config_m.init(poly_m, seg_m);
-        }
-    }
+    algebraic (const Poly& px);
 
     // Creates number as the root of px on the segment s.
     algebraic (const Poly& px, const Seg& s) :
@@ -278,27 +241,7 @@ public:
         config_m.normalize(poly_m, seg_m);
     }
 
-
-    algebraic operator- () const
-    {
-        if
-        (
-            Arageli::is_null(poly_m) &&
-            Arageli::is_null(seg_m)
-        )
-            return *this;
-
-        ARAGELI_ASSERT_0(is_normal());
-        Poly poly_res; Seg seg_res;
-
-        algebraic_minus
-        (
-            Poly(unit<TP>(), 1), Seg(null<TS>()),
-            poly_m, seg_m, poly_res, seg_res
-        );
-
-        return algebraic(poly_res, seg_res);
-    }
+    algebraic operator- () const;
 
     const algebraic& operator+ () const
     {
@@ -339,13 +282,7 @@ public:
         typename Seg2,
         typename Cfg2
     >
-    algebraic& operator+= (const algebraic<TP2, TS2, Poly2, Seg2, Cfg2>& x)
-    {
-        ARAGELI_ASSERT_0(is_normal() && x.is_normal());
-        algebraic_plus(poly_m, seg_m, x.poly_m, x.seg_m, poly_m, seg_m);
-        ARAGELI_ASSERT_0(is_normal());
-        return *this;
-    }
+    algebraic& operator+= (const algebraic<TP2, TS2, Poly2, Seg2, Cfg2>& x);
 
     template
     <
@@ -355,13 +292,7 @@ public:
         typename Seg2,
         typename Cfg2
     >
-    algebraic& operator-= (const algebraic<TP2, TS2, Poly2, Seg2, Cfg2>& x)
-    {
-        ARAGELI_ASSERT_0(is_normal() && x.is_normal());
-        algebraic_minus(poly_m, seg_m, x.poly_m, x.seg_m, poly_m, seg_m);
-        ARAGELI_ASSERT_0(is_normal());
-        return *this;
-    }
+    algebraic& operator-= (const algebraic<TP2, TS2, Poly2, Seg2, Cfg2>& x);
 
     template
     <
@@ -371,13 +302,7 @@ public:
         typename Seg2,
         typename Cfg2
     >
-    algebraic& operator*= (const algebraic<TP2, TS2, Poly2, Seg2, Cfg2>& x)
-    {
-        ARAGELI_ASSERT_0(is_normal() && x.is_normal());
-        algebraic_multiplies(poly_m, seg_m, x.poly_m, x.seg_m, poly_m, seg_m);
-        ARAGELI_ASSERT_0(is_normal());
-        return *this;
-    }
+    algebraic& operator*= (const algebraic<TP2, TS2, Poly2, Seg2, Cfg2>& x);
 
     template
     <
@@ -387,13 +312,7 @@ public:
         typename Seg2,
         typename Cfg2
     >
-    algebraic& operator/= (const algebraic<TP2, TS2, Poly2, Seg2, Cfg2>& x)
-    {
-        ARAGELI_ASSERT_0(is_normal() && x.is_normal());
-        algebraic_divides(poly_m, seg_m, x.poly_m, x.seg_m, poly_m, seg_m);
-        ARAGELI_ASSERT_0(is_normal());
-        return *this;
-    }
+    algebraic& operator/= (const algebraic<TP2, TS2, Poly2, Seg2, Cfg2>& x);
 
     /// Returns true iff the number is zero.
     bool is_null () const
@@ -497,6 +416,48 @@ public:
     }
 
 };
+
+
+template
+<
+    typename TP,
+    typename TS,
+    typename Poly,
+    typename Seg,
+    typename Cfg
+>
+inline bool is_null (const algebraic<TP, TS, Poly, Seg, Cfg>& x)
+{
+    return x.is_null();
+}
+
+
+template
+<
+    typename TP,
+    typename TS,
+    typename Poly,
+    typename Seg,
+    typename Cfg
+>
+inline bool is_unit (const algebraic<TP, TS, Poly, Seg, Cfg>& x)
+{
+    return x.is_unit();
+}
+
+
+template
+<
+    typename TP,
+    typename TS,
+    typename Poly,
+    typename Seg,
+    typename Cfg
+>
+inline bool is_opposite_unit (const algebraic<TP, TS, Poly, Seg, Cfg>& x)
+{
+    return x.is_opposite_unit();
+}
 
 
 #define ARAGELI_ALGEBRAIC_BINARY_OP(OP, OPASS)    \
@@ -609,16 +570,7 @@ int cmp
 (
     const algebraic<TP1, TS1, Poly1, Seg1, Cfg1>& a,
     const algebraic<TP2, TS2, Poly2, Seg2, Cfg2>& b
-)
-{
-    algebraic<TP1, TS1, Poly1, Seg1, Cfg1> c = a - b;
-    if(c.is_null())
-        return 0;
-    int lsign = sign(c.polynom().subs(c.segment().first()));
-    while(sign(c.segment().first())*sign(c.segment().second()) <= 0)
-        interval_root_dichotomy(c.polynom(), lsign, c.segment());
-    return sign(c.segment().first());
-}
+);
 
 
 template
@@ -687,11 +639,7 @@ template
     typename Seg1,
     typename Cfg1
 >
-inline Out& operator<< (Out& out, const algebraic<TP1, TS1, Poly1, Seg1, Cfg1>& x)
-{
-    out << "(" << x.polynom() << ", " << x.segment() << ")";
-    return out;
-}
+Out& operator<< (Out& out, const algebraic<TP1, TS1, Poly1, Seg1, Cfg1>& x);
 
 
 //template <typename TP1, typename TS1, typename Poly1, typename Seg1, typename Cfg1>
@@ -707,10 +655,10 @@ inline Out& operator<< (Out& out, const algebraic<TP1, TS1, Poly1, Seg1, Cfg1>& 
 } // namesapce Arageli
 
 
-//#ifdef ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE
-//    #define ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_ALGEBRAIC
-//    #include "algebraic.cpp"
-//    #undef  ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_ALGEBRAIC
-//#endif
+#ifdef ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE
+    #define ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_algebraic
+    #include "algebraic.cpp"
+    #undef  ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_algebraic
+#endif
 
 #endif

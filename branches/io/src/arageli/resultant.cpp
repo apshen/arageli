@@ -109,6 +109,9 @@ void subresultants_nonmodular
     // Source: Buhberger and others, p. 168, alg. 4.1
     // We have a problem with sign of the result subresultants.
 
+    ARAGELI_ASSERT_0(!is_null(p1));
+    ARAGELI_ASSERT_0(!is_null(p2));
+
     typedef typename SRChain::difference_type index;
     typedef typename SRChain::element_type P;    // maybe there is better chose
     typedef typename P::coef_type Coef;
@@ -167,6 +170,14 @@ typename P1::coef_type resultant_nonmodular
     // insted just P1::coef_type as a type of the return value.
 
     vector<P1, false> s;    // WARNING! Need to choose from P1 and P2 insted just P1.
+    if(p1.is_const())
+        if(p2.is_const())
+            return fctr.unit();
+        else
+            return power(p1.leading_coef_cpy(), p2.degree());
+    else if(p2.is_const())
+        return power(p2.leading_coef_cpy(), p1.degree());
+
     subresultants_nonmodular(p1, p2, s, fctr);
     ARAGELI_ASSERT_2(s[0].degree() <= 0);
     return s[0].leading_coef_cpy();

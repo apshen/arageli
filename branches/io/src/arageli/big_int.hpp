@@ -7,6 +7,7 @@
     WARNIG. This file has no complete implementation.
 
     Copyright (C) 1999 -- 2005 Nikolai Yu. Zolotykh
+    Copyright (C) 2006 -- 2007 Sergey S. Lyalin
     University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
@@ -52,6 +53,7 @@
 #include "powerest.hpp"
 #include "intalg.hpp"
 #include "bigar.hpp"
+#include "gcd.hpp"
 
 #include "std_import.hpp"
 
@@ -86,6 +88,10 @@ template <>
 class io_binary<big_int>;   // see implementation below in this file
 
 
+template <typename T_factory>
+big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
+
+
 /// Big integer number.
 /** Integer number with arbitrary big size. Only available memory
     limits the maximum value of a number. */
@@ -96,6 +102,9 @@ class big_int
     typedef _Internal::digit digit;
 
     friend class io_binary<big_int>;
+
+    template <typename T_factory>
+    friend big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
 
 public:
 
@@ -1175,6 +1184,59 @@ inline bool big_int::is_opposite_unit () const
         *number->data == 1;
 }
 
+
+/// Specialization of factory template class for big_int.
+template <>
+struct factory<big_int>
+{
+private:
+    typedef big_int T;
+public:
+
+    /// True iff the functions of this class has a meaning.
+    static const bool is_specialized = true;
+
+    /// Unit element (1).
+    static const T& unit ()
+    {
+        static const T unit_s = T(1);
+        return unit_s;
+    }
+
+    /// Unit element (1) by pattern.
+    static const T& unit (const T& x)
+    {
+        return unit();
+    }
+
+    /// Minus unit element (-1).
+    static const T& opposite_unit ()
+    {
+        static const T opposite_unit_s = T(-1);
+        return opposite_unit_s;
+    }
+
+    /// Minus unit element (-1) by pattern.
+    static const T& opposite_unit (const T& x)
+    {
+        return opposite_unit();
+    }
+
+    /// Null element (0).
+    static const T& null ()
+    {
+        static const T null_s;
+        return null_s;
+    }
+
+    /// Null element by pattern (0).
+    static const T& null (const T& x)
+    {
+        return null();
+    }
+};
+
+
 inline bool is_null (const big_int& x)
 {
     return x.is_null();
@@ -1213,7 +1275,7 @@ inline bool is_odd (const big_int& x)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// WARNING! This function prototype is placed here because header dependences.
+// WARNING! This function prototype is placed here because of header dependences.
 // WARNING! The problem appears only if ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE macro is undefined.
 // TODO: Resolve this problem and delete.
 template <typename T>
@@ -1251,6 +1313,25 @@ inline big_int log2 (const big_int& x)
 {
     return x.length() - 1;
 }
+
+
+/// Specialization of gcd function for big_int.
+/** Allows more efficient computation with small big_int objects
+    than generic gcd function. */
+template <typename T_factory>
+inline big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr)
+{
+    if(a.number->len == 1 && b.number->len == 1)
+    {
+        // As this is Euclid's algorithm for two integers
+        // we ignore the signs of the numbers.
+
+        return euclid(a.number->data[0], b.number->data[0]);
+    }
+    else
+        return euclid(a, b, tfctr);
+}
+
 
 }
 
