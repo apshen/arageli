@@ -39,13 +39,16 @@
 
 
 #include "stdafx.hpp"
-#include "matrix_ops.hpp"
+//#include "matrix_ops.hpp"
 
 using namespace Arageli;
 
 
 namespace
 {
+
+//#define ARAGELI_TEST_OUTPUT_STATISTICS
+
 
 template <typename P>
 bool simple_test
@@ -81,7 +84,7 @@ bool simple_test
         rnd::equiprob<CS> crnd(seed+1, cs);
         rnd::equiprob<MS> mrnd(seed+2, ms);
 
-        std::size_t n = Arageli::sqrt(coverage/100) + 3;
+        std::size_t n = Arageli::sqrt(coverage/1000) + 1;
 
         for(std::size_t i = 0; i < n && num_of_err < 10; ++i)
         {
@@ -184,6 +187,7 @@ bool simple_test
         }
     }
 
+#ifdef ARAGELI_TEST_OUTPUT_STATISTICS
     tout << "\nStatistics for T = " << typeid(T).name() << "\n";
     tout << "Degrees:\n";
     output_map(hdeg);
@@ -193,6 +197,7 @@ bool simple_test
     output_map(hnumfact);
     tout << "Different polynomials (" << pols.size() << "):";
     output_map(pols);
+#endif
 
     return num_of_err == 0;
 }
@@ -202,7 +207,6 @@ bool simple_test
 
 TEST_FUNCTION(factorize_berlekamp, "A simple test for factorize_berlekamp function.")
 {
-    return resHANG;    // too long
     int seed = 1, coverage = ARAGELI_TESTSYS_COVERAGE_DEFAULT;
 
     bool is_ok = true;

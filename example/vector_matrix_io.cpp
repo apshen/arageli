@@ -1,9 +1,13 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
     vector<rational<> > b;
     matrix< rational<> > A;

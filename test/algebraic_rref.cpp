@@ -45,6 +45,9 @@ using namespace Arageli;
 namespace
 {
 
+//#define ARAGELI_INLINE_DEBUG_OUTPUT
+//#define ARAGELI_TEST_OUTPUT_STATISTICS
+
 
 template <typename M>
 void output_map (const M& m)
@@ -94,7 +97,7 @@ bool test1
         rnd::equiprob<CS> crnd(seed+1, cs);
         rnd::equiprob<SS> srnd(seed+2, ss);
 
-        std::size_t n = Arageli::sqrt(Arageli::sqrt(coverage/100)) + 3;
+        std::size_t n = Arageli::sqrt(Arageli::sqrt(coverage/100)) + 2;
         P p;
 
         for(std::size_t i = 0; i < n && num_of_err < 10; ++i)try
@@ -153,8 +156,9 @@ bool test1
             }
 
         }
-        catch(const Arageli::exception& e)
+        catch(Arageli::exception& e)
         {
+            ARAGELI_EXCEPT_LOC(e);
             tout << "\n" << e;
             ++num_of_err;
             tout
@@ -182,6 +186,7 @@ bool test1
         }
     }
 
+#ifdef ARAGELI_TEST_OUTPUT_STATISTICS
     tout << "\nStatistics for P = " << typeid(P).name() << "\n";
     tout << "Coefficiens (" << coefs.size() << "):\n";
     output_map(coefs);
@@ -191,8 +196,81 @@ bool test1
     output_map(sizes);
     tout << "Ranks (" << ranks.size() << "):\n";
     output_map(ranks);
+#endif
 
     return num_of_err == 0;
+}
+
+
+template <typename P>
+bool test_0_multiplies_0 ()
+{
+    typedef rational<> T;
+    typedef algebraic<T, T, P> Algebr;
+
+    {
+        Algebr a, b;
+
+        ARAGELI_EXCEPT_LOCCTRL_REGION_BEGIN
+            a*b;
+        ARAGELI_EXCEPT_LOCCTRL_REGION_END
+    }
+
+    {
+        Algebr a(null<T>()), b(null<T>());
+
+        ARAGELI_EXCEPT_LOCCTRL_REGION_BEGIN
+            a*b;
+        ARAGELI_EXCEPT_LOCCTRL_REGION_END
+    }
+
+    {
+        Algebr a(null<T>()), b;
+
+        ARAGELI_EXCEPT_LOCCTRL_REGION_BEGIN
+            a*b;
+        ARAGELI_EXCEPT_LOCCTRL_REGION_END
+    }
+
+    {
+        Algebr a, b(null<T>());
+
+        ARAGELI_EXCEPT_LOCCTRL_REGION_BEGIN
+            a*b;
+        ARAGELI_EXCEPT_LOCCTRL_REGION_END
+    }
+
+    return true;
+}
+
+
+template <typename P>
+bool test_2 ()
+{
+    typedef rational<> T;
+    typedef algebraic<T, T, P> Algebr;
+    typedef typename Algebr::interval_type Interv;
+
+    ARAGELI_EXCEPT_LOCCTRL_REGION_BEGIN
+    Algebr
+        a
+        (
+            P("8*x^0-195*x^1"),
+            Interv("(-3344/6847,3344/6847)")
+        ),
+        b
+        (
+            P("2145*x^0-2252*x^1"),
+            Interv("(4950/6847,9900/6847)")
+        );
+
+        ARAGELI_ASSERT_ALWAYS(a.is_normal());
+        ARAGELI_ASSERT_ALWAYS(b.is_normal());
+
+        a*b;
+    ARAGELI_EXCEPT_LOCCTRL_REGION_END
+
+    return true;
 }
 
 
@@ -201,17 +279,19 @@ bool test1
 
 TEST(algebraic, four_arithmetic_operations, "Test algebraic via rref.")
 {
-    return resHANG;    // too long
+    //return resHANG;    // too long
     int seed = 1, coverage = ARAGELI_TESTSYS_COVERAGE_DEFAULT;
 
     bool is_ok = true;
 
     std::size_t maxdeg = 3;
     std::size_t maxval = 20;
-    std::size_t maxsize = 4;
+    std::size_t maxsize = 3;
 
     try
     {
+        is_ok &= test_0_multiplies_0<sparse_polynom<rational<> > >();
+        is_ok &= test_2<sparse_polynom<rational<> > >();
         is_ok &= test1<sparse_polynom<rational<> > >(maxdeg,  maxsize, maxval,seed, coverage);
     }
     catch(const Arageli::exception& e)

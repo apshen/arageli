@@ -48,8 +48,8 @@ runtests:
 	if ls bin/test; then bin/test; else echo \*\*\* Try make check before running tests! \*\*\*; fi;
 #	bin/test
 
-#example:
-#	$(MAKE) -C example/
+example:
+	$(MAKE) -C example/
 
 # call 'make install' only with root previlegues
 install:
@@ -72,8 +72,7 @@ HTML:
 
 # update TAGS for source files
 TAGS:
-	$(MAKE) -C src/arageli TAGS
-	$(MAKE) -C test TAGS
+	ctags -R -h .cpp.hpp
 
 clean:
 	$(MAKE) -C src/arageli clean
@@ -83,5 +82,5 @@ cleanall:
 	$(MAKE) -C tool/ts/src/ts cleanall
 	$(MAKE) -C test cleanall
 	$(MAKE) -C doc/src cleanall
-#	$(MAKE) -C example cleanall
+	$(MAKE) -C example cleanall
 	rm -rf doc/dvi

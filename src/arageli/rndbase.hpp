@@ -226,21 +226,69 @@ public:
 
 // ---------------------------------------------------------------------------
 
+namespace _Internal
+{
+    template <bool Gr, bool Eq, int Shift>
+    struct module_2_32_helper1;
+
+    template <int Shift>
+    struct module_2_32_helper1<true, false, Shift>
+    {
+        static const unsigned int module = (1 << Shift);
+    };
+
+    template <int Shift>
+    struct module_2_32_helper1<false, true, Shift>
+    {
+        static const unsigned int module = 0;
+    };
+
+    struct module_2_32 :
+        public module_2_32_helper1
+        <
+            (std::numeric_limits<unsigned int>::digits > 32),
+            (std::numeric_limits<unsigned int>::digits == 32),
+            32
+        >
+    {};
+}
+
 // lcseq_fineX -- известные "хорошие" генераторы.
-// Надо: [32-х битный unsigned int]
+// Надо: [как минимум 32-х битный unsigned int]
 
 /// Good lc-sequence 1 from VC++ 7.0 C-library sources.
 /** Из реализации функции rand в VC++ 7.0 (см. "rand.c").
     Принимается по умолчанию. */
-typedef lcseq_fullpow<unsigned, 214013u, 2531011u> lcseq_fine1;
+typedef lcseq_fullpow
+<
+    unsigned,
+    214013u,
+    2531011u,
+    _Internal::module_2_32::module
+>
+    lcseq_fine1;
 
 /// Good lc-sequence 2 from C++ Builder 6.0 C-library sources.
 /** Из реализации функции rand в С++ Builder 6.0. */
-typedef lcseq_fullpow<unsigned, 22695477u, 1u> lcseq_fine2;
+typedef lcseq_fullpow
+<
+    unsigned,
+    22695477u,
+    1u,
+    _Internal::module_2_32::module
+>
+    lcseq_fine2;
 
 /// Good lc-sequence 3 from book "Язык программирования C++" by Straustrup.
 /** Из книги Б. Страуструпа "Язык программирования C++", 3-е издание, стр. 754. */
-typedef lcseq_fullpow<unsigned, 1103515245u, 12345u> lcseq_fine3;
+typedef lcseq_fullpow
+<
+    unsigned,
+    1103515245u,
+    12345u,
+    _Internal::module_2_32::module
+>
+    lcseq_fine3;
 
 
 } // namespace rnd

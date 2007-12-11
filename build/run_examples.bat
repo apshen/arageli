@@ -27,8 +27,12 @@
 @rem
 @rem *****************************************************************************
 
+@echo off
 cd ..\bin
 
-for %%i in (..\examples\*.cpp) do call ..\build\run_one_example.bat %%~ni
+for %%i in (..\example\*.cpp) do (
+    echo %%~ni
+    call ..\build\run_one_example.bat %%~ni
+)
 
 cd ..\build

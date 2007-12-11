@@ -309,7 +309,7 @@ bool sparse_polynom<F, I, REFCNT>::is_normal () const
 template <typename F, typename I, bool REFCNT>
 sparse_polynom<F, I, REFCNT>& sparse_polynom<F, I, REFCNT>::opposite ()
 {
-    ARAGELI_ASSERT_0(is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
     if(is_null())
         return *this;
@@ -331,7 +331,7 @@ template <typename F1>
 sparse_polynom<F, I, REFCNT>& sparse_polynom<F, I, REFCNT>::add_scalar
 (const F1& x)
 {
-    ARAGELI_ASSERT_0(is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
     if(Arageli::is_null(x))return *this;
     store.unique();
@@ -350,7 +350,7 @@ template <typename F1>
 sparse_polynom<F, I, REFCNT>& sparse_polynom<F, I, REFCNT>::sub_scalar
 (const F1& x)
 {
-    ARAGELI_ASSERT_0(is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
     if(Arageli::is_null(x))
         return *this;
@@ -372,7 +372,7 @@ sparse_polynom<F, I, REFCNT>& sparse_polynom<F, I, REFCNT>::sub_scalar
     sparse_polynom<F, I, REFCNT>::MNEM##_scalar    \
     (const F1& x)    \
     {    \
-        ARAGELI_ASSERT_0(is_normal());    \
+        ARAGELI_ASSERT_EX1_0(is_normal(), *this);    \
         if(is_null())    \
             return *this;    \
     \
@@ -405,7 +405,7 @@ template <typename F1, typename I1>
 sparse_polynom<F, I, REFCNT>& sparse_polynom<F, I, REFCNT>::operator+=
 (const Arageli::monom<F1, I1>& x)
 {
-    ARAGELI_ASSERT_0(is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
     if(x.is_null())
         return *this;
@@ -429,7 +429,7 @@ template <typename F1, typename I1>
 sparse_polynom<F, I, REFCNT>& sparse_polynom<F, I, REFCNT>::operator-=
 (const Arageli::monom<F1, I1>& x)
 {
-    ARAGELI_ASSERT_0(is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
     // ПРЕДУПРЕЖДЕНИЕ. Простая, но медленная реализация, можно быстрее.
 
@@ -442,7 +442,7 @@ template <typename F1, typename I1>
 sparse_polynom<F, I, REFCNT>& sparse_polynom<F, I, REFCNT>::operator*=
 (const Arageli::monom<F1, I1>& x)
 {
-    ARAGELI_ASSERT_0(is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
     if(x.is_unit())
         return *this;
@@ -475,8 +475,8 @@ sparse_polynom<F, I, REFCNT>&
 sparse_polynom<F, I, REFCNT>::add_sparse_polynom
 (const T1& x)
 {
-    ARAGELI_ASSERT_0(is_normal());
-    ARAGELI_ASSERT_0(x.is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
+    ARAGELI_ASSERT_EX1_0(x.is_normal(), x);
 
     if(x.is_null())
         return *this;
@@ -536,8 +536,8 @@ sparse_polynom<F, I, REFCNT>&
 sparse_polynom<F, I, REFCNT>::sub_sparse_polynom
 (const T1& x)
 {
-    ARAGELI_ASSERT_0(is_normal());
-    ARAGELI_ASSERT_0(x.is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
+    ARAGELI_ASSERT_EX1_0(x.is_normal(), x);
 
     // ПРЕДУПРЕЖДЕНИЕ. Простая, но медленная реализация, можно быстрее.
 
@@ -551,8 +551,8 @@ sparse_polynom<F, I, REFCNT>&
 sparse_polynom<F, I, REFCNT>::mul_sparse_polynom
 (const T1& x)
 {
-    ARAGELI_ASSERT_0(is_normal());
-    ARAGELI_ASSERT_0(x.is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
+    ARAGELI_ASSERT_EX1_0(x.is_normal(), x);
 
     // ПРЕДУПРЕЖДЕНИЕ. Простая, но медленная реализация, можно быстрее.
 
@@ -590,8 +590,8 @@ sparse_polynom<F, I, REFCNT>&
 sparse_polynom<F, I, REFCNT>::div_sparse_polynom
 (const T1& x)
 {
-    ARAGELI_ASSERT_0(x.is_normal());
-    ARAGELI_ASSERT_0(is_normal());
+    ARAGELI_ASSERT_EX1_0(x.is_normal(), x);
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
     if(is_null())
         return *this;
@@ -619,7 +619,7 @@ void sparse_polynom<F, I, REFCNT>::assign_div_common
     const sparse_polynom<F1, I1, REFCNT1>& y
 )
 {
-    ARAGELI_ASSERT_1(x.is_normal());
+    ARAGELI_ASSERT_EX1_1(x.is_normal(), x);
     ARAGELI_ASSERT_1(y.is_normal());
 
 #if 1
@@ -672,8 +672,8 @@ sparse_polynom<F, I, REFCNT>&
 sparse_polynom<F, I, REFCNT>::mod_sparse_polynom
 (const T1& x)
 {
-    ARAGELI_ASSERT_0(is_normal());
-    ARAGELI_ASSERT_0(x.is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
+    ARAGELI_ASSERT_EX1_0(x.is_normal(), x);
 
     // ПРЕДУПРЕЖДЕНИЕ. Простая, но медленная реализация, можно быстрее.
     // WARNING. This implementation is simple but is slow, maybe quicker.
@@ -1002,13 +1002,32 @@ void sparse_polynom<F, I, REFCNT>::addsub
 }
 
 
+namespace _Internal
+{
+
+template <typename M>
+struct is_monom_null
+{
+    bool operator() (const M& m)
+    {
+        return m.is_null();
+    }
+};
+
+}
+
+
 template
 <typename F, typename I, bool REFCNT>
 void sparse_polynom<F, I, REFCNT>::normalize ()
 {
+    //std::cerr << "\nPre unique: " << *this;
     store.unique();
-    rep().remove_if(func::is_null<monom>());
+    //std::cerr << "\nPre remove_if: " << *this;
+    rep().remove_if(_Internal::is_monom_null<monom>());
+    //std::cerr << "\nPre sort: " << *this;
     rep().sort(monom_degree_less<monom>());
+    //std::cerr << "\nPre removing duplicated degrees: " << *this;
 
     for(typename Rep::iterator i = rep().begin();;)
     {
@@ -1032,6 +1051,10 @@ void sparse_polynom<F, I, REFCNT>::normalize ()
             i = rep().erase(i);
         i = rep().erase(i);
     }
+
+    //std::cerr << "\nAfter all: " << *this;
+
+    ARAGELI_ASSERT_2(is_normal());
 }
 
 
@@ -1075,7 +1098,7 @@ template <typename F, typename I, bool REFCNT>
 template <typename F1, typename Coef_factory>
 F1 sparse_polynom<F, I, REFCNT>::subs (const F1& x, const Coef_factory& fctr) const
 {
-    ARAGELI_ASSERT_0(is_normal());
+    ARAGELI_ASSERT_EX1_0(is_normal(), *this);
 
     // ПРЕДУПРЕЖДЕНИЕ. Это не схема Горнера.
 
@@ -1118,7 +1141,7 @@ template <typename F, typename I, bool REFCNT>
 sparse_polynom<F, I, REFCNT> diff
 (const sparse_polynom<F, I, REFCNT>& x)
 {
-    ARAGELI_ASSERT_0(x.is_normal());
+    ARAGELI_ASSERT_EX1_0(x.is_normal(), x);
 
     typedef sparse_polynom<F, I, REFCNT> P;
     typedef typename P::monom_const_iterator Pmi;

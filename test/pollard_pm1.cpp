@@ -39,16 +39,25 @@ TEST_FUNCTION(pollard_pm1, "Test pollard_pm1 algorithm.")
     int i = 10;
     while(i)
     {
-        big_int q1 = rand(INT_MAX);
-        big_int q2 = rand(INT_MAX);
+#if 0
+        big_int q1 = rand(INT_MAX-1);
+        ARAGELI_ASSERT_1(q1 >= 0);
+        big_int q2 = rand(INT_MAX-1);
+        ARAGELI_ASSERT_1(q2 >= 0);
+#else
+        const unsigned int num_lengths = 30;
+        big_int q1 = big_int::random_with_length(num_lengths);
+        big_int q2 = big_int::random_with_length(num_lengths);
+#endif
         big_int test = q1*q2;
-        long inter_num = 1000;
+        long inter_num = 0;
         big_int result = pollard_pm1(test, inter_num);
         if(result == test || is_null(result))
         {
             res = resFAIL;
             tout << "Test fail: " << test << " = " << q1 << '*' << q2 << '\n';
             tout << "Result: " << result << '\n';
+            break;
         }
         --i;
     }

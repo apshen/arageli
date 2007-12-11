@@ -1,13 +1,16 @@
+#include <iostream>
+#include <iomanip>
 #include <arageli/arageli.hpp>
 
-// Smith's normal diagonal form
-
-using namespace std;
 using namespace Arageli;
+using std::cout;
+using std::endl;
+using std::size_t;
+using std::boolalpha;
 
-int main(int argc, char *argv[])
+
+int main ()
 {
-
     matrix< sparse_polynom<rational<> > > A, B, P, Q;
     size_t rk;
     sparse_polynom<rational<> > d;

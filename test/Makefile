@@ -32,29 +32,25 @@
 ##############################################################################
 
 test_dirs = . ITLab-produced
-CXXFLAGS = -MD -g -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
+CXXFLAGS += -MD -g -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
 tests_name = test
 
 all: ../bin/$(tests_name)
 
-../bin/$(tests_name): ../tool/ts/bin/libts.a ../lib/libtestarageli.a $(patsubst %.cpp,%.o, $(wildcard $(addsuffix \
+../bin/$(tests_name): ../tool/ts/bin/libts.a ../lib/libtestarageli.a stdafx.hpp.gch $(patsubst %.cpp,%.o, $(wildcard $(addsuffix \
                 /*.cpp,$(test_dirs))))
+	make -C ../src/arageli ../../lib/libtestarageli.a
 	$(CXX) -o ../bin/$(tests_name) $(patsubst %.cpp,%.o, $(wildcard \
-    $(addsuffix /*.cpp,$(test_dirs)))) -L "../lib" -L "../tool/ts/bin/" -l "testarageli" -l "ts"
+    $(addsuffix /*.cpp,$(test_dirs)))) -L"../lib" -L"../tool/ts/bin/" -ltestarageli -lts
 
 ../tool/ts/bin/libts.a:
 	$(MAKE) -C ../tool/ts/src/ts/
 
+stdafx.hpp.gch: stdafx.hpp
+	$(CC) -x c++-header $(CXXFLAGS) -o $@ $< -I"../src/" -I"../tool/ts/src/"
+
 %.o:%.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@ -I"../src/" -I"../tool/ts/src/"
-
-pollard: t_fft_multiplication.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
-	$(CXX) -o ../bin/pollard_test t_fft_multiplication.o -L "../lib" -L "../tool/ts/bin/" -l "testarageli" -l "ts"
-	../bin/pollard_test
-
-karatsuba: t_karatsuba.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a
-	$(CXX) -o ../bin/karatsuba_test t_karatsuba.o -L "../lib" -L "../tool/ts/bin/" -l "testarageli" -l "ts"
-	../bin/karatsuba_test
 
 ../lib/libtestarageli.a:
 	$(MAKE) -C ../src/arageli ../../lib/libtestarageli.a
@@ -68,6 +64,7 @@ clean:
 	rm -f $(wildcard $(addsuffix /*.o,$(test_dirs))) $(wildcard $(addsuffix /*.d,$(test_dirs)))
 
 cleanall: clean
+	rm -f stdafx.hpp.gch
 	rm -f tags
 
 include $(wildcard *.d)

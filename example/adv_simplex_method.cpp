@@ -1,22 +1,65 @@
+/*
+    Note for Microsoft Visual Studio users.
+
+    To run this example directly from MSVS IDE you should
+    set correct value for working directory path.
+    In MSVS 2005 IDE go to adv_simple_method Property Pages ->
+    Configuration Properties -> Debugging.
+    Set Working Directory field to "..\..\..\example" (without quotes).
+*/
+
+#include <iostream>
+#include <fstream>
 #include <arageli/arageli.hpp>
 
 using namespace Arageli;
+using ctrl::simplex_method::adv_simplex_method_alg_slog;
+using std::ofstream;
+using std::cout;
 
 void SolveFromFile()
 {
-    std::ofstream outfile("output1.txt");
-    ctrl::simplex_method::adv_simplex_method_alg_slog<std::ofstream> ctrl_sm_slog(outfile);
-    simplex_method::adv_simplex_method_alg<rational<>, ctrl::simplex_method::adv_simplex_method_alg_slog<std::ofstream> > sm(ctrl_sm_slog);
+    ofstream outfile("../example/adv_simplex_method.task.output1.txt");
 
-    sm.LoadTaskFromFile("task.txt");
+    adv_simplex_method_alg_slog<ofstream>
+        ctrl_sm_slog(outfile);
+
+    simplex_method::adv_simplex_method_alg
+    <
+        rational<>,
+        adv_simplex_method_alg_slog<ofstream>
+    >
+        sm(ctrl_sm_slog);
+
+    try
+    {
+        sm.LoadTaskFromFile("../example/adv_simplex_method.task.txt");
+    }
+    catch(exception& e)
+    {
+        ARAGELI_EXCEPT_LOC(e);
+        cout
+            << "\nSomething wrong happened while reading the file."
+            << "\nDetailes:\n" << e;
+        return;
+    }
+
     sm.SimplexDriver();
 }
 
 void SolveFromInput()
 {
-    std::ofstream outfile("output2.txt"); // output file
-    ctrl::simplex_method::adv_simplex_method_alg_slog<std::ofstream> ctrl_sm_slog(outfile); // controller
-    simplex_method::adv_simplex_method_alg<rational<>, ctrl::simplex_method::adv_simplex_method_alg_slog<std::ofstream> > sm(ctrl_sm_slog);
+    ofstream outfile("../example/adv_simplex_method.task.output2.txt"); // output file
+
+    adv_simplex_method_alg_slog<ofstream>
+        ctrl_sm_slog(outfile); // controller
+
+    simplex_method::adv_simplex_method_alg
+    <
+        rational<>,
+        adv_simplex_method_alg_slog<ofstream>
+    >
+        sm(ctrl_sm_slog);
 
     int i = 0;
 
@@ -51,8 +94,9 @@ void SolveFromInput()
 }
 
 
-void main()
+int main()
 {
     SolveFromFile();
     SolveFromInput();
+    return 0;
 }
