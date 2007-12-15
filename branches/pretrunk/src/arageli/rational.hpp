@@ -43,6 +43,7 @@
 #include "type_traits.hpp"
 #include "type_pair_traits.hpp"
 #include "basefuncs.hpp"
+#include "frwrddecl.hpp"
 #include "exception.hpp"
 #include "factory.hpp"
 #include "cmp.hpp"
@@ -517,6 +518,59 @@ inline std::basic_istream<Ch, ChT>& operator>>
 {
     return input_default(in, x);
 }
+
+template <typename T>
+class io_binary<rational<T> > : public io_binary_base<rational<T> >
+{
+public:
+
+    using io_binary_base<rational<T> >::output_stream;
+    using io_binary_base<rational<T> >::input_stream;
+    using io_binary_base<rational<T> >::calc;
+    using io_binary_base<rational<T> >::input_mem;
+    using io_binary_base<rational<T> >::output_mem;
+
+    /// Stores rational object state to a binary stream. Seft-delimeted binary serialization.
+    /** This functions uses the following format:
+            NUMERATOR DENOMINATOR
+        where NUMERATOR and DENOMINATOR are output by The Simple Binary
+        format rules corresponding their types. */
+    template <typename Stream>
+    static inline Stream& output_stream (Stream& out, const rational<T>& x)
+    {
+        output_binary_stream(out, x.numerator());
+        output_binary_stream(out, x.denominator());
+        return out;
+    }
+
+
+    /// Loads rational object state from a binary stream. Compatible with output_stream.
+    /** See output_stream(stream, rational) function for detailes on the format.
+        If the function fails to read some of state components, an old value of x
+        may be lost. All depends on input_binary_stream function for T.
+        So, do not relay on the value of x when a given stream is not in a good state
+        after call returns.
+
+        The function takes input in The Simple Binary format.
+    */
+    template <typename Stream>
+    static inline Stream& input_stream (Stream& in, rational<T>& x)
+    {
+        input_binary_stream(in, x.numerator());
+        input_binary_stream(in, x.denominator());
+        return in;
+    }
+
+
+    /// Calculates the number of chars required to store a given rational object in The Simple Binary form.
+    /** This function calculates precise number of chars that will emit
+        any function outputs in The Simple Binary format for one rational object,
+        for example, output_binary_mem function. */
+    static inline std::size_t calc (const rational<T>& x)
+    {
+        return calc_binary(x.numerator()) + calc_binary(x.denominator());
+    }
+};
 
 
 /// @name Standard arithmetic operations.
