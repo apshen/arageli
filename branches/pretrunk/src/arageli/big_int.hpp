@@ -113,6 +113,8 @@ class big_int
     template <typename T_factory>
     friend big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
 
+    friend std::size_t magnitude (const big_int& x);
+
 public:
 
     /// Exception of class big_int.
@@ -1339,6 +1341,30 @@ inline big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr)
         return euclid(a, b, tfctr);
 }
 
+
+/// Retruns a number of digits in a given number with specified radix.
+std::size_t ndigits (big_int x, std::size_t r);
+
+
+/// Retruns platform specific magnitude of a given big integer.
+/** Exact values returned by this function are implementation defined
+    and may differ under different platforms. But this function is satisfied
+    the following criteria:
+
+        - magnitude(x) retruns only non negative integer numbers
+        for any input x.
+
+        - magnitude(x_1) <= magnitude(x_2) for a given pair x_1 and x_2,
+        abs(x_1) <= abs(x_2).
+
+        - C1*nbits(x) - C2 <= magnitude(x) <= C1*nbits(x) + C2,
+        where C1 and C2 are platform specific positive constants
+        that are the same for any x.
+*/
+inline std::size_t magnitude (const big_int& x)
+{
+    return x.number->len;
+}
 
 }
 
