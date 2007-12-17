@@ -53,6 +53,7 @@
 
 #include <cmath>
 #include "std_import.hpp"
+#include "bigar.hpp"
 #include "big_int.hpp"
 
 #ifndef _ARAGELI_big_float_h_
