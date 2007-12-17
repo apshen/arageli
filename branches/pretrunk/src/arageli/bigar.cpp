@@ -252,18 +252,12 @@ std::size_t do_optimize (const digit* a, std::size_t n)
 /// Performs multiplication of 2 sequences of digits by applying different methods.
 /** Different algorithms including karatsuba and pollard methods are used
     depending on arguments lenghts.
-
     @param u    First number.
-
     @param v    Second number.
-
     @param w    Result of multiplication.
                 The length of w = m + n or m + n - 1.
-
     @param m    Length of u.
-
     @param n    Length of v.
-
     @return     Multiplication result length (length of w).
 */
 std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, std::size_t n)
@@ -271,9 +265,10 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
 #ifdef ARAGELI_ENABLE_POLLARD_MULT
     if
     (
-        _Internal::pollard_limit_value > 0 &&
-        m > _Internal::pollard_limit_value &&
-        n > _Internal::pollard_limit_value
+        m > ARAGELI_POLLARD_THRESHOD &&
+        n > ARAGELI_POLLARD_THRESHOD &&
+        m <= ARAGELI_POLLARD_UPPER_BOUND &&
+        n <= ARAGELI_POLLARD_UPPER_BOUND
     )
     {
         return do_mult_pollard<digit,unsigned long>(u, v, w, m, n);
@@ -282,16 +277,45 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
 #ifdef ARAGELI_ENABLE_KARATSUBA_MULT
     if
     (
-        _Internal::karatsuba_limit_value > 0 &&
-        m > _Internal::karatsuba_limit_value &&
-        n > _Internal::karatsuba_limit_value
+        m > ARAGELI_KARATSUBA_THRESHOLD &&
+        n > ARAGELI_KARATSUBA_THRESHOLD 
     )
     {
-        digit *t = new digit[9 * (n + m)];
-        unsigned ret =
-            (n > m) ?
-            do_mult_karatsuba<digit, unsigned>(v, u, w, &t, n, m) :
-            do_mult_karatsuba<digit, unsigned>(u, v, w, &t, m, n);
+        digit *t = new digit[3 * (n + m)];
+        std::size_t ret = 0;
+        //// make m >= n
+        if (m < n)
+        {
+            std::size_t temp = m;
+            m = n;
+            n = temp;
+            const digit *tmp = u;
+            u = v;
+            v = tmp;
+        };
+        if (m/n > 1)
+        {
+            for (std::size_t i = n; i < m + n; ++i)
+            {
+                w[i] = 0;
+            }
+            do_mult_karatsuba<digit, std::size_t>(u, v, w, t, n, n);
+            for (std::size_t i = 1; i < m/n; ++i)
+            {
+                std::size_t temp_len = do_mult_karatsuba<digit, std::size_t>(&u[i*n], v, &t[2*(n+m)], t, n, n);
+                do_add(&w[i*n], &t[2*(n+m)], temp_len, temp_len);
+            }
+            if (m - (m/n)*n)
+            {
+                std::size_t temp_len = do_mult(v, &u[(m/n)*n], t, n, m - (m/n)*n);
+                do_add(&w[(m/n)*n], t, temp_len, temp_len);
+            }
+            ret = (w[m + n - 1]) ?  m + n :  m + n - 1;
+        }
+        else
+        {
+            ret = do_mult_karatsuba<digit, std::size_t>(u, v, w, t, m, n);
+        }
         delete[] t;
         return ret;
     }
@@ -301,18 +325,12 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
 
 /// Performs multiplication of 2 sequences of digits by classic method.
 /** Performs multiplication of 2 sequences of digits by classic method.
-
     @param u    First number.
-
     @param v    Second number.
-
     @param w    Result of multiplication.
                 The length of w = m + n or m + n - 1.
-
     @param m    Length of u.
-
     @param n    Length of v.
-
     @return     Multiplication result length (length of w).
 */
 std::size_t do_mult_classic (const digit* u, const digit* v, digit* w, std::size_t m, std::size_t n)
