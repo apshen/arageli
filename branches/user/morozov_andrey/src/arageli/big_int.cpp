@@ -93,6 +93,28 @@ void big_int::from_native_int (const T& x)
     typedef std::numeric_limits<T> Nl;
     ARAGELI_ASSERT_1(Nl::is_specialized);
     ARAGELI_ASSERT_1(Nl::is_integer);
+
+    #ifdef ARAGELI_GMP
+
+    if(Nl::is_signed)
+    {
+        typedef std::numeric_limits<signed long int> Nlsli;
+        ARAGELI_ASSERT_0(x >= Nlsli::min() && x <= Nlsli::max());
+        number = new big_struct;
+        number->refs = 1;
+        mpz_init_set_si(number->gmpdata, x);
+    }
+    else
+    {
+        typedef std::numeric_limits<unsigned long int> Nlsli;
+        ARAGELI_ASSERT_0(x >= Nlsli::min() && x <= Nlsli::max());
+        number = new big_struct;
+        number->refs = 1;
+        mpz_init_set_ui(number->gmpdata, x);
+    }
+
+    #else
+
     alloc_zero();
 
     if(Arageli::is_null(x))
@@ -148,6 +170,8 @@ void big_int::from_native_int (const T& x)
 
         number->sign = +1;
     }
+
+    #endif
 }
 
 
@@ -162,6 +186,16 @@ void big_int::from_native_float (const T& x)
     ARAGELI_ASSERT_0(!(Nl::has_quiet_NaN && x == Nl::quiet_NaN()));
     ARAGELI_ASSERT_0(!(Nl::has_signaling_NaN && x == Nl::signaling_NaN()));
     ARAGELI_ASSERT_0(!(Nl::has_denorm && x == Nl::denorm_min()));
+
+    #ifdef ARAGELI_GMP
+
+    typedef std::numeric_limits<double> Nld;
+    ARAGELI_ASSERT_0(x == 0 || std::abs(x) >= Nld::min() && std::abs(x) <= Nld::max());
+    number = new big_struct;
+    number->refs = 1;
+    mpz_init_set_d(number->gmpdata, x);
+
+    #else
 
     alloc_zero();
 
@@ -229,6 +263,8 @@ void big_int::from_native_float (const T& x)
         else
             *this >>= -expon;
     }
+
+    #endif
 }
 
 
@@ -241,6 +277,21 @@ T big_int::to_native_int () const
 
     ARAGELI_ASSERT_0(big_int(Nl::min()) <= *this && *this <= big_int(Nl::max()));
 
+    #ifdef ARAGELI_GMP
+
+    if(Nl::is_signed)
+    {
+        ARAGELI_ASSERT_0(mpz_fits_slong_p(number->gmpdata));
+        return mpz_get_si(number->gmpdata);
+    }
+    else
+    {
+        ARAGELI_ASSERT_0(mpz_fits_ulong_p(number->gmpdata));
+        return mpz_get_ui(number->gmpdata);
+    }
+
+    #else
+
     if(is_null())return factory<T>::null();
     else if(sign() < 0)
     {
@@ -250,8 +301,12 @@ T big_int::to_native_int () const
             (to_native_int_without_sign<typename _Internal::Unsigned<T>::Type>());
     }
     else return to_native_int_without_sign<T>();
+
+    #endif
 }
 
+
+#ifndef ARAGELI_GMP
 
 template <typename T>
 T big_int::to_native_int_without_sign () const
@@ -270,6 +325,8 @@ T big_int::to_native_int_without_sign () const
     return res;
 }
 
+#endif
+
 
 template <typename T>
 T big_int::to_native_float () const
@@ -278,6 +335,12 @@ T big_int::to_native_float () const
 
     ARAGELI_ASSERT_1(Nl::is_specialized);
     ARAGELI_ASSERT_1(!Nl::is_integer);
+
+    #ifdef ARAGELI_GMP
+
+    return mpz_get_d(number->gmpdata);
+
+    #else
 
     if(is_null())
         return factory<T>::null();
@@ -334,6 +397,8 @@ T big_int::to_native_float () const
 
         return res;
     }
+
+    #endif
 }
 
 
@@ -345,6 +410,21 @@ T big_int::to_native_float () const
 template <typename Stream>
 Stream& io_binary<big_int>::output_stream (Stream& out, const big_int& x)
 {
+    #ifdef ARAGELI_GMP
+
+    int sign = x.sign();
+    output_binary_stream(out, sign);
+    if(sign)
+    {
+        const mpz_t& t = x.number->gmpdata;
+        std::size_t len = mpz_size(t);
+        output_binary_stream(out, len);
+        for(std::size_t i = 0; i < len; ++i)
+            output_binary_stream(out, mpz_getlimbn(t, i));
+    }
+
+    #else
+
     int sign = x.number->sign;
     output_binary_stream(out, sign);
     if(sign)
@@ -353,6 +433,8 @@ Stream& io_binary<big_int>::output_stream (Stream& out, const big_int& x)
         output_binary_stream(out, len);
         output_binary_stream(out, x.number->data, len);
     }
+
+    #endif
 
     return out;
 }
@@ -377,6 +459,38 @@ Stream& io_binary<big_int>::input_stream (Stream& in, big_int& x)
             return in;
         ARAGELI_ASSERT_ALWAYS(len > 0);
 
+        #ifdef ARAGELI_GMP
+
+        x = big_int();
+        ARAGELI_ASSERT_1(x.number->refs == 1);
+
+        // WARNING! IT IS SLOW IMPLEMENTATION.
+
+        ARAGELI_ASSERT_1
+        (
+            std::numeric_limits<unsigned long>::digits >=
+            mp_bits_per_limb
+        );
+
+        std::size_t shift = 0;
+        mpz_t tmp;
+        mpz_init(tmp);
+
+        for(std::size_t i = 0; i < len; ++i, shift += mp_bits_per_limb)
+        {
+            mp_limb_t limb;
+            input_binary_stream(in, limb);
+            mpz_set_ui(tmp, limb);
+            mpz_mul_2exp(tmp, tmp, shift);
+            mpz_add(x.number->gmpdata, x.number->gmpdata, tmp);
+        }
+
+        mpz_clear(tmp);
+        if(sign < 0)
+            mpz_neg(x.number->gmpdata, x.number->gmpdata);
+
+        #else
+
         if(x.number->refs == 1 && x.number->len == len)
             x.number->sign = sign;
         else
@@ -389,6 +503,8 @@ Stream& io_binary<big_int>::input_stream (Stream& in, big_int& x)
             // Make sure that x object is in correct state.
             x.number->data[len - 1] = 1;    // kills all leading zeros
         }
+
+        #endif
     }
     else
     {
@@ -416,12 +532,12 @@ Stream& io_binary<big_int>::input_stream (Stream& in, big_int& x)
 #include "big_int.hpp"
 #include "rational.hpp"
 
-
+#ifndef ARAGELI_GMP
 namespace
 {
     typedef Arageli::_Internal::digit digit;
 }
-
+#endif
 
 namespace Arageli
 {
@@ -432,13 +548,14 @@ void big_arith_error(const char *s)
 }
 
 
+#ifndef ARAGELI_GMP
+
 /***************************/
 /*                         */
 /*    low level memory     */
 /*   managment routines    */
 /*                         */
 /***************************/
-
 
 digit* big_int::get_mem_for_data (std::size_t nitems)
 {
@@ -499,15 +616,27 @@ void big_int::alloc_number
     number->refs = 1;
 }
 
+#endif
+
+
 void big_int::free_number()
 {
     if(!number)return;
     number->refs--;
     if(number->refs)return;
+
+    #ifdef ARAGELI_GMP
+    mpz_clear(number->gmpdata);
+    #else
     free_data(number->data);
+    #endif
+
     delete number;
     number = 0;
 }
+
+
+#ifndef ARAGELI_GMP
 
 void big_int::free_mem_and_alloc_number
 (int new_sign, digit* new_data, std::size_t new_len)
@@ -522,6 +651,7 @@ void big_int::free_mem_and_alloc_zero ()
     free_number();
     alloc_zero();
 }
+
 
 /***************************/
 /*                         */
@@ -575,6 +705,9 @@ digit* big_int::optimize (std::size_t& new_len, digit * p, std::size_t len)
     return p;
 }
 
+#endif
+
+
 /***************************/
 /*                         */
 /*      constructors       */
@@ -584,6 +717,19 @@ digit* big_int::optimize (std::size_t& new_len, digit * p, std::size_t len)
 
 big_int::big_int (const char* str)
 {
+    #ifdef ARAGELI_GMP
+
+    number = new big_struct;
+    number->refs = 1;
+    if(mpz_init_set_str(number->gmpdata, const_cast<char*>(str), 0) != 0)
+    {
+        mpz_clear(number->gmpdata);
+        delete number;
+        throw incorrect_string(str);
+    }
+
+    #else
+
     std::istringstream s(str);
     big_int b;
     s >> b;
@@ -599,6 +745,8 @@ big_int::big_int (const char* str)
     {
         free_number(); throw;
     }
+
+    #endif
 }
 
 
@@ -611,7 +759,9 @@ big_int::big_int (const char* str)
 
 big_int& big_int::operator= (const big_int & b)
 {
+    #ifndef ARAGELI_GMP
     ARAGELI_ASSERT_1(b.number->sign == -1 || b.number->sign == 0 || b.number->sign == 1);
+    #endif
 
     // make a copy of a number, just increments the reference count
     if(number == b.number)
@@ -632,6 +782,15 @@ big_int& big_int::operator= (const big_int & b)
 
 big_int big_int::operator- () const    // unary minus
 {
+    #ifdef ARAGELI_GMP
+
+    big_int a;
+    ARAGELI_ASSERT_1(a.number->refs == 1);
+    mpz_neg(a.number->gmpdata, number->gmpdata);
+    return a;
+
+    #else
+
     big_int a;
     digit *result;
     std::size_t blen;
@@ -648,6 +807,8 @@ big_int big_int::operator- () const    // unary minus
     }
 
     return a;
+
+    #endif
 }
 
 /***************************/
@@ -658,6 +819,15 @@ big_int big_int::operator- () const    // unary minus
 
 big_int operator+ (const big_int& b, const big_int& c)
 {
+    #ifdef ARAGELI_GMP
+
+    big_int a;
+    ARAGELI_ASSERT_1(a.number->refs == 1);
+    mpz_add(a.number->gmpdata, b.number->gmpdata, c.number->gmpdata);
+    return a;
+
+    #else
+
     ARAGELI_ASSERT_1(b.number->sign == -1 || b.number->sign == 0 || b.number->sign == 1);
     ARAGELI_ASSERT_1(c.number->sign == -1 || c.number->sign == 0 || c.number->sign == 1);
 
@@ -725,6 +895,8 @@ big_int operator+ (const big_int& b, const big_int& c)
     }
 
     return a;
+
+    #endif
 }
 
 
@@ -737,7 +909,18 @@ big_int operator+ (const big_int& b, const big_int& c)
 
 big_int operator- (const big_int& b, const big_int& c)
 {
+    #ifdef ARAGELI_GMP
+
+    big_int a;
+    ARAGELI_ASSERT_1(a.number->refs == 1);
+    mpz_sub(a.number->gmpdata, b.number->gmpdata, c.number->gmpdata);
+    return a;
+
+    #else
+
     return b + (-c);
+
+    #endif
 }
 
 
@@ -750,6 +933,15 @@ big_int operator- (const big_int& b, const big_int& c)
 
 big_int operator* (const big_int& b, const big_int& c)
 {
+    #ifdef ARAGELI_GMP
+
+    big_int a;
+    ARAGELI_ASSERT_1(a.number->refs == 1);
+    mpz_mul(a.number->gmpdata, b.number->gmpdata, c.number->gmpdata);
+    return a;
+
+    #else
+
     ARAGELI_ASSERT_1(b.number->sign == -1 || b.number->sign == 0 || b.number->sign == 1);
     ARAGELI_ASSERT_1(c.number->sign == -1 || c.number->sign == 0 || c.number->sign == 1);
 
@@ -781,6 +973,8 @@ big_int operator* (const big_int& b, const big_int& c)
     }
 
     return a;
+
+    #endif
 }
 
 
@@ -794,6 +988,18 @@ big_int operator* (const big_int& b, const big_int& c)
 void _Internal::xdivide (big_int& a, const big_int& b, const big_int& c, big_int& res)
 {
     // a = b / c; res = b % c
+
+    #ifdef ARAGELI_GMP
+
+    mpz_tdiv_qr
+    (
+        a.number->gmpdata,
+        res.number->gmpdata,
+        b.number->gmpdata,
+        c.number->gmpdata
+    );
+
+    #else
 
     digit *u, *v, *q, *r;
     std::size_t alen, blen, clen, rlen;
@@ -886,6 +1092,8 @@ void _Internal::xdivide (big_int& a, const big_int& b, const big_int& c, big_int
         }
     }
 
+    #endif
+
     ARAGELI_ASSERT_1(b == c*a + res);
 }
 
@@ -915,6 +1123,22 @@ big_int operator/ (const big_int& b, const big_int& c)
 
 int cmp (const big_int & a, const big_int & b)
 {
+    #ifdef ARAGELI_GMP
+
+    int res = mpz_cmp(a.number->gmpdata, b.number->gmpdata);
+
+    // May be it will be reasonable to change the semantic of Arageli::cmp
+    // function to fit GMP cmp to avoid the following manual conversion.
+
+    if(res > 0)
+        return +1;
+    else if(res < 0)
+        return -1;
+    else // res == 0
+        return 0;
+
+    #else
+
     //sign(a-b)
 
     int result;
@@ -945,6 +1169,8 @@ int cmp (const big_int & a, const big_int & b)
     }
 
     return result;
+
+    #endif
 }
 
 
@@ -958,6 +1184,8 @@ int cmp (const big_int & a, const big_int & b)
     #pragma warning (push)
     #pragma warning (disable : 4800)
 #endif
+
+#ifndef ARAGELI_GMP
 
 digit random_digit ()
 {
@@ -974,6 +1202,8 @@ digit random_digit ()
                                             // placed to higher bits of the result.
     return res;
 }
+
+#endif
 
 #ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
     #pragma warning (pop)
@@ -998,6 +1228,19 @@ big_int big_int::random_in_range (const big_int& max)
 
 big_int big_int::random_with_length_or_less (std::size_t length) //bits
 {
+    #ifdef ARAGELI_GMP
+
+    big_int a;
+    ARAGELI_ASSERT_1(a.number->refs == 1);
+    gmp_randstate_t rst;
+    gmp_randinit_default(rst);
+    gmp_randseed_ui(rst, rand());   // WARNING! IT SHOULD BE DONE ONCE.
+    mpz_urandomb(a.number->gmpdata, rst, length);
+    ARAGELI_ASSERT_1(!is_negative(a) && a.length() <= length);
+    return a;
+
+    #else
+
     int bits_in_highest = length % _Internal::bits_per_digit;
     std::size_t len = length/_Internal::bits_per_digit + 1;
     digit *p = big_int::get_mem_for_data(len);
@@ -1028,6 +1271,8 @@ big_int big_int::random_with_length_or_less (std::size_t length) //bits
         big_int::free_data(p);
         throw;
     }
+
+    #endif
 }
 
 /***************************/
@@ -1036,7 +1281,7 @@ big_int big_int::random_with_length_or_less (std::size_t length) //bits
 /*                         */
 /***************************/
 
-digit stream_radix(std::ios & s)
+unsigned int stream_radix(std::ios & s)
 {
     if(s.flags() & std::ios::dec)
         return 10;
@@ -1053,6 +1298,16 @@ std::ostream& operator<< (std::ostream& s, const big_int& x)
 {
     if(s.flags() & std::ios_base::showpos && x.sign() > 0)
         s << '+';
+
+    #ifdef ARAGELI_GMP
+
+    int base = stream_radix(s);
+    char* buf = new char[mpz_sizeinbase(x.number->gmpdata, base) + 2];
+    mpz_get_str(buf, base, x.number->gmpdata);
+    s << buf;
+    delete [] buf;
+
+    #else
 
     if(!x.number->sign)return s << "0";
 
@@ -1100,11 +1355,14 @@ std::ostream& operator<< (std::ostream& s, const big_int& x)
     }
 
     big_int::free_data(bdn);
+
+    #endif
+
     return s;
 }
 
 
-inline void set_stream_radix (std::ios& s, digit radix)
+inline void set_stream_radix (std::ios& s, unsigned int radix)
 {
     switch(radix)
     {
@@ -1284,7 +1542,7 @@ std::istream& operator>> (std::istream& s, big_int& x)
 
     char ch = 0;
     int sign = 1;
-    digit radix = 10;
+    unsigned int radix = 10;
     bool brackets = false;
 
     std::size_t len;
@@ -1375,6 +1633,27 @@ std::istream& operator>> (std::istream& s, big_int& x)
         return s;
     }
 
+    #ifdef ARAGELI_GMP
+
+    x = big_int();
+    ARAGELI_ASSERT_1(x.number->refs == 1);
+    
+    int status = mpz_set_str
+    (
+        x.number->gmpdata,
+        const_cast<char*>(buffer.c_str()),
+        radix
+    );
+    
+    ARAGELI_ASSERT_1(status == 0);
+
+    if(sign == -1)
+    {
+        mpz_neg(x.number->gmpdata, x.number->gmpdata);
+    }
+
+    #else
+
     digit bdn_radix;
     std::size_t chars_per_block;
     calc_bdn_radix(radix, bdn_radix, chars_per_block);
@@ -1419,6 +1698,8 @@ std::istream& operator>> (std::istream& s, big_int& x)
     if(brackets && !_Internal::read_literal(s, ")"))
         throw big_int::incorrect_string(std::string(1, s.peek()));
 
+    #endif
+
     s.clear();
     return s;
 
@@ -1428,6 +1709,19 @@ std::istream& operator>> (std::istream& s, big_int& x)
 
 std::size_t big_int::length () const
 {
+    #ifdef ARAGELI_GMP
+
+    std::size_t len = mpz_size(number->gmpdata);
+    if(len == 0)
+        return 0;
+    std::size_t l = (len - 1) * mp_bits_per_limb;
+    mp_limb_t highest = mpz_getlimbn(number->gmpdata, len - 1);
+    while(highest >>= 1)
+        l++;
+    return l + 1;
+
+    #else
+
     if(!number->len)
         return 0;
     std::size_t l = (number->len - 1) * _Internal::bits_per_digit;
@@ -1435,6 +1729,8 @@ std::size_t big_int::length () const
     while(highest >>= 1)
         l++;
     return l + 1;
+
+    #endif
 }
 
 
@@ -1446,8 +1742,18 @@ std::size_t big_int::length () const
 bool big_int::operator[] (std::size_t k) const
 {
     ARAGELI_ASSERT_0(k < length());
+
+    #ifdef ARAGELI_GMP
+
+    return (mpz_getlimbn(number->gmpdata, k / mp_bits_per_limb) >>
+        (k % mp_bits_per_limb)) % 2;
+
+    #else
+
     return (number->data[k / _Internal::bits_per_digit] >>
         (k % _Internal::bits_per_digit)) % 2;
+
+    #endif
 }
 
 #ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
@@ -1458,6 +1764,15 @@ bool big_int::operator[] (std::size_t k) const
 
 big_int operator<< (const big_int& a, std::size_t n)
 {
+    #ifdef ARAGELI_GMP
+
+    big_int res;
+    ARAGELI_ASSERT_1(res.number->refs == 1);
+    mpz_mul_2exp(res.number->gmpdata, a.number->gmpdata, n);
+    return res;
+
+    #else
+
     std::size_t a_len = a.number->len;
     if(!n || !a_len)
         return a;
@@ -1493,11 +1808,22 @@ big_int operator<< (const big_int& a, std::size_t n)
     big_int res;
     res.free_mem_and_alloc_number(a.number->sign, res_data, res_len);
     return res;
+
+    #endif
 }
 
 
 big_int operator>> (const big_int& a, std::size_t n)
 {
+    #ifdef ARAGELI_GMP
+
+    big_int res;
+    ARAGELI_ASSERT_1(res.number->refs == 1);
+    mpz_tdiv_q_2exp(res.number->gmpdata, a.number->gmpdata, n);
+    return res;
+
+    #else
+
     std::size_t a_len = a.number->len;
     if (!n || !a_len)
         return a;
@@ -1533,11 +1859,23 @@ big_int operator>> (const big_int& a, std::size_t n)
     big_int res;
     res.free_mem_and_alloc_number(a.number->sign, res_data, res_len);
     return res;
+
+    #endif
 }
 
 
 big_int operator& (const big_int& a, const big_int& b)
 {
+    #ifdef ARAGELI_GMP
+
+    big_int aa = abs(a), bb = abs(b);
+    big_int c;
+    ARAGELI_ASSERT_1(c.number->refs == 1);
+    mpz_and(c.number->gmpdata, a.number->gmpdata, b.number->gmpdata);
+    return c;
+
+    #else
+
     std::size_t reslen = std::min(a.number->len, b.number->len);
     if(reslen == 0)
         return big_int();
@@ -1564,6 +1902,8 @@ big_int operator& (const big_int& a, const big_int& b)
         big_int::free_data(res);
         return big_int();
     }
+
+    #endif
 }
 
 
@@ -1588,6 +1928,18 @@ std::size_t ndigits (big_int x, std::size_t r)
 
 std::size_t io_binary<big_int>::calc (const big_int& x)
 {
+    #ifdef ARAGELI_GMP
+
+    if(x.sign())
+        return
+            sizeof(int) +
+            sizeof(std::size_t) +
+            mpz_size(x.number->gmpdata) * sizeof(mp_limb_t);
+    else
+        return sizeof(int);
+
+    #else
+
     if(x.number->sign)
         return
             sizeof(int) +
@@ -1595,6 +1947,8 @@ std::size_t io_binary<big_int>::calc (const big_int& x)
             x.number->len * sizeof(big_int::digit);
     else
         return sizeof(int);
+
+    #endif
 }
 
 
