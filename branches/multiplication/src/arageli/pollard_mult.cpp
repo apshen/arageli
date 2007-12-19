@@ -47,9 +47,7 @@ namespace Arageli
 
 }
 
-
 #else    // #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) || ...
-
 
 namespace Arageli
 {
@@ -71,6 +69,5 @@ namespace Arageli
 #endif
 
 }
-
 
 #endif    // #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) || ...

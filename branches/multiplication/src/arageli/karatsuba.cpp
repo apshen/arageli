@@ -45,6 +45,44 @@
 namespace Arageli
 {
 
+template <typename N,typename T>
+T do_mult_karatsuba_new(const N *u, const N *v, N *w, N *t, T m, T n)
+{
+    ARAGELI_ASSERT_0(m>=n);
+
+    T p = m >> 1;
+    T q = m - p;
+
+    if (!is_null(p) && n > p /*&& n > ARAGELI_KARATSUBA_THRESHOLD*/)
+    {
+        memcpy(w, u, sizeof(N)*p);
+        _Internal::do_sub(w, u+p, p, p);
+        if (q != p) w[p] = -u[m-1];
+
+        memcpy(w+q, v+p, sizeof(N)*p);
+        _Internal::do_sub(w+q, v, p, p);
+
+        do_mult_karatsuba_new(w, w+q, t, w+2*q, q, q); // mult U0*V0
+        do_mult_karatsuba_new(u+p, v+p, w+2*p, w, q, q);     // mult U1*V1
+
+        _Internal::do_add(t, w+2*p, 2*q-1, 2*q-1);
+        memcpy(w+p, t, sizeof(N)*p);
+        _Internal::do_add(w+2*p, t+p, 2*q-1-p, 2*q-1-p);
+
+        do_mult_karatsuba_new(u, v, t, w, p, p);
+        memcpy(w, t, sizeof(N)*p);
+        _Internal::do_add(w+p, t+p, p-1, p-1);
+        _Internal::do_add(w+p, t, 2*p-1, 2*p-1);
+    }
+    else
+    {
+        // no sence to use karatsuba algorithm in this case
+        return _Internal::do_mult_classic(u, v, w, m, n);
+    };
+
+    return (w[m+n-1] != 0) ? (m+n): (m+n-1);
+};
+
 /**
 Preliminary conditions: w[n+m+1] = 0!
 */

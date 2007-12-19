@@ -211,7 +211,7 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
     static _Internal::digit w_buffer3[n_max];
 
     /* Analize input data and optimize method for small numbers!*/
-    if (n <= ARAGELI_OPTIMIZED_POLLARD_THRESHOLD && m <= ARAGELI_OPTIMIZED_POLLARD_THRESHOLD)
+/*    if (n <= ARAGELI_OPTIMIZED_POLLARD_THRESHOLD && m <= ARAGELI_OPTIMIZED_POLLARD_THRESHOLD)
     {
         MT i;
         for (i = 0; i < n; ++i)
@@ -257,7 +257,7 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
         typename doubled_type<ET>::d_value y3_low, y3_high, betta_low, betta_high;
         for (i=0; i < m+n; ++i)
         {
-            /* y1 = W1 mod n1 = W1*/
+            //y1 = W1 mod n1 = W1
 
             y2 = w_buffer2[i];
             y2 -= w_buffer1[i];
@@ -274,7 +274,7 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
         }
     }
     else
-    {
+    {*/
         MT i;
         for (i = 0; i < n; ++i)
         {
@@ -386,7 +386,7 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
             }
             w[i] = (ET) (betta_low & 0xFFFFFFFF);
         }
-    }
+    //}
     return (w[m+n-1] != 0) ? (m+n): (m+n-1);
 }
 

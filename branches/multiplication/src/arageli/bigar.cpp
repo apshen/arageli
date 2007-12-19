@@ -265,8 +265,8 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
 #ifdef ARAGELI_ENABLE_POLLARD_MULT
     if
     (
-        m > ARAGELI_POLLARD_THRESHOD &&
-        n > ARAGELI_POLLARD_THRESHOD 
+        m > ARAGELI_POLLARD_THRESHOLD &&
+        n > ARAGELI_POLLARD_THRESHOLD 
     )
     {
         return do_mult_pollard<digit,unsigned long>(u, v, w, m, n);

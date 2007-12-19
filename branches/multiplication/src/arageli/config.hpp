@@ -75,7 +75,7 @@
 //#define ARAGELI_INLINE_DEBUG_OUTPUT
 
 /// Turn on advanced multiplication methods
-//#define ARAGELI_ENABLE_POLLARD_MULT
+#define ARAGELI_ENABLE_POLLARD_MULT
 #define ARAGELI_ENABLE_KARATSUBA_MULT
 
 /// Internal threshold for Karatsuba multiplication algorithm
