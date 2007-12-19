@@ -84,6 +84,8 @@
 #endif
 
 /// Internal threshold for Pollard multiplication algorithm
+#define ARAGELI_POLLARD_MAX_POWER 21
+#define ARAGELI_POLLARD_UPPER_BOUND (1<<ARAGELI_POLLARD_MAX_POWER)
 #if defined(ARAGELI_ENABLE_POLLARD_MULT)
     #define ARAGELI_POLLARD_THRESHOLD 30000
 #endif
