@@ -38,7 +38,6 @@
 
 
 #include "stdafx.hpp"
-#include "io_simple_binary.hpp"
 
 using namespace Arageli;
 

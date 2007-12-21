@@ -876,7 +876,7 @@ public:
     static Stream& output_stream (Stream& out, const big_int& x);
 
 
-    /// Loads big_int object state from a binary stream. Compatible with output_binary_stream.
+    /// Loads big_int object state from a binary stream. Compatible with output_stream.
     /** See output_stream(stream, big_int) function for detailes on the format.
         If the function fails to read some bytes from a stream, an old value of x
         may be lost (but a given big_int object x remains in the correct state).

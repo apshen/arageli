@@ -266,7 +266,9 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
     if
     (
         m > ARAGELI_POLLARD_THRESHOLD &&
-        n > ARAGELI_POLLARD_THRESHOLD 
+        n > ARAGELI_POLLARD_THRESHOLD &&
+        m <= ARAGELI_POLLARD_UPPER_BOUND &&
+        n <= ARAGELI_POLLARD_UPPER_BOUND
     )
     {
         return do_mult_pollard<digit,unsigned long>(u, v, w, m, n);
@@ -276,7 +278,7 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
     if
     (
         m > ARAGELI_KARATSUBA_THRESHOLD &&
-        n > ARAGELI_KARATSUBA_THRESHOLD 
+        n > ARAGELI_KARATSUBA_THRESHOLD
     )
     {
         digit *t = new digit[3 * (n + m)];

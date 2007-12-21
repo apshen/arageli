@@ -87,8 +87,18 @@
 /// Turn on some debug output command to std::cout inlined to internal code.
 //#define ARAGELI_INLINE_DEBUG_OUTPUT
 
-/// Turn on advanced multiplication methods
+// The following two defines turn on advanced multiplication methods:
+
+/// Turns on multiplication method based on NTT.
+/** This method is experimental and doesn't work properly on all the numbers.
+    Do not turn it on!
+    The complexity of the method is O(n*log(n)), where n is the length
+    of input numbers. */
 #define ARAGELI_ENABLE_POLLARD_MULT
+
+/// Turns on Karatsuba multiplication method.
+/** This method has complexity O(n^log2(3)), where n is the length
+    of input numbers. */
 #define ARAGELI_ENABLE_KARATSUBA_MULT
 
 /// Internal threshold for Karatsuba multiplication algorithm
@@ -97,6 +107,8 @@
 #endif
 
 /// Internal threshold for Pollard multiplication algorithm
+#define ARAGELI_POLLARD_MAX_POWER 21
+#define ARAGELI_POLLARD_UPPER_BOUND (1<<ARAGELI_POLLARD_MAX_POWER)
 #if defined(ARAGELI_ENABLE_POLLARD_MULT)
     #define ARAGELI_POLLARD_THRESHOLD 30000
 #endif
@@ -124,7 +136,7 @@
 
 /// Turns GMP support on.
 /** This macro allows big_int to use GMP. Do not forget to point to
-    GMP include directory so, that <gmp.h> will be correct 
+    GMP include directory so, that <gmp.h> will be correct
     reference to the GMP header file. */
 //#define ARAGELI_GMP
 

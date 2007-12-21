@@ -48,11 +48,7 @@ perf:
 	$(MAKE) -C perf
 
 runtests:
-	if [ -x "./bin/test" ]; then 
-	  ./bin/test 
-	else 
-	  echo "*** Try make check before running tests! ***"
-	fi
+	if ls bin/test; then bin/test; else echo \*\*\* Try make check before running tests! \*\*\*; fi;
 
 #example:
 #	$(MAKE) -C example/

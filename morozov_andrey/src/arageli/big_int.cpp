@@ -1637,14 +1637,14 @@ std::istream& operator>> (std::istream& s, big_int& x)
 
     x = big_int();
     ARAGELI_ASSERT_1(x.number->refs == 1);
-    
+
     int status = mpz_set_str
     (
         x.number->gmpdata,
         const_cast<char*>(buffer.c_str()),
         radix
     );
-    
+
     ARAGELI_ASSERT_1(status == 0);
 
     if(sign == -1)

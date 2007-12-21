@@ -91,7 +91,7 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
         big_int out = 0;
         _Internal::digit *w_digits = new _Internal::digit[a_len+b_len];
         _Internal::digit *t_digits = new
-            _Internal::digit[2*(a_len+b_len)];
+            _Internal::digit[3*(a_len+b_len)];
         w_digits[a_len+b_len-1] = 0;
 #ifdef CHECK_TIME
         timer s;
