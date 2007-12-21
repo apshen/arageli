@@ -147,8 +147,9 @@ bool big_int_multiply_divide_test(int param, int count)
 
 bool various_length_big_int_multiply ()
 {
-    for(int n = 1; n < 1024*1024*128; n *= 2)
-        for(int i = 0; i < 2; ++i)
+    // You can exted the test segment but it is too time consuming.
+    for(int n = 1; n <= 1024*1024*1; n *= 2)
+        for(int i = 0; i < 1; ++i)
         {
             big_int a, b;
 
