@@ -2695,7 +2695,7 @@ public:
     }
 
 
-    /// Loads vector object state from a binary stream. Compatible with output_binary_stream.
+    /// Loads vector object state from a binary stream. Compatible with output_stream.
     /** See output_stream(stream, vector) function for detailes on the format.
         If the function fails to read some of state components, an old value of x
         may be lost. All depends on input_binary_stream function for T.
@@ -2710,7 +2710,7 @@ public:
 
     /// Calculates the number of chars required to store a given vector object in The Simple Binary form.
     /** This function calculates precise number of chars that will emit
-        any function outputs in The Simple Binary format for one rational object,
+        any function outputs in The Simple Binary format for one vector object,
         for example, output_binary_mem function. */
     static inline std::size_t calc (const vector<T, REFCNT>& x)
     {

@@ -142,7 +142,7 @@ void timer::calibrate ()
     }
 
     delta = (kernel_time() - startclock)/ncalibs + 1;    // +1 is for the upper estimate
-    
+
     #ifdef _ARAGELI_WIN_PERFORMANCE_TIMER
         sdelta = double(delta)/freq.QuadPart;
     #else

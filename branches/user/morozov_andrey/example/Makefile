@@ -79,7 +79,7 @@ $(LIBRARY_DIR)/libarageli.a:
 ../src/arageli/arageli.hpp.gch:../src/arageli/arageli.hpp
 	$(MAKE) -C ../src/arageli arageli.hpp.gch
 
-$(BIN)/adv_simplex_method: adv_simplex_method.cpp adv_simplex_method.task.txt
+$(BIN)/adv_simplex_method: adv_simplex_method.cpp adv_simplex_method.task.txt ../src/arageli/arageli.hpp.gch $(LIBRARY_DIR)/libarageli.a
 	$(CXX) -I"$(INCLUDE_DIR)" adv_simplex_method.cpp -o$@ -L"$(LIBRARY_DIR)" -larageli
 
 $(BIN)/big_int_basic: big_int_basic.cpp ../src/arageli/arageli.hpp.gch $(LIBRARY_DIR)/libarageli.a

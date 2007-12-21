@@ -417,7 +417,7 @@ public:
     }
 
 
-    /// Loads a raw object state from a binary stream. Compatible with output_binary_stream.
+    /// Loads a raw object state from a binary stream. Compatible with output_stream.
     /** This function supposes T doesn't have a non trivial constructor/destructor pair.
         The format that this function uses is call The Simple Binary format. */
     template <typename Stream>
@@ -445,7 +445,7 @@ public:
     }
 
 
-    /// Loads an array of a raw object states from a binary stream. Compatible with output_binary_stream.
+    /// Loads an array of a raw object states from a binary stream. Compatible with output_stream.
     /** This function supposes T doesn't have a non trivial constructor/destructor pair.
         The format that this function uses is call The Simple Binary format. */
     template <typename Stream>
@@ -497,7 +497,7 @@ public:
     }
 
 
-    /// Loads a raw object state from a memory location. Compatible with output_binary_stream.
+    /// Loads a raw object state from a memory location. Compatible with output_stream.
     /** This function supposes T doesn't have a non trivial constructor/destructor pair.
         The format that this function uses is call The Simple Binary format. */
     static inline const char* input_mem (const char* in, T& x)
@@ -535,7 +535,7 @@ public:
     }
 
 
-    /// Loads an array of a raw object states from a memory location. Compatible with output_binary_stream.
+    /// Loads an array of a raw object states from a memory location. Compatible with output_stream.
     /** This function supposes T doesn't have a non trivial constructor/destructor pair.
         The format that this function uses is call The Simple Binary format. */
     static inline const char* input_mem
@@ -594,6 +594,7 @@ ARAGELI_IO_BINARY_DEFINE_RAW(double)
 ARAGELI_IO_BINARY_DEFINE_RAW(long double)
 
 
+/// Binary serializer for a pointer; just a raw serialization.
 template <typename T>
 class io_binary<T*> : public io_binary_raw<T*>
 {};
@@ -620,7 +621,7 @@ inline Out& output_binary (Out& out, const T& x)
 }
 
 
-/// Loads an object state from a binary stream. Compatible with output_stream.
+/// Loads an object state from a binary stream. Compatible with output_binary_stream.
 /** Serialization in the Simple Binary format corresponding to type T. */
 template <typename Stream, typename T>
 inline Stream& input_binary_stream (Stream& in, T& x)
@@ -662,7 +663,7 @@ inline Out& output_binary
 }
 
 
-/// Loads an array of object states from a binary stream. Compatible with output_stream.
+/// Loads an array of object states from a binary stream. Compatible with output_binary_stream.
 /** Serialization in the Simple Binary format corresponding to type T. */
 template <typename Stream, typename T>
 inline Stream& input_binary_stream
@@ -721,7 +722,7 @@ inline char* output_binary (char* out, const T& x)
 }
 
 
-/// Loads an object state from a memory location. Compatible with output_stream.
+/// Loads an object state from a memory location. Compatible with output_binary_stream.
 /** Serialization in the Simple Binary format corresponding to type T. */
 template <typename T>
 inline const char* input_binary_mem (const char* in, T& x)
