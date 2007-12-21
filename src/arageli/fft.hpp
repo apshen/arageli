@@ -114,8 +114,8 @@ struct doubled_type<_Internal::digit>
 
 // WARNING!!! here we suppose that 32-bit computations are supported!!!
 // TODO: make this code more portable.
-const unsigned long k_max = 21;
-const unsigned long n_max = (1 << k_max);   // max length of (input vector ~ polynom)
+const unsigned long k_max = ARAGELI_POLLARD_MAX_POWER;
+const unsigned long n_max = ARAGELI_POLLARD_UPPER_BOUND;   // max length of (input vector ~ polynom)
 
 /**
 * \breif Class contains methods for FFT and inverse FFT calculation.
