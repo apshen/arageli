@@ -98,12 +98,12 @@ class timer_isnot_stopped :
     Use timer class in following manner:
 
         timer tm;   // create timer and start measurment immediately
-        
+
         // Code that have to be evaluated.
         ...
-        
+
         tm.stop();  // turn off timer
-        
+
         // Here do something with tm.time(); it is elapsed time in seconds
         // from moment of timer creates up to tm.stop() call.
 
@@ -112,20 +112,20 @@ class timer_isnot_stopped :
         timer tm(false);    // create turned off timer
         ...
         timer.start();
-        
+
         // A. The first part of code to be measured.
         ...
 
         timer.stop();
-        
+
         // B. Some code that we do not measure.
         ...
-        
+
         timer.start();
-        
+
         // C. Another code to be measured.
         ...
-        
+
         timer.stop();
 
         // Here do something with tm.time(); it is elapsed time
