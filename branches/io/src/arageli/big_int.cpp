@@ -1565,6 +1565,25 @@ big_int operator& (const big_int& a, const big_int& b)
 }
 
 
+std::size_t ndigits (big_int x, std::size_t r)
+{
+    ARAGELI_ASSERT_0(r >= 2);
+
+    if(is_negative(x))
+        opposite(&x);   // Is it really necessary?
+
+    std::size_t res = 0;
+    big_int br = r; // as we do not have optimized operations with the built-ins
+    while(!is_null(x))
+    {
+        x /= br;
+        ++res;
+    }
+
+    return res;
+}
+
+
 std::size_t io_binary<big_int>::calc (const big_int& x)
 {
     if(x.number->sign)

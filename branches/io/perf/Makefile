@@ -31,7 +31,11 @@
 #
 ##############################################################################
 
-CXXFLAGS += -pg
+BIN=../bin
+ARAGELIPERFFLAGS += -pg -O3
 
-../lib/libperfarageli.a:
+$(BIN)/karatsuba_vs_classic:karatsuba_vs_classic.cpp perfarageli
+	$(CXX) $(ARAGELIPERFFLAGS) $< -o $@ -I"../src" -L"../lib" -lperfarageli
+
+perfarageli:
 	$(MAKE) -C ../src/arageli ../../lib/libperfarageli.a

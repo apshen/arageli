@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-    test/big_int_io_binary.cpp
+    test/timer_resolution.cpp
 
     This file is a part of the Arageli library test base.
 
@@ -28,12 +28,10 @@
 *****************************************************************************/
 
 /**
-    \file big_int_io_binary.cpp
-    \brief Test binary serialization functions for big_int.
+    \file timer_resolution.cpp
+    \brief This file includes test for timer::resolution function.
 
-    This file is a test for input_binary_stream, output_binary_stream etc.
-    functions. We store and load various big_int values to and from
-    binary file streams and memory.
+    <!--ADD ADDITIONAL FILE DESCRIPTION HERE-->
 */
 
 
@@ -45,34 +43,66 @@ using namespace Arageli;
 namespace
 {
 
+double average_resolution (int k, timer& tm)
+{
+    double resolution = 0;
+    for(int i = 0; i < k; ++i)
+    {
+        double prev = tm.time(), cur = prev;
+        do
+        {
+            cur = tm.time();
+        }while(prev == cur);
+
+        resolution += cur - prev;
+    }
+
+    return resolution/k;
+}
+
+bool multiple_calibrate (int n, int k)
+{
+    bool res = true;
+
+    for(int i = 0; i < n; ++i)
+    {
+        timer::calibrate();
+        double resolution = timer::resolution();
+        //tout << resolution << '\n';
+        const double eps = 2;
+        const double reseps = resolution * eps;
+        timer tm;
+        double mr = average_resolution(k, tm);
+
+        if(mr > resolution + reseps)
+        {
+            tout
+                << "resolution = " << resolution
+                << "\nmeasured resolution = " << mr
+                << '\n';
+
+            res = false;
+        }
+    }
+
+    return res;
+}
 
 }
 
 
 TEST
 (
-    big_int,
-    output_input_binary,
-    "Test binary serialization functions for big_int."
+    timer,
+    resolution,
+    "Test for timer::resolution."
 )
 {
     bool is_ok = true;
-    const int mem_reserve = 16*1024;
 
     ARAGELI_TS_ALLEXCEPT_CATCH_REGION_BEGIN
     {
-        for(std::size_t n = 0; n < 10 && is_ok; ++n)
-        {
-            is_ok &= test_io_simple_binary(big_int(), n, mem_reserve);
-            is_ok &= test_io_simple_binary(big_int(1), n, mem_reserve);
-            is_ok &= test_io_simple_binary(big_int(-1), n, mem_reserve);
-            is_ok &= test_io_simple_binary(big_int("1234567890"), n, mem_reserve);
-            is_ok &= test_io_simple_binary(big_int("-1234567890"), n, mem_reserve);
-            is_ok &= test_io_simple_binary(big_int("12345678901234567890"), n, mem_reserve);
-            is_ok &= test_io_simple_binary(big_int("-12345678901234567890"), n, mem_reserve);
-            is_ok &= test_io_simple_binary(big_int("123456789012345678901234567890"), n, mem_reserve);
-            is_ok &= test_io_simple_binary(big_int("-123456789012345678901234567890"), n, mem_reserve);
-        }
+        is_ok &= multiple_calibrate(100, 10);
     }
     ARAGELI_TS_ALLEXCEPT_CATCH_REGION_END
 
