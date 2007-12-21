@@ -34,7 +34,7 @@
 
 # build arageli library
 
-.PHONY: all check install clean example dvi TAGS
+.PHONY: all check install clean example dvi TAGS perf
 
 all:
 	$(MAKE) -C src/arageli
@@ -44,9 +44,11 @@ check:
 	$(MAKE) -C test
 	make runtests
 
+perf:
+	$(MAKE) -C perf
+
 runtests:
 	if ls bin/test; then bin/test; else echo \*\*\* Try make check before running tests! \*\*\*; fi;
-#	bin/test
 
 example:
 	$(MAKE) -C example/

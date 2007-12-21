@@ -425,6 +425,63 @@ private:
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
+/// Specialization of io_binary for monom.
+template <typename F, typename I>
+class io_binary<monom<F, I> > :
+    public io_binary_base<monom<F, I> >
+{
+public:
+
+    using io_binary_base<monom<F, I> >::output_stream;
+    using io_binary_base<monom<F, I> >::input_stream;
+    using io_binary_base<monom<F, I> >::calc;
+    using io_binary_base<monom<F, I> >::input_mem;
+    using io_binary_base<monom<F, I> >::output_mem;
+
+    /// Stores monom object state to a binary stream. Seft-delimeted binary serialization.
+    /** This functions uses the following format:
+            COEFFICIENT DEGREE
+        where COEFFICIENT is a coefficient of a given monom and DEGREE is
+        the degree of the monom.
+        All output is in The Simple Binary format. */
+    template <typename Stream>
+    static inline Stream& output_stream (Stream& out, const monom<F, I>& x)
+    {
+        output_binary_stream(out, x.coef());
+        output_binary_stream(out, x.degree());
+        return out;
+    }
+
+
+    /// Loads monom object state from a binary stream. Compatible with output_stream.
+    /** See output_stream(stream, monom) function for detailes on the format.
+        If the function fails to read some of state components, an old value of x
+        may be lost. All depends on input_binary_stream function for F and I.
+        So, do not relay on the value of x when a given stream is not in a good state
+        after call returns.
+
+        The function takes input in The Simple Binary format.
+    */
+    template <typename Stream>
+    static inline Stream& input_stream (Stream& in, monom<F, I>& x)
+    {
+        input_binary_stream(in, x.coef());
+        input_binary_stream(in, x.degree());
+        return in;
+    }
+
+
+    /// Calculates the number of chars required to store a given monom object in The Simple Binary form.
+    /** This function calculates precise number of chars that will emit
+        any function outputs in The Simple Binary format for one monom object,
+        for example, output_binary_mem function. */
+    static inline std::size_t calc (const monom<F, I>& x)
+    {
+        return calc_binary(x.coef()) + calc_binary(x.degree());
+    }
+};
+
+
 template <typename F, typename I>
 struct type_traits<monom<F, I> > :
     public type_traits_default<monom<F, I> >
@@ -2137,6 +2194,59 @@ private:
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+/// Specialization of io_binary for sparse_polynom.
+template <typename F, typename I, bool REFCNT>
+class io_binary<sparse_polynom<F, I, REFCNT> > :
+    public io_binary_base<sparse_polynom<F, I, REFCNT> >
+{
+public:
+
+    using io_binary_base<sparse_polynom<F, I, REFCNT> >::output_stream;
+    using io_binary_base<sparse_polynom<F, I, REFCNT> >::input_stream;
+    using io_binary_base<sparse_polynom<F, I, REFCNT> >::calc;
+    using io_binary_base<sparse_polynom<F, I, REFCNT> >::input_mem;
+    using io_binary_base<sparse_polynom<F, I, REFCNT> >::output_mem;
+
+    /// Stores polynomial object state to a binary stream. Seft-delimeted binary serialization.
+    /** This functions uses the following format:
+            SIZE MONOMS
+        where SIZE is a number of monomial in a given polynomial and
+        MONOMS is all monoms of the polynomial (if any).
+        All output is in The Simple Binary format. */
+    template <typename Stream>
+    static Stream& output_stream
+    (
+        Stream& out,
+        const sparse_polynom<F, I, REFCNT>& x
+    );
+
+    /// Loads polynomial object state from a binary stream. Compatible with output_stream.
+    /** See output_stream(stream, sparse_polynom) function for detailes on the format.
+        If the function fails to read some of state components, an old value of x
+        may be lost. All depends on input_binary_stream function for F and I.
+        So, do not relay on the value of x when a given stream is not in a good state
+        after call returns.
+
+        The function takes input in The Simple Binary format.
+    */
+    template <typename Stream>
+    static Stream& input_stream
+    (
+        Stream& in,
+        sparse_polynom<F, I, REFCNT>& x
+    );
+
+
+    /// Calculates the number of chars required to store a given polynomial object in The Simple Binary form.
+    /** This function calculates precise number of chars that will emit
+        any function outputs in The Simple Binary format for one polynomial object,
+        for example, output_binary_mem function. */
+    static std::size_t calc (const sparse_polynom<F, I, REFCNT>& x);
+
+};
+
 
 #if 0
 

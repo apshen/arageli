@@ -33,7 +33,9 @@
 #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) ||    \
     defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_IO)
 
+#include <limits>
 #include <iomanip>
+#include <algorithm>
 
 #include "io.hpp"
 #include "exception.hpp"
@@ -182,6 +184,89 @@ std::basic_ostream<Ch, ChT>& output_polynom_internal_default
 
     out.flags(old_opts);
     return out;
+}
+
+
+template <typename T>
+template <typename Stream>
+Stream& io_binary_base<T>::output_stream
+(
+    Stream& out,
+    const T* x,
+    std::size_t n
+)
+{
+    ARAGELI_ASSERT_1(std::numeric_limits<std::size_t>::max()/sizeof(T) >= n);
+    for(std::size_t i = 0; i < n; ++i)
+        output_binary_stream(out, x[i]);
+    return out;
+}
+
+
+template <typename T>
+template <typename Stream>
+Stream& io_binary_base<T>::input_stream
+(
+    Stream& in,
+    T* x,
+    std::size_t n
+)
+{
+    ARAGELI_ASSERT_1(std::numeric_limits<std::size_t>::max()/sizeof(T) >= n);
+    for(std::size_t i = 0; i < n; ++i)
+        input_binary_stream(in, x[i]);
+    return in;
+}
+
+
+template <typename T>
+std::size_t io_binary_base<T>::calc (const T* x, std::size_t n)
+{
+    ARAGELI_DEBUG_EXEC_1
+    (
+        const std::size_t resmax = std::numeric_limits<std::size_t>::max()
+    );
+    ARAGELI_ASSERT_1(resmax/sizeof(T) >= n);
+
+    std::size_t res = 0;
+
+    for(std::size_t i = 0; i < n; ++i)
+    {
+        std::size_t i_calc = calc_binary(x[i]);
+        ARAGELI_ASSERT_1(res <= resmax - i_calc);
+        res += i_calc;
+    }
+    return res;
+}
+
+
+template <typename T>
+char* io_binary_base<T>::output_mem
+(
+    char* out,
+    const T* x,
+    std::size_t n
+)
+{
+    ARAGELI_ASSERT_1(std::numeric_limits<std::size_t>::max()/sizeof(T) >= n);
+    for(std::size_t i = 0; i < n; ++i)
+        out = output_binary_mem(out, x[i]);
+    return out;
+}
+
+
+template <typename T>
+const char* io_binary_base<T>::input_mem
+(
+    const char* in,
+    T* x,
+    std::size_t n
+)
+{
+    ARAGELI_ASSERT_1(std::numeric_limits<std::size_t>::max()/sizeof(T) >= n);
+    for(std::size_t i = 0; i < n; ++i)
+        in = input_binary_mem(in, x[i]);
+    return in;
 }
 
 
