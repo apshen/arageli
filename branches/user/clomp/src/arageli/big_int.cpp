@@ -478,8 +478,6 @@ void big_int::copy_data
 }
 
 
-#ifndef ARAGELI_BIG_INT_REFCNT
-
 void big_int::hard_copy_number (const big_int& b)
 {
     if(b.number->sign)  // if b != 0
@@ -500,8 +498,6 @@ void big_int::hard_copy_number (const big_int& b)
     else    // b == 0
         alloc_zero();
 }
-
-#endif
 
 
 /***************************/

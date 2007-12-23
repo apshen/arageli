@@ -573,6 +573,29 @@ public:
 };
 
 
+template <typename T>
+struct alias_alg<rational<T> >
+{
+    /// Check if x is noaliased internally and externally (recursive).
+    static bool is_deep (const rational<T>& x)
+    {
+        return
+            is_noalias_deep(x.numerator()) &&
+            is_noalias_deep(x.denominator());
+    }
+
+    /// Make x noaliased internally and externally.
+    /** There is no the default implementation. See specializations. */
+    static bool deep (rational<T>& x)
+    {
+        bool
+            resn = noalias_deep(x.numerator()),
+            resd = noalias_deep(x.denominator());
+        return resn && resd;
+    }
+};
+
+
 /// @name Standard arithmetic operations.
 // @{
 

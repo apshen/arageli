@@ -48,6 +48,7 @@
 #include "type_traits.hpp"
 #include "type_pair_traits.hpp"
 #include "exception.hpp"
+#include "refcntr.hpp"
 #include "factory.hpp"
 #include "io.hpp"
 #include "powerest.hpp"
@@ -717,6 +718,46 @@ public:
         std::swap(number, x.number);
     }
 
+
+    bool is_unique () const
+    {
+        #ifdef ARAGELI_BIG_INT_REFCNT
+
+        return number->refs == 1;
+
+        #else
+
+        return true;
+
+        #endif
+    }
+
+
+    bool unique ()
+    {
+        #ifdef ARAGELI_BIG_INT_REFCNT
+
+        if(number->refs > 1)
+        {
+            // No one other thread can touch the representation
+            // during this operation.
+
+            big_int t = *this;  // just increment reference counter
+            free_number();
+            hard_copy_number(t);
+
+            return false;
+        }
+        else
+            return true;
+
+        #else
+
+        return true;
+
+        #endif
+    }
+
 private:
 
     friend class big_float;    // see big_float.hpp source file
@@ -755,14 +796,8 @@ private:
         std::size_t newnitems
     );
 
-
-    #ifndef ARAGELI_BIG_INT_REFCNT
-
     /// Copies b to this object not using reference counter.
     void hard_copy_number (const big_int& b);
-
-    #endif
-
 
     // Erases leading zeros.
     static digit* optimize (std::size_t& new_len, digit * p, std::size_t len);
@@ -845,6 +880,24 @@ public:
         any function outputs in The Simple Binary format for one big_int object,
         for example, output_binary_mem function. */
     static std::size_t calc (const big_int& x);
+};
+
+
+template <>
+struct alias_alg<big_int>
+{
+    /// Check if x is noaliased internally and externally (recursive).
+    static bool is_deep (const big_int& x)
+    {
+        return x.is_unique();
+    }
+
+    /// Make x noaliased internally and externally.
+    /** There is no the default implementation. See specializations. */
+    static bool deep (big_int& x)
+    {
+        return x.unique();
+    }
 };
 
 
