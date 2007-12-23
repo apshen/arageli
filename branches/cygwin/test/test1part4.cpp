@@ -42,7 +42,8 @@ template <typename T, typename Ch, typename ChT>
 std::basic_ostream<Ch, ChT>& my_output_latex
 (
     std::basic_ostream<Ch, ChT>& out, const T& x,
-    bool mathmode = false
+    bool mathmode = false,
+    size_t msaf = 5
 )
 { return out << x; }
 

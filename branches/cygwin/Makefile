@@ -33,6 +33,7 @@
 ##############################################################################
 
 # build arageli library
+-include Makefile.OS
 
 .PHONY: all check install clean example dvi TAGS perf
 
@@ -78,6 +79,7 @@ TAGS:
 
 clean:
 	$(MAKE) -C src/arageli clean
+#	rm Makefile.OS
 
 cleanall:
 	$(MAKE) -C src/arageli cleanall
@@ -86,3 +88,4 @@ cleanall:
 	$(MAKE) -C doc/src cleanall
 	$(MAKE) -C example cleanall
 	rm -rf doc/dvi
+#	rm Makefile.OS
