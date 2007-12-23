@@ -74,6 +74,9 @@ inline T pow2 (I n)
 
 
 /// Returns the base-2 logarithm of x. The default version.
+#ifdef log2
+    #undef log2
+#endif
 template <typename T>
 inline T log2(T x)
 {

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+force_use_pch=0
+my_name=$0
+while [ ! -z "$1" ]; do
+    case "$1" in
+#        -help ) echo "HELP";;
+        -force_use_pch ) 
+             echo "-force_use_pch enabled"
+             force_use_pch=1
+             ;;
+#        * ) echo "oops"; exit 1;;
+    esac
+    shift
+done
+
+
+if uname -a | grep Cygwin >/dev/null; then
+    echo Cygwin detected
+    echo DLINUXFLAG+=-D__linux > Makefile.OS
+    if [ $force_use_pch -eq 0 ]; then
+        echo TESTS_STDAFX_GCH_FILENAME = >> Makefile.OS
+        echo Precompiled headers disabled for tests. Use \"$my_name -force_use_pch\" to enable precompiled headers
+    else
+        echo Precompiled headers enabled for tests
+    fi
+else
+    echo Your OS is normal
+fi
