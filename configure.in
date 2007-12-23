@@ -1,0 +1,38 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.59)
+AC_INIT(Arageli, 2.59, support.arageli@gmail.com)
+AM_INIT_AUTOMAKE(arageli,2.59)    
+AC_CONFIG_SRCDIR([src/arageli/arageli.hpp])
+AC_CONFIG_HEADER([src/arageli/config.hpp])
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_RANLIB
+
+# Checks for libraries.
+dnl AC_CHECK_LIB(stdc++,main,AC_MSG_ERROR([can't find stdc++ library]))
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([malloc.h stdlib.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_SIZE_T
+AC_STRUCT_TM
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([floor memmove memset pow sqrt])
+
+AC_CONFIG_FILES(Makefile src/arageli/Makefile)
+AC_OUTPUT
+
+dnl AC_PROG_MAKE_SET
+dnl SUBDIRS = "tool/ts/src/ts"
+dnl AC_SUBST(SUBDIRS)
