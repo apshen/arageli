@@ -366,6 +366,97 @@ template <typename T, typename TC, typename A>
 const TC refcntr_proxy<T, false, TC, A>::one_always;
 
 
+/// Contains functions to deal with aliases forced by the reference counting.
+template <typename T>
+struct alias_alg
+{
+    /// Check if x is noaliased internally and externally (recursive).
+    /** There is no the default implementation. See specializations. */
+    static bool is_deep (const T& x);
+
+    /// Make x noaliased internally and externally.
+    /** There is no the default implementation. See specializations. */
+    static bool deep (T& x);
+};
+
+
+/// Check if x is noaliased internally and externally (recursive).
+template <typename T>
+inline bool is_noalias_deep (const T& x)
+{
+    return alias_alg<T>::is_deep(x);
+}
+
+
+template <typename T>
+inline bool noalias_deep (T& x)
+{
+    return alias_alg<T>::deep(x);
+}
+
+
+/// Version of noalias_alg for types that have no naturally internal references.
+template <typename T>
+struct alias_alg_noalias
+{
+    /// Retruns always true since T cannot be aliased.
+    static inline bool is_deep (const T&)
+    {
+        return true;
+    }
+
+    /// Does nothing since T cannot be aliased.
+    static bool deep (T& x)
+    {}
+};
+
+
+#define ARAGELI_ALIAS_DEFINE_NOALIAS(T)    \
+    template <>    \
+    struct alias_alg<T> : public alias_alg_noalias<T>    \
+    {};
+
+
+ARAGELI_ALIAS_DEFINE_NOALIAS(char)
+ARAGELI_ALIAS_DEFINE_NOALIAS(signed char)
+ARAGELI_ALIAS_DEFINE_NOALIAS(unsigned char)
+ARAGELI_ALIAS_DEFINE_NOALIAS(signed short)
+ARAGELI_ALIAS_DEFINE_NOALIAS(unsigned short)
+ARAGELI_ALIAS_DEFINE_NOALIAS(signed int)
+ARAGELI_ALIAS_DEFINE_NOALIAS(unsigned int)
+ARAGELI_ALIAS_DEFINE_NOALIAS(signed long)
+ARAGELI_ALIAS_DEFINE_NOALIAS(unsigned long)
+
+#ifdef ARAGELI_INT64_SUPPORT
+
+    ARAGELI_ALIAS_DEFINE_NOALIAS(signed __int64)
+    ARAGELI_ALIAS_DEFINE_NOALIAS(unsigned __int64)
+
+#endif
+
+#ifdef ARAGELI_LONG_LONG_SUPPORT
+
+    ARAGELI_ALIAS_DEFINE_NOALIAS(signed long long)
+    ARAGELI_ALIAS_DEFINE_NOALIAS(unsigned long long)
+
+#endif
+
+ARAGELI_ALIAS_DEFINE_NOALIAS(float)
+ARAGELI_ALIAS_DEFINE_NOALIAS(double)
+ARAGELI_ALIAS_DEFINE_NOALIAS(long double)
+
+
+template <typename T>
+struct alias_alg<T*> : public alias_alg_noalias<T*>
+{};
+
+
+/// Avoids a wrong specialization of alias_alg for built-in arrays.
+/** If you want to deal with an array, use a loop over the elements. */
+template <typename T, std::size_t N>
+struct alias_alg<T[N]>;
+
+
 }
 
 
