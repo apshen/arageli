@@ -266,7 +266,7 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
     if
     (
         m > ARAGELI_POLLARD_THRESHOLD &&
-        n > ARAGELI_POLLARD_THRESHOLD 
+        n > ARAGELI_POLLARD_THRESHOLD &&
         m <= ARAGELI_POLLARD_UPPER_BOUND &&
         n <= ARAGELI_POLLARD_UPPER_BOUND
     )

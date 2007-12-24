@@ -58,41 +58,30 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
     if (!is_null(k) && n > k && n > ARAGELI_KARATSUBA_THRESHOLD)
     {
         T k2 = k << 1;
-        N *W0 = w+k2;
+        N *W2 = w+k2;
         N *W1 = w+k;
-        N *W2 = w;
-        const N *U0 = u+k;
-        const N *U1 = u;
-        const N *V0 = v+k;
-        const N *V1 = v;
+        N *W0 = w;
+        const N *U1 = u+k;
+        const N *U0 = u;
+        const N *V1 = v+k;
+        const N *V0 = v;
 
-        T Clen, C1len, C2len, UV0len, UV1len;
+        T Clen, C1len, C2len, UV1len, UV0len;
 
         // allocate temprary space
-        // N *C1 = new N[k+2];
         N *C1 = t;
-        // N *C2 = new N[k+2];
-        N *C2 = t+k+2;
-        N *C = t+m+4;
-        t += 2*m+6;
+        N *C2 = t+k+1;
+        N *C = t+k2+2;
 
-        UV0len = do_mult_karatsuba(U0, V0, W0, t, m-k, n-k); // mult U0*V0
-        UV1len = do_mult_karatsuba(U1, V1, W2, t, k, k);     // mult U1*V1
+        UV1len = do_mult_karatsuba(U1, V1, W2, t, m-k, n-k); // mult U1*V1
+        UV0len = do_mult_karatsuba(U0, V0, W0, t, k, k);     // mult U0*V0
 
-        memcpy(C1, U0, sizeof(N)*(m-k));
-        C1len = _Internal::do_add(C1, U1, m-k, k); // U0+U1
-        if (n>=k2)    // V0+V1
-        {
-            // here n = m or n = m-1 and (n-k) = k or (n-k) = k+1
-            memcpy(C2, V0, sizeof(N)*(n-k));
-            C2len = _Internal::do_add(C2, V1, n-k, k);
-        }
-        else
-        {
-            memcpy(C2, V1, sizeof(N)*k);
-            C2len = _Internal::do_add(C2, V0, k, n-k);
-        }
+        memcpy(C1, U1, sizeof(N)*(m-k));
+        C1len = _Internal::do_add(C1, U0, m-k, k); // U1+U0
+        memcpy(C2, V0, sizeof(N)*k);
+        C2len = _Internal::do_add(C2, V1, k, n-k);
 
+        t += 2*k2+4;
         if (C2len > C1len)
         {
             Clen = do_mult_karatsuba(C2, C1, C, t, C2len, C1len); // mult C = C1*C2
@@ -101,13 +90,12 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
         {
             Clen = do_mult_karatsuba(C1, C2, C, t, C1len, C2len); // mult C = C1*C2
         }
+        t -= 2*k2+4;
 
-        _Internal::do_sub(C, W0, Clen, UV0len);
         _Internal::do_sub(C, W2, Clen, UV1len);
+        _Internal::do_sub(C, W0, Clen, UV0len);
 
         _Internal::do_add(W1, C, m+n-k, Clen);    // W += C
-
-        t -= 2*m+6;
     }
     else
     {
