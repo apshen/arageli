@@ -56,6 +56,7 @@
 #include "vector.hpp"
 #include "universal.hpp"
 #include "test1.hpp"
+#include "io_simple_binary.hpp"
 
 // TODO: reference additional headers your program requires here
 

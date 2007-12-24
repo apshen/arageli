@@ -1,0 +1,59 @@
+ARAGELICXXFLAGS = -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=1
+
+lib_LIBRARIES = libarageli.a
+libarageli_a_CXXFLAGS = $(ARAGELICXXFLAGS)
+libarageli_a_SOURCES = \
+						advsimplmeth.cpp\
+						algebraic.cpp\
+						algebrslt.cpp\
+						bareiss.cpp\
+						berlekamp_hensel.cpp\
+						bigar.cpp\
+						big_const.cpp\
+						big_float.cpp\
+						big_int.cpp\
+						cantor_zassenhaus.cpp\
+						cone.cpp\
+						exception.cpp\
+						gauss.cpp\
+						gcd.cpp\
+						generic.cpp\
+						gram_schmidt.cpp\
+						groebner_basis.cpp\
+						hermite.cpp\
+						intalg.cpp\
+						intconvex.cpp\
+						intcount_barvinok.cpp\
+						io.cpp\
+						karatsuba.cpp\
+						linopt.cpp\
+						lll.cpp\
+						logarithm.cpp\
+						matrix.cpp\
+						motzkin_burger.cpp\
+						orthogonal.cpp\
+						pollard_mult.cpp\
+						polyhedron.cpp\
+						polyhedron_relation.cpp\
+						polynom.cpp\
+						powerest.cpp\
+						prime.cpp\
+						rational.cpp\
+						resultant.cpp\
+						sideset.cpp\
+						smith.cpp\
+						smithpoly.cpp\
+						solve_linsys.cpp\
+						sparse_multipolynom.cpp\
+						sparse_polynom.cpp\
+						sturm.cpp\
+						tex_cartesian2d.cpp\
+						texout.cpp\
+						timer.cpp\
+						triangulation.cpp\
+						type_opers.cpp\
+						type_traits.cpp\
+						_utility.cpp\
+						vecalg.cpp\
+						vector.cpp\
+						winograd.cpp
