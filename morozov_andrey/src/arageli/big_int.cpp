@@ -991,6 +991,11 @@ void _Internal::xdivide (big_int& a, const big_int& b, const big_int& c, big_int
 
     #ifdef ARAGELI_GMP
 
+    a = big_int();
+    res = big_int();
+    ARAGELI_ASSERT_1(a.number->refs == 1);
+    ARAGELI_ASSERT_1(res.number->refs == 1);
+
     mpz_tdiv_qr
     (
         a.number->gmpdata,

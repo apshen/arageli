@@ -1439,7 +1439,10 @@ inline big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr)
 {
     #ifdef ARAGELI_GMP
 
-    return euclid(a, b, tfctr);
+    big_int res;
+    ARAGELI_ASSERT_1(res.number->refs == 1);
+    mpz_gcd(res.number->gmpdata, a.number->gmpdata, b.number->gmpdata);
+    return res;
 
     #else
 
