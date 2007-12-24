@@ -1912,6 +1912,23 @@ std::istream& input_polynom_internal
 }
 
 
+template <typename T, bool REFCNT>
+template <typename Stream>
+Stream& io_binary<matrix<T, REFCNT> >::input_stream (Stream& in, matrix<T, REFCNT>& x)
+{
+    typename matrix<T, REFCNT>::size_type nrows, ncols;
+    if(!input_binary_stream(in, nrows) || !input_binary_stream(in, ncols))
+        return in;  // fail without losing an old value
+    x.resize(nrows, ncols);
+
+    // this can lose an old value without new one have been loaded successfully
+    if(x.size())
+        input_binary_stream(in, &*x.begin(), x.size());
+
+    return in;
+}
+
+
 } // namespace Arageli
 
 

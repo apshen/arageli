@@ -62,13 +62,6 @@ namespace Arageli { namespace _Internal
     // Sizes, types and masks can faile on some platforms.
     // This is a temporary implementation.
 
-    // these is troubleshoot values for mutiplication algorithms
-    // 0 --- disable approach
-    // troubleshoot for karatsuba algorithm
-    const std::size_t karatsuba_limit_value = 150;
-    // troubleshoot for pollard algorithm
-    const std::size_t pollard_limit_value = 0 /*30000*/;    // currently disabled due to a bug in the algorithm
-
 #if defined(_MSC_VER) && defined (_WIN32) || 0 && defined(__BORLANDC__) && defined(__WIN32__)
     // The following works well for Ms C (Win32)
     // Also you can use these for Borland C 5.5 compiler.
