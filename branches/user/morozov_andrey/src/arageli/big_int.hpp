@@ -129,6 +129,10 @@ class big_int
 
     friend std::size_t magnitude (const big_int& x);
 
+    #ifdef ARAGELI_GMP
+    friend big_int factorial (const big_int& a);
+    #endif
+
 public:
 
     /// Exception of class big_int.
@@ -1458,6 +1462,21 @@ inline big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr)
 
     #endif
 }
+
+
+#ifdef ARAGELI_GMP
+
+inline big_int factorial (const big_int& a)
+{
+    ARAGELI_ASSERT_0(!is_negative(a));
+    ARAGELI_ASSERT_0(mpz_fits_ulong_p(a.number->gmpdata));
+    big_int res;
+    ARAGELI_ASSERT_1(res.number->refs == 1);
+    mpz_fac_ui(res.number->gmpdata, mpz_get_ui(a.number->gmpdata));
+    return res;
+}
+
+#endif
 
 
 /// Retruns a number of digits in a given number with specified radix.

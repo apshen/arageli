@@ -94,7 +94,7 @@
     Do not turn it on!
     The complexity of the method is O(n*log(n)), where n is the length
     of input numbers. */
-#define ARAGELI_ENABLE_POLLARD_MULT
+//#define ARAGELI_ENABLE_POLLARD_MULT
 
 /// Turns on Karatsuba multiplication method.
 /** This method has complexity O(n^log2(3)), where n is the length
