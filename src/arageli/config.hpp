@@ -71,12 +71,47 @@
 #endif
 
 
+#define ARAGELI_PLATFORM_UNKNOWN 0
+#define ARAGELI_PLATFORM_WINDOWS 1
+
+
+#ifndef ARAGELI_PLATFORM
+    #if defined(_MSC_VER) || defined(__CYGWIN32__) || defined(__MINGW32__)
+        #define ARAGELI_PLATFORM  ARAGELI_PLATFORM_WINDOWS
+    #else
+        #define ARAGELI_PLATFORM  ARAGELI_PLATFORM_UNKNOWN
+    #endif
+#endif
+
+
 /// Turn on some debug output command to std::cout inlined to internal code.
 //#define ARAGELI_INLINE_DEBUG_OUTPUT
 
-/// Turn on advanced multiplication methods
+// The following two defines turn on advanced multiplication methods:
+
+/// Turns on multiplication method based on NTT.
+/** This method is experimental and doesn't work properly on all the numbers.
+    Do not turn it on!
+    The complexity of the method is O(n*log(n)), where n is the length
+    of input numbers. */
 //#define ARAGELI_ENABLE_POLLARD_MULT
+
+/// Turns on Karatsuba multiplication method.
+/** This method has complexity O(n^log2(3)), where n is the length
+    of input numbers. */
 #define ARAGELI_ENABLE_KARATSUBA_MULT
+
+/// Internal threshold for Karatsuba multiplication algorithm
+#if defined(ARAGELI_ENABLE_KARATSUBA_MULT)
+    #define ARAGELI_KARATSUBA_THRESHOLD 50
+#endif
+
+/// Internal threshold for Pollard multiplication algorithm
+#define ARAGELI_POLLARD_MAX_POWER 21
+#define ARAGELI_POLLARD_UPPER_BOUND (1<<ARAGELI_POLLARD_MAX_POWER)
+#if defined(ARAGELI_ENABLE_POLLARD_MULT)
+    #define ARAGELI_POLLARD_THRESHOLD 30000
+#endif
 
 /// If this macro is defined then assertions throw exception assert_failed.
 //#define ARAGELI_ASSERT_THROW_EXCEPTION
@@ -94,6 +129,9 @@
     WARNING! Temporary this feature can't be turned on because of
     not compatibility with ARAGELI_DEBUG_EXEC macros family. */
 //#define ARAGELI_ASSERT_ASSUME
+
+
+#define ARAGELI_PERFORMANCE_TIMER
 
 
 /// The number of iterations in is_prime_small_primes_division function.
