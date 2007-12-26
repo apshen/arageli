@@ -2665,6 +2665,64 @@ inline std::istringstream& operator>> (std::istringstream& in, vector<T, REFCNT>
 }
 
 
+/// Specialization of io_binary for vector.
+template <typename T, bool REFCNT>
+class io_binary<vector<T, REFCNT> > :
+    public io_binary_base<vector<T, REFCNT> >
+{
+public:
+
+    using io_binary_base<vector<T, REFCNT> >::output_stream;
+    using io_binary_base<vector<T, REFCNT> >::input_stream;
+    using io_binary_base<vector<T, REFCNT> >::calc;
+    using io_binary_base<vector<T, REFCNT> >::input_mem;
+    using io_binary_base<vector<T, REFCNT> >::output_mem;
+
+    /// Stores vector object state to a binary stream. Seft-delimeted binary serialization.
+    /** This functions uses the following format:
+            SIZE ELEMENTS
+        where SIZE is a size of a given vector and ELEMENTS is
+        all elements of the vector stored as an array of length SIZE
+        All output is in The Simple Binary format. */
+    template <typename Stream>
+    static inline Stream& output_stream (Stream& out, const vector<T, REFCNT>& x)
+    {
+        typename vector<T, REFCNT>::size_type size = x.size();
+        output_binary_stream(out, size);
+        if(size)
+            output_binary_stream(out, &*x.begin(), size);
+        return out;
+    }
+
+
+    /// Loads vector object state from a binary stream. Compatible with output_stream.
+    /** See output_stream(stream, vector) function for detailes on the format.
+        If the function fails to read some of state components, an old value of x
+        may be lost. All depends on input_binary_stream function for T.
+        So, do not relay on the value of x when a given stream is not in a good state
+        after call returns.
+
+        The function takes input in The Simple Binary format.
+    */
+    template <typename Stream>
+    static Stream& input_stream (Stream& in, vector<T, REFCNT>& x);
+
+
+    /// Calculates the number of chars required to store a given vector object in The Simple Binary form.
+    /** This function calculates precise number of chars that will emit
+        any function outputs in The Simple Binary format for one vector object,
+        for example, output_binary_mem function. */
+    static inline std::size_t calc (const vector<T, REFCNT>& x)
+    {
+        typename vector<T, REFCNT>::size_type size = x.size();
+        if(size)
+            return calc_binary(size) + calc_binary(&*x.begin(), size);
+        else
+            return calc_binary(size);
+    }
+};
+
+
 /// Specialization of the template 'factory' for the Arageli::vector template.
 template <typename T, bool REFCNT>
 struct factory<vector<T, REFCNT> >

@@ -144,11 +144,65 @@ bool big_int_multiply_divide_test(int param, int count)
     return false;
 }
 
+
+bool various_length_big_int_multiply ()
+{
+    // You can exted the test segment but it is too time consuming.
+    for(int n = 1; n <= 1024*1024*1; n *= 2)
+        for(int i = 0; i < 1; ++i)
+        {
+            big_int a, b;
+
+            do
+            {
+                a = big_int::random_with_length(n);
+                b = big_int::random_with_length(n);
+            }while(a.is_null() || b.is_null());
+
+            big_int c = a*b;
+            big_int d1 = c/a;
+            big_int d2 = c/b;
+
+            if(d1 != b)
+            {
+                tout
+                    << "FAILED: various_length_big_int_multiply at d1 != b with"
+                    << "\n\ta.length() = " << a.length()
+                    << "\n\tb.length() = " << b.length()
+                    << "\n\tc.length() = " << c.length()
+                    << "\n\td1.length() = " << d1.length()
+                    << "\n\td2.length() = " << d2.length() << "\n";
+
+                return true;
+            }
+
+            if(d2 != a)
+            {
+                tout
+                    << "FAILED: various_length_big_int_multiply at d2 != a with"
+                    << "\n\ta.length() = " << a.length()
+                    << "\n\tb.length() = " << b.length()
+                    << "\n\tc.length() = " << c.length()
+                    << "\n\td1.length() = " << d1.length()
+                    << "\n\td2.length() = " << d2.length() << "\n";
+
+                return true;
+            }
+        }
+
+    return false;
+}
+
+
 TEST(big_int,multiply_divide,"Test")
 {
-    bool fail=big_int_multiply_divide_test(100,1000);
+    ARAGELI_TS_ALLEXCEPT_CATCH_REGION_BEGIN
+    {
+        bool fail = big_int_multiply_divide_test(100,1000);
+        fail = fail || various_length_big_int_multiply();
 
-    if(fail) return resFAIL;
-    return resOK;
-
+        if(fail) return resFAIL;
+        return resOK;
+    }
+    ARAGELI_TS_ALLEXCEPT_CATCH_REGION_END
 }
