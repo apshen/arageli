@@ -1,36 +1,66 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
+############# Prelude ################
+dnl Require a minimum Autoconf version.
 AC_PREREQ(2.59)
-AC_INIT(Arageli, 2.59, support.arageli@gmail.com)
-AM_INIT_AUTOMAKE(arageli,2.59)    
-AC_CONFIG_SRCDIR([src/arageli/arageli.hpp])
-AC_CONFIG_HEADER([src/arageli/config.hpp])
 
-# Checks for programs.
+dnl Initialize Autoconf. Specify package’s name, version number, and bug-report address.
+AC_INIT(Arageli, 2.2.8, support.arageli@gmail.com)
+
+dnl Auxiliary scripts such as install-sh and depcomp should be in "build" directory.
+AC_CONFIG_AUX_DIR([build/linux])
+
+dnl AM_INIT_AUTOMAKE(arageli,2.59) 
+dnl Initialize Automake. Turn on all Automake warnings. This is a foreign package.
+AM_INIT_AUTOMAKE([-Wall foreign]) 
+
+dnl A safety check. src/arageli/arageli.hpp should be a distributed source file, and this
+dnl makes sure that ‘configure’ is not run from outer space.
+AC_CONFIG_SRCDIR([src/arageli/arageli.hpp])
+
+############### Checks for programs ##################
+dnl Check for a C++ compiler
 AC_PROG_CXX
 AC_PROG_RANLIB
 
-# Checks for libraries.
+############## Checks for libraries ##################
 dnl AC_CHECK_LIB(stdc++,main,AC_MSG_ERROR([can't find stdc++ library]))
 
-# Checks for header files.
+############## Checks for header files ###############
 AC_HEADER_STDC
 AC_CHECK_HEADERS([malloc.h stdlib.h])
 
-# Checks for typedefs, structures, and compiler characteristics.
+############## Checks for typedefs, structures, and compiler characteristics ############
 AC_HEADER_STDBOOL
 AC_C_CONST
 AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_STRUCT_TM
 
-# Checks for library functions.
+dnl Output the following to config.hpp.
+AC_DEFINE(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE,1,Controls whether cpp-files would be included into corresponding hpp-files.)
+AC_DEFINE(ARAGELI_ENABLE_KARATSUBA_MULT,0,Turn on karatsuba multiplication method)
+AC_DEFINE(ARAGELI_KARATSUBA_THRESHOLD,50,Internal threshold for Karatsuba multiplication algorithm)
+AC_DEFINE(ARAGELI_ENABLE_POLLARD_MULT,0,Turn on fft based multiplication method)
+AC_DEFINE(ARAGELI_POLLARD_MAX_POWER,21,Internal threshold for Pollard multiplication algorithm)
+AC_DEFINE(ARAGELI_POLLARD_UPPER_BOUND,(1<<ARAGELI_POLLARD_MAX_POWER),Internal threshold for Pollard multiplication algorithm)
+AC_DEFINE(ARAGELI_POLLARD_THRESHOLD,30000,Internal threshold for Pollard multiplication algorithm)
+AC_DEFINE(ARAGELI_IS_PRIME_SMALL_PRIMES_DIVISION_NUMBER,20,The number of iterations in is_prime_small_primes_division function.)
+AC_DEFINE(ARAGELI_LONG_LONG_SUPPORT,1,Enabling long long type support.)
+
+############## Checks for library functions #################
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([floor memmove memset pow sqrt])
 
+############## Output files #######################
 AC_CONFIG_FILES(Makefile src/arageli/Makefile)
+
+dnl Declare config.hpp as output header.
+AC_CONFIG_HEADER([src/arageli/config.hpp])
+
+dnl Actually output all declared files.
 AC_OUTPUT
 
 dnl AC_PROG_MAKE_SET

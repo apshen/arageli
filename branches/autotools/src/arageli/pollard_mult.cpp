@@ -37,6 +37,7 @@
 
 
 #include "config.hpp"
+#if defined(ARAGELI_ENABLE_POLLARD_MULT)
 #include "pollard_mult.hpp"
 
 #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) ||    \
@@ -74,3 +75,4 @@ namespace Arageli
 
 
 #endif    // #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) || ...
+#endif //ARAGELI_ENABLE_POLLARD_MULT
