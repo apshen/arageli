@@ -1,1 +1,1 @@
-SUBDIRS = src/arageli
+SUBDIRS = src/arageli test

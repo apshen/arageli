@@ -35,6 +35,7 @@
 
 
 #include "config.hpp"
+#if defined(ARAGELI_ENABLE_KARATSUBA_MULT)
 #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) ||    \
     defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_karatsuba)
 #include "karatsuba.hpp"
@@ -120,3 +121,4 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
 
 }
 #endif
+#endif //ARAGELI_ENABLE_KARATSUBA_MULT
