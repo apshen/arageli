@@ -34,6 +34,7 @@
 test_dirs = . ITLab-produced
 CXXFLAGS += -MD -g -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
 tests_name = test
+LINKFLAGS = -L"../lib" -L"../tool/ts/bin/" -ltestarageli -lts
 
 all: ../bin/$(tests_name)
 
@@ -41,7 +42,7 @@ all: ../bin/$(tests_name)
                 /*.cpp,$(test_dirs))))
 	make -C ../src/arageli ../../lib/libtestarageli.a
 	$(CXX) -o ../bin/$(tests_name) $(patsubst %.cpp,%.o, $(wildcard \
-    $(addsuffix /*.cpp,$(test_dirs)))) -L"../lib" -L"../tool/ts/bin/" -ltestarageli -lts
+    $(addsuffix /*.cpp,$(test_dirs)))) $(LINKFLAGS)
 
 ../tool/ts/bin/libts.a:
 	$(MAKE) -C ../tool/ts/src/ts/
@@ -51,6 +52,15 @@ stdafx.hpp.gch: stdafx.hpp
 
 %.o:%.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@ -I"../src/" -I"../tool/ts/src/"
+
+karatsuba:../bin/karatsuba
+	echo Build karatsuba algorithm test.
+
+../bin/karatsuba: karatsuba.o stdafx.hpp.gch ../tool/ts/bin/libts.a testarageli
+	$(CXX) -o ../bin/karatsuba karatsuba.o $(LINKFLAGS)
+
+testarageli:
+	$(MAKE) -C ../src/arageli ../../lib/libtestarageli.a
 
 ../lib/libtestarageli.a:
 	$(MAKE) -C ../src/arageli ../../lib/libtestarageli.a
