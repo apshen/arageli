@@ -88,8 +88,8 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
             t >>= digit_len;
         }
         // alloc memory for output number
-        big_int out = 0;
         _Internal::digit *w_digits = new _Internal::digit[a_len+b_len];
+        _Internal::digit *r_digits = new _Internal::digit[a_len+b_len];
         _Internal::digit *t_digits = new
             _Internal::digit[3*(a_len+b_len)];
         w_digits[a_len+b_len-1] = 0;
@@ -97,6 +97,7 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
         timer s;
         s.start();
 #endif
+        std::cerr << "m = " << a_len <<"\nn = " << b_len << '\n';
         unsigned w_len =
             do_mult_karatsuba<_Internal::digit,unsigned>(a_digits,
                     b_digits, w_digits, t_digits, a_len, b_len);
@@ -104,19 +105,22 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
         s.stop();
         std::cerr << "Karatsuba time: " << s.time() << "\n";
 #endif
-        out = 0;
-        for (i = 0; i < w_len; ++i)
-        {
-            out += big_int(w_digits[i])<<(i*digit_len);
-        }
-        // compare result with trivial multiplication
-        if (out != a*b)
+        // compare karatsuba method result with classic algorithm
+        if (_Internal::do_mult_classic(a_digits, b_digits, r_digits, a_len, b_len) != w_len)
         {
             is_ok = false;
+        }
+        for (i = 0; i < w_len; ++i)
+        {
+            if(w_digits[i] != r_digits[i])
+            {
+                is_ok = false;
+            }
         }
         delete [] a_digits;
         delete [] b_digits;
         delete [] w_digits;
+        delete [] r_digits;
         delete [] t_digits;
     }
     catch(const Arageli::exception& e)

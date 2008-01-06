@@ -39,3 +39,7 @@ $(BIN)/karatsuba_vs_classic:karatsuba_vs_classic.cpp perfarageli
 
 perfarageli:
 	$(MAKE) -C ../src/arageli ../../lib/libperfarageli.a
+
+clean:
+	rm -f $(BIN)/karatsuba_vs_classic
+	$(MAKE) -C ../src/arageli perfclean
