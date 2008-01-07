@@ -53,12 +53,6 @@ stdafx.hpp.gch: stdafx.hpp
 %.o:%.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@ -I"../src/" -I"../tool/ts/src/"
 
-karatsuba:../bin/karatsuba
-	echo Build karatsuba algorithm test.
-
-../bin/karatsuba: karatsuba.o stdafx.hpp.gch ../tool/ts/bin/libts.a testarageli
-	$(CXX) -o ../bin/karatsuba karatsuba.o $(LINKFLAGS)
-
 testarageli:
 	$(MAKE) -C ../src/arageli ../../lib/libtestarageli.a
 
@@ -72,6 +66,8 @@ TAGS:
 clean:
 	rm -f ../bin/$(tests_name)
 	rm -f $(wildcard $(addsuffix /*.o,$(test_dirs))) $(wildcard $(addsuffix /*.d,$(test_dirs)))
+	$(MAKE) -C ../src/arageli testclean
+	$(MAKE) -C ../tool/ts/src/ts clean
 
 cleanall: clean
 	rm -f stdafx.hpp.gch
