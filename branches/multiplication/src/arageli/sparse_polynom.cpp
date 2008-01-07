@@ -1516,6 +1516,99 @@ std::istream& input_polynom_internal
 }
 
 
+template <typename F, typename I, bool REFCNT>
+template <typename Stream>
+Stream& io_binary<sparse_polynom<F, I, REFCNT> >::output_stream
+(
+    Stream& out,
+    const sparse_polynom<F, I, REFCNT>& x
+)
+{
+    const std::size_t size = x.size();
+    output_binary_stream(out, size);
+
+    if(size)
+    {
+        // Output all monomials.
+
+        typedef typename sparse_polynom<F, I, REFCNT>::monom_const_iterator mci;
+        mci begin = x.monoms_begin(), end = x.monoms_end();
+
+        // WARNING! Use some special iterator and a standard algorithm
+        // instead of the loop here.
+
+        for(mci i = begin; i != end; ++i)
+            output_binary_stream(out, *i);
+    }
+
+    return out;
+}
+
+
+template <typename F, typename I, bool REFCNT>
+template <typename Stream>
+Stream& io_binary<sparse_polynom<F, I, REFCNT> >::input_stream
+(
+    Stream& in,
+    sparse_polynom<F, I, REFCNT>& x
+)
+{
+    // If an error occurs when the size is being read,
+    // we won't lose an old value of x.
+    std::size_t size;
+    if(!input_binary_stream(in, size))
+        return in;
+
+    // The following statement loses an old value of x, and
+    // if an error occure during next reads we will return
+    // a meaningless value in x.
+
+    x = null(x);    // WARNING! Use some special function instead.
+
+    // Read all monomials numbered `size' and insert them all
+    // to x in the same order.
+
+    typedef typename sparse_polynom<F, I, REFCNT>::monom_iterator mi;
+    mi end = x.monoms_end();
+
+    for(std::size_t i = 0; i < size; ++i)
+    {
+        typedef typename sparse_polynom<F, I, REFCNT>::monom monom;
+        monom m;
+        if(!input_binary_stream(in, m))
+            return in;  // reading fails
+        x.insert(end, m);
+    }
+
+    return in;
+}
+
+
+template <typename F, typename I, bool REFCNT>
+std::size_t io_binary<sparse_polynom<F, I, REFCNT> >::calc
+(const sparse_polynom<F, I, REFCNT>& x)
+{
+    std::size_t size = x.size();
+    std::size_t res = calc_binary(size);
+
+    if(size)
+    {
+        // Calculate for all monomials.
+
+        typedef typename sparse_polynom<F, I, REFCNT>::monom_const_iterator mci;
+        mci begin = x.monoms_begin(), end = x.monoms_end();
+
+        // WARNING! Use some special iterator and a standard algorithm
+        // instead of the loop here.
+
+        for(mci i = begin; i != end; ++i)
+            res += calc_binary(*i);
+    }
+
+    return res;
+}
+
+
 } // namespace Arageli
 
 

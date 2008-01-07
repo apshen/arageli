@@ -75,6 +75,11 @@ struct polynom_config_default
     };
 };
 
+
+template <typename F, typename Config>
+class io_binary<polynom<F, Config> >;   // see implementation below in this file
+
+
 /// Polynomial template class with the dense representation.
 /** Implementation of a dense representation for polynomials.
     An instance of this type is a polynom where the
@@ -86,6 +91,9 @@ class polynom
     friend class polynom;
 
     typedef typename Config::storage_type storage_type;
+
+    friend class io_binary<polynom<F, Config> >;
+
 
 public:
 
@@ -755,6 +763,58 @@ In& operator>> (In& in, polynom<F, Config>& x)
 {
     return input_var(in, x);
 }
+
+
+/// Specialization of io_binary for polynom.
+template <typename F, typename Config>
+class io_binary<polynom<F, Config> > :
+    public io_binary_base<polynom<F, Config> >
+{
+public:
+
+    using io_binary_base<polynom<F, Config> >::output_stream;
+    using io_binary_base<polynom<F, Config> >::input_stream;
+    using io_binary_base<polynom<F, Config> >::calc;
+    using io_binary_base<polynom<F, Config> >::input_mem;
+    using io_binary_base<polynom<F, Config> >::output_mem;
+
+    /// Stores polynom object state to a binary stream. Seft-delimeted binary serialization.
+    /** This functions just stores an object x as x.store
+        in The Simple Binary format. */
+    template <typename Stream>
+    static inline Stream& output_stream (Stream& out, const polynom<F, Config>& x)
+    {
+        output_binary_stream(out, x.store);
+        return out;
+    }
+
+
+    /// Loads polynom object state from a binary stream. Compatible with output_stream.
+    /** See output_stream(stream, polynom) function for detailes on the format.
+        If the function fails to read some of state components, an old value of x
+        may be lost. All depends on input_binary_stream function for x.store.
+        So, do not relay on the value of x when a given stream is not in a good state
+        after call returns.
+
+        The function takes input in The Simple Binary format.
+    */
+    template <typename Stream>
+    static Stream& input_stream (Stream& in, polynom<F, Config>& x)
+    {
+        input_binary_stream(in, x.store);
+        return in;
+    }
+
+
+    /// Calculates the number of chars required to store a given polynom object in The Simple Binary form.
+    /** This function calculates precise number of chars that will emit
+        any function outputs in The Simple Binary format for one rational object,
+        for example, output_binary_mem function. */
+    static inline std::size_t calc (const polynom<F, Config>& x)
+    {
+        return calc_binary(x.store);
+    }
+};
 
 
 template <typename F, typename Config>

@@ -278,7 +278,7 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
     if
     (
         m > ARAGELI_KARATSUBA_THRESHOLD &&
-        n > ARAGELI_KARATSUBA_THRESHOLD 
+        n > ARAGELI_KARATSUBA_THRESHOLD
     )
     {
         digit *t = new digit[3 * (n + m)];

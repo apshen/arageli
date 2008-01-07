@@ -105,7 +105,7 @@ int main ()
 
     do
     {
-        double t1_l = 0.0, t1_m = 0.0, t1_u = 0.0, t2_l = 0.0, t2_m = 0.0, t2_u = 0.0; 
+        double t1_l = 0.0, t1_m = 0.0, t1_u = 0.0, t2_l = 0.0, t2_m = 0.0, t2_u = 0.0;
         std::cout << "Lower bound = " << lower_bound << "; Upper bound = " << upper_bound << ";\n";
         big_int bt1, bt2;
         big_int a_l = big_int::random_with_length(lower_bound);
@@ -167,7 +167,7 @@ int main ()
             {
                 timer t(false);
                 t.start();
-                do_mult_karatsuba(a_l_digits, b_l_digits, w_u_digits, &t_digits, l_len, l_len, res);
+                do_mult_karatsuba(a_l_digits, b_l_digits, w_u_digits, t_digits, l_len, l_len, res);
                 t.stop();
                 t2_l += t.time();
             }
@@ -183,7 +183,7 @@ int main ()
             {
                 timer t(false);
                 t.start();
-                do_mult_karatsuba(a_m_digits, b_m_digits, w_u_digits, &t_digits, m_len, m_len, res);
+                do_mult_karatsuba(a_m_digits, b_m_digits, w_u_digits, t_digits, m_len, m_len, res);
                 t.stop();
                 t2_m += t.time();
             }
@@ -199,13 +199,13 @@ int main ()
             {
                 timer t(false);
                 t.start();
-                do_mult_karatsuba(a_u_digits, b_u_digits, w_u_digits, &t_digits, u_len, u_len, res);
+                do_mult_karatsuba(a_u_digits, b_u_digits, w_u_digits, t_digits, u_len, u_len, res);
                 t.stop();
                 t2_u += t.time();
             }
         }
-        t1_l /= repeat; t1_m /= repeat; t1_u /= repeat; 
-        t2_l /= repeat; t2_m /= repeat; t2_u /= repeat; 
+        t1_l /= repeat; t1_m /= repeat; t1_u /= repeat;
+        t2_l /= repeat; t2_m /= repeat; t2_u /= repeat;
         if (t1_u < t2_u)
         {
             upper_bound += init_step;

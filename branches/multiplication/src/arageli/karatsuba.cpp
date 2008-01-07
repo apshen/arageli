@@ -90,12 +90,12 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
         {
             Clen = do_mult_karatsuba(C1, C2, C, t, C1len, C2len); // mult C = C1*C2
         }
-        t -= 2*k2+4;
 
         _Internal::do_sub(C, W2, Clen, UV1len);
         _Internal::do_sub(C, W0, Clen, UV0len);
 
         _Internal::do_add(W1, C, m+n-k, Clen);    // W += C
+        t -= 2*k2+4;
     }
     else
     {

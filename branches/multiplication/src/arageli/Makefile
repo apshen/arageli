@@ -68,14 +68,30 @@ arageli.hpp.gch:arageli.hpp
 TAGS:
 	ctags $(wildcard $(addsuffix /*.cpp,$(obj_dirs))) $(wildcard $(addsuffix /*.hpp,$(obj_dirs)))
 
+fastclean:
+	rm -f $(wildcard $(addsuffix /*f.o,$(obj_dirs))) $(wildcard $(addsuffix /*.d,$(obj_dirs)))
+	rm -f ../../lib/libfastarageli.a
+
+perfclean:
+	rm -f $(wildcard $(addsuffix /*p.o,$(obj_dirs))) $(wildcard $(addsuffix /*.d,$(obj_dirs)))
+	rm -f ../../lib/libperfarageli.a
+
+testclean:
+	rm -f $(wildcard $(addsuffix /*t.o,$(obj_dirs))) $(wildcard $(addsuffix /*.d,$(obj_dirs)))
+	rm -f ../../lib/libtestarageli.a
+
 clean:
-	rm -f ../../lib/libarageli.a ../../lib/libtestarageli.a ../../lib/libperfarageli.a ../../lib/libfastarageli.a
+	rm -f ../../lib/libarageli.a
 	rm -f $(wildcard $(addsuffix /*.o,$(obj_dirs))) $(wildcard $(addsuffix /*.d,$(obj_dirs)))
 
-cleanall: clean
+cleanall: clean perfclean HTMLclean testclean fastclean
+	rm -f arageli.hpp.gch
 	rm -f tags
 
 include $(wildcard *.d)
 
 HTML:
 	doxygen Doxyfile
+
+HTMLclean:
+	rm -rf ../../doc/reference_manual_html

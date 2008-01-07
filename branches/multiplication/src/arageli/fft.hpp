@@ -45,7 +45,7 @@
 namespace Arageli
 {
 // TODO: clarify if this approach speed up the algorithm
-#define BARRETT
+//#define BARRETT
 #ifdef BARRETT
 // precomputed constants for Barrett reduction
 // p_inv = floor(4^k / p), where k --- number of bits for p number representation
@@ -61,11 +61,10 @@ const _Internal::digit p3_inv = 1527099480ul;
 // Barrett reduction function return reduction of x modulo p
 // here n = 4^{k+1}, where k --- number of bits for p number representation
 template<_Internal::digit p, _Internal::digit p_inv, int n>
-inline unsigned long barrett_reduction(unsigned long long x)
+unsigned long barrett_reduction(unsigned long long x)
 {
-//    unsigned long q = ((x >> (n-4))*p_inv)>> n;
-//    long long res = (x & ((1ll<<n)-1)) - (((unsigned long long)(q)*p) & ((1ll<<n)-1));
-    long long res = (x & ((1ll<<n)-1)) - (((((x >> (n-4))*p_inv)>> n)*p) & ((1ll<<n)-1));
+    unsigned long q = ((x >> (n-4))*p_inv)>> n;
+    long long res = (x & ((1ll<<n)-1)) - (((unsigned long long)(q)*p) & ((1ll<<n)-1));
     if (res < 0) res += 1ll<<n;
     while(res >= p) res -= p;
     return res;
@@ -541,9 +540,6 @@ public:
     /* polinom multiplication */
     void poli_multiply(const ET *F, const MT F_Length, const ET *G, const MT G_Length, ET *Result_Out) const
     {
-        /* Check input numbers for length. This method has restrictions for max length*/
-        ARAGELI_ASSERT_0(F_Length <= n_max && G_Length <= n_max);
-
         static ET F_Copy[n_max];
         static ET G_Copy[n_max];
 
