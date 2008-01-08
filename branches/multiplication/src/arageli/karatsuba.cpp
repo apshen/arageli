@@ -47,6 +47,7 @@ namespace Arageli
 
 /**
 Preliminary conditions: w[n+m+1] = 0!
+                        m >= n
 */
 template <typename N,typename T>
 T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
@@ -116,6 +117,67 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
     };
 
     return (w[m+n-1] != 0) ? (m+n): (m+n-1);
+};
+
+/*
+ * Implementation from Emmanuel Thome paper from september 2002 "Karatsuba multiplication
+ * with temporary space of size <= n"
+ */
+template <typename N,typename T>
+T do_mult_karatsuba(const N *a, const N *b, N *r, N *t, T n)
+{
+    T p = n >> 1;
+    T q = n - p;
+
+    if (n < 3)
+    {
+        return _Internal::do_mult_classic(a, b, r, n, n);
+    }
+    
+    /*step 1*/
+    memcpy(r,a,p*sizeof(N));
+    _Internal::do_sub(r,a+p,p,p);
+    if (q != p)
+    {
+        r[p] = -a[n-1];
+    }
+
+    /*step 2*/
+    memcpy(r+q,b+p,p*sizeof(N));
+    _Internal::do_sub(r+q,b,p,p);
+    if (q != p)
+    {
+        r[n] = b[n-1];
+    }
+    
+    /*step 3*/
+    do_mult_karatsuba(r, r+q, t, r+2*q, q);
+
+    /*step 4*/
+    do_mult_karatsuba(a+p, b+p, r+2*p, r, q);
+
+    /*step 5*/
+    _Internal::do_add(t, r+2*p, 2*q, 2*q-1);
+
+    /*step 6*/
+    memcpy(r+p, t, p*sizeof(N));
+
+    /*step 7*/
+    _Internal::do_add(r+2*p, t+p, 2*q-p, 2*q-p-1);
+
+    /*step 8*/
+    do_mult_karatsuba(a, b, t, r, p);
+
+    /*step 9*/
+    memcpy(r, t, p*sizeof(N));
+
+    /*step 10*/
+    _Internal::do_add(r+p, t+p, p, p-1);
+
+    /*step 11*/
+    _Internal::do_add(r+p, t, 2*p, 2*p-1);
+
+    return (r[2*n-1] != 0) ? (2*n) : (2*n-1);
 };
 
 }
