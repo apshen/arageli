@@ -2,7 +2,7 @@
 #
 #    Makefile.am
 #
-#    The root makefile.am.
+#    Makefile.am for documentation.
 #
 #    This file is a part of the Arageli library.
 #
@@ -29,4 +29,4 @@
 #
 ##############################################################################
 
-SUBDIRS = doc/src/ example/ src/arageli/ test/ tool/ts/src/ts/
+# PUT YOUR MAKE COMMANDS HERE

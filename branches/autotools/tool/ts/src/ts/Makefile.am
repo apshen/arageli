@@ -1,11 +1,11 @@
-lib_LTLIBRARIES = libts.la
+lib_LIBRARIES = libts.a
 
-libts_la_SOURCES = \
+libts_a_SOURCES = \
+		ts.cpp\
+		tstcontainer.cpp\
 		config.hpp\
 		strcompare.hpp\
-		ts.cpp\
 		ts.hpp\
 		tsowndefs.hpp\
 		tsstream.hpp\
-		stcontainer.cpp\
 		tstcontainer.hpp

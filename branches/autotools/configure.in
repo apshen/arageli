@@ -55,7 +55,7 @@ AC_FUNC_REALLOC
 AC_CHECK_FUNCS([floor memmove memset pow sqrt])
 
 ############## Output files #######################
-AC_CONFIG_FILES(Makefile src/arageli/Makefile)
+AC_CONFIG_FILES(Makefile doc/src/Makefile example/Makefile src/arageli/Makefile test/Makefile tool/ts/src/ts/Makefile)
 
 dnl Declare config.hpp as output header.
 AC_CONFIG_HEADER([src/arageli/config.hpp])
