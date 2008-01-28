@@ -1,6 +1,10 @@
 ARAGELICXXFLAGS = -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=1
 TESTCXXFLAGS = -DARAGELI_SOURCE -O2 -g -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
 
+# Precompiled header(s)
+arageli.hpp.gch: arageli.hpp
+	$(CC) -x c++-header $(ARAGELICXXFLAGS) $< -o $@
+
 # We are building some libraries. These libraries will be intalled in libdir.
 lib_LIBRARIES = libarageli.a
 libarageli_a_CXXFLAGS = $(ARAGELICXXFLAGS)

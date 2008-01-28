@@ -1,12 +1,13 @@
 ##############################################################################
 #
-#    Makefile.am
+#    Makefile
 #
-#    The root makefile.am.
+#    ADD FILE DESCRIPTION HERE
 #
 #    This file is a part of the Arageli library.
 #
 #    Copyright (C) 2006--2007 Aleksey Bader
+#    REFERENCE ADDITIONAL COPYRIGHTS HERE
 #    University of Nizhni Novgorod, Russia
 #
 #    The Arageli Library is free software; you can redistribute it and/or
@@ -29,4 +30,4 @@
 #
 ##############################################################################
 
-SUBDIRS = doc/src/ example/ src/arageli/ test/ tool/ts/src/ts/
+# PUT YOUR MAKE COMMANDS HERE
