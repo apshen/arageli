@@ -40,6 +40,9 @@ AC_STRUCT_TM
 
 dnl Output the following to config.hpp.
 AC_DEFINE(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE,1,Controls whether cpp-files would be included into corresponding hpp-files.)
+AC_DEFINE(ARAGELI_PLATFORM_WINDOWS,1,TODO:ADD MACROS DESCRIPTION HERE)
+AC_DEFINE(ARAGELI_PLATFORM_UNKNOWN,0,TODO:ADD MACROS DESCRIPTION HERE)
+AC_DEFINE(ARAGELI_PERFORMANCE_TIMER,1,TODO:ADD MACROS DESCRIPTION HERE)
 AC_DEFINE(ARAGELI_ENABLE_KARATSUBA_MULT,0,Turn on karatsuba multiplication method)
 AC_DEFINE(ARAGELI_KARATSUBA_THRESHOLD,50,Internal threshold for Karatsuba multiplication algorithm)
 AC_DEFINE(ARAGELI_ENABLE_POLLARD_MULT,0,Turn on fft based multiplication method)
@@ -48,6 +51,7 @@ AC_DEFINE(ARAGELI_POLLARD_UPPER_BOUND,(1<<ARAGELI_POLLARD_MAX_POWER),Internal th
 AC_DEFINE(ARAGELI_POLLARD_THRESHOLD,30000,Internal threshold for Pollard multiplication algorithm)
 AC_DEFINE(ARAGELI_IS_PRIME_SMALL_PRIMES_DIVISION_NUMBER,20,The number of iterations in is_prime_small_primes_division function.)
 AC_DEFINE(ARAGELI_LONG_LONG_SUPPORT,1,Enabling long long type support.)
+AC_DEFINE(ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS,1,TODO:ADD MACROS DESCRIPTION HERE)
 
 ############## Checks for library functions #################
 AC_FUNC_MALLOC
