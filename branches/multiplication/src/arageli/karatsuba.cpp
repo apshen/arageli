@@ -135,35 +135,27 @@ T do_mult_karatsuba(const N *a, const N *b, N *r, N *t, T n)
     }
     
     /*step 1*/
-    memcpy(r,a,p*sizeof(N));
-    _Internal::do_sub(r,a+p,p,p);
-    if (q != p)
-    {
-        r[p] = -a[n-1];
-    }
+    memcpy(r,a+p,q*sizeof(N));
+    _Internal::do_add(r,a,q,p);
 
     /*step 2*/
-    memcpy(r+q,b+p,p*sizeof(N));
-    _Internal::do_sub(r+q,b,p,p);
-    if (q != p)
-    {
-        r[n] = b[n-1];
-    }
+    memcpy(r+q+1,b+p,q*sizeof(N));
+    _Internal::do_add(r+q+1,b,q,p);
     
     /*step 3*/
-    do_mult_karatsuba(r, r+q, t, r+2*q, q);
+    do_mult_karatsuba(r, r+q+1, t, r+2*q+2, q+1);
 
     /*step 4*/
     do_mult_karatsuba(a+p, b+p, r+2*p, r, q);
 
     /*step 5*/
-    _Internal::do_add(t, r+2*p, 2*q, 2*q-1);
+    _Internal::do_sub(t, r+2*p, 2*q+2, 2*q);
 
     /*step 6*/
     memcpy(r+p, t, p*sizeof(N));
 
     /*step 7*/
-    _Internal::do_add(r+2*p, t+p, 2*q-p, 2*q-p-1);
+    _Internal::do_add(r+2*p, t+p, 2*q-p+3, 2*q-p+2);
 
     /*step 8*/
     do_mult_karatsuba(a, b, t, r, p);
@@ -172,10 +164,10 @@ T do_mult_karatsuba(const N *a, const N *b, N *r, N *t, T n)
     memcpy(r, t, p*sizeof(N));
 
     /*step 10*/
-    _Internal::do_add(r+p, t+p, p, p-1);
+    _Internal::do_add(r+p, t+p, p+1, p);
 
     /*step 11*/
-    _Internal::do_add(r+p, t, 2*p, 2*p-1);
+    _Internal::do_sub(r+p, t, 2*p+1, 2*p);
 
     return (r[2*n-1] != 0) ? (2*n) : (2*n-1);
 };

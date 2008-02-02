@@ -53,6 +53,21 @@ stdafx.hpp.gch: stdafx.hpp
 %.o:%.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@ -I"../src/" -I"../tool/ts/src/"
 
+pollard:../bin/pollard
+	echo Build Pollard algorithm test.
+
+karatsuba:../bin/karatsuba
+	echo Build karatsuba algorithm test.
+
+karatsubaclean:
+	rm -f ../bin/karatsuba
+
+../bin/pollard: stdafx.hpp.gch fft_multiplication.o ../tool/ts/bin/libts.a testarageli
+	$(CXX) -o ../bin/pollard fft_multiplication.o $(LINKFLAGS)
+
+../bin/karatsuba: stdafx.hpp.gch karatsuba.o ../tool/ts/bin/libts.a testarageli
+	$(CXX) -o ../bin/karatsuba karatsuba.o $(LINKFLAGS)
+
 testarageli:
 	$(MAKE) -C ../src/arageli ../../lib/libtestarageli.a
 
@@ -66,8 +81,6 @@ TAGS:
 clean:
 	rm -f ../bin/$(tests_name)
 	rm -f $(wildcard $(addsuffix /*.o,$(test_dirs))) $(wildcard $(addsuffix /*.d,$(test_dirs)))
-	$(MAKE) -C ../src/arageli testclean
-	$(MAKE) -C ../tool/ts/src/ts clean
 
 cleanall: clean
 	rm -f stdafx.hpp.gch

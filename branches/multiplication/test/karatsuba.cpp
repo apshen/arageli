@@ -47,7 +47,7 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
     try
     {
         int i;
-        const unsigned int num_lengths = 100;
+        const unsigned int num_lengths = 200;
         // generate two random integers approximately with equal lengths
         big_int a = big_int::random_with_length(num_lengths),
                 b = big_int::random_with_length(num_lengths);
@@ -92,7 +92,7 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
             {
                 if(w_digits[i] != r_digits[i])
                 {
-                    tout << i << '\t';
+                    tout << i << '\t' << "diff: " << r_digits[i] - w_digits[i] << '\t';
                     is_ok = false;
                 }
             }
