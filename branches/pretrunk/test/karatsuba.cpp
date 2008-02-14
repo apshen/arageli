@@ -81,7 +81,7 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
         if (magnitude(a) == magnitude(b))
         {
             w_len = do_mult_karatsuba<_Internal::digit,unsigned>(a._digits(),
-                        b._digits(), w_digits, t_digits, magnitude(a));
+                        b._digits(), w_digits, t_digits, magnitude(a), magnitude(b));
             // compare karatsuba method result with classic algorithm
             if (_Internal::do_mult_classic(a._digits(), b._digits(), r_digits, magnitude(a), magnitude(b)) != w_len)
             {
