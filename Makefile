@@ -85,12 +85,12 @@ TAGS:
 clean:
 	$(MAKE) -C src/arageli clean
 
-cleanall:
-	$(MAKE) -C src/arageli cleanall
+cleanall: clean HTMLclean
 	$(MAKE) -C tool/ts/src/ts cleanall
 	$(MAKE) -C test cleanall
 	$(MAKE) -C doc/src cleanall
 	$(MAKE) -C example cleanall
+	$(MAKE) -C perf cleanall
 	rm -rf doc/dvi
 	rm -f tags
 	rm -f io_simple_binary.hpp.tmp #TODO: resolve problem with this file!!!
