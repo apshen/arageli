@@ -43,3 +43,5 @@ perfarageli:
 clean:
 	rm -f $(BIN)/karatsuba_vs_classic
 	$(MAKE) -C ../src/arageli perfclean
+
+cleanall: clean

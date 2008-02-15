@@ -705,6 +705,11 @@ public:
         std::swap(number, x.number);
     }
 
+    const digit* _digits () const
+    {
+        return number->data;
+    }
+
 private:
 
     friend class big_float;    // see big_float.hpp source file

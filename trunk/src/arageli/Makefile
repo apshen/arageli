@@ -30,6 +30,7 @@
 #
 ##############################################################################
 
+FASTCXXFLAGS += -MD -DARAGELI_SOURCE -O3 -DARAGELI_DEBUG_LEVEL=0 -DARAGELI_ASSERT_THROW_EXCEPTION
 ARAGELICXXFLAGS += -MD -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=1
 TESTSCXXFLAGS += -MD -DARAGELI_SOURCE -g -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
 PERFCXXFLAGS += -MD -pg -DARAGELI_SOURCE -g -O3 -DARAGELI_DEBUG_LEVEL=0 -DARAGELI_ASSERT_THROW_EXCEPTION
@@ -46,6 +47,9 @@ all: ../../lib/libarageli.a
 ../../lib/libperfarageli.a: $(patsubst %.cpp,%p.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
 	$(AR) -r $@ $(patsubst %.cpp,%p.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
 
+../../lib/libfastarageli.a: $(patsubst %.cpp,%f.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+	$(AR) -r $@ $(patsubst %.cpp,%f.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+
 arageli.hpp.gch:arageli.hpp
 	$(CC) -x c++-header $(ARAGELICXXFLAGS) $< -o $@
 
@@ -58,18 +62,29 @@ arageli.hpp.gch:arageli.hpp
 %p.o:%.cpp
 	$(CXX) -c $(PERFCXXFLAGS) $< -o $@
 
+%f.o:%.cpp
+	$(CXX) -c $(FASTCXXFLAGS) $< -o $@
+
 TAGS:
 	ctags $(wildcard $(addsuffix /*.cpp,$(obj_dirs))) $(wildcard $(addsuffix /*.hpp,$(obj_dirs)))
+
+fastclean:
+	rm -f $(wildcard $(addsuffix /*f.o,$(obj_dirs))) $(wildcard $(addsuffix /*.d,$(obj_dirs)))
+	rm -f ../../lib/libfastarageli.a
 
 perfclean:
 	rm -f $(wildcard $(addsuffix /*p.o,$(obj_dirs))) $(wildcard $(addsuffix /*.d,$(obj_dirs)))
 	rm -f ../../lib/libperfarageli.a
 
+testclean:
+	rm -f $(wildcard $(addsuffix /*t.o,$(obj_dirs))) $(wildcard $(addsuffix /*.d,$(obj_dirs)))
+	rm -f ../../lib/libtestarageli.a
+
 clean:
-	rm -f ../../lib/libarageli.a ../../lib/libtestarageli.a
+	rm -f ../../lib/libarageli.a
 	rm -f $(wildcard $(addsuffix /*.o,$(obj_dirs))) $(wildcard $(addsuffix /*.d,$(obj_dirs)))
 
-cleanall: clean perfclean HTMLclean
+cleanall: clean perfclean HTMLclean testclean fastclean
 	rm -f arageli.hpp.gch
 	rm -f tags
 
