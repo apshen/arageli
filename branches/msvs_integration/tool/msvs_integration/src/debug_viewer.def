@@ -1,0 +1,5 @@
+LIBRARY	"ArageliDebugViewer"
+EXPORTS
+	ArgView_big_int	
+	ArgView_big_intd
+	ArgView_big_int_big_struct
