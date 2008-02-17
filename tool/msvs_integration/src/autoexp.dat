@@ -253,6 +253,22 @@ Arageli::vector<*,*>{
 	)
 }
 
+;Following doesn't work. It is likely because of too deep indirection.
+;Arageli::matrix<*,*>{
+;	children
+;	(
+;	    #array
+;	    (
+;			expr :	($e.store.refcntr_m->value_m.mem._Myfirst)[$i],  
+;			size :	$e.store.refcntr_m->value_m.mem._Mylast-$e.store.refcntr_m->value_m.mem._Myfirst
+;		)
+;	)
+;	preview
+;	(
+;		#("[", $e.store.refcntr_m->value_m.rows, ", ", $e.store.refcntr_m->value_m.cols, "]", $e.store.refcntr_m->value_m.mem)
+;	)
+;}
+
 Arageli::monom<char,char>|Arageli::monom<signed char,char>|Arageli::monom<unsigned char,char>|Arageli::monom<short,char>|Arageli::monom<unsigned short,char>|Arageli::monom<int,char>|Arageli::monom<unsigned int,char>|Arageli::monom<long,char>|Arageli::monom<unsigned long,char>|Arageli::monom<char,signed char>|Arageli::monom<signed char,signed char>|Arageli::monom<unsigned char,signed char>|Arageli::monom<short,signed char>|Arageli::monom<unsigned short,signed char>|Arageli::monom<int,signed char>|Arageli::monom<unsigned int,signed char>|Arageli::monom<long,signed char>|Arageli::monom<unsigned long,signed char>|Arageli::monom<char,unsigned char>|Arageli::monom<signed char,unsigned char>|Arageli::monom<unsigned char,unsigned char>|Arageli::monom<short,unsigned char>|Arageli::monom<unsigned short,unsigned char>|Arageli::monom<int,unsigned char>|Arageli::monom<unsigned int,unsigned char>|Arageli::monom<long,unsigned char>|Arageli::monom<unsigned long,unsigned char>|Arageli::monom<char,short>|Arageli::monom<signed char,short>|Arageli::monom<unsigned char,short>|Arageli::monom<short,short>|Arageli::monom<unsigned short,short>|Arageli::monom<int,short>|Arageli::monom<unsigned int,short>|Arageli::monom<long,short>|Arageli::monom<unsigned long,short>|Arageli::monom<char,unsigned short>|Arageli::monom<signed char,unsigned short>|Arageli::monom<unsigned char,unsigned short>|Arageli::monom<short,unsigned short>|Arageli::monom<unsigned short,unsigned short>|Arageli::monom<int,unsigned short>|Arageli::monom<unsigned int,unsigned short>|Arageli::monom<long,unsigned short>|Arageli::monom<unsigned long,unsigned short>|Arageli::monom<char,int>|Arageli::monom<signed char,int>|Arageli::monom<unsigned char,int>|Arageli::monom<short,int>|Arageli::monom<unsigned short,int>|Arageli::monom<int,int>|Arageli::monom<unsigned int,int>|Arageli::monom<long,int>|Arageli::monom<unsigned long,int>|Arageli::monom<char,unsigned int>|Arageli::monom<signed char,unsigned int>|Arageli::monom<unsigned char,unsigned int>|Arageli::monom<short,unsigned int>|Arageli::monom<unsigned short,unsigned int>|Arageli::monom<int,unsigned int>|Arageli::monom<unsigned int,unsigned int>|Arageli::monom<long,unsigned int>|Arageli::monom<unsigned long,unsigned int>|Arageli::monom<char,long>|Arageli::monom<signed char,long>|Arageli::monom<unsigned char,long>|Arageli::monom<short,long>|Arageli::monom<unsigned short,long>|Arageli::monom<int,long>|Arageli::monom<unsigned int,long>|Arageli::monom<long,long>|Arageli::monom<unsigned long,long>|Arageli::monom<char,unsigned long>|Arageli::monom<signed char,unsigned long>|Arageli::monom<unsigned char,unsigned long>|Arageli::monom<short,unsigned long>|Arageli::monom<unsigned short,unsigned long>|Arageli::monom<int,unsigned long>|Arageli::monom<unsigned int,unsigned long>|Arageli::monom<long,unsigned long>|Arageli::monom<unsigned long,unsigned long>{
 	children
 	(
