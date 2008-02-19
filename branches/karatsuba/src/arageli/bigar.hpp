@@ -113,7 +113,7 @@ std::size_t do_bdn_to_big_int
     digit bdn_radix
 );
 
-std::size_t do_add
+bit do_add
 (
     digit* p1,
     const digit* p2,
@@ -121,7 +121,16 @@ std::size_t do_add
     std::size_t n
 );
 
-int do_sub
+bit do_sub
+(
+    digit* r,
+    const digit* p1,
+    const digit* p2,
+    std::size_t m,
+    std::size_t n
+);
+
+bit do_sub
 (
     digit* p1,
     const digit* p2,

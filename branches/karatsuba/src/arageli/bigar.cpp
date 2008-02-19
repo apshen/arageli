@@ -141,7 +141,7 @@ std::size_t do_bdn_to_big_int (digit* a, digit* b, std::size_t n, digit bdn_radi
 #endif
 
 
-std::size_t do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
+bit do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
 {
     // m - length of p1
     // n - length of p2
@@ -170,16 +170,10 @@ std::size_t do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
         doubledigit tmp = doubledigit(p1[i]) + carry;
         p1[i] = digit(tmp % BASE);
         carry = digit(tmp / BASE);
-        if(carry == 0) break;
+        if (!carry) break;
     }
 
-    if(carry)
-    {
-        p1[m] = 1;
-        return m + 1;
-    }
-    else
-        return m;
+    return carry;
 }
 
 
@@ -187,8 +181,57 @@ std::size_t do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
     #pragma warning (pop)
 #endif
 
+bit do_sub (digit* r, const digit* p1, const digit* p2, std::size_t m, std::size_t n)
+{
+    // m - length of p1
+    // n - length of p2
+    // m must be >= n
+    //
+    // do_sub returns borrow (0 or 1)
 
-int do_sub (digit* p1, const digit* p2, std::size_t m, std::size_t n)
+    ARAGELI_ASSERT_1(m >= n);
+
+    bit borrow = 0;
+
+    // 1. loop for 0 to n-1 - digits of p2 sub from digits of p1
+
+    for(std::size_t i = 0; i < n; i++)
+    {
+        if(extendeddigit(p1[i]) >= extendeddigit(p2[i]) + borrow)
+        {
+            r[i] = p1[i] - p2[i] - borrow;
+            borrow = 0;
+        }
+        else
+        {
+            r[i] = digit(BASE + p1[i] - p2[i] - borrow);
+            borrow = 1;
+        }
+    }
+
+    if (!borrow) return borrow; // no borrow
+
+    // 2. loop for borrow
+
+    for(std::size_t i = n; i < m; i++)
+    {
+        if(p1[i] >= borrow)
+        {
+            r[i] = p1[i] - borrow;
+            borrow = 0;
+        }
+        else
+        {
+            r[i] = digit(BASE + p1[i] - borrow);
+            borrow = 1;
+        }
+    }
+
+    return borrow; // borrow was accuped -> p2 > p1
+}
+
+
+bit do_sub (digit* p1, const digit* p2, std::size_t m, std::size_t n)
 {
     // m - length of p1
     // n - length of p2
@@ -216,7 +259,7 @@ int do_sub (digit* p1, const digit* p2, std::size_t m, std::size_t n)
         }
     }
 
-    if(borrow == 0)return 0; // no borrow
+    if (!borrow) return borrow; // no borrow
 
     // 2. loop for borrow
 

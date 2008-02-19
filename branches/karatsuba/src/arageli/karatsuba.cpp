@@ -46,11 +46,11 @@ namespace Arageli
 {
 
 /**
-Preliminary conditions: w[n+m+1] = 0!
+Preliminary conditions: w[n+m-1] = 0!
                         m >= n
 */
 template <typename N,typename T>
-T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
+T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n)
 {
     ARAGELI_ASSERT_0(m>=n);
 
@@ -117,6 +117,253 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
     };
 
     return (w[m+n-1] != 0) ? (m+n): (m+n-1);
+};
+
+/**
+Preliminary conditions: w[2*n-1] = 0!
+*/
+// This implementation was taken from GMP library.
+template <typename N,typename T>
+T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
+{
+    ARAGELI_ASSERT_0(n >= 1);
+
+    T i;
+    N w, w0, w1;
+    const N* x, y;
+    T n2 = n >> 1;  // floor(n/2);
+    ARAGELI_ASSERT_0(n2 > 0);
+    int sign = 0;
+
+    if (n & 1)
+    {
+        // Odd length
+        T n3 = n - n2;
+        w = u[n2];
+        if (w)
+        {
+            w -= _Internal::do_sub(r, u, u+n3, n2, n2);
+        }
+        else
+        {
+            i = n2;
+            do{
+                --i;
+                w0 = u[i];
+                w1 = u[n3+i];
+            }while ((w0 == w1) && (i != 0));
+            if (w0 < w1)
+            {
+                x = u+n3;
+                y = u;
+                sign = 1;
+            }
+            else
+            {
+                x = u;
+                y = u+n3;
+            }
+            _Internal::do_sub(r, x, y, n2, n2);
+        }
+        r[n2] = w;
+
+        w = v[n2];
+        if (w)
+        {
+            w -= _Internal::do_sub(r+n3, v, v+n3, n2, n2);
+        }
+        else
+        {
+            i = n2;
+            do{
+                --i;
+                w0 = v[i];
+                w1 = v[n3+i];
+            }while ((w0 == w1) && (i != 0));
+            if (w0 < w1)
+            {
+                x = v+n3;
+                y = v;
+                sign = ~sign;
+            }
+            else
+            {
+                x = v;
+                y = v+n3;
+            }
+            _Internal::do_sub(r+n3, x, y, n2, n2);
+        }
+        r[n] = w;
+
+        T n1 = n+1;
+        if (n2 < ARAGELI_KARATSUBA_THRESHOLD)
+        {
+            if (n3 < ARAGELI_KARATSUBA_THRESHOLD)
+            {
+                _Internal::do_mult_classic(r, r+n3, t, n3, n3);
+                _Internal::do_mult_classic(u, v, r, n3, n3);
+            }
+            else
+            {
+                do_mult_karatsuba(r, r+n3, t, t+n1, n3);
+                do_mult_karatsuba(u, v, r, t+n1, n3);
+            }
+            _Internal::do_mult_classic(u+n3, v+n3, r+n1, n2, n2);
+        }
+        else
+        {
+            do_mult_karatsuba(r, r+n3, t, t+n1, n3);
+            do_mult_karatsuba(u, v, r, t+n1, n3);
+            do_mult_karatsuba(u+n3, v+n3, r+n1, t+n1, n2);
+        }
+        if (sign)
+        {
+            _Internal::do_add(t, r, n1, n1);
+        }
+        else
+        {
+            _Internal::do_sub(r, t, r, n1, n1);
+        }
+
+        T nm1 = n-1;
+        // TODO: rewrite!
+        _Internal::do_add(t, r+n1, nm1, nm1)
+        _Internal::do_add(r+n3, t, n1, n1)
+    }
+    else
+    {
+        i = n2;
+        do
+        {
+            --i;
+            w0 = a[i];
+            w1 = a[n2 + i];
+        }
+        while (w0 == w1 && i != 0);
+        sign = 0;
+        if (w0 < w1)
+        {
+            x = a + n2;
+            y = a;
+            sign = ~0;
+        }
+        else
+        {
+            x = a;
+            y = a + n2;
+        }
+        mpn_sub_n (p, x, y, n2);
+
+        i = n2;
+        do
+        {
+            --i;
+            w0 = b[i];
+            w1 = b[n2 + i];
+        }
+        while (w0 == w1 && i != 0);
+        if (w0 < w1)
+        {
+            x = b + n2;
+            y = b;
+            sign = ~sign;
+        }
+        else
+        {
+            x = b;
+            y = b + n2;
+        }
+        mpn_sub_n (p + n2, x, y, n2);
+
+        /* Pointwise products. */
+        if (n2 < MUL_KARATSUBA_THRESHOLD)
+        {
+            mpn_mul_basecase (ws, p, n2, p + n2, n2);
+            mpn_mul_basecase (p, a, n2, b, n2);
+            mpn_mul_basecase (p + n, a + n2, n2, b + n2, n2);
+        }
+        else
+        {
+            mpn_kara_mul_n (ws, p, p + n2, n2, ws + n);
+            mpn_kara_mul_n (p, a, b, n2, ws + n);
+            mpn_kara_mul_n (p + n, a + n2, b + n2, n2, ws + n);
+        }
+
+        /* Interpolate. */
+        if (sign)
+            w = mpn_add_n (ws, p, ws, n);
+        else
+            w = -mpn_sub_n (ws, p, ws, n);
+        w += mpn_add_n (ws, p + n, ws, n);
+        w += mpn_add_n (p + n2, p + n2, ws, n);
+        MPN_INCR_U (p + n2 + n, 2 * n - (n2 + n), w);
+        
+        // Even length
+        i = n2;
+        do
+        {
+            --i;
+            w0 = u[i];
+            w1 = u[n2+i];
+        }
+        while ((w0 == w1) && (i != 0));
+        if (w0 < w1)
+        {
+            x = u+n2;
+            y = u;
+            sign = 1;
+        }
+        else
+        {
+            x = u;
+            y = u+n2;
+        }
+        _Internal::do_sub(r, x, y, n2, n2);
+
+        i = n2;
+        do
+        {
+            --i;
+            w0 = v[i];
+            w1 = v[n2+i];
+        }
+        while ((w0 == w1) && (i != 0));
+        if (w0 < w1)
+        {
+            x = v+n2;
+            y = v;
+            sign = ~sign;
+        }
+        else
+        {
+            x = v;
+            y = v+n2;
+        }
+        _Internal::do_sub(r+n2, x, y, n2, n2);
+
+        if (n2 < ARAGELI_KARATSUBA_THRESHOLD)
+        {
+            _Internal::do_mult_classic(r, r+n2, t, n2, n2);
+            _Internal::do_mult_classic(u, v, r, n2, n2);
+            _Internal::do_mult_classic(u+n2, v+n2, r+n, n2, n2);
+        }
+        else
+        {
+            do_mult_karatsuba(r, r+n2, t, t+n, n2);
+            do_mult_karatsuba(u, v, r, t+n, n2);
+            do_mult_karatsuba(u+n2, v+n2, r+n, t+n, n2);
+        }
+
+        if (sign)
+        {
+            w = (_Internal::do_add(t, r, n, n) == n) ? 0 : 1;
+        }
+        else
+        {
+            w = -1*_Internal::do_sub(r, t, r, n1, n1);
+        }
+    }
+
 };
 
 }

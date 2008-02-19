@@ -59,7 +59,17 @@ namespace Arageli
     @param m length of the first number
     @param n length of the second number*/
 template <typename N,typename T>
-T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold = 50);
+T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n);
+
+/// Multiply two integers by karatsuba algorithm.
+/** @param u list of digits of the first number
+    @param v list of digits of the second number
+    @param w list of digits for result number
+    @param t temporary memory
+    @param m length of the first number
+    @param n length of the second number*/
+template <typename N,typename T>
+T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T n);
 } // namesapce Arageli
 
 
