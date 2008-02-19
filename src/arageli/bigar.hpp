@@ -121,6 +121,15 @@ bit do_add
     std::size_t n
 );
 
+/// Substracs p2 digits sequence from p1 digits sequence and store the difference in r.
+/** Substracs p2 digits sequence from p1 digits sequence and store the difference in r.
+ * @param r     Pointer to result sequence of digits.
+ * @param p1    Pointer to digits sequence of minuend.
+ * @param p2    Pointer to digits sequence of subtrahend.
+ * @param m     Length of minuend in digits.
+ * @param n     Length of subtrahend in digits.
+ * @return      Borrow bit: 1 if subtrahend is bigger than minuend, 0 otherwise.
+ */
 bit do_sub
 (
     digit* r,
