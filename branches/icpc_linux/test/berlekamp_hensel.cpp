@@ -180,7 +180,7 @@ bool simple_test2 ()
         P p = "400*x^2+360*x-180";
         vector<P> v = factorize_berlekamp_hensel(p);
         //std::cout<<v;
-        if(v.size() == 0 || product(v) != v)
+        if(v.size() == 0 || product(v) != p)
         {
             tout
                 << "Error at simple_test2:"
