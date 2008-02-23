@@ -123,7 +123,8 @@ You can use CXXFLAGS, ARAGELICXXFLAGS and TESTSCXXFLAGS
 variables to set specific command line parameters to tune
 compilation of different parts as usual.
 
-If you are in Cygwin, type './configure' before 'make'.
+If you are in Cygwin(GCC 4 or later), type
+'./configure -force_use_pch' before 'make'.
 
 
 3. Using
