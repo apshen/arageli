@@ -130,7 +130,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
 
     T i;
     N w, w0, w1;
-    const N* x, y;
+    const N *x, *y;
     T n2 = n >> 1;  // floor(n/2);
     ARAGELI_ASSERT_0(n2 > 0);
     int sign = 0;
@@ -205,6 +205,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
             }
             else
             {
+                // TODO:Check if we get into this branch!!
                 do_mult_karatsuba(r, r+n3, t, t+n1, n3);
                 do_mult_karatsuba(u, v, r, t+n1, n3);
             }
@@ -226,78 +227,22 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
         }
 
         T nm1 = n-1;
-        // TODO: rewrite!
-        _Internal::do_add(t, r+n1, nm1, nm1)
-        _Internal::do_add(r+n3, t, n1, n1)
+        if (_Internal::do_add(t, r+n1, nm1, nm1))
+        {
+            N x = (t[nm1] + 1) & _Internal::max_digit;
+            t[nm1] = x;
+            if (x == 0)
+            {
+                t[n] = (t[n] + 1) & _Internal::max_digit;
+            }
+        }
+        if (_Internal::do_add(r+n3, t, n1, n1))
+        {
+            r[n1+n3] += 1;
+        }
     }
     else
     {
-        i = n2;
-        do
-        {
-            --i;
-            w0 = a[i];
-            w1 = a[n2 + i];
-        }
-        while (w0 == w1 && i != 0);
-        sign = 0;
-        if (w0 < w1)
-        {
-            x = a + n2;
-            y = a;
-            sign = ~0;
-        }
-        else
-        {
-            x = a;
-            y = a + n2;
-        }
-        mpn_sub_n (p, x, y, n2);
-
-        i = n2;
-        do
-        {
-            --i;
-            w0 = b[i];
-            w1 = b[n2 + i];
-        }
-        while (w0 == w1 && i != 0);
-        if (w0 < w1)
-        {
-            x = b + n2;
-            y = b;
-            sign = ~sign;
-        }
-        else
-        {
-            x = b;
-            y = b + n2;
-        }
-        mpn_sub_n (p + n2, x, y, n2);
-
-        /* Pointwise products. */
-        if (n2 < MUL_KARATSUBA_THRESHOLD)
-        {
-            mpn_mul_basecase (ws, p, n2, p + n2, n2);
-            mpn_mul_basecase (p, a, n2, b, n2);
-            mpn_mul_basecase (p + n, a + n2, n2, b + n2, n2);
-        }
-        else
-        {
-            mpn_kara_mul_n (ws, p, p + n2, n2, ws + n);
-            mpn_kara_mul_n (p, a, b, n2, ws + n);
-            mpn_kara_mul_n (p + n, a + n2, b + n2, n2, ws + n);
-        }
-
-        /* Interpolate. */
-        if (sign)
-            w = mpn_add_n (ws, p, ws, n);
-        else
-            w = -mpn_sub_n (ws, p, ws, n);
-        w += mpn_add_n (ws, p + n, ws, n);
-        w += mpn_add_n (p + n2, p + n2, ws, n);
-        MPN_INCR_U (p + n2 + n, 2 * n - (n2 + n), w);
-        
         // Even length
         i = n2;
         do
@@ -356,14 +301,19 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
 
         if (sign)
         {
-            w = (_Internal::do_add(t, r, n, n) == n) ? 0 : 1;
+            w = _Internal::do_add(t, r, n, n);
         }
         else
         {
-            w = -1*_Internal::do_sub(r, t, r, n1, n1);
+            w = -1*_Internal::do_sub(r, t, r, n, n);
         }
+        w += _Internal::do_add(t, r+n, n, n);
+        w += _Internal::do_add(r+n2, t, n, n);
+        // TODO: Check this code! Potential bug!
+        // Carry bit was forgotten.
+        r[n+n2] += w;
     }
-
+    return (r[2*n-1]) ? 2*n - 1 : 2*n - 2;
 };
 
 }
