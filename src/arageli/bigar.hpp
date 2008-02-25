@@ -113,6 +113,14 @@ std::size_t do_bdn_to_big_int
     digit bdn_radix
 );
 
+/// Add p2 digits sequence to p1 digits sequence.
+/** 
+ * @param p1    Pointer to digits sequence of the first number.
+ * @param p2    Pointer to digits sequence of the second number.
+ * @param m     Length of the first number in digits.
+ * @param n     Length of the seconde number in digits.
+ * @return      Carry bit: 1 if result number length is more than m, 0 otherwise.
+ */
 bit do_add
 (
     digit* p1,
@@ -122,7 +130,7 @@ bit do_add
 );
 
 /// Substracs p2 digits sequence from p1 digits sequence and store the difference in r.
-/** Substracs p2 digits sequence from p1 digits sequence and store the difference in r.
+/**
  * @param r     Pointer to result sequence of digits.
  * @param p1    Pointer to digits sequence of minuend.
  * @param p2    Pointer to digits sequence of subtrahend.
@@ -139,6 +147,14 @@ bit do_sub
     std::size_t n
 );
 
+/// Performs substaction with assignement from p1 of p2.
+/**
+ * @param p1    Pointer to digits sequence of minuend and result of operation.
+ * @param p2    Pointer to digits sequence of subtrahend.
+ * @param m     Length of minuend in digits.
+ * @param n     Length of subtrahend in digits.
+ * @return      Borrow bit: 1 if subtrahend is bigger than minuend, 0 otherwise.
+ */
 bit do_sub
 (
     digit* p1,
@@ -153,6 +169,16 @@ std::size_t do_optimize
     std::size_t n
 );
 
+/// Multiply u by v using "classic" algorithm (classic in terms of Knuth "The art of computer programming").
+/** 
+ *  @param u    First number.
+ *  @param v    Second number.
+ *  @param w    Result of multiplication.
+ *              The length of w = m + n or m + n - 1.
+ *  @param m    Length of u.
+ *  @param n    Length of v.
+ *  @return     Multiplication result length (length of w).
+ */
 std::size_t do_mult_classic
 (
     const digit* u,
@@ -162,6 +188,17 @@ std::size_t do_mult_classic
     std::size_t n
 );
 
+/// Performs multiplication of 2 sequences of digits by applying different methods.
+/** Different algorithms including karatsuba and pollard methods are used
+ *  depending on arguments lenghts.
+ *  @param u    First number.
+ *  @param v    Second number.
+ *  @param w    Result of multiplication.
+ *              The length of w = m + n or m + n - 1.
+ *  @param m    Length of u.
+ *  @param n    Length of v.
+ *  @return     Multiplication result length (length of w).
+ */
 std::size_t do_mult
 (
     const digit* u,

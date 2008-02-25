@@ -56,12 +56,17 @@ stdafx.hpp.gch: stdafx.hpp
 ../lib/libtestarageli.a:
 	$(MAKE) -C ../src/arageli ../../lib/libtestarageli.a
 
+karatsuba: stdafx.hpp.gch karatsuba.o ../tool/ts/bin/libts.a ../lib/libtestarageli.a 
+	$(CXX) -o ../bin/karatsuba karatsuba.o $(LINKFLAGS)
+	../bin/karatsuba
+
 TAGS:
 	ctags $(wildcard $(addsuffix /*.cpp,$(test_dirs))) $(wildcard \
 	$(addsuffix /*.hpp,$(test_dirs))) #-f TAGS
 
 clean:
 	rm -f ../bin/$(tests_name)
+	rm -f ../lib/libtestarageli.a
 	rm -f $(wildcard $(addsuffix /*.o,$(test_dirs))) $(wildcard $(addsuffix /*.d,$(test_dirs)))
 
 cleanall: clean

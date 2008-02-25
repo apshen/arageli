@@ -292,17 +292,6 @@ std::size_t do_optimize (const digit* a, std::size_t n)
     return 0;
 }
 
-/// Performs multiplication of 2 sequences of digits by applying different methods.
-/** Different algorithms including karatsuba and pollard methods are used
-    depending on arguments lenghts.
-    @param u    First number.
-    @param v    Second number.
-    @param w    Result of multiplication.
-                The length of w = m + n or m + n - 1.
-    @param m    Length of u.
-    @param n    Length of v.
-    @return     Multiplication result length (length of w).
-*/
 std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, std::size_t n)
 {
 #ifdef ARAGELI_ENABLE_POLLARD_MULT
@@ -366,16 +355,6 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
     return do_mult_classic(u, v, w, m, n);
 }
 
-/// Performs multiplication of 2 sequences of digits by classic method.
-/** Performs multiplication of 2 sequences of digits by classic method.
-    @param u    First number.
-    @param v    Second number.
-    @param w    Result of multiplication.
-                The length of w = m + n or m + n - 1.
-    @param m    Length of u.
-    @param n    Length of v.
-    @return     Multiplication result length (length of w).
-*/
 std::size_t do_mult_classic (const digit* u, const digit* v, digit* w, std::size_t m, std::size_t n)
 {
     for(std::size_t i = 0; i < m; i++)
