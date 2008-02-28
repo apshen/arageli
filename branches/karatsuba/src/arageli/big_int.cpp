@@ -692,7 +692,19 @@ big_int operator+ (const big_int& b, const big_int& c)
             }
             sum = big_int::get_mem_for_data(u->len + 1);
             big_int::copy_data(sum, u->data, u->len);
-            sumlen = _Internal::do_add(sum, v->data, u->len, v->len);
+            if (_Internal::do_add(sum, v->data, u->len, v->len))
+            {
+                sum[u->len] = 1;
+                sumlen = u->len + 1;
+            }
+            else
+            {
+                sum[u->len] = 0;
+                sumlen = u->len;
+            }
+            //sumlen = _Internal::do_add(sum, v->data, u->len, v->len) ? 
+            //            sum[u->len] = 1, u->len + 1 : 
+            //            sum[u->len] = 0, u->len;
         }
         else // bsign != csign
         {

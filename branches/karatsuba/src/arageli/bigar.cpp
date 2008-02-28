@@ -335,12 +335,18 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
             for (std::size_t i = 1; i < m/n; ++i)
             {
                 std::size_t temp_len = do_mult_karatsuba<digit, std::size_t>(&u[i*n], v, &t[2*(n+m)], t, n, n);
-                do_add(&w[i*n], &t[2*(n+m)], temp_len, temp_len);
+                if (do_add(&w[i*n], &t[2*(n+m)], temp_len, temp_len))
+                {
+                    w[i*n+temp_len] += 1;
+                }
             }
             if (m - (m/n)*n)
             {
                 std::size_t temp_len = do_mult(v, &u[(m/n)*n], t, n, m - (m/n)*n);
-                do_add(&w[(m/n)*n], t, temp_len, temp_len);
+                if (do_add(&w[(m/n)*n], t, temp_len, temp_len))
+                {
+                    w[(m/n)*n+temp_len] += 1;
+                }
             }
             ret = (w[m + n - 1]) ?  m + n :  m + n - 1;
         }
