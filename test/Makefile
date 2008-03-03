@@ -66,7 +66,7 @@ TAGS:
 
 clean:
 	rm -f ../bin/$(tests_name)
-	rm -f ../lib/libtestarageli.a
+	$(MAKE) -C ../src/arageli testclean
 	rm -f $(wildcard $(addsuffix /*.o,$(test_dirs))) $(wildcard $(addsuffix /*.d,$(test_dirs)))
 
 cleanall: clean

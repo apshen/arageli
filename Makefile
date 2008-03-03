@@ -85,6 +85,9 @@ TAGS:
 clean:
 	$(MAKE) -C src/arageli clean
 
+cleancheck:
+	$(MAKE) -C test clean
+
 cleanall: clean HTMLclean
 	$(MAKE) -C tool/ts/src/ts cleanall
 	$(MAKE) -C test cleanall

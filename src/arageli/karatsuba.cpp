@@ -153,8 +153,8 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n)
 };
 
 /**
-Preliminary conditions: w[2*n-1] = 0!
-*/
+ * Preliminary conditions: w[2*n-1] = 0!
+ */
 // This implementation was taken from GMP library.
 template <typename N,typename T>
 T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
@@ -273,8 +273,13 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
         }
         if (_Internal::do_add(r+n3, t, n1, n1))
         {
-            // TODO: make it more careful.
-            r[n1+n3] += 1;
+            int cy = 1;
+            for (int i = 0; cy < 1; ++i)
+            {
+                N t = r[n1 + n3 + i];
+                r[n1 + n3 + i] += cy;
+                cy = r[n1 + n3 + i] < t;
+            }
         }
     }
     else
@@ -345,9 +350,13 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
         }
         w += _Internal::do_add(t, r+n, n, n);
         w += _Internal::do_add(r+n2, t, n, n);
-        // TODO: Check this code! Potential bug!
-        // Carry bit was forgotten.
-        r[n+n2] += w;
+        int i = 0;
+        do
+        {
+            N t = r[n + n2 + i];
+            r[n + n2 + i] += w;
+            w = r[n + n2 + i] < t;
+        }while(w<1);
     }
     return (r[2*n-1]) ? 2*n : 2*n - 1;
 };
