@@ -308,7 +308,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
         }
         else
         {
-            w = -1*_Internal::do_sub(r, t, r, n, n);
+            w = -1*_Internal::do_sub(t, r, t, n, n);
         }
         w += _Internal::do_add(t, r+n, n, n);
         w += _Internal::do_add(r+n2, t, n, n);
