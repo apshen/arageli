@@ -42,12 +42,13 @@ using namespace Arageli;
 
 TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
 {
-    bool is_ok = true;
+    bool test1 = true;
+    bool test2 = true;
 
     try
     {
         int i;
-        const unsigned int num_lengths = 200;
+        const unsigned int num_lengths = 10000;
         // generate two random integers approximately with equal lengths
         big_int a = big_int::random_with_length(num_lengths),
                 b = big_int::random_with_length(num_lengths);
@@ -61,22 +62,18 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
         // compare karatsuba method result with classic algorithm
         if (_Internal::do_mult_classic(a._digits(), b._digits(), r_digits, magnitude(a), magnitude(b)) != w_len)
         {
-            is_ok = false;
+            test1 = false;
         }
         for (i = 0; i < w_len; ++i)
         {
             if(w_digits[i] != r_digits[i])
             {
-                is_ok = false;
+                test1 = false;
             }
         }
-        if (is_ok)
+        if (!test1)
         {
-            tout << "The first karatsuba test passed!\n";
-        }
-        else
-        {
-            tout << "The first karatsuba test failed!\n";
+            tout << "\nThe first karatsuba test failed!\n";
         }
         if (magnitude(a) == magnitude(b))
         {
@@ -86,22 +83,17 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
             // compare karatsuba method result with classic algorithm
             if (_Internal::do_mult_classic(a._digits(), b._digits(), r_digits, magnitude(a), magnitude(b)) != w_len)
             {
-                is_ok = false;
-                tout << "The second karatsuba test failed!\n";
+                test2 = false;
             }
             for (i = 0; i < w_len; ++i)
             {
                 if(w_digits[i] != r_digits[i])
                 {
                     tout << i << '\t' << "diff: " << r_digits[i] - w_digits[i] << '\t';
-                    is_ok = false;
+                    test2 = false;
                 }
             }
-            if (is_ok)
-            {
-                tout << "The second karatsuba test passed!\n";
-            }
-            else
+            if (!test2)
             {
                 tout << "The second karatsuba test failed!\n";
             }
@@ -125,6 +117,6 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
         return resEXCEPT;
     }
 
-    return is_ok ? resOK : resFAIL;
+    return test1 && test2 ? resOK : resFAIL;
 }
 

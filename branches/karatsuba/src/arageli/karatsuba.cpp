@@ -81,20 +81,44 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n)
         UV1len = do_mult_karatsuba(U1, V1, W2, t, k, k);     // mult U1*V1
 
         memcpy(C1, U0, sizeof(N)*(m-k));
-        C1len = _Internal::do_add(C1, U1, m-k, k); // U0+U1
+        if (_Internal::do_add(C1, U1, m-k, k))              // U0+U1
+        {
+            C1len = m - k + 1;
+            C1[m-k] = 1;
+        }
+        else
+        {
+            C1len = m - k; // U0+U1
+        }
         if (n>=k2)    // V0+V1
         {
             // here n = m or n = m-1 and (n-k) = k or (n-k) = k+1
             memcpy(C2, V0, sizeof(N)*(n-k));
-            C2len = _Internal::do_add(C2, V1, n-k, k);
+            if(_Internal::do_add(C2, V1, n-k, k))           // V0+V1
+            {
+                C2len = n - k + 1;
+                C2[n-k] = 1;
+            }
+            else
+            {
+                C2len = n - k;
+            }
         }
         else
         {
             memcpy(C2, V1, sizeof(N)*k);
-            C2len = _Internal::do_add(C2, V0, k, n-k);
+            if (_Internal::do_add(C2, V0, k, n-k))           // V0+V1
+            {
+                C2len = k + 1;
+                C2[k] = 1;
+            }
+            else
+            {
+                C2len = k;
+            }
         }
 
-        if (C2len > C1len)
+        if (C2len > C1len)              // (U0+U1)*(V0+V1)
         {
             Clen = do_mult_karatsuba(C2, C1, C, t, C2len, C1len); // mult C = C1*C2
         }
@@ -103,10 +127,19 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n)
             Clen = do_mult_karatsuba(C1, C2, C, t, C1len, C2len); // mult C = C1*C2
         }
 
-        _Internal::do_sub(C, W0, Clen, UV0len);
-        _Internal::do_sub(C, W2, Clen, UV1len);
+        if (_Internal::do_sub(C, W0, Clen, UV0len))     // U1*V1+U0*V1+U1*V0
+        {
+            C[Clen] = 1;
+        }
+        if (_Internal::do_sub(C, W2, Clen, UV1len))     // U0*V1+V0*U1
+        {
+            C[Clen] = 1;
+        }
 
-        _Internal::do_add(W1, C, m+n-k, Clen);    // W += C
+        if (_Internal::do_add(W1, C, m+n-k, Clen))      // W += C
+        {
+            W1[m+n-k] = 1;
+        }
 
         t -= 2*m+6;
     }
