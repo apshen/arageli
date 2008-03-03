@@ -138,6 +138,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
     if (n & 1)
     {
         // Odd length
+        // Computing u0-u1. Result stores in r.
         T n3 = n - n2;
         w = u[n2];
         if (w)
@@ -167,6 +168,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
         }
         r[n2] = w;
 
+        // Computing v0-v1. Result stores in r+n3.
         w = v[n2];
         if (w)
         {
@@ -223,7 +225,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
         }
         else
         {
-            _Internal::do_sub(r, t, r, n1, n1);
+            _Internal::do_sub(t, r, t, n1, n1);
         }
 
         T nm1 = n-1;
@@ -238,6 +240,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
         }
         if (_Internal::do_add(r+n3, t, n1, n1))
         {
+            // TODO: make it more careful.
             r[n1+n3] += 1;
         }
     }
@@ -313,7 +316,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *r, N *t, T n)
         // Carry bit was forgotten.
         r[n+n2] += w;
     }
-    return (r[2*n-1]) ? 2*n - 1 : 2*n - 2;
+    return (r[2*n-1]) ? 2*n : 2*n - 1;
 };
 
 }
