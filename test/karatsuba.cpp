@@ -48,7 +48,7 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
     try
     {
         int i;
-        const unsigned int num_lengths = 10000;
+        const unsigned int num_lengths = 50000;
         // generate two random integers approximately with equal lengths
         big_int a = big_int::random_with_length(num_lengths),
                 b = big_int::random_with_length(num_lengths);
@@ -78,8 +78,8 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
         if (magnitude(a) == magnitude(b))
         {
             w_digits[magnitude(a)*2-1]=0;
-            w_len = do_mult_karatsuba<_Internal::digit,unsigned>(a._digits(),
-                        b._digits(), w_digits, t_digits, magnitude(a));
+            w_len = do_mult_karatsuba<_Internal::digit,unsigned>(w_digits, a._digits(),
+                        b._digits(), t_digits, magnitude(a));
             // compare karatsuba method result with classic algorithm
             if (_Internal::do_mult_classic(a._digits(), b._digits(), r_digits, magnitude(a), magnitude(b)) != w_len)
             {
