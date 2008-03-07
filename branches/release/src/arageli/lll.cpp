@@ -170,7 +170,7 @@ bool lll_reduction (B_type& B, H_type& H)
             // std::cout << "B = " << std::endl; output_aligned(std::cout, B);
             // std::cout << "Bst = " << std::endl; output_aligned(std::cout, Bst);
             // std::cout << "Mu = " << std::endl; output_aligned(std::cout, Mu);
-            k = std::max(1, k - 1);
+            k = std::max(static_cast<index>(1), k - 1);
         }
         else
         {

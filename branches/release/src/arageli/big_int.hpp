@@ -1317,6 +1317,13 @@ inline big_int pow (const big_int& x, int p)
 
 /// Raise x in to a power p.
 /** Just uses Arageli::power. */
+inline big_int pow (const big_int& x, long int p)
+{
+    return power(x, p);
+}
+
+/// Raise x in to a power p.
+/** Just uses Arageli::power. */
 inline big_int pow (const big_int& x, const big_int& p)
 {
     return power(x, p);
@@ -1386,6 +1393,13 @@ inline Arageli::big_int sqrt (const Arageli::big_int& a)
 inline Arageli::big_int abs (const Arageli::big_int& x)
 {
     return Arageli::abs(x);
+}
+
+/// Raise x to a power p.
+/** Just uses Arageli::power. */
+inline Arageli::big_int pow (const Arageli::big_int& x, long int p)
+{
+    return Arageli::pow(x, p);
 }
 
 /// Raise x to a power p.
