@@ -30,13 +30,17 @@
 
 /**
     \file rand.hpp
-    Defines T rand(T maxVal) function for each type.
+    \brief Defines T rand(T maxVal) function for each type. This file is deprecated.
+
+    WARNING! All features implemented in this file are deprecated. This file will be
+    deleted from the library soon. Use stuff from Arageli::rnd namespace instead.
 */
 
 #ifndef __ARAGELI_rand_hpp__
 #define __ARAGELI_rand_hpp__
 
 #include <cstdlib>
+#include <limits>
 
 #include "config.hpp"
 #include "exception.hpp"
@@ -65,7 +69,13 @@ namespace Arageli
 //#endif
 
 #define ARAGELI_DEFINE_FUNCTION_T_RAND_T(type, rand_value)    \
-    inline type rand(type maxVal) { return 0==maxVal ? 0 : (((type)rand_value)%(maxVal+1)); }
+    inline type rand(type maxVal)    \
+    {    \
+        if(maxVal == std::numeric_limits<type>::max())    \
+            return rand_value;    \
+        else    \
+            return (0 == maxVal) ? 0 : (((type)rand_value)%(maxVal + 1));    \
+    }
 
 ARAGELI_DEFINE_FUNCTION_T_RAND_T(char, ARAGELI_RAND_GENERAL);
 ARAGELI_DEFINE_FUNCTION_T_RAND_T(unsigned char, ARAGELI_RAND_GENERAL);
