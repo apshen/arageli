@@ -93,7 +93,7 @@ void big_int::from_native_int (const T& x)
     typedef std::numeric_limits<T> Nl;
     ARAGELI_ASSERT_1(Nl::is_specialized);
     ARAGELI_ASSERT_1(Nl::is_integer);
-    alloc_zero();
+    free_mem_and_alloc_zero();
 
     if(Arageli::is_null(x))
         return;
@@ -163,7 +163,7 @@ void big_int::from_native_float (const T& x)
     ARAGELI_ASSERT_0(!(Nl::has_signaling_NaN && x == Nl::signaling_NaN()));
     ARAGELI_ASSERT_0(!(Nl::has_denorm && x == Nl::denorm_min()));
 
-    alloc_zero();
+    free_mem_and_alloc_zero();
 
     if(x > opposite_unit(x) && x < unit(x))
         return;
