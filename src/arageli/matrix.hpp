@@ -52,6 +52,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <limits>
 
 #include "frwrddecl.hpp"
 
@@ -229,6 +230,363 @@ public:
 
     /// Const iterator type.
     typedef typename Rep::Mem::const_iterator const_iterator;
+
+private:
+
+    /// Template for raw iterator for held elements of the matrix only. Iterates among all stored elements; provides information about indices.
+    /** There is information about indices of the elements. If indices aren't important,
+        use raw_iterator instead.
+        Constant and non-constant forms of the iterator are generated from this template. */
+    template <typename Pointer, typename Reference>
+    class indraw_iterator_base
+    {
+        Pointer it;           ///< Current element.
+        size_type irow_m;     ///< Row index in which the current element is.
+        size_type icol_m;     ///< Column index in which the current element is.
+        size_type ncolsm1;    ///< The number of columns in the matrix minus 1.
+
+        /// Special for in-matrix initialization. Do not use externally.
+        indraw_iterator_base
+        (
+            Pointer it_a,
+            size_type irow_a,
+            size_type icol_a,
+            size_type ncols_a
+        ) :
+            it(it_a),
+            irow_m(irow_a),
+            icol_m(icol_a),
+            ncolsm1(ncols_a - 1)
+        {
+            ARAGELI_ASSERT_1(icol_m <= ncolsm1);
+            ARAGELI_ASSERT_1(irow_m >= 0 && irow_m < std::numeric_limits<size_type>::max());
+        }
+
+        friend class indraw_iterator_base<const_pointer, const_reference>;
+
+        friend class matrix;
+
+    public:
+
+        /// Not initialized iterator.
+        /** Iterator object needs additional initialization. */
+        indraw_iterator_base ()
+        {}
+
+        /// Conversion constructor for non-const iterator to const iterator casting.
+        indraw_iterator_base (const indraw_iterator_base<pointer, reference>& x) :
+            it(x.it),
+            irow_m(x.irow_m),
+            icol_m(x.icol_m),
+            ncolsm1(x.ncolsm1)
+        {}
+
+        /// Row index in which the current element is.
+        size_type irow () const
+        {
+            return irow_m;
+        }
+
+        /// Column index in which the current element is.
+        size_type icol () const
+        {
+            return icol_m;
+        }
+
+        /// Reference to the current element.
+        Reference el () const
+        {
+            return *it;
+        }
+
+        indraw_iterator_base& operator++ ()
+        {
+            ARAGELI_ASSERT_1(irow_m >= 0 && irow_m < std::numeric_limits<size_type>::max());
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m <= ncolsm1);
+
+            if(icol_m == ncolsm1)
+            { // go to the next row
+                icol_m = 0;
+                ++irow_m;
+            }
+            else
+                ++icol_m;
+
+            ARAGELI_ASSERT_1(irow_m >= 0 && irow_m < std::numeric_limits<size_type>::max());
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < ncols);
+
+            ++it;
+        }
+
+        indraw_iterator_base operator++ (int)
+        {
+            indraw_iterator res = *this;
+            operator++();
+            return res;
+        }
+
+        indraw_iterator_base& operator-- ()
+        {
+            ARAGELI_ASSERT_1(irow_m >= 0 && irow_m < std::numeric_limits<size_type>::max());
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m <= ncolsm1);
+
+            if(icol_m == 0)
+            { // go to the previous row
+                icol_m = ncolsm1;
+                --irow_m;
+            }
+            else
+                --icol_m;
+
+            ARAGELI_ASSERT_1(irow_m >= 0 && irow_m < std::numeric_limits<size_type>::max());
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < ncols);
+
+            --it;
+        }
+
+        indraw_iterator_base operator-- (int)
+        {
+            indraw_iterator res = *this;
+            operator--();
+            return res;
+        }
+
+    };
+
+    /// Template for raw iterator for held elements of the matrix only. Iterates among all stored elements for a particular row; provides information about indices.
+    /** There is information about indices of the elements. If indices aren't important,
+        use row_raw_iterator instead.
+        Constant and non-constant forms of the iteration are generation from this template. */
+    template <typename Pointer, typename Reference>
+    class row_indraw_iterator_base
+    {
+        Pointer it;           ///< Current element.
+        size_type icol_m;     ///< Column index in which the current element is.
+
+        /// Special for-in matrix initialization. Do not use externally.
+        row_indraw_iterator_base
+        (
+            Pointer it_a,
+            size_type icol_a
+        ) :
+            it(it_a),
+            icol_m(icol_a)
+        {
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+        }
+
+        //template <typename Pointer2, typename Reference2>
+        //friend class row_indrow_iterator_base;
+        friend class row_indraw_iterator_base<const_pointer, const_reference>;
+
+        friend class matrix;
+
+    public:
+
+        /// Not initialized iterator.
+        /** Iterator object needs additional initialization. */
+        row_indraw_iterator_base ()
+        {}
+
+        row_indraw_iterator_base (const row_indraw_iterator_base<pointer, reference>& x) :
+            it(x.it),
+            icol_m(x.icol_m)
+        {}
+
+        /// Column index in which the current element is.
+        size_type icol () const
+        {
+            return icol_m;
+        }
+
+        /// Reference to the current element.
+        Reference el () const
+        {
+            return *it;
+        }
+
+        row_indraw_iterator_base& operator++ ()
+        {
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+            ++it;
+            ++icol_m;
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+        }
+
+        row_indraw_iterator_base operator++ (int)
+        {
+            row_indraw_iterator_base res = *this;
+            operator++();
+            return res;
+        }
+
+        row_indraw_iterator_base& operator-- ()
+        {
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+            --it;
+            --icol_m;
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+        }
+
+        row_indraw_iterator_base operator-- (int)
+        {
+            row_indraw_iterator_base res = *this;
+            operator--();
+            return res;
+        }
+    };
+
+    /// Template for raw iterator for held elements of the matrix only. Iterates among all stored elements for a prticular column; provides information about indices.
+    /** There is no information about indices of the elements. If indices aren't important,
+        use col_raw_iterator instead.
+        Constant and non-constant forms of the iteration are generation from this template. */
+    template <typename Pointer, typename Reference>
+    class col_indraw_iterator_base
+    {
+        Pointer it;           ///< Current element.
+        size_type irow_m;     ///< Row index in which the current element is.
+        size_type ncols;      ///< The number of columns in the matrix.
+
+        /// Special for-in matrix initialization. Do not use externally.
+        col_indraw_iterator_base
+        (
+            Pointer it_a,
+            size_type irow_a,
+            size_type ncols_a
+        ) :
+            it(it_a),
+            irow_m(irow_a),
+            ncols(ncols_a)
+        {
+            ARAGELI_ASSERT_1(irow_m >= 0 && irow_m < std::numeric_limits<size_type>::max());
+        }
+
+        friend class col_indraw_iterator_base<const_pointer, const_reference>;
+
+        friend class matrix;
+
+    public:
+
+        /// Not initialized iterator.
+        /** Iterator object needs additional initialization. */
+        col_indraw_iterator_base ()
+        {}
+
+        col_indraw_iterator_base (const col_indraw_iterator_base<pointer, reference>& x) :
+            it(x.it),
+            irow_m(x.irow_m),
+            ncols(x.ncols)
+        {}
+
+        /// Column index in which the current element is.
+        size_type irow () const
+        {
+            return irow_m;
+        }
+
+        /// Reference to the current element.
+        Reference el () const
+        {
+            return *it;
+        }
+
+        col_indraw_iterator_base& operator++ ()
+        {
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+            it += ncols;
+            ++irow_m;
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+        }
+
+        col_indraw_iterator_base operator++ (int)
+        {
+            col_indraw_iterator_base res = *this;
+            operator++();
+            return res;
+        }
+
+        col_indraw_iterator_base& operator-- ()
+        {
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+            it -= ncols;
+            --irow_m;
+            ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+        }
+
+        col_indraw_iterator_base operator-- (int)
+        {
+            col_indraw_iterator_base res = *this;
+            operator--();
+            return res;
+        }
+    };
+
+public:
+
+    // WARNING! NAMES IN THE FOLLOWING DEFINITION ARE FOR CLARIFICATION.
+    // SECTION BEGINS
+
+    /// Raw iterator for held elements of the matrix only. Iterates among all stored elements. Non constant form.
+    /** There is no information about indices of the elements. If indices are important,
+        use indraw_iterator instead. */
+    typedef iterator raw_iterator;
+
+    /// Raw iterator for held elements of the matrix only. Iterates among all stored elements. Constant form.
+    /** There is no information about indices of the elements. If indices are important,
+        use indraw_iterator instead. */
+    typedef const_iterator const_raw_iterator;
+
+    /// Raw iterator for held elements of the matrix only. Iterates among all stored elements for a particular row. Non constant form.
+    /** There is no information about indices of the elements. If indices are important,
+        use row_indraw_iterator instead. */
+    typedef iterator row_raw_iterator;
+
+    /// Raw iterator for held elements of the matrix only. Iterates among all stored elements for a particular row. Constant form.
+    /** There is no information about indices of the elements. If indices are important,
+        use row_indraw_iterator instead. */
+    typedef const_iterator const_row_raw_iterator;
+
+    /// Non-constant raw iterator for held elements of the matrix only. Iterates among all stored elements for a particular column.
+    /** There is no information about indices of the elements. If indices are important,
+        use col_indraw_iterator instead. */
+    class col_raw_iterator;
+
+    /// Constant raw iterator for held elements of the matrix only. Iterates among all stored elements for a particular column.
+    /** There is no information about indices of the elements. If indices are important,
+        use col_indraw_iterator instead. */
+    class const_col_raw_iterator;
+
+    /// Non-constant raw iterator for held elements of the matrix only. Iterates among all stored elements; provides information about indices.
+    /** There is information about indices of the elements. If indices aren't important,
+        use raw_iterator instead. */
+    typedef indraw_iterator_base<pointer, reference> indraw_iterator;
+
+    /// Non-constant raw iterator for held elements of the matrix only. Iterates among all stored elements for a particular row; provides information about indices.
+    /** There is information about indices of the elements. If indices aren't important,
+        use row_raw_iterator instead. */
+    typedef row_indraw_iterator_base<pointer, reference> row_indraw_iterator;
+
+    /// Non-constant raw iterator for held elements of the matrix only. Iterates among all stored elements for a prticular column; provides information about indices.
+    /** There is no information about indices of the elements. If indices aren't important,
+        use col_raw_iterator instead. */
+    typedef col_indraw_iterator_base<pointer, reference> col_indraw_iterator;
+
+    /// Constant raw iterator for held elements of the matrix only. Iterates among all stored elements; provides information about indices.
+    /** There is information about indices of the elements. If indices aren't important,
+        use raw_iterator instead. */
+    typedef indraw_iterator_base<const_pointer, const_reference> const_indraw_iterator;
+
+    /// Constant raw iterator for held elements of the matrix only. Iterates among all stored elements for a particular row; provides information about indices.
+    /** There is information about indices of the elements. If indices aren't important,
+        use row_raw_iterator instead. */
+    typedef row_indraw_iterator_base<const_pointer, const_reference> const_row_indraw_iterator;
+
+    /// Constant raw iterator for held elements of the matrix only. Iterates among all stored elements for a prticular column; provides information about indices.
+    /** There is no information about indices of the elements. If indices aren't important,
+        use col_raw_iterator instead. */
+    typedef col_indraw_iterator_base<const_pointer, const_reference> const_col_indraw_iterator;
+
+    // SECTION ENDS
 
     // @}
 
@@ -1867,6 +2225,54 @@ public:
         return mem().end();
     }
 
+    /// Returns raw iterator on begin of items sequence. Non-constant form.
+    /** Calls unique(). */
+    raw_iterator raw_begin ()
+    {
+        unique();
+        return mem().begin();
+    }
+
+    /// Returns raw iterator on end of items sequence. Non-constant form.
+    /** Calls unique(). */
+    raw_iterator raw_end ()
+    {
+        unique();
+        return mem().end();
+    }
+
+    /// Returns index raw iterator on begin of items sequence. Non-constant form.
+    /** Calls unique(). */
+    indraw_iterator indraw_begin ()
+    {
+        unique();
+        return indraw_iterator(&*mem().begin(), 0, 0, ncols());
+    }
+
+    /// Returns index raw iterator on end of items sequence. Non-constant form.
+    /** Calls unique(). */
+    indraw_iterator indraw_end ()
+    {
+        unique();
+        return indraw_itetaror(&*mem().end(), nrows(), ncols(), ncols());
+    }
+
+    /// Returns index raw iterator on begin of items sequence for a particular row of the matrix. Non-constant form.
+    /** Calls unique(). */
+    row_indraw_iterator row_indraw_begin (size_type i);
+
+    /// Returns index raw iterator on end of items sequence for a particular row of the matrix. Non-constant form.
+    /** Calls unique(). */
+    row_indraw_iterator row_indraw_end (size_type i);
+
+    /// Returns index raw iterator on begin of items sequence for a particular column of the matrix. Non-constant form.
+    /** Calls unique(). */
+    col_indraw_iterator col_indraw_begin (size_type i);
+
+    /// Returns index raw iterator on end of items sequence for a particular columnt of the matrix . Non-constant form.
+    /** Calls unique(). */
+    col_indraw_iterator col_indraw_end (size_type i);
+
     /// Returns iterator on begin of items sequence. Constant form.
     const_iterator begin () const
     {
@@ -1875,6 +2281,18 @@ public:
 
     /// Returns iterator on end of items sequence. Constant form.
     const_iterator end () const
+    {
+        return mem().end();
+    }
+
+    /// Returns raw iterator on begin of items sequence. Constant form.
+    const_raw_iterator raw_begin () const
+    {
+        return mem().begin();
+    }
+
+    /// Returns raw iterator on end of items sequence. Constant form.
+    const_raw_iterator raw_end () const
     {
         return mem().end();
     }
