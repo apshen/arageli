@@ -36,7 +36,6 @@ using Arageli::vector;
 
 namespace
 {
-using Arageli::vector;
 
 // lexicographical sort of rows of a matrix
 template <typename M>

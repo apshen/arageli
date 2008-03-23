@@ -38,6 +38,10 @@
 
 #include "stdafx.hpp"
 
+#include "rational.hpp"
+#include "universal.hpp"
+#include "rand.hpp"
+
 typedef void* (*Generate)(big_int arg);
 
 #define RATIONAL_CASE_COUNT 20

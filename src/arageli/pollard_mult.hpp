@@ -230,7 +230,7 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
 #endif
     }
     t1.poli_multiply(u_buffer, n, v_buffer, m, w_buffer1);
-    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer1, n, m, pollard_p1)));
+    ARAGELI_ASSERT_3((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer1, n, m, pollard_p1)));
 
     for (i = 0; i < n; ++i)
     {
@@ -249,7 +249,7 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
 #endif
     }
     t2.poli_multiply(u_buffer, n, v_buffer, m, w_buffer2);
-    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer2, n, m, pollard_p2)));
+    ARAGELI_ASSERT_3((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer2, n, m, pollard_p2)));
 
     for (i = 0; i < n; ++i)
     {
@@ -268,7 +268,7 @@ MT do_mult_pollard(const ET *u, const ET *v, ET *w, const MT n, const MT m)
 #endif
     }
     t3.poli_multiply(u_buffer, n, v_buffer, m, w_buffer3);
-    ARAGELI_ASSERT_2((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer3, n, m, pollard_p3)));
+    ARAGELI_ASSERT_3((multiplication_check<ET, MT>(u_buffer, v_buffer, w_buffer3, n, m, pollard_p3)));
 
     //__int64 y2, y3;
     signed long long y2, y3;

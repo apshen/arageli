@@ -37,9 +37,10 @@
 
 
 #include "stdafx.hpp"
+#include "rand.hpp"
 
-//#include <time.h>
-//#include <strstream>
+#include <time.h>
+#include <strstream>
 
 using namespace Arageli;
 

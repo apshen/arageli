@@ -532,23 +532,6 @@ std::istream& input_polynom_internal
 }
 
 
-template <typename T, bool REFCNT>
-template <typename Stream>
-Stream& io_binary<vector<T, REFCNT> >::input_stream (Stream& in, vector<T, REFCNT>& x)
-{
-    typename vector<T, REFCNT>::size_type size;
-    if(!input_binary_stream(in, size))
-        return in;  // fail without losing an old value
-    x.resize(size);
-
-    // this can lose an old value without new one have been loaded successfully
-    if(size)
-        input_binary_stream(in, &*x.begin(), size);
-
-    return in;
-}
-
-
 #define ARAGELI_VECTOR_MATH_FUNCS1_IMPL(NAME)    \
     template <typename T, bool REFCNT>    \
     vector<T, true> NAME    \

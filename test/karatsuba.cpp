@@ -36,6 +36,8 @@
     by karatsuba method and compare result with trivial algorithm.
 */
 
+//#define CHECK_TIME
+
 #include "stdafx.hpp"
 
 using namespace Arageli;
@@ -47,70 +49,74 @@ TEST_FUNCTION(do_mult_karatsuba, "Test Karatsuba algorithm for multiplication.")
     try
     {
         int i;
-        const unsigned int num_lengths = 200;
+        const unsigned int num_lengths = 200000;
         // generate two random integers approximately with equal lengths
         big_int a = big_int::random_with_length(num_lengths),
                 b = big_int::random_with_length(num_lengths);
-        _Internal::digit *w_digits = new _Internal::digit[magnitude(a)+magnitude(b)];
-        w_digits[magnitude(a)+magnitude(b)-1] = 0;
-        _Internal::digit *r_digits = new _Internal::digit[magnitude(a)+magnitude(b)];
-        _Internal::digit *t_digits = new _Internal::digit[3*(magnitude(a)+magnitude(b))];
+        // compute digit length
+        const unsigned digit_len = sizeof(_Internal::digit)*8;
+        unsigned long mask = 0;             // mask for one digit
+        for (i = 0; i < digit_len; ++i)
+        {
+            mask |= 1 << i;
+        }
+        unsigned a_len = 0;
+        unsigned b_len = 0;
+        // conpute number of digits in a and b
+        big_int t = a;
+        for (; t != 0; ++a_len)
+        {
+            t >>= digit_len;
+        }
+        t = b;
+        for (; t != 0; ++b_len)
+        {
+            t >>= digit_len;
+        }
+        _Internal::digit *a_digits = new _Internal::digit[a_len];
+        _Internal::digit *b_digits = new _Internal::digit[b_len];
+        t = a;
+        for (i = 0; i < a_len; ++i)
+        {
+            a_digits[i] = _Internal::digit(t & big_int(mask));
+            t >>= digit_len;
+        }
+        t = b;
+        for (i = 0; i < b_len; ++i)
+        {
+            b_digits[i] = _Internal::digit(t & big_int(mask));
+            t >>= digit_len;
+        }
+        // alloc memory for output number
+        big_int out = 0;
+        _Internal::digit *w_digits = new _Internal::digit[a_len+b_len];
+        _Internal::digit *t_digits = new
+            _Internal::digit[9*(a_len+b_len)];
+        w_digits[a_len+b_len-1] = 0;
+#ifdef CHECK_TIME
+        timer s;
+        s.start();
+#endif
         unsigned w_len =
-            do_mult_karatsuba<_Internal::digit,unsigned>(a._digits(),
-                    b._digits(), w_digits, t_digits, magnitude(a), magnitude(b));
-        // compare karatsuba method result with classic algorithm
-        if (_Internal::do_mult_classic(a._digits(), b._digits(), r_digits, magnitude(a), magnitude(b)) != w_len)
+            do_mult_karatsuba<_Internal::digit,unsigned>(a_digits,
+                    b_digits, w_digits, &t_digits, a_len, b_len);
+#ifdef CHECK_TIME
+        s.stop();
+        std::cerr << "Karatsuba time: " << s.time() << "\n";
+#endif
+        out = 0;
+        for (i = 0; i < w_len; ++i)
+        {
+            out += big_int(w_digits[i])<<(i*digit_len);
+        }
+        // compare result with trivial multiplication
+        if (out != a*b)
         {
             is_ok = false;
         }
-        for (i = 0; i < w_len; ++i)
-        {
-            if(w_digits[i] != r_digits[i])
-            {
-                is_ok = false;
-            }
-        }
-        if (is_ok)
-        {
-            tout << "The first karatsuba test passed!\n";
-        }
-        else
-        {
-            tout << "The first karatsuba test failed!\n";
-        }
-        if (magnitude(a) == magnitude(b))
-        {
-            w_len = do_mult_karatsuba<_Internal::digit,unsigned>(a._digits(),
-                        b._digits(), w_digits, t_digits, magnitude(a), magnitude(b));
-            // compare karatsuba method result with classic algorithm
-            if (_Internal::do_mult_classic(a._digits(), b._digits(), r_digits, magnitude(a), magnitude(b)) != w_len)
-            {
-                is_ok = false;
-                tout << "The second karatsuba test failed!\n";
-            }
-            for (i = 0; i < w_len; ++i)
-            {
-                if(w_digits[i] != r_digits[i])
-                {
-                    tout << i << '\t' << "diff: " << r_digits[i] - w_digits[i] << '\t';
-                    is_ok = false;
-                }
-            }
-            if (is_ok)
-            {
-                tout << "The second karatsuba test passed!\n";
-            }
-            else
-            {
-                tout << "The second karatsuba test failed!\n";
-            }
-        }
-        else
-        {
-            tout << "Generated two numbers with different lengths! Try once more!\n";
-        }
+        delete [] a_digits;
+        delete [] b_digits;
         delete [] w_digits;
-        delete [] r_digits;
         delete [] t_digits;
     }
     catch(const Arageli::exception& e)

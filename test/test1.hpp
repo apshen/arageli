@@ -129,9 +129,7 @@ namespace std
 
 template <typename T1, typename T2>
 inline ostream& operator<< (ostream& out, const pair<T1, T2>& x)
-{
-    return out << "key = " << x.first << ", value = " << x.second;
-}
+{ return out << "key = " << x.first << ", value = " << x.second; }
 
 }
 

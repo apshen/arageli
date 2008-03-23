@@ -29,6 +29,9 @@
 
 #include "stdafx.hpp"
 
+
+#include "test1.hpp"
+
 #pragma warning (disable : 4503)
 
 

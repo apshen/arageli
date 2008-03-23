@@ -39,10 +39,12 @@
 
 // Modified by Sergey S. Lyalin. Now it works OK.
 
-#include "stdafx.hpp"
 
-//#include <time.h>
-//#include <strstream>
+#include "stdafx.hpp"
+#include "rand.hpp"
+
+#include <time.h>
+#include <strstream>
 
 using namespace Arageli;
 

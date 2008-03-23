@@ -46,14 +46,7 @@ using namespace Arageli;
 
 /// Create matrix in \f$T^{n \times m}\f$ with random elements not grater than max
 template <typename T, bool REFCNT>
-matrix<T, REFCNT> rand_matrix(size_t m, size_t n, const T& max)
-{
-    matrix<T, REFCNT> res(m, n, fromsize);
-    for (typename matrix<T>::size_type i = 0; i < res.nrows(); i++)
-        for (typename matrix<T>::size_type j = 0; j < res.ncols(); j++)
-            res.el(i, j) = rand(max);
-    return res;
-}
+matrix<T, REFCNT> rand_matrix(size_t m, size_t n, const T& max);
 
 /**
 Create upper diagonal matrix \f$M \in T^{n \times n}\f$ with element 1 on the
@@ -62,14 +55,7 @@ positions.
 Note that \f$M\f$ is in hermite form and \f$det(M)=1\f$.
 */
 template <typename T, bool REFCNT>
-matrix<T, REFCNT> rand_matrix_upper_diagonal(size_t n, const T& max)
-{
-    matrix<T, REFCNT> res(n, eye);
-    for (typename matrix<T>::size_type i = 0; i < res.nrows(); i++)
-        for (typename matrix<T>::size_type j = i+1; j < res.ncols(); j++)
-            res.el(i, j) = rand(max);
-    return res;
-}
+matrix<T, REFCNT> rand_matrix_upper_diagonal(size_t n, const T& max);
 
 /**
 Shuffles input matrix \f$m\f$ by multiplying it on the upper diagonal
@@ -77,10 +63,7 @@ random matrix acquired from rand_matrix_upper_diagonal(m.ncols(), max) call.
 Note that this operation does not change determinant of the source matrix.
 */
 template <typename T, bool REFCNT>
-void shuffle(matrix<T, REFCNT> &m, const T& max)
-{
-    m *= rand_matrix_upper_diagonal(m.ncols(), max);
-}
+void shuffle(matrix<T, REFCNT> &m, const T& max);
 
 
 template <typename M>

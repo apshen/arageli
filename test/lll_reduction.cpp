@@ -28,8 +28,8 @@
 
 *****************************************************************************/
 
-//#include "matrix_ops.cpp"
 #include "stdafx.hpp"
+#include "matrix_ops.cpp"
 
 #pragma warning(disable : 4244)
 

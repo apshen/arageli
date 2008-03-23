@@ -49,7 +49,6 @@
 #include "type_pair_traits.hpp"
 #include "exception.hpp"
 #include "factory.hpp"
-#include "io.hpp"
 #include "powerest.hpp"
 #include "intalg.hpp"
 #include "bigar.hpp"
@@ -84,12 +83,16 @@ namespace _Internal
 // template <typename T> class rational;    // see rational.hpp
 
 
-template <>
-class io_binary<big_int>;   // see implementation below in this file
+/// Binary seft-delimeted serialization for big_int -- store.
+/** This function works with input_binary only on compatible platforms. */
+template <typename Ch, typename ChT>
+void output_binary (std::basic_ostream<Ch, ChT>& out, const big_int& x);
 
 
-template <typename T_factory>
-big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
+/// Binary seft-delimeted serialization for big_int -- load.
+/** This function works with output_binary only on compatible platforms. */
+template <typename Ch, typename ChT>
+void input_binary (std::basic_istream<Ch, ChT>& in, big_int& x);
 
 
 template <typename T_factory>
@@ -105,15 +108,14 @@ class big_int
     // Number consist of sequence of objects of this type.
     typedef _Internal::digit digit;
 
-    friend class io_binary<big_int>;
+    template <typename Ch, typename ChT>
+    friend void output_binary (std::basic_ostream<Ch, ChT>& out, const big_int& x);
+
+    template <typename Ch, typename ChT>
+    friend void input_binary (std::basic_istream<Ch, ChT>& in, big_int& x);
 
     template <typename T_factory>
     friend big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
-
-    template <typename T_factory>
-    friend big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
-
-    friend std::size_t magnitude (const big_int& x);
 
 public:
 
@@ -705,11 +707,6 @@ public:
         std::swap(number, x.number);
     }
 
-    const digit* _digits () const
-    {
-        return number->data;
-    }
-
 private:
 
     friend class big_float;    // see big_float.hpp source file
@@ -781,56 +778,6 @@ std::ostream & operator<< (std::ostream & s, const big_int & x);
 
 /// Writes a number to a string notation.
 std::istream & operator>> (std::istream & s, big_int & x);
-
-
-/// Serialization in the Simple Binary format for big_int.
-template <>
-class io_binary<big_int> : public io_binary_base<big_int>
-{
-public:
-
-    using io_binary_base<big_int>::output_stream;
-    using io_binary_base<big_int>::input_stream;
-    using io_binary_base<big_int>::calc;
-    using io_binary_base<big_int>::input_mem;
-    using io_binary_base<big_int>::output_mem;
-
-    /// Stores big_int object state to a binary stream. Seft-delimeted binary serialization.
-    /** This functions uses the following format:
-            SIGN [LEN DIGITS]
-        where SIGN is in {-1,0,+1};
-        LEN (optional) is a number of limbs used by a given big_int object;
-        DIGITS is a dump of all limbs.
-        All fields of the format are stored in binary format without any delimeters.
-        The optional part LEN DIGITS is emitted only if SIGN != 0.
-        This format is The Simple Binary format for big_int.
-    */
-    template <typename Stream>
-    static Stream& output_stream (Stream& out, const big_int& x);
-
-
-    /// Loads big_int object state from a binary stream. Compatible with output_stream.
-    /** See output_stream(stream, big_int) function for detailes on the format.
-        If the function fails to read some bytes from a stream, an old value of x
-        may be lost (but a given big_int object x remains in the correct state).
-        So, do not relay on the value of x when a given stream is not in a good state
-        after call returns.
-
-        The function takes input in The Simple Binary format.
-
-        \todo What is a correct way to handle errors in format when we read from a binary stream?
-    */
-    template <typename Stream>
-    static Stream& input_stream (Stream& in, big_int& x);
-
-
-    /// Calculates the number of chars required to store a given big_int object in The Simple Binary form.
-    /** This function calculates precise number of chars that will emit
-        any function outputs in The Simple Binary format for one big_int object,
-        for example, output_binary_mem function. */
-    static std::size_t calc (const big_int& x);
-};
-
 
 /// Compares two big integers
 /**
@@ -1346,30 +1293,6 @@ inline big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr)
         return euclid(a, b, tfctr);
 }
 
-
-/// Retruns a number of digits in a given number with specified radix.
-std::size_t ndigits (big_int x, std::size_t r);
-
-
-/// Retruns platform specific magnitude of a given big integer.
-/** Exact values returned by this function are implementation defined
-    and may differ under different platforms. But this function is satisfied
-    the following criteria:
-
-        - magnitude(x) retruns only non negative integer numbers
-        for any input x.
-
-        - magnitude(x_1) <= magnitude(x_2) for a given pair x_1 and x_2,
-        abs(x_1) <= abs(x_2).
-
-        - C1*nbits(x) - C2 <= magnitude(x) <= C1*nbits(x) + C2,
-        where C1 and C2 are platform specific positive constants
-        that are the same for any x.
-*/
-inline std::size_t magnitude (const big_int& x)
-{
-    return x.number->len;
-}
 
 }
 

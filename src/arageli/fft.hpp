@@ -45,7 +45,7 @@
 namespace Arageli
 {
 // TODO: clarify if this approach speed up the algorithm
-//#define BARRETT
+#define BARRETT
 #ifdef BARRETT
 // precomputed constants for Barrett reduction
 // p_inv = floor(4^k / p), where k --- number of bits for p number representation
@@ -114,8 +114,8 @@ struct doubled_type<_Internal::digit>
 
 // WARNING!!! here we suppose that 32-bit computations are supported!!!
 // TODO: make this code more portable.
-const unsigned long k_max = ARAGELI_POLLARD_MAX_POWER;
-const unsigned long n_max = ARAGELI_POLLARD_UPPER_BOUND;   // max length of (input vector ~ polynom)
+const unsigned long k_max = 21;
+const unsigned long n_max = (1 << k_max);   // max length of (input vector ~ polynom)
 
 /**
 * \breif Class contains methods for FFT and inverse FFT calculation.
@@ -149,20 +149,16 @@ private:
     void alpha_determination(const MT p, const MT root)
     {
         alpha = 1;
-        unsigned long j;
-        for (j=1; j <= (p - 1) / n; ++j)
-        {
-#ifdef BARRETT
-            //alpha = barrett_reduction<p_num, p_inv, b_n>(doubled_value(alpha)*root);
-            alpha = doubled_value(alpha)*root > p ? barrett_reduction<p_num, p_inv, b_n>(doubled_value(alpha)*root): doubled_value(alpha)*root;
-#else
-            alpha = MT((doubled_value(alpha)*root) % p);
-#endif
-        }
-
-        // Look at this code more thoroughly
-        // It was invented for optimization reasons, but contains bugs!
-        /*
+//        unsigned long j;
+//        for (j=1; j <= (p - 1) / n; ++j)
+//        {
+//#ifdef BARRETT
+//            //alpha = barrett_reduction<p_num, p_inv, b_n>(doubled_value(alpha)*root);
+//            alpha = doubled_value(alpha)*root > p ? barrett_reduction<p_num, p_inv, b_n>(doubled_value(alpha)*root): doubled_value(alpha)*root;
+//#else
+//            alpha = MT((doubled_value(alpha)*root) % p);
+//#endif
+//        }
         MT curr_root = root;
         MT curr_power = (p - 1) / n;
         while(curr_power)
@@ -179,7 +175,6 @@ private:
             curr_root = (doubled_value(curr_root)*curr_root > p) ? (doubled_value(curr_root)*curr_root) % p : doubled_value(curr_root)*curr_root;
 #endif
         }
-        */
     };
 
 #ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
@@ -572,10 +567,10 @@ public:
         memset(&G_Copy[G_Length],0,sizeof(ET)*(Result_Length-G_Length));
 
         /* make images */
-        //FFT_h(F_Copy,Result_Length, Hat_F);
-        //FFT_h(G_Copy,Result_Length, Hat_G);
-        FFT(F_Copy,Result_Length, Hat_F);
-        FFT(G_Copy,Result_Length, Hat_G);
+        FFT_h(F_Copy,Result_Length, Hat_F);
+        FFT_h(G_Copy,Result_Length, Hat_G);
+        //FFT(F_Copy,Result_Length, Hat_F);
+        //FFT(G_Copy,Result_Length, Hat_G);
 
         /* make image of result*/
         for (i=0; i<Result_Length;i++)

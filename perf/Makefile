@@ -31,17 +31,7 @@
 #
 ##############################################################################
 
-BIN=../bin
-ARAGELIPERFFLAGS += -pg -O3
+CXXFLAGS += -pg
 
-$(BIN)/karatsuba_vs_classic:karatsuba_vs_classic.cpp perfarageli
-	$(CXX) $(ARAGELIPERFFLAGS) $< -o $@ -I"../src" -L"../lib" -lperfarageli
-
-perfarageli:
+../lib/libperfarageli.a:
 	$(MAKE) -C ../src/arageli ../../lib/libperfarageli.a
-
-clean:
-	rm -f $(BIN)/karatsuba_vs_classic
-	$(MAKE) -C ../src/arageli perfclean
-
-cleanall: clean

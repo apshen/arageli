@@ -29,6 +29,8 @@
 
 #include "stdafx.hpp"
 
+#include "test1.hpp"
+
 #define _ARAGELI_TEST_VECTOR_SWAP_BUG
 
 namespace Arageli

@@ -39,6 +39,10 @@
 
 #include "stdafx.hpp"
 
+#include "rand.hpp"
+#include "universal.hpp"
+#include "rational.hpp"
+
 using namespace Arageli;
 
 

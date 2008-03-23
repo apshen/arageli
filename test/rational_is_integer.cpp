@@ -38,6 +38,10 @@
 
 #include "stdafx.hpp"
 
+#include "rand.hpp"
+#include "universal.hpp"
+#include "rational.hpp"
+
 using namespace Arageli;
 
 bool rational_is_integer_test(int param, int count)

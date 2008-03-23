@@ -42,16 +42,6 @@
 
 #include "config.hpp"
 
-#if ARAGELI_PLATFORM == ARAGELI_PLATFORM_WINDOWS && defined(ARAGELI_PERFORMANCE_TIMER)
-    #define _ARAGELI_WIN_PERFORMANCE_TIMER
-#endif
-
-#ifdef _ARAGELI_WIN_PERFORMANCE_TIMER
-    #include <windows.h>
-    #undef min
-    #undef max
-#endif
-
 #include <ctime>
 #include <iostream>
 
@@ -73,7 +63,7 @@ class timer_isnot_stopped :
 {};
 
 
-/// Measures execution time by marking the begin and the end time stamps.
+/// Fix execution time by marking the begin and the end times by std::clock.
 /** The timer can be switched on and off several times during its life time.
     All time ranges are accumulated. The timer can tell what the current
     relative precision of measured time is.
@@ -87,59 +77,19 @@ class timer_isnot_stopped :
     Some functions may throw an exception of time_source_isnot_available
     type if the system time source isn't available. In this case the timer
     object doesn't work and you cannot use it.
-
-    To obtain actual resolution value, timer class needs to be calibrated.
-    The calibration is invoked automatically only once during the program
-    execution: when the user calls timer::resolution static function or
-    when the timer class object is created in the first time. The user can
-    call calibration function explicitly to control moment of calibration
-    since the calibration needs some time (but less than one second usually).
-
-    Use timer class in following manner:
-
-        timer tm;   // create timer and start measurment immediately
-
-        // Code that have to be evaluated.
-        ...
-
-        tm.stop();  // turn off timer
-
-        // Here do something with tm.time(); it is elapsed time in seconds
-        // from moment of timer creates up to tm.stop() call.
-
-    Or:
-
-        timer tm(false);    // create turned off timer
-        ...
-        timer.start();
-
-        // A. The first part of code to be measured.
-        ...
-
-        timer.stop();
-
-        // B. Some code that we do not measure.
-        ...
-
-        timer.start();
-
-        // C. Another code to be measured.
-        ...
-
-        timer.stop();
-
-        // Here do something with tm.time(); it is elapsed time
-        // during A and C was been executed (B execution isn't included).
-
-    You can call time() even if timer is activated. Returned value is current
-    (up to the call of the function time) elapsed time.
 */
 class timer
 {
 public:
 
     /// Starts time tracking if turn_on == true.
-    timer (bool turn_on = true);
+    timer (bool turn_on = true) :
+        turn_on_m(false),
+        duration(0),
+        absprec(0)
+    {
+        if(turn_on)start();
+    }
 
     /// Starts new time interval.
     /** If the timer is already activated, the call doesn't have any effect. */
@@ -166,20 +116,14 @@ public:
         function. */
     double time () const
     {
-        #ifdef _ARAGELI_WIN_PERFORMANCE_TIMER
-            ARAGELI_ASSERT_1(is_calibrated());
-            return double(clock_time())/freq.QuadPart;
-        #else
-            return double(clock_time())/CLOCKS_PER_SEC;
-        #endif
+        return double(clock_time())*resolution();
     }
 
     /// The minimal amount of time that can be measured.
     /** Duration of one tick. The returned value is expressed in seconds. */
     static double resolution ()
     {
-        first_calibrate();
-        return sdelta;
+        return 1.0/CLOCKS_PER_SEC;
     }
 
     /// Relative precision of measuring of the total elapsed time.
@@ -199,36 +143,12 @@ public:
             start();
     }
 
-    /// Calibrates the timer class to get correct approximation for resolution value.
-    /** This function is called automatically when one of the timer class functions
-        is called for the first time. The moment when the user can call this function
-        is TBD. */
-    static void calibrate ();
-
-    /// Retruns true iff timer class is calibrated.
-    static bool is_calibrated ()
-    {
-        return delta != 0;
-    }
-
-    static void first_calibrate ()
-    {
-        if(!is_calibrated())
-            calibrate();
-    }
-
 private:
-
-#ifdef _ARAGELI_WIN_PERFORMANCE_TIMER
-    typedef LONGLONG tick_type;
-#else
-    typedef std::clock_t tick_type;
-#endif
 
     friend std::ostream& operator<< (std::ostream& s, const timer& t);
     friend std::istream& operator>> (std::istream& s, timer& t);
 
-    void init (tick_type dur, std::clock_t ap)
+    void init (std::clock_t dur, std::clock_t ap)
     {
         duration = dur;
         absprec = ap;
@@ -236,36 +156,12 @@ private:
     }
 
     /// The current elapsed time in ticks.
-    tick_type clock_time () const;
+    std::clock_t clock_time () const;
 
-    static tick_type kernel_time ()
-    {
-        #ifdef _ARAGELI_WIN_PERFORMANCE_TIMER
-            LARGE_INTEGER curclock;
-            if(!QueryPerformanceCounter(&curclock))
-                throw time_source_isnot_available();
-            return curclock.QuadPart;
-        #else
-            std::clock_t curclock = std::clock();
-            if(curclock == std::clock_t(-1))
-                throw time_source_isnot_available();
-            return curclock;
-        #endif
-    }
-
-    tick_type start_stamp;    ///< Beginning of the current interval in ticks.
-    tick_type duration;    ///< Total accumulated time in ticks.
-    tick_type absprec;    ///< Absolute precision of the total accumulated time in ticks.
+    std::clock_t start_stamp;    ///< Beginning of the current interval in ticks.
+    std::clock_t duration;    ///< Total accumulated time in ticks.
+    std::clock_t absprec;    ///< Absolute precision of the total accumulated time in ticks.
     bool turn_on_m;    ///< Activation flag.
-
-    static tick_type delta;  ///< Minimum interval that can be measured in ticks.
-    static double sdelta;   ///< Minimum interval that can be measured in seconds.
-
-#ifdef _ARAGELI_WIN_PERFORMANCE_TIMER
-
-    static LARGE_INTEGER freq;  ///< Cached value retrieved by QueryPerformanceFrequency.
-
-#endif
 
 };
 
@@ -329,4 +225,4 @@ Times& series_timing (Tasks& tasks, Times& times, Timer& timer);
 } // namespace Arageli
 
 
-#endif  // #ifndef _ARAGELI_timer_hpp_
+#endif  // #ifndef _Arageli_timer_hpp_

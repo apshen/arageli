@@ -40,6 +40,10 @@
 //--Падение теста адекватно
 
 #include "stdafx.hpp"
+#include "rand.hpp"
+
+#include <time.h>
+#include <strstream>
 
 using namespace Arageli;
 
@@ -107,7 +111,6 @@ bool sparse_polynom_multiply_divide_monom_test(int param, int count)
         for (int k=0; k<count; k++)
         {
             int a=rand();
-            a=((a==0)?3:a);
             int b=rand();
             sparse_polynom<int> S = "2*x^2+5*x-7+3*x";
             sparse_polynom<big_int> B = "1234567891011121314151617181920*x^777-9876543210*x^123+112233445566778899";
