@@ -124,7 +124,7 @@ bool is_pseudoprime_solovay_strassen (const T& x, const N& n, const T_factory& t
     T a;
     for (N i = null(n); i < n; ++i)
     {
-        a = rand(x-3);
+        a = rand(x-3);  // WARNING! Deprecated rand is used.
         a += 2;
         if (!is_unit(gcd(a,x)))
             return false;
@@ -469,7 +469,7 @@ T rho_pollard(const T& n, const T_factory& tfctr)
 
     // Zolotykh - Computer Algebra
     ARAGELI_ASSERT_1(n >= 4);
-    T x0 = rand(n-1);
+    T x0 = rand(n-1);  // WARNING! Deprecated rand is used.
     T x = x0;
     T d;
     unsigned int i, j = 1;
@@ -775,9 +775,9 @@ T prev_probably_prime (T x)
 template<typename T, typename N>
 void rsa_generate_keys(N l, T& c, T& public_key, T& d)
 {
-    T p = rand(l/2);
+    T p = rand(l/2);  // WARNING! Deprecated rand is used.
     //    init_random(time(NULL));
-    T q = rand(l/2);
+    T q = rand(l/2);  // WARNING! Deprecated rand is used.
     public_key = p * q;
 
     T phi = (p-1)*(q-1);

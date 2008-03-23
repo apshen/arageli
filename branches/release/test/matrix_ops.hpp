@@ -51,7 +51,7 @@ matrix<T, REFCNT> rand_matrix(size_t m, size_t n, const T& max)
     matrix<T, REFCNT> res(m, n, fromsize);
     for (typename matrix<T>::size_type i = 0; i < res.nrows(); i++)
         for (typename matrix<T>::size_type j = 0; j < res.ncols(); j++)
-            res.el(i, j) = rand(max);
+            res.el(i, j) = rand(max);  // WARNING! Deprecated rand is used.
     return res;
 }
 
@@ -67,7 +67,7 @@ matrix<T, REFCNT> rand_matrix_upper_diagonal(size_t n, const T& max)
     matrix<T, REFCNT> res(n, eye);
     for (typename matrix<T>::size_type i = 0; i < res.nrows(); i++)
         for (typename matrix<T>::size_type j = i+1; j < res.ncols(); j++)
-            res.el(i, j) = rand(max);
+            res.el(i, j) = rand(max);  // WARNING! Deprecated rand is used.
     return res;
 }
 

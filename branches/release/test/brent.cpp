@@ -39,8 +39,8 @@ TEST_FUNCTION(brent, "Test brent algorithm.")
     int i = 10;
     while(i)
     {
-        big_int q1 = rand(INT_MAX);
-        big_int q2 = rand(INT_MAX);
+        big_int q1 = rand(INT_MAX);  // WARNING! Deprecated rand is used.
+        big_int q2 = rand(INT_MAX);  // WARNING! Deprecated rand is used.
         big_int test = q1*q2;
         long inter_num = 1000;
         big_int result = brent(test, inter_num);
