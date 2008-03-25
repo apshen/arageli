@@ -667,8 +667,6 @@ public:
 
     value_type operator() () const
     {
-        ARAGELI_ASSERT_0(relation != BASE_LESS);
-
         switch(relation)
         {
             case BASE_EQUAL:
@@ -837,8 +835,6 @@ public:
 
     value_type operator() () const
     {
-        ARAGELI_ASSERT_0(relation != BASE_LESS);
-
         switch(relation)
         {
             case BASE_EQUAL:
