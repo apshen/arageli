@@ -90,7 +90,6 @@ namespace Arageli
 
 #include "smithpoly.hpp"
 #include "hermite.hpp"
-#include "rand.hpp"
 #include "sparse_polynom.hpp"
 #include <stdlib.h>
 #include <iostream>
