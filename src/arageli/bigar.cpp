@@ -294,6 +294,10 @@ std::size_t do_optimize (const digit* a, std::size_t n)
 
 std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, std::size_t n)
 {
+    //if ((u == v) && (n == m))
+    //{
+        //do_sqr(u, w, n);
+    //}
 #ifdef ARAGELI_ENABLE_POLLARD_MULT
     if
     (
@@ -307,6 +311,23 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
     }
 #endif
 #ifdef ARAGELI_ENABLE_KARATSUBA_MULT
+    //// make m >= n
+    if (m < n)
+    {
+        std::size_t temp = m;
+        m = n;
+        n = temp;
+        const digit *tmp = u;
+        u = v;
+        v = tmp;
+    };
+#define GMP_KARATSUBA
+#ifdef GMP_KARATSUBA
+    if (m > ARAGELI_KARATSUBA_THRESHOLD && n > ARAGELI_KARATSUBA_THRESHOLD)
+    {
+        digit *t = new digit[];
+    }
+#else
     if
     (
         m > ARAGELI_KARATSUBA_THRESHOLD &&
@@ -315,16 +336,6 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
     {
         digit *t = new digit[3 * (n + m)];
         std::size_t ret = 0;
-        //// make m >= n
-        if (m < n)
-        {
-            std::size_t temp = m;
-            m = n;
-            n = temp;
-            const digit *tmp = u;
-            u = v;
-            v = tmp;
-        };
         if (m/n > 1)
         {
             for (std::size_t i = n; i < m + n; ++i)
@@ -357,6 +368,7 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
         delete[] t;
         return ret;
     }
+#endif
 #endif
     return do_mult_classic(u, v, w, m, n);
 }
