@@ -1,4 +1,4 @@
-project (arageli)
-
 add_subdirectory (src/arageli)
-add_subdirectory (test)
+set (DEBUG_POSTFIX "d")
+set (RELEASE_POSTFIX "r")
+# add_subdirectory (test)
