@@ -39,6 +39,8 @@
 #include "matrix.hpp"
 #include "lll.hpp"
 
+#include "rational.hpp"    // WARNING! TEMPORARY AS A WORKAROUND TO A BUG
+
 
 namespace Arageli
 {
