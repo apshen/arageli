@@ -138,4 +138,4 @@ add_library (arageli STATIC
 						winograd.hpp
                         )
 
-set_target_properties (arageli PROPERTIES DEBUG_OUTPUT_NAME arageli32d RELEASE_OUTPUT_NAME arageli32r)
+set_target_properties (arageli PROPERTIES DEBUG_OUTPUT_NAME arageli32d RELEASE_OUTPUT_NAME arageli32r TEST_OUTPUT_NAME arageli32t FAST_OUTPUT_NAME arageli32f)
