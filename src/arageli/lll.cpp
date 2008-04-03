@@ -39,6 +39,8 @@
 #include "matrix.hpp"
 #include "lll.hpp"
 
+#include "rational.hpp"    // WARNING! TEMPORARY AS A WORKAROUND TO A BUG
+
 
 namespace Arageli
 {
@@ -170,7 +172,7 @@ bool lll_reduction (B_type& B, H_type& H)
             // std::cout << "B = " << std::endl; output_aligned(std::cout, B);
             // std::cout << "Bst = " << std::endl; output_aligned(std::cout, Bst);
             // std::cout << "Mu = " << std::endl; output_aligned(std::cout, Mu);
-            k = std::max(1, k - 1);
+            k = max(static_cast<index>(1), k - 1);
         }
         else
         {
@@ -334,7 +336,7 @@ bool lll_reduction_int(B_type& B, H_type& H)
         if (4*d[k + 1]*d[k - 1] < 3*d[k]*d[k] - 4*Lambda(k, k - 1))
         {
             _Internal::lll_interchange_int(B, H, Lambda, d, k, k_max);
-            k = std::max(1, k - 1);
+            k = max(1, k - 1);
         }
         else
         {
