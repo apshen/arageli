@@ -41,9 +41,16 @@ TEST_FUNCTION(rho_pollard, "Test rho_pollard function")
     int i = 20;
     while(i)
     {
+#if 0
+        big_int q1 = rand(INT_MAX-1);
+        ARAGELI_ASSERT_1(q1 >= 0);
+        big_int q2 = rand(INT_MAX-1);
+        ARAGELI_ASSERT_1(q2 >= 0);
+#else
         const unsigned int num_lengths = 50;
         big_int q1 = big_int::random_with_length(num_lengths);
         big_int q2 = big_int::random_with_length(num_lengths);
+#endif
         big_int test = q1*q2;
         big_int result = rho_pollard(test);
         if(result == test)

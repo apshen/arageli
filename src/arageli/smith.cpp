@@ -51,8 +51,6 @@
 #include "vector.hpp"
 #include "matrix.hpp"
 
-#include "sparse_polynom.hpp"    // WARNING! TEMPORARY AS A WORKAROUND TO A BUG
-
 #include "smith.hpp"
 
 

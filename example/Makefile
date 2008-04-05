@@ -227,4 +227,3 @@ clean:
      $(BIN)/vector_matrix_io\
 	
 cleanall: clean
-	rm -f ../src/arageli/arageli.hpp.gch

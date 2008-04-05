@@ -2511,10 +2511,7 @@ result_kind gomory1_iter
 }
 
 
-/// Runs the First Gomory's Algorithm on an optimal column simplex table up to the end.
-/** Finds of the optimal table with integer solution or proof absence of integer
-    points in search area. Be carefull: already optimized column simple table should
-    be passed as input. */
+
 template
 <
     typename T1,
@@ -2549,8 +2546,6 @@ result_kind gomory1_iters
 }
 
 
-/// Runs the First Gomory's Algorithm on an optimal column simplex table up to the end.
-/** See full version of the function. */
 template
 <
     typename T1,

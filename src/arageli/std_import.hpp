@@ -80,15 +80,15 @@ inline void swap (T1& x, T2& y)
 // WARNING! TEMPORARY DEFINITIONS FOR max AND min
 
 template <typename T1, typename T2>
-inline T1 min (const T1& x, const T2& y)
+inline T1 min (T1& x, T2& y)
 {
-    return std::min(x, T1(y));  // WARNING! TYPE CAST
+    return std::min(x, y);
 }
 
 template <typename T1, typename T2>
-inline T1 max (const T1& x, const T2& y)
+inline T1 max (T1& x, T2& y)
 {
-    return std::max(x, T1(y));  // WARNING! TYPE CAST
+    return std::max(x, y);
 }
 
 // WARNING! TEMPORARY DEFINITION

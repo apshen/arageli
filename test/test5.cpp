@@ -33,6 +33,7 @@
 using namespace Arageli;
 using namespace std;
 using Arageli::vector;
+using std::rand;
 
 namespace Arageli
 {
@@ -53,7 +54,7 @@ sparse_polynom<rational<> > rand_polynom (size_t maxdegree, size_t nummons, size
 {
     sparse_polynom<rational <> > res;
     for(size_t i = 0; i < nummons; ++i)
-        res += monom<rational<> >(rand_rational(lencoef), std::rand()%(maxdegree+1));
+        res += monom<rational<> >(rand_rational(lencoef), rand()%(maxdegree+1));
     return res;
 }
 

@@ -37,16 +37,10 @@ TEST_FUNCTION(brent, "Test brent algorithm.")
     srand( (unsigned)time( NULL ) );
     TestResult res = resOK;
     int i = 10;
-
-    // We need integer random numbers from [0, INT_MAX].
-    typedef set::grid1<int> int_grid;
-    int_grid int_0_INTMAX(0, INT_MAX); // integer set from [0, INT_MAX]
-    rnd::equiprob<int_grid> gen_0_IM(int_0_INTMAX);   // random generator from [0, INT_MAX]
-
     while(i)
     {
-        big_int q1 = gen_0_IM();
-        big_int q2 = gen_0_IM();
+        big_int q1 = rand(INT_MAX);
+        big_int q2 = rand(INT_MAX);
         big_int test = q1*q2;
         long inter_num = 1000;
         big_int result = brent(test, inter_num);

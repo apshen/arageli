@@ -106,9 +106,9 @@ bool sparse_polynom_multiply_divide_monom_test(int param, int count)
 
         for (int k=0; k<count; k++)
         {
-            int a = std::rand();
+            int a=rand();
             a=((a==0)?3:a);
-            int b = std::rand();
+            int b=rand();
             sparse_polynom<int> S = "2*x^2+5*x-7+3*x";
             sparse_polynom<big_int> B = "1234567891011121314151617181920*x^777-9876543210*x^123+112233445566778899";
             sparse_polynom<double> D = "1.12345*x-1e45*x^2+1234.5678*x^3-0.000002334";

@@ -34,13 +34,10 @@
 
 # build arageli library
 
-.PHONY: arageli all check install clean example dvi TAGS perf script HTML
+.PHONY: all check install clean example dvi TAGS perf
 
-arageli:
+all:
 	$(MAKE) -C src/arageli
-
-all: arageli check example dvi TAGS perf script HTML
-	
 
 check:
 	$(MAKE) -C tool/ts/src/ts/
@@ -53,8 +50,8 @@ perf:
 runtests:
 	if ls bin/test; then bin/test; else echo \*\*\* Try make check before running tests! \*\*\*; fi;
 
-example:
-	$(MAKE) -C example/
+#example:
+#	$(MAKE) -C example/
 
 # call 'make install' only with root previlegues
 install:
@@ -75,9 +72,6 @@ dvi:
 HTML:
 	$(MAKE) -C src/arageli HTML
 
-HTMLclean:
-	$(MAKE) -C src/arageli HTMLclean
-
 # update TAGS for source files
 TAGS:
 	ctags -R -h .cpp.hpp
@@ -85,12 +79,10 @@ TAGS:
 clean:
 	$(MAKE) -C src/arageli clean
 
-cleanall: clean HTMLclean
+cleanall:
+	$(MAKE) -C src/arageli cleanall
 	$(MAKE) -C tool/ts/src/ts cleanall
 	$(MAKE) -C test cleanall
 	$(MAKE) -C doc/src cleanall
 	$(MAKE) -C example cleanall
-	$(MAKE) -C perf cleanall
 	rm -rf doc/dvi
-	rm -f tags
-	rm -f io_simple_binary.hpp.tmp #TODO: resolve problem with this file!!!
