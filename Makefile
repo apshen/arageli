@@ -34,10 +34,13 @@
 
 # build arageli library
 
-.PHONY: all check install clean example dvi TAGS perf
+.PHONY: arageli all check install clean example dvi TAGS perf script HTML
 
-all:
+arageli:
 	$(MAKE) -C src/arageli
+
+all: arageli check example dvi TAGS perf script HTML
+	
 
 check:
 	$(MAKE) -C tool/ts/src/ts/
@@ -72,6 +75,9 @@ dvi:
 HTML:
 	$(MAKE) -C src/arageli HTML
 
+HTMLclean:
+	$(MAKE) -C src/arageli HTMLclean
+
 # update TAGS for source files
 TAGS:
 	ctags -R -h .cpp.hpp
@@ -79,10 +85,12 @@ TAGS:
 clean:
 	$(MAKE) -C src/arageli clean
 
-cleanall:
-	$(MAKE) -C src/arageli cleanall
+cleanall: clean HTMLclean
 	$(MAKE) -C tool/ts/src/ts cleanall
 	$(MAKE) -C test cleanall
 	$(MAKE) -C doc/src cleanall
 	$(MAKE) -C example cleanall
+	$(MAKE) -C perf cleanall
 	rm -rf doc/dvi
+	rm -f tags
+	rm -f io_simple_binary.hpp.tmp #TODO: resolve problem with this file!!!

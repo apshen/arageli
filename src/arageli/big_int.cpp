@@ -42,6 +42,7 @@
 
 
 #include <cstddef>
+#include <cstdlib>  // it maybe for std::rand only
 #include <limits>
 #include <cmath>
 
@@ -115,7 +116,7 @@ void big_int::from_native_int (const T& x)
 
     #else
 
-    alloc_zero();
+    free_mem_and_alloc_zero();
 
     if(Arageli::is_null(x))
         return;
@@ -197,7 +198,7 @@ void big_int::from_native_float (const T& x)
 
     #else
 
-    alloc_zero();
+    free_mem_and_alloc_zero();
 
     if(x > opposite_unit(x) && x < unit(x))
         return;
@@ -1194,7 +1195,7 @@ int cmp (const big_int & a, const big_int & b)
 
 digit random_digit ()
 {
-    if(_Internal::max_digit <= RAND_MAX)return rand();
+    if(_Internal::max_digit <= RAND_MAX)return std::rand();
 
     static const std::size_t rand_max_len = big_int(RAND_MAX).length();    // WARNING! It is not efficient.
     const std::size_t n =
@@ -1203,7 +1204,7 @@ digit random_digit ()
 
     digit res = 0;
     for(std::size_t i = 0; i < n; ++i)
-        (res <<= rand_max_len) |= rand();    // WARNING! Lower bits from rand is
+        (res <<= rand_max_len) |= std::rand();    // WARNING! Lower bits from rand is
                                             // placed to higher bits of the result.
     return res;
 }
