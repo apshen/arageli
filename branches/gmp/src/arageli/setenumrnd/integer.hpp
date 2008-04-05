@@ -45,7 +45,7 @@
 #include "../misc.hpp"
 #include "../rndbase.hpp"
 #include "../setenumrnd.hpp"
-
+#include "../big_int.hpp"   // for temporary solution with large random numbers only
 
 namespace Arageli
 {
@@ -645,30 +645,28 @@ public:
         relation_init();
     }
 
-    cardinality_type cardinality ()
+    cardinality_type cardinality () const
     {
         return set_m->max();
     }
 
-    period_type period ()
+    period_type period () const
     {
         return base_m.period();
     }
 
-    value_type min ()
+    value_type min () const
     {
         return unit<value_type>();
     }
 
-    value_type max ()
+    value_type max () const
     {
         return set_m->max();
     }
 
     value_type operator() () const
     {
-        ARAGELI_ASSERT_0(relation != BASE_LESS);
-
         switch(relation)
         {
             case BASE_EQUAL:
@@ -681,6 +679,13 @@ public:
                 while(val > cp.Z)
                     val = base_m();
                 return value_type(val / cp.Q) + 1;
+            }
+            case BASE_LESS:
+            {
+                // WARNING! TEMPORARY SOLUTION.
+                // We just call random generator for big_int and convert the result to type T.
+
+                return value_type(big_int::random_in_range(big_int(max()) - 1) + 1);
             }
             default:
                 ARAGELI_ASSERT_1(!"It's impossible.");
@@ -726,11 +731,7 @@ private:
         else if(base_m.max() == maxm1)
             relation = BASE_EQUAL;
         else
-        {
             relation = BASE_LESS;
-            //cp.assign(base_m.cardinality(), unit<T>(), set_m->max());
-            // WARNING! IT IS NOT IMPLEMENTED!!!
-        }
     }
 };
 
@@ -812,30 +813,28 @@ public:
         relation_init();
     }
 
-    cardinality_type cardinality ()
+    cardinality_type cardinality () const
     {
         return set_m->max();
     }
 
-    period_type period ()
+    period_type period () const
     {
         return base_m.period();
     }
 
-    value_type min ()
+    value_type min () const
     {
         return null<value_type>();
     }
 
-    value_type max ()
+    value_type max () const
     {
         return set_m->max();
     }
 
     value_type operator() () const
     {
-        ARAGELI_ASSERT_0(relation != BASE_LESS);
-
         switch(relation)
         {
             case BASE_EQUAL:
@@ -848,6 +847,13 @@ public:
                 while(val > cp.Z)
                     val = base_m();
                 return val / cp.Q;
+            }
+            case BASE_LESS:
+            {
+                // WARNING! TEMPORARY SOLUTION.
+                // We just call random generator for big_int and convert the result to type T.
+
+                return value_type(big_int::random_in_range(max()));
             }
             default:
                 ARAGELI_ASSERT_1(!"It's impossible.");
