@@ -110,9 +110,6 @@ class big_int
     template <typename T_factory>
     friend big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
 
-    template <typename T_factory>
-    friend big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
-
     friend std::size_t magnitude (const big_int& x);
 
 public:
