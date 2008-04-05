@@ -316,11 +316,13 @@ private:
             ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < ncols);
 
             ++it;
+
+            return *this;
         }
 
         indraw_iterator_base operator++ (int)
         {
-            indraw_iterator res = *this;
+            indraw_iterator_base res = *this;
             operator++();
             return res;
         }
@@ -342,13 +344,27 @@ private:
             ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < ncols);
 
             --it;
+
+            return *this;
         }
 
         indraw_iterator_base operator-- (int)
         {
-            indraw_iterator res = *this;
+            indraw_iterator_base res = *this;
             operator--();
             return res;
+        }
+
+        // WARNING! TEMPORARY. SHOULD BE MOVED OUT OF THE CLASS
+        bool operator== (const indraw_iterator_base& x) const
+        {
+            return it == x.it;
+        }
+
+        // WARNING! TEMPORARY. SHOULD BE MOVED OUT OF THE CLASS
+        bool operator!= (const indraw_iterator_base& x) const
+        {
+            return !operator==(x);
         }
 
     };
@@ -411,6 +427,7 @@ private:
             ++it;
             ++icol_m;
             ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+            return *this;
         }
 
         row_indraw_iterator_base operator++ (int)
@@ -426,6 +443,7 @@ private:
             --it;
             --icol_m;
             ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+            return *this;
         }
 
         row_indraw_iterator_base operator-- (int)
@@ -434,6 +452,19 @@ private:
             operator--();
             return res;
         }
+
+        // WARNING! TEMPORARY. SHOULD BE MOVED OUT OF THE CLASS
+        bool operator== (const row_indraw_iterator_base& x) const
+        {
+            return it == x.it;
+        }
+
+        // WARNING! TEMPORARY. SHOULD BE MOVED OUT OF THE CLASS
+        bool operator!= (const row_indraw_iterator_base& x) const
+        {
+            return !operator==(x);
+        }
+
     };
 
     /// Template for raw iterator for held elements of the matrix only. Iterates among all stored elements for a prticular column; provides information about indices.
@@ -496,6 +527,7 @@ private:
             it += ncols;
             ++irow_m;
             ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+            return *this;
         }
 
         col_indraw_iterator_base operator++ (int)
@@ -511,6 +543,7 @@ private:
             it -= ncols;
             --irow_m;
             ARAGELI_ASSERT_1(icol_m >= 0 && icol_m < std::numeric_limits<size_type>::max());
+            return *this;
         }
 
         col_indraw_iterator_base operator-- (int)
@@ -2241,6 +2274,22 @@ public:
         return mem().end();
     }
 
+    /// Returns raw iterator on begin of items sequence for i-th row. Non-constant form.
+    /** Calls unique(). */
+    row_raw_iterator row_raw_begin (size_type i)
+    {
+        unique();
+        return mem().begin() + i*ncols();
+    }
+
+    /// Returns raw iterator on end of items sequence for i-th row. Non-constant form.
+    /** Calls unique(). */
+    row_raw_iterator row_raw_end (size_type i)
+    {
+        unique();
+        return mem().begin() + (i+1)*ncols();
+    }
+
     /// Returns index raw iterator on begin of items sequence. Non-constant form.
     /** Calls unique(). */
     indraw_iterator indraw_begin ()
@@ -2259,11 +2308,19 @@ public:
 
     /// Returns index raw iterator on begin of items sequence for a particular row of the matrix. Non-constant form.
     /** Calls unique(). */
-    row_indraw_iterator row_indraw_begin (size_type i);
+    row_indraw_iterator row_indraw_begin (size_type i)
+    {
+        unique();
+        return row_indraw_iterator(&*mem().begin() + i*ncols(), 0);
+    }
 
     /// Returns index raw iterator on end of items sequence for a particular row of the matrix. Non-constant form.
     /** Calls unique(). */
-    row_indraw_iterator row_indraw_end (size_type i);
+    row_indraw_iterator row_indraw_end (size_type i)
+    {
+        unique();
+        return row_indraw_iterator(&*mem().begin() + (i+1)*ncols(), ncols());
+    }
 
     /// Returns index raw iterator on begin of items sequence for a particular column of the matrix. Non-constant form.
     /** Calls unique(). */
@@ -2296,6 +2353,48 @@ public:
     {
         return mem().end();
     }
+
+    /// Returns raw iterator on begin of items sequence for i-th row. Constant form.
+    const_row_raw_iterator row_raw_begin (size_type i) const
+    {
+        return mem().begin() + i*ncols();
+    }
+
+    /// Returns raw iterator on end of items sequence for i-th row. Constant form.
+    const_row_raw_iterator row_raw_end (size_type i) const
+    {
+        return mem().begin() + (i+1)*ncols();
+    }
+
+    /// Returns index raw iterator on begin of items sequence. Constant form.
+    const_indraw_iterator indraw_begin () const
+    {
+        return const_indraw_iterator(&*mem().begin(), 0, 0, ncols());
+    }
+
+    /// Returns index raw iterator on end of items sequence. Non-constant form.
+    const_indraw_iterator indraw_end () const
+    {
+        return indraw_itetaror(&*mem().end(), nrows(), ncols(), ncols());
+    }
+
+    /// Returns index raw iterator on begin of items sequence for a particular row of the matrix. Non-constant form.
+    const_row_indraw_iterator row_indraw_begin (size_type i) const
+    {
+        return const_row_indraw_iterator(&*mem().begin() + i*ncols(), 0);
+    }
+
+    /// Returns index raw iterator on end of items sequence for a particular row of the matrix. Non-constant form.
+    const_row_indraw_iterator row_indraw_end (size_type i) const
+    {
+        return const_row_indraw_iterator(&*mem().begin() + (i+1)*ncols(), ncols());
+    }
+
+    /// Returns index raw iterator on begin of items sequence for a particular column of the matrix. Non-constant form.
+    const_col_indraw_iterator col_indraw_begin (size_type i) const;
+
+    /// Returns index raw iterator on end of items sequence for a particular columnt of the matrix . Non-constant form.
+    const_col_indraw_iterator col_indraw_end (size_type i) const;
 
     // @}
 
