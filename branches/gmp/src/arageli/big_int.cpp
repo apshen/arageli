@@ -560,7 +560,7 @@ void big_arith_error(const char *s)
 
 digit* big_int::get_mem_for_data (std::size_t nitems)
 {
-    digit* p = reinterpret_cast<digit*>(_aligned_malloc(nitems * sizeof(digit), 16));
+    digit* p = reinterpret_cast<digit*>(malloc(nitems * sizeof(digit)));
     if(!p)
         big_arith_error("the heap overflow");
     return p;
@@ -569,7 +569,7 @@ digit* big_int::get_mem_for_data (std::size_t nitems)
 
 void big_int::free_data (digit *p)
 {
-    _aligned_free(p);
+    free(p);
 }
 
 
@@ -577,7 +577,7 @@ digit* big_int::realloc_data (digit* p, std::size_t newnitems)
 {
     if(newnitems)
     {
-        p = reinterpret_cast<digit*>(_aligned_realloc(p, newnitems * sizeof(digit), 16));
+        p = reinterpret_cast<digit*>(realloc(p, newnitems * sizeof(digit)));
         if(!p)
             big_arith_error("the heap overflow");
     }
