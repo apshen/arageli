@@ -92,6 +92,57 @@ struct Row_raw_adaptor
     }
 };
 
+
+template <typename M, typename I, typename Iind>
+struct Col_raw_adaptor
+{
+    typedef typename M::size_type size_type;
+    typedef I iterator;
+    typedef Iind ind_iterator;
+    typedef typename M::value_type value_type;
+
+    size_type n (M& a) const
+    {
+        return a.ncols();
+    }
+
+    size_type m (M& a) const
+    {
+        return a.nrows();
+    }
+
+    iterator begin (M& a, size_type i) const
+    {
+        return a.col_raw_begin(i);
+    }
+
+    ind_iterator ind_end (M& a, size_type i) const
+    {
+        return a.col_indraw_end(i);
+    }
+
+    ind_iterator ind_begin (M& a, size_type i) const
+    {
+        return a.col_indraw_begin(i);
+    }
+
+    iterator end (M& a, size_type i) const
+    {
+        return a.col_raw_end(i);
+    }
+
+    const value_type& el (M& a, size_type i, size_type j) const
+    {
+        return a(j, i);
+    }
+
+    size_type index (ind_iterator j) const
+    {
+        return j.irow();
+    }
+};
+
+
 template <typename M, typename Adaptor>
 bool iterate_for_all_cols_or_rows_helper_1 (M& a, Adaptor adaptor)
 {
@@ -216,6 +267,46 @@ bool iterate_for_all_cols_and_rows (M& a)
                 const M,
                 typename M::const_row_raw_iterator,
                 typename M::const_row_indraw_iterator
+            >()
+        ) &&
+        iterate_for_all_cols_or_rows_helper_1
+        (
+            a,
+            Col_raw_adaptor
+            <
+                M,
+                typename M::col_raw_iterator,
+                typename M::col_indraw_iterator
+            >()
+        ) &&
+        iterate_for_all_cols_or_rows_helper_1
+        (
+            (const M)a,
+            Col_raw_adaptor
+            <
+                const M,
+                typename M::const_col_raw_iterator,
+                typename M::const_col_indraw_iterator
+            >()
+        ) &&
+        check_row_or_col_indices
+        (
+            a,
+            Col_raw_adaptor
+            <
+                M,
+                typename M::col_raw_iterator,
+                typename M::col_indraw_iterator
+            >()
+        ) &&
+        check_row_or_col_indices
+        (
+            (const M)a,
+            Col_raw_adaptor
+            <
+                const M,
+                typename M::const_col_raw_iterator,
+                typename M::const_col_indraw_iterator
             >()
         );
 }
