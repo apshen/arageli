@@ -2278,6 +2278,7 @@ public:
     /** Calls unique(). */
     row_raw_iterator row_raw_begin (size_type i)
     {
+        ARAGELI_ASSERT_0(i < nrows());
         unique();
         return mem().begin() + i*ncols();
     }
@@ -2286,6 +2287,7 @@ public:
     /** Calls unique(). */
     row_raw_iterator row_raw_end (size_type i)
     {
+        ARAGELI_ASSERT_0(i < nrows());
         unique();
         return mem().begin() + (i+1)*ncols();
     }
@@ -2295,7 +2297,7 @@ public:
     indraw_iterator indraw_begin ()
     {
         unique();
-        return indraw_iterator(&*mem().begin(), 0, 0, ncols());
+        return indraw_iterator(mem().empty() ? 0 : &*mem().begin(), 0, 0, ncols());
     }
 
     /// Returns index raw iterator on end of items sequence. Non-constant form.
@@ -2303,23 +2305,25 @@ public:
     indraw_iterator indraw_end ()
     {
         unique();
-        return indraw_itetaror(&*mem().end(), nrows(), ncols(), ncols());
+        return indraw_itetaror(mem().empty() ? 0 : &*(mem().end() - 1) + 1, nrows(), ncols(), ncols());
     }
 
     /// Returns index raw iterator on begin of items sequence for a particular row of the matrix. Non-constant form.
     /** Calls unique(). */
     row_indraw_iterator row_indraw_begin (size_type i)
     {
+        ARAGELI_ASSERT_0(i < nrows());
         unique();
-        return row_indraw_iterator(&*mem().begin() + i*ncols(), 0);
+        return row_indraw_iterator(mem().empty() ? 0 : &*mem().begin() + i*ncols(), 0);
     }
 
     /// Returns index raw iterator on end of items sequence for a particular row of the matrix. Non-constant form.
     /** Calls unique(). */
     row_indraw_iterator row_indraw_end (size_type i)
     {
+        ARAGELI_ASSERT_0(i < nrows());
         unique();
-        return row_indraw_iterator(&*mem().begin() + (i+1)*ncols(), ncols());
+        return row_indraw_iterator(mem().empty() ? 0 : &*mem().begin() + (i+1)*ncols(), ncols());
     }
 
     /// Returns index raw iterator on begin of items sequence for a particular column of the matrix. Non-constant form.
@@ -2357,37 +2361,41 @@ public:
     /// Returns raw iterator on begin of items sequence for i-th row. Constant form.
     const_row_raw_iterator row_raw_begin (size_type i) const
     {
+        ARAGELI_ASSERT_0(i < nrows());
         return mem().begin() + i*ncols();
     }
 
     /// Returns raw iterator on end of items sequence for i-th row. Constant form.
     const_row_raw_iterator row_raw_end (size_type i) const
     {
+        ARAGELI_ASSERT_0(i < nrows());
         return mem().begin() + (i+1)*ncols();
     }
 
     /// Returns index raw iterator on begin of items sequence. Constant form.
     const_indraw_iterator indraw_begin () const
     {
-        return const_indraw_iterator(&*mem().begin(), 0, 0, ncols());
+        return const_indraw_iterator(mem().empty() ? 0 : &*mem().begin(), 0, 0, ncols());
     }
 
     /// Returns index raw iterator on end of items sequence. Non-constant form.
     const_indraw_iterator indraw_end () const
     {
-        return indraw_itetaror(&*mem().end(), nrows(), ncols(), ncols());
+        return indraw_itetaror(mem().empty() ? 0 : &*(mem().end() - 1) + 1, nrows(), ncols(), ncols());
     }
 
     /// Returns index raw iterator on begin of items sequence for a particular row of the matrix. Non-constant form.
     const_row_indraw_iterator row_indraw_begin (size_type i) const
     {
-        return const_row_indraw_iterator(&*mem().begin() + i*ncols(), 0);
+        ARAGELI_ASSERT_0(i < nrows());
+        return const_row_indraw_iterator(mem().empty() ? 0 : &*mem().begin() + i*ncols(), 0);
     }
 
     /// Returns index raw iterator on end of items sequence for a particular row of the matrix. Non-constant form.
     const_row_indraw_iterator row_indraw_end (size_type i) const
     {
-        return const_row_indraw_iterator(&*mem().begin() + (i+1)*ncols(), ncols());
+        ARAGELI_ASSERT_0(i < nrows());
+        return const_row_indraw_iterator(mem().empty() ? 0 : &*mem().begin() + (i+1)*ncols(), ncols());
     }
 
     /// Returns index raw iterator on begin of items sequence for a particular column of the matrix. Non-constant form.

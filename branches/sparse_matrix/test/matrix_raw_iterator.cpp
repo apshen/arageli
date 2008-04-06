@@ -223,14 +223,37 @@ bool iterate_for_all_cols_and_rows (M& a)
 template <typename M>
 bool concrete_test_1 ()
 {
-    M a = "((1,0,2), (0, 0, 0), (0, 0, 1), (3, 2, 1))";
-    return iterate_for_all_cols_and_rows(a);
+    {
+        M a = "((1, 0, 2), (0, 0, 0), (0, 0, 1), (3, 2, 1))";
+        if(!iterate_for_all_cols_and_rows(a))
+            return false;
+    }
+    {
+        M a = "((), (), (), ())";
+        if(!iterate_for_all_cols_and_rows(a))
+            return false;
+    }
+    {
+        M a = "()";
+        if(!iterate_for_all_cols_and_rows(a))
+            return false;
+    }
+    {
+        M a = "((1, 2, 3), (4, 5, 6), (7, 8, 9), (10, 11, 12))";
+        if(!iterate_for_all_cols_and_rows(a))
+            return false;
+    }
+    {
+        M a = "((1, 2, 3, 4), (5, 6, 7, 8), (9, 10, 11, 12))";
+        if(!iterate_for_all_cols_and_rows(a))
+            return false;
+    }
+
+    return true;
 }
 
 }
 
-
-// CHOOSE ONE OF THE FOLLOWING THREE HEADERS
 
 TEST
 (
