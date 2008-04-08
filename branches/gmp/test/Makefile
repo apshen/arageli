@@ -32,9 +32,9 @@
 ##############################################################################
 
 test_dirs = . ITLab-produced
-CXXFLAGS += -MD -g -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
+CXXFLAGS += $(COMMONCXXFLAGS) -MD -g -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
 tests_name = test
-LINKFLAGS = -L"../lib" -L"../tool/ts/bin/" -ltestarageli -lts
+LINKFLAGS += $(COMMONLINKFLAGS) -L"../lib" -L"../tool/ts/bin/" -ltestarageli -lts
 
 all: ../bin/$(tests_name)
 
