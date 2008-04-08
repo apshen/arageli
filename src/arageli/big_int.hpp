@@ -764,10 +764,14 @@ public:
         std::swap(number, x.number);
     }
 
+#ifndef ARAGELI_GMP
+
     const digit* _digits () const
     {
         return number->data;
     }
+
+#endif
 
 private:
 
