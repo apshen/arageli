@@ -56,16 +56,19 @@ namespace Arageli
 namespace simplex_method
 {
 
+//  Alexey Polovinkin: code that must be refactored I'll note // AP ... // end AP
 
 template<typename T, typename Ctrler>
 void adv_simplex_method_alg<T, Ctrler>::AllocateData()
 {
+    // AP
     m_A.resize(m_NumAuxVars, m_NumAuxVars + m_NumStructVars);
     m_C.resize(m_NumAuxVars + m_NumStructVars);
     m_B.resize(m_NumAuxVars, m_NumAuxVars);
     m_N.resize(m_NumAuxVars, m_NumStructVars);
     m_Binv.resize(m_NumAuxVars, m_NumAuxVars);
     m_Amod.resize(m_NumAuxVars, m_NumAuxVars + m_NumStructVars);
+    // end AP
     m_LowerBounds.resize(m_NumAuxVars + m_NumStructVars);
     m_UpperBounds.resize(m_NumAuxVars + m_NumStructVars);
     m_IsLowerBoundsInf.resize(m_NumAuxVars + m_NumStructVars);
@@ -115,12 +118,15 @@ void adv_simplex_method_alg<T, Ctrler>::SetConstraintMatrix (const matrix<T>& A)
     SetNumAuxVars(A.nrows());
     SetNumStructVars(A.ncols());
     AllocateData();
+
+    // to create full matrix m_A from A we need bind identity matrix to it only.
+    // AP
     for (i = 0; i < m_NumAuxVars; i++)
         m_A(i, i) = unit<T>();
     for (j = m_NumAuxVars; j < m_NumAuxVars + m_NumStructVars; j++)
         for (i = 0; i < m_NumAuxVars; i++)
             m_A(i, j) = A(i, j - m_NumAuxVars);
-
+    // end AP
 }
 
 
@@ -211,7 +217,10 @@ void adv_simplex_method_alg<T, Ctrler>::InitInitialData()
     m_Binv.assign_diag(m_NumAuxVars, unit<T>());
 
     m_A.copy_cols(m_NonBasicVarNums, m_N);
+    // matrix m_Amod will be excluded from algorithm
+    // AP
     m_Amod.assign(m_N);
+    // end AP
 
     for(i = m_NumAuxVars; i < m_NumAuxVars + m_NumStructVars; i++)
         switch (m_VarsType[i])
@@ -331,7 +340,11 @@ void adv_simplex_method_alg<T, Ctrler>::ComputeReducedCosts()
     for (i = 0; i < m_NumStructVars; i++)
         cn[i] = m_C[m_NonBasicVarNums[i]];
 
+    // will be changed to improve performance
+    // m_D = cn - (cb * m_Binv) * m_N;
+    // AP
     m_D = cn - cb * m_Amod;
+    // end AP
 }
 
 
@@ -386,6 +399,9 @@ iterResult adv_simplex_method_alg<T, Ctrler>::ChooseBasicVar()
             break;
         }
 
+    // only pivot_col_number-th column is necessary to find pivot row
+    // therefore we will be operate with this vector
+    // AP
     if (m_CurrCost < 0)
     {
         for (i = 0; i < m_NumAuxVars; i++)
@@ -443,7 +459,7 @@ iterResult adv_simplex_method_alg<T, Ctrler>::ChooseBasicVar()
             }
         }
     }
-
+    // end AP
     if (min_index == -1)
     {
         return IRES_SOLUTION_NOT_BOUNDED;
@@ -507,12 +523,17 @@ void adv_simplex_method_alg<T, Ctrler>::ChangeBasis()
             (
                 m_CurrCost < null<T>() &&
                 // TODO Use is_positive instead comparing with 0.
+                // will be changed by pivot elem value
+                // AP
                 m_Amod(pivot_basic_col_num, pivot_non_basic_col_num) > null<T>()
+                // end AP
             ) ||
             (
                 m_CurrCost > null<T>() &&
                 // TODO Use is_negative instead comparing with 0.
+                // AP
                 m_Amod(pivot_basic_col_num, pivot_non_basic_col_num) < null<T>()
+                // end AP
             )
         )
         {
@@ -534,7 +555,10 @@ void adv_simplex_method_alg<T, Ctrler>::ChangeBasis()
     //m_Binv.assign(m_B);
     m_Binv = inverse(m_B);
 
+    // will be removed
+    // AP
     m_Amod = m_Binv * m_N;
+    // end AP
 
 }
 
