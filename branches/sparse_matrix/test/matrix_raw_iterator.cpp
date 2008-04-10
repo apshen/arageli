@@ -216,7 +216,7 @@ bool check_row_or_col_indices (M& a, Adaptor adaptor)
                     << "typeid(M).name() = " << typeid(M).name() << '\n';
                 output_aligned(tout, a);
                 tout << '\n';
-                
+
                 return false;
             }
         }
