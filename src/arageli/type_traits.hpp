@@ -201,7 +201,30 @@ namespace type_category
     class string :
         public type
     {};
+
+    class configurator :
+        public type
+    {};
+
+    class spectator :
+        public type
+    {};
+
+    class tag :
+        public type
+    {};
 }
+
+
+#define ARAGELI_REGISTER_TAG(NAME)    \
+    template <>    \
+    struct type_traits<NAME>:    \
+        public type_traits_default<NAME>    \
+    {    \
+        static const bool is_specialized = true;    \
+        typedef type_category::tag category_type;    \
+        static const category_type category_value;    \
+    };
 
 
 namespace _Internal

@@ -44,6 +44,12 @@ namespace Arageli
 {
 
 
+/// Tag for selecting default parameters.
+/** May be used in some classes or functions to choose the default configuration. */
+struct default_tag
+{};
+
+
 /// Makes and returns a temporary copy of the argument.
 /** This function is useful to dealing with our container-liked
     structures when an element of structure is used in operation
