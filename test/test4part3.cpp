@@ -166,12 +166,12 @@ void test4_10 ()
     cout << "\n\n *********** big_float *********** \n\n";
 
     {
-        //big_float::set_global_precision(100);
-        //big_float::set_round_mode(TO_NEAREST);
+        //big_float_impl::set_global_precision(100);
+        //big_float_impl::set_round_mode(TO_NEAREST);
 
         cout.setf(std::ios::scientific, std::ios::floatfield);
 
-        typedef big_float T;
+        typedef big_float_impl T;
 
         matrix<T> a = "((1, 2, 3), (4, 5, 6), (7, 8, 9))", b, q;
 
@@ -297,7 +297,7 @@ void test4_14 ()
     //big_float::set_global_precision(100);
     //big_float::set_round_mode(TO_NEAREST);
 
-    big_float
+    big_float_impl
         a = "1.1234567890987654321",
         b = "82736418265418217823000000.0000000000000000000000000000000001111111";
 
