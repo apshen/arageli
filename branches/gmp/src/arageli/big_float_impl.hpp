@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-    big_float.hpp
+    big_float_impl.hpp
 
     This file is a part of the Arageli library.
 
@@ -29,7 +29,7 @@
 *****************************************************************************/
 
 /**
-    \file big_float.hpp
+    \file big_float_impl.hpp
     \brief Big float number class implementation.
 
     This module implements a class big_float for representing
@@ -37,7 +37,7 @@
     floating point.
 
     Implementation of a Big Float Number.
-    An instance of the data type big_float is
+    An instance of the data type big_float_impl is
     a number of the form s*2^e where s is
     the significant and e is the exponent.
     Both are instances of type big_int.
@@ -56,8 +56,8 @@
 #include "bigar.hpp"
 #include "big_int.hpp"
 
-#ifndef _ARAGELI_big_float_h_
-#define _ARAGELI_big_float_h_
+#ifndef _ARAGELI_big_float_impl_h_
+#define _ARAGELI_big_float_impl_h_
 
 #undef NAN
 
@@ -87,100 +87,100 @@ const unsigned long PREC_MAX = _Internal::max_digit;
 const unsigned long D_PREC_MAX =
     ( long ) (_Internal::max_digit * log ( 2.0l ) / log ( 10.0l ));
 
-class big_float
+class big_float_impl
 {
 
 public:
 
     /**@name Initializations from built-in types. */
     //@{
-    big_float (char i)
+    big_float_impl (char i)
     {
         from_native_int(i);
     }
 
-    big_float (signed char i)
+    big_float_impl (signed char i)
     {
         from_native_int(i);
     }
 
-    big_float (unsigned char i)
+    big_float_impl (unsigned char i)
     {
         from_native_int(i);
     }
 
-    big_float (signed short i)
+    big_float_impl (signed short i)
     {
         from_native_int(i);
     }
 
-    big_float (unsigned short i)
+    big_float_impl (unsigned short i)
     {
         from_native_int(i);
     }
 
-    big_float (signed int i)
+    big_float_impl (signed int i)
     {
         from_native_int(i);
     }
 
-    big_float (unsigned int i)
+    big_float_impl (unsigned int i)
     {
         from_native_int(i);
     }
 
-    big_float (signed long int i)
+    big_float_impl (signed long int i)
     {
         from_native_int(i);
     }
 
-    big_float (unsigned long int i)
+    big_float_impl (unsigned long int i)
     {
         from_native_int(i);
     }
 
-    big_float (bool i)
+    big_float_impl (bool i)
     {
         from_native_int(i);
     }
 
-    big_float (const big_int &i);
+    big_float_impl (const big_int &i);
 
     #ifdef ARAGELI_INT64_SUPPORT
-        big_float (signed __int64 i)
+        big_float_impl (signed __int64 i)
         {
             from_native_int(i);
         }
 
-        big_float (unsigned __int64 i)
+        big_float_impl (unsigned __int64 i)
         {
             from_native_int(i);
         }
     #endif
 
     #ifdef ARAGELI_LONG_LONG_SUPPORT
-        big_float (signed long long i)
+        big_float_impl (signed long long i)
         {
             from_native_int(i);
         }
 
-        big_float (unsigned long long i)
+        big_float_impl (unsigned long long i)
         {
             from_native_int(i);
         }
     #endif
 
-    big_float (float f)
+    big_float_impl (float f)
     {
         from_native_float(f);
     }
 
-    big_float (double f)
+    big_float_impl (double f)
     {
         from_native_float(f);
     }
 
-    big_float (long double f)
+    big_float_impl (long double f)
     {
         from_native_float(f);
     }
@@ -189,14 +189,14 @@ public:
 
     /**@name Other constructors */
     //@{
-    big_float();                                   ///< Default constructor
-    big_float ( long prec, long mode );            ///< Sets mode to mode and prec to prec
-    big_float ( const char *str );                 ///< Converts str to a big_float
-    big_float ( const char* str, long p );
-    big_float ( const big_float & b );             ///< Makes a copy of a number
+    big_float_impl();                                   ///< Default constructor
+    big_float_impl ( long prec, long mode );            ///< Sets mode to mode and prec to prec
+    big_float_impl ( const char *str );                 ///< Converts str to a big_float_impl
+    big_float_impl ( const char* str, long p );
+    big_float_impl ( const big_float_impl & b );             ///< Makes a copy of a number
 
     /// Sets mantissa to s and exponenta to e
-    big_float
+    big_float_impl
     (
         const big_int &s,
         const big_int &e,
@@ -204,72 +204,72 @@ public:
     );
     //@}
 
-    ~big_float();
+    ~big_float_impl();
 
     /**@name Assignment*/
     //@{
-    big_float& operator= (const big_int & b);
+    big_float_impl& operator= (const big_int & b);
 
-    big_float& operator= (const char* str)
+    big_float_impl& operator= (const char* str)
     {
-        return *this = big_float (str,prec);
+        return *this = big_float_impl (str,prec);
     }
 
-    big_float& operator= (char i)
-    {
-        from_native_int(i);
-        return *this;
-    }
-
-    big_float& operator= (signed char i)
+    big_float_impl& operator= (char i)
     {
         from_native_int(i);
         return *this;
     }
 
-    big_float& operator= (unsigned char i)
+    big_float_impl& operator= (signed char i)
     {
         from_native_int(i);
         return *this;
     }
 
-    big_float& operator= (signed short i)
+    big_float_impl& operator= (unsigned char i)
     {
         from_native_int(i);
         return *this;
     }
 
-    big_float& operator= (unsigned short i)
+    big_float_impl& operator= (signed short i)
     {
         from_native_int(i);
         return *this;
     }
 
-    big_float& operator= (signed int i)
+    big_float_impl& operator= (unsigned short i)
     {
         from_native_int(i);
         return *this;
     }
 
-    big_float& operator= (unsigned int i)
+    big_float_impl& operator= (signed int i)
     {
         from_native_int(i);
         return *this;
     }
 
-    big_float& operator= (signed long int i)
+    big_float_impl& operator= (unsigned int i)
     {
         from_native_int(i);
         return *this;
     }
 
-    big_float& operator= (unsigned long int i)
+    big_float_impl& operator= (signed long int i)
     {
         from_native_int(i);
         return *this;
     }
 
-    big_float& operator= (bool i)
+    big_float_impl& operator= (unsigned long int i)
+    {
+        from_native_int(i);
+        return *this;
+    }
+
+    big_float_impl& operator= (bool i)
     {
         from_native_int(i);
         return *this;
@@ -277,13 +277,13 @@ public:
 
 
     #ifdef ARAGELI_INT64_SUPPORT
-        big_float& operator= (signed __int64 i)
+        big_float_impl& operator= (signed __int64 i)
         {
             from_native_int(i);
             return *this;
         }
 
-        big_float& operator= (unsigned __int64 i)
+        big_float_impl& operator= (unsigned __int64 i)
         {
             from_native_int(i);
             return *this;
@@ -291,31 +291,31 @@ public:
     #endif
 
     #ifdef ARAGELI_LONG_LONG_SUPPORT
-        big_float& operator= (signed long long i)
+        big_float_impl& operator= (signed long long i)
         {
             from_native_int(i);
             return *this;
         }
 
-        big_float& operator= (unsigned long long i)
+        big_float_impl& operator= (unsigned long long i)
         {
             from_native_int(i);
             return *this;
         }
     #endif
 
-    big_float& operator= (float f)
+    big_float_impl& operator= (float f)
     {
         from_native_float(f); return *this;
     }
 
-    big_float& operator= (double f)
+    big_float_impl& operator= (double f)
     {
         from_native_float(f);
         return *this;
     }
 
-    big_float& operator= (long double f)
+    big_float_impl& operator= (long double f)
     {
         from_native_float(f);
         return *this;
@@ -437,7 +437,7 @@ public:
     int sign () const;
 
     /// Swaps two numbers.
-    void swap (big_float& bf)
+    void swap (big_float_impl& bf)
     {
         s.swap(bf.s);
         e.swap(bf.e);
@@ -446,9 +446,9 @@ public:
     }
 
     /// Reads a number
-    friend std::ostream & operator << (std::ostream & s, const big_float & x);
+    friend std::ostream & operator << (std::ostream & s, const big_float_impl & x);
     /// Writes a number
-    friend std::istream & operator >> (std::istream & s, big_float & x);
+    friend std::istream & operator >> (std::istream & s, big_float_impl & x);
     /// Formated output
     void out ( std::ostream & os, char c = 'd' ) const ;
     /// Formated input
@@ -495,94 +495,94 @@ public:
         - -1  if a < b,
         - +1  if a > b
     */
-    friend int cmp(const big_float & a, const big_float & b);
+    friend int cmp(const big_float_impl & a, const big_float_impl & b);
     /// Test for equality
-    friend bool operator ==(const big_float & a, const big_float & b);
+    friend bool operator ==(const big_float_impl & a, const big_float_impl & b);
     /// Test for inequality
-    friend bool operator !=(const big_float & a, const big_float & b);
+    friend bool operator !=(const big_float_impl & a, const big_float_impl & b);
     /// Test for greater
-    friend bool operator > (const big_float & a, const big_float & b);
+    friend bool operator > (const big_float_impl & a, const big_float_impl & b);
     /// Test for greater than or equal to
-    friend bool operator >=(const big_float & a, const big_float & b);
+    friend bool operator >=(const big_float_impl & a, const big_float_impl & b);
     /// Test for less
-    friend bool operator < (const big_float & a, const big_float & b);
+    friend bool operator < (const big_float_impl & a, const big_float_impl & b);
     /// Test for less than or equal to
-    friend bool operator <=(const big_float & a, const big_float & b);
+    friend bool operator <=(const big_float_impl & a, const big_float_impl & b);
 
-    friend big_float operator + (const big_float & a);       ///< Unary plus
-    friend big_float operator - (const big_float & a);       ///< Unary minus
+    friend big_float_impl operator + (const big_float_impl & a);       ///< Unary plus
+    friend big_float_impl operator - (const big_float_impl & a);       ///< Unary minus
 
     /** Addition. Up to prec binary digits in rounding mode mode.
         The parameters prec and mode are optional and have the global defult
         values which can be set by set_global_precision and set_rounding_mode.*/
-    friend big_float add(const big_float & b, const big_float & c, long prec, int mode);
-    friend big_float add(const big_float & b, const big_float & c, long prec);
-    friend big_float add(const big_float & b, const big_float & c);
+    friend big_float_impl add(const big_float_impl & b, const big_float_impl & c, long prec, int mode);
+    friend big_float_impl add(const big_float_impl & b, const big_float_impl & c, long prec);
+    friend big_float_impl add(const big_float_impl & b, const big_float_impl & c);
 
     /** Subtraction. Up to prec binary digits in rounding mode mode
         The parameters prec and mode are optional and have the global defult
         values which can be set by set_global_precision and set_rounding_mode.*/
-    friend big_float sub(const big_float & b, const big_float & c, long prec, int mode);
-    friend big_float sub(const big_float & b, const big_float & c, long prec);
-    friend big_float sub(const big_float & b, const big_float & c);
+    friend big_float_impl sub(const big_float_impl & b, const big_float_impl & c, long prec, int mode);
+    friend big_float_impl sub(const big_float_impl & b, const big_float_impl & c, long prec);
+    friend big_float_impl sub(const big_float_impl & b, const big_float_impl & c);
 
     /** Multiplication. Up to prec binary digits in rounding mode mode
         The parameters prec and mode are optional and have the global defult
         values which can be set by set_global_precision and set_rounding_mode.*/
-    friend big_float mul(const big_float & b, const big_float & c, long prec, int mode);
-    friend big_float mul(const big_float & b, const big_float & c, long prec);
-    friend big_float mul(const big_float & b, const big_float & c);
+    friend big_float_impl mul(const big_float_impl & b, const big_float_impl & c, long prec, int mode);
+    friend big_float_impl mul(const big_float_impl & b, const big_float_impl & c, long prec);
+    friend big_float_impl mul(const big_float_impl & b, const big_float_impl & c);
 
     /** Divizion. Up to prec binary digits
         The parameters prec and mode are optional and have the global defult
         values which can be set by set_global_precision */
-    friend big_float div(const big_float & b, const big_float & c, long prec, int mode);
-    friend big_float div(const big_float & b, const big_float & c, long prec);
-    friend big_float div(const big_float & b, const big_float & c);
-    friend big_float divnu(const big_float & b, const big_float & c, long prec, int mode);
-    friend big_float div_i ( const big_int & c );
+    friend big_float_impl div(const big_float_impl & b, const big_float_impl & c, long prec, int mode);
+    friend big_float_impl div(const big_float_impl & b, const big_float_impl & c, long prec);
+    friend big_float_impl div(const big_float_impl & b, const big_float_impl & c);
+    friend big_float_impl divnu(const big_float_impl & b, const big_float_impl & c, long prec, int mode);
+    friend big_float_impl div_i ( const big_int & c );
     /** Square rooting. Up to prec binary digits
         The parameters prec and mode are optional and have the global defult
         values which can be set by set_global_precision.*/
-    friend big_float fsqrt(const big_float & b,/* const big_float & c,*/ long prec, int mode);
-    friend big_float fsqrt(const big_float & b,/* const big_float & c,*/ long prec);
-    friend big_float fsqrt(const big_float & b/*, const big_float & c*/);
-    friend big_float nfsqrt(const big_float & b,/* const big_float & c,*/ long prec, int mode);
+    friend big_float_impl fsqrt(const big_float_impl & b,/* const big_float_impl & c,*/ long prec, int mode);
+    friend big_float_impl fsqrt(const big_float_impl & b,/* const big_float_impl & c,*/ long prec);
+    friend big_float_impl fsqrt(const big_float_impl & b/*, const big_float_impl & c*/);
+    friend big_float_impl nfsqrt(const big_float_impl & b,/* const big_float_impl & c,*/ long prec, int mode);
 
     /// Binary plus. It is equivalent to add(b, c)
-    friend big_float operator + (const big_float & b, const big_float & c);
+    friend big_float_impl operator + (const big_float_impl & b, const big_float_impl & c);
     /// Binary minus. It is equivalent to sub(b, c)
-    friend big_float operator - (const big_float & b, const big_float & c);
+    friend big_float_impl operator - (const big_float_impl & b, const big_float_impl & c);
     /// Multiplication. It is equivalent to mul(b, c)
-    friend big_float operator * (const big_float & b, const big_float & c);
+    friend big_float_impl operator * (const big_float_impl & b, const big_float_impl & c);
     /// Divizion. It is equivalent to div(b, c)
-    friend big_float operator / (const big_float & b, const big_float & c);
+    friend big_float_impl operator / (const big_float_impl & b, const big_float_impl & c);
     /// Combined assignment-addition operator
-    friend big_float & operator += (big_float & b, const big_float & c);
+    friend big_float_impl & operator += (big_float_impl & b, const big_float_impl & c);
     /// Combined assignment-subtraction operator
-    friend big_float & operator -= (big_float & b, const big_float & c);
+    friend big_float_impl & operator -= (big_float_impl & b, const big_float_impl & c);
     /// Combined assignment-multiplication operator
-    friend big_float & operator *= (big_float & b, const big_float & c);
+    friend big_float_impl & operator *= (big_float_impl & b, const big_float_impl & c);
     /// Combined assignment-division operator
-    friend big_float & operator /= (big_float & b, const big_float & c);
+    friend big_float_impl & operator /= (big_float_impl & b, const big_float_impl & c);
 
     /// Returns the next bigger integer
-    friend big_float ceil  (const big_float & a);
+    friend big_float_impl ceil  (const big_float_impl & a);
     /// Returns the next smaller integer
-    friend big_float floor (const big_float & a);
+    friend big_float_impl floor (const big_float_impl & a);
     /// Returns the fractal part of the number
-    friend big_float frac  (const big_float & a);
+    friend big_float_impl frac  (const big_float_impl & a);
     /// Returns the next bigger integer
-    friend big_int iceil (const big_float & a);
+    friend big_int iceil (const big_float_impl & a);
     /// Returns the next smaller integer
-    friend big_int ifloor(const big_float & a);
+    friend big_int ifloor(const big_float_impl & a);
 
     /// Returns random number in the interval 0 <=x < 1 with prec lenght of mantissa
-    friend big_float frandom  (long bits);
+    friend big_float_impl frandom  (long bits);
     /// Returns random number in the interval 0 <=x < 1 with prec lenght of mantissa
-    friend big_float frandom  ( );
+    friend big_float_impl frandom  ( );
     /// Returns random number with prec lenght of mantissa and with exp as exponent
-    friend big_float frandom1 (long bits, const big_int & exp = 0 );
+    friend big_float_impl frandom1 (long bits, const big_int & exp = 0 );
 
     /// Returns 1 iff the number is Nan, Infinity or 0
     bool is_special ( void ) const
@@ -633,32 +633,32 @@ public:
     }
 
     #if 0
-    /** \name Special big_float numbers */
+    /** \name Special big_float_impl numbers */
     //@{
 
-        static big_float nan ( void )
+        static big_float_impl nan ( void )
         {
-            return big_float ("nan");
+            return big_float_impl ("nan");
         }
 
-        static big_float inf ( void )
+        static big_float_impl inf ( void )
         {
-            return big_float ("inf");
+            return big_float_impl ("inf");
         }
 
-        static big_float m_inf ( void )
+        static big_float_impl m_inf ( void )
         {
-            return big_float ("-inf");
+            return big_float_impl ("-inf");
         }
 
-        static big_float zero ( void )
+        static big_float_impl zero ( void )
         {
-            return big_float ( );
+            return big_float_impl ( );
         }
 
-        static big_float m_zero ( void )
+        static big_float_impl m_zero ( void )
         {
-            return big_float ("-0");
+            return big_float_impl ("-0");
         }
 
     //@}
@@ -686,9 +686,9 @@ public:
 
 private:
 
-    void normalize_1 ( long prec = big_float::global_prec, long mode = big_float::global_mode );
+    void normalize_1 ( long prec = big_float_impl::global_prec, long mode = big_float_impl::global_mode );
 
-    // the following type is used inside the big_float unit and implements
+    // the following type is used inside the big_float_impl unit and implements
     // the storage for a Big Float Number
 
     special_numbers special;
@@ -696,11 +696,11 @@ private:
     big_int e; ///< exponent
     big_int s; //< significant
 
-    long prec; ///< bits precision for this big_float number
-    long mode; ///< big_float rounding mode for this number
+    long prec; ///< bits precision for this big_float_impl number
+    long mode; ///< big_float_impl rounding mode for this number
 
-    static long global_prec; ///< Global bits precision for big_float numbers
-    static long global_mode; ///< Global big_float rounding mode
+    static long global_prec; ///< Global bits precision for big_float_impl numbers
+    static long global_mode; ///< Global big_float_impl rounding mode
 
 private:
 
@@ -721,41 +721,41 @@ private:
 };
 
 
-inline big_float abs (const big_float& x)
+inline big_float_impl abs (const big_float_impl& x)
 {
     return is_negative(x) ? -x : x;
 }
 
 
 template <typename Outiter>
-inline void generate_range_helper (big_float& t1, const big_float& t2, Outiter outiter)
+inline void generate_range_helper (big_float_impl& t1, const big_float_impl& t2, Outiter outiter)
 {
     generate_range_helper_wo_inc(t1, t2, outiter);
 }
 
 
-inline big_float & operator+= (big_float & b, const big_float & c)
+inline big_float_impl & operator+= (big_float_impl & b, const big_float_impl & c)
 {
     return b = b + c;
 }
 
-inline big_float & operator-= (big_float & b, const big_float & c)
+inline big_float_impl & operator-= (big_float_impl & b, const big_float_impl & c)
 {
     return b = b - c;
 }
 
-inline big_float & operator*= (big_float & b, const big_float & c)
+inline big_float_impl & operator*= (big_float_impl & b, const big_float_impl & c)
 {
     return b = b * c;
 }
 
-inline big_float & operator/= (big_float & b, const big_float & c)
+inline big_float_impl & operator/= (big_float_impl & b, const big_float_impl & c)
 {
     return b = b / c;
 }
 
 
-big_float fsqrt( const big_float & b );
+big_float_impl fsqrt( const big_float_impl & b );
 
 
 }
@@ -763,12 +763,12 @@ big_float fsqrt( const big_float & b );
 namespace std
 {
 
-inline Arageli::big_float abs(const Arageli::big_float &x)
+inline Arageli::big_float_impl abs(const Arageli::big_float_impl &x)
 {
     return Arageli::abs(x);
 }
 
-inline Arageli::big_float sqrt(const Arageli::big_float &x)
+inline Arageli::big_float_impl sqrt(const Arageli::big_float_impl &x)
 {
     return Arageli::fsqrt(x);
 }
@@ -777,7 +777,7 @@ inline Arageli::big_float sqrt(const Arageli::big_float &x)
 
 #ifdef ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE
     #define ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_BIG_FLOAT
-    #include "big_float.cpp"
+    #include "big_float_impl.cpp"
     #undef  ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_BIG_FLOAT
 #endif
 

@@ -516,7 +516,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\arageli\big_float.cpp"
+				RelativePath="..\..\..\src\arageli\big_float_impl.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -2602,7 +2602,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\arageli\big_float.hpp"
+				RelativePath="..\..\..\src\arageli\big_float_impl.hpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
