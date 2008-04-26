@@ -160,7 +160,7 @@ void test4_40 ()
 {
     cout
         << "double(0) = " << double(0)
-        << "\nbig_float_impl(0) = " << big_float_impl(0) << std::endl;
+        << "\nbig_float(0) = " << big_float(0) << std::endl;
 }
 
 

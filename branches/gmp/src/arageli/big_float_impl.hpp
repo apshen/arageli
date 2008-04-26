@@ -52,35 +52,18 @@
 #include "config.hpp"
 
 #include <cmath>
-#include "std_import.hpp"
 #include "bigar.hpp"
 #include "big_int.hpp"
 
 #ifndef _ARAGELI_big_float_impl_h_
 #define _ARAGELI_big_float_impl_h_
 
-#undef NAN
-
 #pragma warning ( disable : 4018 )
+
+#undef NAN
 
 namespace Arageli
 {
-
-/** \name Rounding Modes for big_float*/
-//@{
-
-// WARNING! Names are too simple and general.
-// TODO: Rename or incapsulate them!
-// WARNING! How does it combine with ISO C++ 18.2.1.3?
-
-const int EXACT = 1; ///< Rounds to the closest value
-const int ROUND = 2; ///< Uses rules of `'manual'' computations
-const int TO_NEAREST = 3; ///< Rounds towards the nearest number
-const int TO_ZERO = 4; ///< Rounds towards zero
-const int TO_P_INF = 5; ///< Rounds towards +infinity
-const int TO_M_INF = 6; ///< Rounds towards -infinity
-const int TO_INF = 7;   ///< Rounds outwards zero
-//@}
 
 const int PREC_MIN = 2;
 const unsigned long PREC_MAX = _Internal::max_digit;
@@ -89,8 +72,34 @@ const unsigned long D_PREC_MAX =
 
 class big_float_impl
 {
-
+    typedef enum
+    {
+        FINITE,
+        P_ZERO,
+        M_ZERO,
+        P_INF,
+        M_INF,
+        NAN
+    } special_number_t;
 public:
+    /** \name Rounding Modes for big_float*/
+    //@{
+    typedef enum
+    {
+        EXACT = 1, ///< Rounds to the closest value
+        ROUND = 2, ///< Uses rules of "manual" computations
+        TO_NEAREST = 3, ///< Rounds towards the nearest number
+        TO_ZERO = 4, ///< Rounds towards zero
+        TO_P_INF = 5, ///< Rounds towards +infinity
+        TO_M_INF = 6, ///< Rounds towards -infinity
+        TO_INF = 7   ///< Rounds outwards zero
+    } rounding_mode_t;
+    //@}
+
+    typedef long prec_t;
+    typedef big_int man_t;
+    typedef big_int exp_t;
+
 
     /**@name Initializations from built-in types. */
     //@{
@@ -189,22 +198,35 @@ public:
 
     /**@name Other constructors */
     //@{
-    big_float_impl();                                   ///< Default constructor
-    big_float_impl ( long prec, long mode );            ///< Sets mode to mode and prec to prec
-    big_float_impl ( const char *str );                 ///< Converts str to a big_float_impl
-    big_float_impl ( const char* str, long p );
-    big_float_impl ( const big_float_impl & b );             ///< Makes a copy of a number
+    big_float_impl() :
+    prec(get_default_precision()), mode (get_default_rounding_mode())
+    {}
 
-    /// Sets mantissa to s and exponenta to e
-    big_float_impl
-    (
-        const big_int &s,
-        const big_int &e,
-        long mode
-    );
+    big_float_impl (prec_t prec, rounding_mode_t mode) :
+    prec (prec), mode (mode)
+    {}
+
+    //constructor  (from two big_int to big_float_impl )
+    big_float_impl (const man_t &s, const exp_t &e, rounding_mode_t mode = get_default_rounding_mode()) :
+    e(e), s(s), mode (mode)
+    {
+        ARAGELI_ASSERT_0( prec >= PREC_MIN && prec <= PREC_MAX )
+        prec = s.length();
+    }
+
+    big_float_impl (const char *str);                 ///< Converts str to a big_float_impl
+    big_float_impl (const char* str,long p );
     //@}
 
-    ~big_float_impl();
+
+
+    //copy constructor
+    big_float_impl (const big_float_impl &b) :
+    e(b.e), s(b.s), prec(b.prec), mode(b.mode)
+    {}
+
+    ~big_float_impl()
+    {}
 
     /**@name Assignment*/
     //@{
@@ -373,7 +395,7 @@ public:
 
     operator bool () const
     {
-        return !is_zero();
+        return !iszero();
     }
 
     #ifdef ARAGELI_INT64_SUPPORT
@@ -421,20 +443,76 @@ public:
 
     //@}
 
+    //precision and rounding mode
+    void set_precision (prec_t p)
+    {
+        //CHECK_PREC(p)
+        prec = p;
+    }
+
+    void set_round_mode (rounding_mode_t m)
+    {
+        //CHECK_MODE(m)
+        mode = m;
+    }
+    
+    prec_t get_precision () const
+    {
+        return prec;
+    }
+
+    rounding_mode_t get_rounding_mode () const
+    {
+        return mode;
+    }
+
+    void set_default_precision (prec_t p)
+    {
+        //CHECK_PREC(p)
+        get_default_precision() = p;
+    }
+
+    
+    void set_default_round_mode (rounding_mode_t m)
+    {
+        //CHECK_MODE(m)
+        get_default_rounding_mode() = m;
+    }
+
+    static prec_t &get_default_precision ()
+    {
+        static prec_t p = 300;
+        return p;
+    }
+    
+    static rounding_mode_t & get_default_rounding_mode()
+    {
+        static rounding_mode_t m = TO_NEAREST;
+        return m;
+    }
+
     /// Returns the exponent
-    big_int get_exponent() const
+    exp_t get_exp() const
     {
         return e;
     }
 
     /// Returns the significant
-    big_int get_significant() const
+    man_t get_significant() const
     {
         return s;
     }
 
     /// Returns signum
-    int sign () const;
+    int sign () const
+    {
+        return s.sign();
+    }
+
+    void setsign (int sign)
+    {
+        s.number->sign = sign;
+    }
 
     /// Swaps two numbers.
     void swap (big_float_impl& bf)
@@ -445,19 +523,12 @@ public:
         std::swap(mode, bf.mode);
     }
 
-    /// Reads a number
-    friend std::ostream & operator << (std::ostream & s, const big_float_impl & x);
-    /// Writes a number
-    friend std::istream & operator >> (std::istream & s, big_float_impl & x);
-    /// Formated output
-    void out ( std::ostream & os, char c = 'd' ) const ;
-    /// Formated input
-    void in ( std::istream &ins, char c = 'd' );
+    big_float_impl abs() const
+    {
+        return big_float_impl(s.sign() > 0 ? s : -s, e, mode);
+    }
 
-    /// Sets the global precision to p
-    static void set_global_precision(long p);
-    /// Sets the global rounding mode
-    static void set_global_round_mode (int m = TO_NEAREST);
+    std::pair<std::basic_string<char>, exp_t> to_string (std::size_t n, int base) const;
 
     /// Returns bits precision required to guarantee dec precision indicated
     static std::size_t dec2bits_precision ( std::size_t dec_precision )
@@ -471,24 +542,7 @@ public:
         return (std::size_t) ((long double)(bits_precision) * log(2.0l) / log(10.0l));
     }
 
-    /// Sets precision to p
-    void set_precision ( long p );
-    /// Sets rounding mode
-    void set_round_mode ( long m );
-
-    /// Get precision
-    long get_precision ( void )
-    {
-        return prec;
-    }
-
-    /// Get rounding mode
-    long get_round_mode ( void )
-    {
-        return mode;
-    }
-
-    /// Compares two numbers
+     /// Compares two numbers
     /**
         Returns
         -  0  if a = b,
@@ -496,77 +550,35 @@ public:
         - +1  if a > b
     */
     friend int cmp(const big_float_impl & a, const big_float_impl & b);
-    /// Test for equality
-    friend bool operator ==(const big_float_impl & a, const big_float_impl & b);
-    /// Test for inequality
-    friend bool operator !=(const big_float_impl & a, const big_float_impl & b);
-    /// Test for greater
-    friend bool operator > (const big_float_impl & a, const big_float_impl & b);
-    /// Test for greater than or equal to
-    friend bool operator >=(const big_float_impl & a, const big_float_impl & b);
-    /// Test for less
-    friend bool operator < (const big_float_impl & a, const big_float_impl & b);
-    /// Test for less than or equal to
-    friend bool operator <=(const big_float_impl & a, const big_float_impl & b);
-
-    friend big_float_impl operator + (const big_float_impl & a);       ///< Unary plus
-    friend big_float_impl operator - (const big_float_impl & a);       ///< Unary minus
 
     /** Addition. Up to prec binary digits in rounding mode mode.
-        The parameters prec and mode are optional and have the global defult
+        The parameters prec and mode are optional and have the global default
         values which can be set by set_global_precision and set_rounding_mode.*/
-    friend big_float_impl add(const big_float_impl & b, const big_float_impl & c, long prec, int mode);
-    friend big_float_impl add(const big_float_impl & b, const big_float_impl & c, long prec);
-    friend big_float_impl add(const big_float_impl & b, const big_float_impl & c);
+    friend big_float_impl add ( const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode );
 
     /** Subtraction. Up to prec binary digits in rounding mode mode
-        The parameters prec and mode are optional and have the global defult
+        The parameters prec and mode are optional and have the global default
         values which can be set by set_global_precision and set_rounding_mode.*/
-    friend big_float_impl sub(const big_float_impl & b, const big_float_impl & c, long prec, int mode);
-    friend big_float_impl sub(const big_float_impl & b, const big_float_impl & c, long prec);
-    friend big_float_impl sub(const big_float_impl & b, const big_float_impl & c);
+    friend big_float_impl sub(const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode);
 
     /** Multiplication. Up to prec binary digits in rounding mode mode
-        The parameters prec and mode are optional and have the global defult
+        The parameters prec and mode are optional and have the global default
         values which can be set by set_global_precision and set_rounding_mode.*/
-    friend big_float_impl mul(const big_float_impl & b, const big_float_impl & c, long prec, int mode);
-    friend big_float_impl mul(const big_float_impl & b, const big_float_impl & c, long prec);
-    friend big_float_impl mul(const big_float_impl & b, const big_float_impl & c);
+    friend big_float_impl mul(const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode);
 
     /** Divizion. Up to prec binary digits
-        The parameters prec and mode are optional and have the global defult
+        The parameters prec and mode are optional and have the global default
         values which can be set by set_global_precision */
-    friend big_float_impl div(const big_float_impl & b, const big_float_impl & c, long prec, int mode);
-    friend big_float_impl div(const big_float_impl & b, const big_float_impl & c, long prec);
-    friend big_float_impl div(const big_float_impl & b, const big_float_impl & c);
-    friend big_float_impl divnu(const big_float_impl & b, const big_float_impl & c, long prec, int mode);
-    friend big_float_impl div_i ( const big_int & c );
+    friend big_float_impl div(const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode);
+    friend big_float_impl divnu(const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode);
+    friend big_float_impl div_i (const big_int & c);
     /** Square rooting. Up to prec binary digits
         The parameters prec and mode are optional and have the global defult
         values which can be set by set_global_precision.*/
-    friend big_float_impl fsqrt(const big_float_impl & b,/* const big_float_impl & c,*/ long prec, int mode);
-    friend big_float_impl fsqrt(const big_float_impl & b,/* const big_float_impl & c,*/ long prec);
-    friend big_float_impl fsqrt(const big_float_impl & b/*, const big_float_impl & c*/);
-    friend big_float_impl nfsqrt(const big_float_impl & b,/* const big_float_impl & c,*/ long prec, int mode);
+    friend big_float_impl fsqrt(const big_float_impl & bf, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode);
+    friend big_float_impl nfsqrt ( const big_float_impl & bf, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode );
 
-    /// Binary plus. It is equivalent to add(b, c)
-    friend big_float_impl operator + (const big_float_impl & b, const big_float_impl & c);
-    /// Binary minus. It is equivalent to sub(b, c)
-    friend big_float_impl operator - (const big_float_impl & b, const big_float_impl & c);
-    /// Multiplication. It is equivalent to mul(b, c)
-    friend big_float_impl operator * (const big_float_impl & b, const big_float_impl & c);
-    /// Divizion. It is equivalent to div(b, c)
-    friend big_float_impl operator / (const big_float_impl & b, const big_float_impl & c);
-    /// Combined assignment-addition operator
-    friend big_float_impl & operator += (big_float_impl & b, const big_float_impl & c);
-    /// Combined assignment-subtraction operator
-    friend big_float_impl & operator -= (big_float_impl & b, const big_float_impl & c);
-    /// Combined assignment-multiplication operator
-    friend big_float_impl & operator *= (big_float_impl & b, const big_float_impl & c);
-    /// Combined assignment-division operator
-    friend big_float_impl & operator /= (big_float_impl & b, const big_float_impl & c);
-
-    /// Returns the next bigger integer
+     /// Returns the next bigger integer
     friend big_float_impl ceil  (const big_float_impl & a);
     /// Returns the next smaller integer
     friend big_float_impl floor (const big_float_impl & a);
@@ -585,49 +597,43 @@ public:
     friend big_float_impl frandom1 (long bits, const big_int & exp = 0 );
 
     /// Returns 1 iff the number is Nan, Infinity or 0
-    bool is_special ( void ) const
+    bool isspecial () const
     {
         return special != FINITE;
     }
 
-    /// Returns 1 iff the number is NaN
-    bool is_nan     ( void ) const
+    bool isnan () const
     {
         return special == NAN;
     }
 
-    /// Returns 1 iff the number is +Infinity
-    bool is_pinf    ( void ) const
+    bool ispinf () const
     {
         return special == P_INF;
     }
 
-    /// Returns 1 iff the number is -Infinity
-    bool is_minf    ( void ) const
+
+    bool isminf () const
     {
         return special == M_INF;
     }
 
-    /// Returns 1 iff the number is +Infinity or -Infinity
-    bool is_inf     ( void ) const
+    bool isinf () const
     {
         return special == P_INF || special == M_INF;
     }
 
-    /// Returns 1 iff the number is +0
-    bool is_pzero   ( void ) const
+    bool ispzero () const
     {
         return special == P_ZERO;
     }
 
-    /// Returns 1 iff the number is -0
-    bool is_mzero   ( void ) const
+    bool ismzero () const
     {
         return special == M_ZERO;
     }
 
-    /// Returns 1 iff the number is +0
-    bool is_zero    ( void ) const
+    bool iszero () const
     {
         return special == P_ZERO || special == M_ZERO;
     }
@@ -663,49 +669,23 @@ public:
 
     //@}
     #endif
+    friend std::istream & operator >> (std::istream &is , big_float_impl &fnum);
+ private:
 
-    typedef enum special_numbers_en
-    {
-        FINITE = 0,
-        NAN,
-        P_INF,
-        M_INF,
-        P_ZERO,
-        M_ZERO
-    } special_numbers;
-
-    /*
-    friend special_numbers operator + ( const special_numbers &sa, const special_numbers &sb );
-    friend special_numbers operator - ( const special_numbers &sa, const special_numbers &sb );
-    friend special_numbers operator * ( const special_numbers &sa, const special_numbers &sb );
-    friend special_numbers operator / ( const special_numbers &sa, const special_numbers &sb );
-
-    friend std::ostream & operator << ( std::ostream &os, const special_numbers &sn );
-    friend std::istream & operator >> ( std::istream &is, const special_numbers &sn );
-    */
-
-private:
-
-    void normalize_1 ( long prec = big_float_impl::global_prec, long mode = big_float_impl::global_mode );
+    void normalize_1 (prec_t prec = get_default_precision(), rounding_mode_t mode = get_default_rounding_mode());
 
     // the following type is used inside the big_float_impl unit and implements
     // the storage for a Big Float Number
 
-    special_numbers special;
-
     big_int e; ///< exponent
     big_int s; //< significant
 
-    long prec; ///< bits precision for this big_float_impl number
-    long mode; ///< big_float_impl rounding mode for this number
+    prec_t prec; ///< bits precision for this big_float_impl number
+    rounding_mode_t mode; ///< big_float_impl rounding mode for this number
 
-    static long global_prec; ///< Global bits precision for big_float_impl numbers
-    static long global_mode; ///< Global big_float_impl rounding mode
+    special_number_t special;
 
 private:
-
-    //  static const std::string get_lower_string ( const special_numbers sn );
-    //  static const std::string get_upper_string ( const special_numbers sn );
 
     template <typename T>
     void from_native_float (const T &f);
@@ -719,59 +699,6 @@ private:
     template <typename T>
     T to_native_float () const;
 };
-
-
-inline big_float_impl abs (const big_float_impl& x)
-{
-    return is_negative(x) ? -x : x;
-}
-
-
-template <typename Outiter>
-inline void generate_range_helper (big_float_impl& t1, const big_float_impl& t2, Outiter outiter)
-{
-    generate_range_helper_wo_inc(t1, t2, outiter);
-}
-
-
-inline big_float_impl & operator+= (big_float_impl & b, const big_float_impl & c)
-{
-    return b = b + c;
-}
-
-inline big_float_impl & operator-= (big_float_impl & b, const big_float_impl & c)
-{
-    return b = b - c;
-}
-
-inline big_float_impl & operator*= (big_float_impl & b, const big_float_impl & c)
-{
-    return b = b * c;
-}
-
-inline big_float_impl & operator/= (big_float_impl & b, const big_float_impl & c)
-{
-    return b = b / c;
-}
-
-
-big_float_impl fsqrt( const big_float_impl & b );
-
-
-}
-
-namespace std
-{
-
-inline Arageli::big_float_impl abs(const Arageli::big_float_impl &x)
-{
-    return Arageli::abs(x);
-}
-
-inline Arageli::big_float_impl sqrt(const Arageli::big_float_impl &x)
-{
-    return Arageli::fsqrt(x);
-}
 
 }
 

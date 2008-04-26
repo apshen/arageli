@@ -140,6 +140,15 @@
     reference to the GMP header file. */
 //#define ARAGELI_GMP
 
+/// Turns MPFR support on.
+/** This macro allows to use mpfr wrapper as template argument of
+    big_float template class
+*/
+//#define ARAGELI_MPFR
+
+#if defined(ARAGELI_MPFR) && !defined(ARAGELI_GMP)
+    #error MPFR support reqires GMP enabled
+#endif
 
 /// The number of iterations in is_prime_small_primes_division function.
 #define ARAGELI_IS_PRIME_SMALL_PRIMES_DIVISION_NUMBER 20
