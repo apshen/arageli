@@ -45,7 +45,7 @@
 #include <iomanip> //for setw, setfill, etc.
 #include <sstream> //for stringstream
 #include <utility> //for pair
-#include <string> //for basic_string 
+#include <string> //for basic_string
 
 #include "config.hpp"
 
@@ -58,7 +58,7 @@ class big_float_t
     typedef BigFloatImpl bf_t;
 
 public:
-    typedef bf_t rep_t;    
+    typedef bf_t rep_t;
     typedef typename rep_t::prec_t prec_t;
     typedef typename rep_t::exp_t exp_t;
 
@@ -68,16 +68,16 @@ public:
     big_float_t ()
     {}
 
-    big_float_t (prec_t prec, rounding_mode_t m) : 
+    big_float_t (prec_t prec, rounding_mode_t m) :
     rep (prec, m)
     {}
 
     template <typename T>
-    big_float_t (T x) : 
+    big_float_t (T x) :
     rep (x)
     {}
 
-    big_float_t (const big_float_t<rep_t> &b) : 
+    big_float_t (const big_float_t<rep_t> &b) :
     rep(b.get_rep())
     {}
 
@@ -105,9 +105,9 @@ public:
     template <typename T>
     operator T () const
     {
-    	return T(get_rep());
+        return T(get_rep());
     }
-        
+
     //precision and round mode
     static prec_t get_default_precision()
     {
@@ -148,7 +148,7 @@ public:
     {
         return get_rep().set_rounding_mode(m);
     }
-    
+
     //representation
     const rep_t & get_rep () const
     {
@@ -183,7 +183,7 @@ inline bool isnan(const T)
 template <>
 inline bool isnan(const float f)
 {
-    #ifdef _MSC_VER 
+    #ifdef _MSC_VER
     return static_cast<bool>(::_isnan(f));
     #else
         return static_cast<bool> (std::isnan(f));
@@ -193,7 +193,7 @@ inline bool isnan(const float f)
 template <>
 inline bool isnan(const double f)
 {
-    #ifdef _MSC_VER 
+    #ifdef _MSC_VER
         return static_cast<bool>(::_isnan(f));
     #else
         return static_cast<bool> (std::isnan(f));
@@ -203,7 +203,7 @@ inline bool isnan(const double f)
 template <>
 inline bool isnan(const long double f)
 {
-    #ifdef _MSC_VER 
+    #ifdef _MSC_VER
         return static_cast<bool>(::_isnan(f));
     #else
         return static_cast<bool> (std::isnan(f));
@@ -353,11 +353,11 @@ inline big_float_t<BF> operator - (const big_float_t<BF> &b)
 
 //arithmetic operations (+, *, -, /)
 template <typename BF, typename T>
-inline big_float_t<BF> add 
+inline big_float_t<BF> add
 (
-    const big_float_t<BF> &b, 
-    T x, 
-    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision, 
+    const big_float_t<BF> &b,
+    T x,
+    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision,
     typename big_float_t<BF>::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -365,11 +365,11 @@ inline big_float_t<BF> add
 }
 
 template <typename BF, typename T>
-inline big_float_t<BF> add 
+inline big_float_t<BF> add
 (
     T x,
-    const big_float_t<BF> &b, 
-    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision, 
+    const big_float_t<BF> &b,
+    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision,
     typename big_float_t<BF>::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -377,11 +377,11 @@ inline big_float_t<BF> add
 }
 
 template <typename BF>
-inline big_float_t<BF> add 
+inline big_float_t<BF> add
 (
-    const big_float_t<BF> &b, 
-    const big_float_t<BF> &c, 
-    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision, 
+    const big_float_t<BF> &b,
+    const big_float_t<BF> &c,
+    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision,
     typename big_float_t<BF>::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -389,11 +389,11 @@ inline big_float_t<BF> add
 }
 
 template <typename BF, typename T>
-inline big_float_t<BF> mul 
+inline big_float_t<BF> mul
 (
-    const big_float_t<BF> &b, 
-    T x, 
-    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(), 
+    const big_float_t<BF> &b,
+    T x,
+    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename BF::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -401,11 +401,11 @@ inline big_float_t<BF> mul
 }
 
 template <typename BF, typename T>
-inline big_float_t<BF> mul 
+inline big_float_t<BF> mul
 (
     T x,
-    const big_float_t<BF> &b, 
-    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(), 
+    const big_float_t<BF> &b,
+    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename BF::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -413,11 +413,11 @@ inline big_float_t<BF> mul
 }
 
 template <typename BF>
-inline big_float_t<BF> mul 
+inline big_float_t<BF> mul
 (
-    const big_float_t<BF> &b, 
-    const big_float_t<BF> &c, 
-    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(), 
+    const big_float_t<BF> &b,
+    const big_float_t<BF> &c,
+    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename BF::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -425,11 +425,11 @@ inline big_float_t<BF> mul
 }
 
 template <typename BF, typename T>
-inline big_float_t<BF> sub 
+inline big_float_t<BF> sub
 (
-    const big_float_t<BF> &b, 
-    T x, 
-    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(), 
+    const big_float_t<BF> &b,
+    T x,
+    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename BF::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -437,11 +437,11 @@ inline big_float_t<BF> sub
 }
 
 template <typename BF, typename T>
-inline big_float_t<BF> sub 
+inline big_float_t<BF> sub
 (
     T x,
-    const big_float_t<BF> &b, 
-    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(), 
+    const big_float_t<BF> &b,
+    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename BF::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -449,11 +449,11 @@ inline big_float_t<BF> sub
 }
 
 template <typename BF>
-inline big_float_t<BF> sub 
+inline big_float_t<BF> sub
 (
-    const big_float_t<BF> &b, 
-    const big_float_t<BF> &c, 
-    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(), 
+    const big_float_t<BF> &b,
+    const big_float_t<BF> &c,
+    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename BF::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -461,11 +461,11 @@ inline big_float_t<BF> sub
 }
 
 template <typename BF, typename T>
-inline big_float_t<BF> div 
+inline big_float_t<BF> div
 (
-    const big_float_t<BF> &b, 
-    T x, 
-    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(), 
+    const big_float_t<BF> &b,
+    T x,
+    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename BF::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -473,11 +473,11 @@ inline big_float_t<BF> div
 }
 
 template <typename BF, typename T>
-inline big_float_t<BF> div 
+inline big_float_t<BF> div
 (
     T x,
-    const big_float_t<BF> &b, 
-    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(), 
+    const big_float_t<BF> &b,
+    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename BF::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -485,11 +485,11 @@ inline big_float_t<BF> div
 }
 
 template <typename BF>
-inline big_float_t<BF> div 
+inline big_float_t<BF> div
 (
-    const big_float_t<BF> &b, 
-    const big_float_t<BF> &c, 
-    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(), 
+    const big_float_t<BF> &b,
+    const big_float_t<BF> &c,
+    typename BF::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename BF::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -629,43 +629,43 @@ inline bool ispzero (const big_float_t<BF> &b)
 
 //TEMPORARY VERSION!
 template <typename BF, typename T>
-inline big_float_t<BF> operator += (big_float_t<BF> &b, T x) 
+inline big_float_t<BF> operator += (big_float_t<BF> &b, T x)
 {
     return (b = b + x);
 }
 
 template <typename BF, typename T>
-inline big_float_t<BF> operator -= (big_float_t<BF> &b, T x) 
+inline big_float_t<BF> operator -= (big_float_t<BF> &b, T x)
 {
     return (b = b - x);
 }
 
 template <typename BF, typename T>
-inline big_float_t<BF> operator /= (big_float_t<BF> &b, T x) 
+inline big_float_t<BF> operator /= (big_float_t<BF> &b, T x)
 {
     return (b = b / x);
 }
 
 template <typename BF, typename T>
-inline big_float_t<BF> operator *= (big_float_t<BF> &b, T x) 
+inline big_float_t<BF> operator *= (big_float_t<BF> &b, T x)
 {
     return (b = b * x);
 }
 
 template <typename BF>
-inline big_float_t<BF> operator -= (big_float_t<BF> &b, const big_float_t<BF> &c) 
+inline big_float_t<BF> operator -= (big_float_t<BF> &b, const big_float_t<BF> &c)
 {
     return (b = b + c);
 }
 
 template <typename BF>
-inline big_float_t<BF> operator /= (big_float_t<BF> &b, const big_float_t<BF> &c) 
+inline big_float_t<BF> operator /= (big_float_t<BF> &b, const big_float_t<BF> &c)
 {
     return (b = b / c);
 }
 
 template <typename BF>
-inline big_float_t<BF> operator *= (big_float_t<BF> &b, const big_float_t<BF> &c) 
+inline big_float_t<BF> operator *= (big_float_t<BF> &b, const big_float_t<BF> &c)
 {
     return (b = b * c);
 }
@@ -706,14 +706,14 @@ Ostream & big_float_t_out_auto (Ostream &os, std::ios_base::fmtflags flags, cons
                 std::size_t zpos = str.find_last_not_of('0');
                 str.erase (str[zpos] == '.' ? zpos: zpos + 1);
             }
-            return str;        
+            return str;
         }
     };
 
     long precision = os.precision();
     pair <basic_string<char>, typename BF::exp_t> bs = b.get_rep().to_string(precision, 10);
     basic_string<char> &man = bs.first;
-    
+
     if (man[0] == '0')
     {
         os << "0.0";
@@ -727,13 +727,13 @@ Ostream & big_float_t_out_auto (Ostream &os, std::ios_base::fmtflags flags, cons
 
         if (exp > precision || exp < -3)
         {
-           os << ze(man.insert(1 + sigm, ".")) << (flags & ios_base::uppercase ? 'E' : 'e') << exp - 1;
-           return os;
+            os << ze(man.insert(1 + sigm, ".")) << (flags & ios_base::uppercase ? 'E' : 'e') << exp - 1;
+            return os;
         }
         else if ( exp <= 0 )
         {
             stringstream ss;
-            os << ze(man.insert(sigm, static_cast<stringstream &>(ss << setfill('0') << setw(-exp+2) << left << "0.").str())); 
+            os << ze(man.insert(sigm, static_cast<stringstream &>(ss << setfill('0') << setw(-exp+2) << left << "0.").str()));
             return os;
         }
         else if ( exp < precision )
@@ -748,11 +748,11 @@ Ostream & big_float_t_out_auto (Ostream &os, std::ios_base::fmtflags flags, cons
 
 #if !defined (M_LOG10E)
     #define M_LOG10E 0.434294481903251827651
-#endif 
+#endif
 
 #if !defined (M_LOG2E)
     #define M_LOG2E 0.434294481903251827651
-#endif 
+#endif
 
 #define M_LOG10_2 M_LOG10E / M_LOG2E
 
@@ -768,14 +768,14 @@ Ostream & big_float_t_out_fixed ( Ostream &os, std::ios_base::fmtflags flags, co
 #else
     long position = 1 + precision + ceil (static_cast<double> (exp) * M_LOG10_2);
 #endif
-    if ( position <= 0) 
+    if ( position <= 0)
     {
         os << "0.0";
         return os;
     }
 
     if (position == 1) ++position;
-    
+
     pair <basic_string<char>, typename BF::exp_t> bs = b.get_rep().to_string(position, 10);
     basic_string<char> &man = bs.first;
     exp = bs.second;
@@ -785,7 +785,7 @@ Ostream & big_float_t_out_fixed ( Ostream &os, std::ios_base::fmtflags flags, co
     stringstream ss;
     if (exp <= 0)
         man.insert(sigm, static_cast<stringstream &> (ss << "0." << setw(-exp) << setfill('0') << "").str());
-    else 
+    else
         man.insert(exp + sigm, ".");
     man.erase (man.end()-(position - exp - precision), man.end());
     os << man;
@@ -797,10 +797,10 @@ Ostream & big_float_t_out_fixed ( Ostream &os, std::ios_base::fmtflags flags, co
 template <typename BF, typename Ostream>
 Ostream & operator << (Ostream &os, const Arageli::big_float_t<BF> &b)
 {
-    if ((os.flags() & std::ios_base::showpos) && sign(b) > 0) os << '+'; 
+    if ((os.flags() & std::ios_base::showpos) && sign(b) > 0) os << '+';
 
     std::ios_base::fmtflags fl = os.flags();
-    
+
     if (fl & std::ios_base::scientific)
     {
         return _Internal::big_float_t_out_scientific (os, fl, b);
@@ -809,7 +809,7 @@ Ostream & operator << (Ostream &os, const Arageli::big_float_t<BF> &b)
     {
         return _Internal::big_float_t_out_fixed (os, fl, b);
     }
-        
+
     else
     {
         return _Internal::big_float_t_out_auto (os, fl, b);
@@ -830,45 +830,45 @@ Stream & operator >> (Stream &is, big_float_t<BF> &b)
 }
 
 //special functions
-#define _ARAGELI_BIG_FLOAT_SPECIAL_UFUNC(FUNC)\
-template <typename BF>\
-inline big_float_t<BF> FUNC (const big_float_t<BF> &b, typename big_float_t<BF>::prec_t prec, typename big_float_t<BF>::rounding_mode_t mode)\
-{\
-    return big_float_t<BF>(/*FUNC(b.get_rep(), prec, mode)*/);\
-}\
+#define _ARAGELI_BIG_FLOAT_SPECIAL_UFUNC(FUNC)    \
+template <typename BF>    \
+inline big_float_t<BF> FUNC (const big_float_t<BF> &b, typename big_float_t<BF>::prec_t prec, typename big_float_t<BF>::rounding_mode_t mode)    \
+{    \
+    return big_float_t<BF>(/*FUNC(b.get_rep(), prec, mode)*/);    \
+}    \
 
-#define _ARAGELI_BIG_FLOAT_SPECIAL_BFUNC(FUNC)\
-template <typename BF>\
-inline big_float_t<BF> FUNC \
-(\
-    const big_float_t<BF> &b,\
-    const big_float_t<BF> &c,\
-    typename big_float_t<BF>::prec_t prec,\
-    typename big_float_t<BF>::rounding_mode_t mode\
-)\
-{\
-    return big_float_t<BF>(FUNC(b.get_rep(), c.get_rep(), prec, mode));\
-}\
+#define _ARAGELI_BIG_FLOAT_SPECIAL_BFUNC(FUNC)    \
+template <typename BF>    \
+inline big_float_t<BF> FUNC    \
+(    \
+    const big_float_t<BF> &b,    \
+    const big_float_t<BF> &c,    \
+    typename big_float_t<BF>::prec_t prec,    \
+    typename big_float_t<BF>::rounding_mode_t mode    \
+)    \
+{    \
+    return big_float_t<BF>(FUNC(b.get_rep(), c.get_rep(), prec, mode));    \
+}    \
 
-#define _ARAGELI_BIG_FLOAT_SPECIAL_MIXED_BFUNC(FUNC)\
-template <typename BF>\
-inline big_float_t<BF> FUNC\
-(\
-    long x,\
-    const big_float_t<BF> &b,\
-    typename big_float_t<BF>::prec_t prec,\
-    typename big_float_t<BF>::rounding_mode_t mode\
-)\
-{\
-    return big_float_t<BF>(FUNC(x, b.get_rep(), prec, mode));\
-}\
+#define _ARAGELI_BIG_FLOAT_SPECIAL_MIXED_BFUNC(FUNC)    \
+template <typename BF>    \
+inline big_float_t<BF> FUNC    \
+(    \
+    long x,    \
+    const big_float_t<BF> &b,    \
+    typename big_float_t<BF>::prec_t prec,    \
+    typename big_float_t<BF>::rounding_mode_t mode    \
+)    \
+{    \
+    return big_float_t<BF>(FUNC(x, b.get_rep(), prec, mode));    \
+}    \
 
-#define _ARAGELI_BIG_FLOAT_SPECIAL_VFUNC(FUNC)\
-template <typename BF>\
-inline big_float_t<BF> FUNC (typename big_float_t<BF>::prec_t prec, typename big_float_t<BF>::rounding_mode_t mode)\
-{\
-    return big_float_t<BF>(FUNC(prec, mode));\
-}\
+#define _ARAGELI_BIG_FLOAT_SPECIAL_VFUNC(FUNC)    \
+template <typename BF>    \
+inline big_float_t<BF> FUNC (typename big_float_t<BF>::prec_t prec, typename big_float_t<BF>::rounding_mode_t mode)    \
+{    \
+    return big_float_t<BF>(FUNC(prec, mode));    \
+}    \
 
 _ARAGELI_BIG_FLOAT_SPECIAL_UFUNC(log)
 _ARAGELI_BIG_FLOAT_SPECIAL_UFUNC(log2)
@@ -963,16 +963,16 @@ int signbit(const big_float_t<BF> &b)
 template <typename BF>
 big_float_t<BF> abs(const big_float_t<BF> &b)
 {
-   return b.get_rep().abs();
+    return b.get_rep().abs();
 }
 
 //integer related functions
-#define _ARAGELI_BIG_FLOAT_MISC_FUNC(FUNC)\
-template <typename BF>\
-inline big_float_t<BF> FUNC (const big_float_t<BF> &b)\
-{\
-    return big_float_t<BF>(FUNC(b));\
-}\
+#define _ARAGELI_BIG_FLOAT_MISC_FUNC(FUNC)    \
+template <typename BF>    \
+inline big_float_t<BF> FUNC (const big_float_t<BF> &b)    \
+{    \
+    return big_float_t<BF>(FUNC(b));    \
+}    \
 
 _ARAGELI_BIG_FLOAT_MISC_FUNC(rint)
 _ARAGELI_BIG_FLOAT_MISC_FUNC(ceil)

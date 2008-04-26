@@ -817,8 +817,8 @@ big_float_impl nfsqrt ( const big_float_impl & bf, big_float_impl::prec_t prec, 
         res = add ( res,  div( bf, res, counter * 2, big_float_impl::EXACT ), counter * 2, big_float_impl::TO_NEAREST );
 //        std::cout << res << std::endl;
         res.e = res.e - 1;
- //       std::cout << counter << " iter \t";
- //       std::cout << res << std::endl;
+//       std::cout << counter << " iter \t";
+//       std::cout << res << std::endl;
         //res.out( std::cout, 'd' );
         //std::cout << std::endl;
     }
