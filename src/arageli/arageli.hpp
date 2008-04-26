@@ -162,7 +162,7 @@
 #include "big_int.hpp"
 #include "big_const.hpp"
 #include "logarithm.hpp"
-#include "big_float_impl.hpp"
+#include "big_float.hpp"
 
 #include "residue.hpp"
 #include "rational.hpp"

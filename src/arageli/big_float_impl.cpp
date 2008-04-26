@@ -41,7 +41,7 @@
     ARAGELI_ASSERT_0(p >= PREC_MIN && p <= PREC_MAX && "Precision is out of range")
 
 #define CHECK_MODE(m)    \
-    ARAGELI_ASSERT_0(m >= EXACT && m <= TO_INF && "Try to use incorrect rounding mode")
+    ARAGELI_ASSERT_0(m >= big_float_impl::EXACT && m <= big_float_impl::TO_INF && "Try to use incorrect rounding mode")
 
 #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) ||    \
     defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_BIG_FLOAT)
@@ -87,12 +87,12 @@ void big_float_impl::from_native_float(const T &f)
 
     man [ digits_need ] =
         (
-            (*p << _Internal::bits_per_digit - bits_remain) >>
-            _Internal::bits_per_digit - bits_remain
+            (*p << (_Internal::bits_per_digit - bits_remain)) >>
+            (_Internal::bits_per_digit - bits_remain)
         ) | (1U << bits_remain);
 
     prec = Nl::digits;
-    mode = big_float_impl::global_mode;
+    mode = big_float_impl::get_default_rounding_mode();
 
     #ifdef ARAGELI_GMP
     ARAGELI_ASSERT_ALWAYS_EX1(0, "GMP and big_float_impl aren't compatible");
@@ -110,12 +110,12 @@ void big_float_impl::from_native_int (const T& i)
 {
     s = big_int(i);
     prec =
-        (big_float_impl::global_prec < std::numeric_limits<T>::digits) ?
+        (big_float_impl::get_default_precision() < std::numeric_limits<T>::digits) ?
         std::numeric_limits<T>::digits :
-        big_float_impl::global_prec;
+        big_float_impl::get_default_precision();
 
     CHECK_PREC(prec)
-    mode = big_float_impl::global_mode;
+    mode = big_float_impl::get_default_rounding_mode();
 }
 
 template <typename T>
@@ -200,30 +200,10 @@ void big_float_impl_fatal_error(const char *s)
 /*
 * Constructors
 */
-//default constructor
-big_float_impl::big_float_impl(void) :
-    prec( big_float_impl::global_prec ),
-    mode ( big_float_impl::global_mode )
-{}
-
-//Sets prec to prec and mode to mode
-big_float_impl::big_float_impl ( long prec, long mode ) :
-    prec ( prec ),
-    mode ( mode )
-{}
-
-//copy constructor
-big_float_impl::big_float_impl ( const big_float_impl &b ) :
-    e(b.e),
-    s(b.s),
-    prec(b.prec),
-    mode(b.mode)
-{}
-
 //constructor (from string to big_float_impl)
 big_float_impl::big_float_impl ( const char *str, long p ) :
     prec (p),
-    mode ( big_float_impl::global_mode )
+    mode (get_default_rounding_mode() )
 {
     CHECK_PREC(prec)
     std::istringstream s ( str );
@@ -232,7 +212,7 @@ big_float_impl::big_float_impl ( const char *str, long p ) :
 
 //constructor (from string to big_float_impl)
 big_float_impl::big_float_impl ( const char *str ) :
-    mode ( big_float_impl::global_mode )
+    mode (get_default_rounding_mode())
 {
     //first evaluate significant digits (mantissa) and set appropriate precision
     size_t l;
@@ -257,20 +237,10 @@ big_float_impl::big_float_impl ( const char *str ) :
     else
     {
         prec = (long ) ((long double) l * log (10.0l)/log(2.0l) + 1.0);
-        if ( prec < big_float_impl::global_prec )
-            prec = big_float_impl::global_prec;
+        if ( prec < get_default_precision() )
+            prec = get_default_precision();
         *this = big_float_impl (str, prec);
     }
-}
-
-//constructor  ( from two big_int to big_float_impl )
-big_float_impl::big_float_impl ( const big_int &s, const big_int &e, long mode ) :
-    e ( e ),
-    s (s),
-    mode ( mode )
-{
-    prec = s.length();
-    ARAGELI_ASSERT_0( prec >= PREC_MIN && prec <= PREC_MAX )
 }
 
 //constructor from big_int
@@ -279,35 +249,10 @@ big_float_impl::big_float_impl (const big_int& i)
     s = big_int(i);
     prec = i.length();
     CHECK_PREC(prec)
-    mode = big_float_impl::global_mode;
+    mode = get_default_rounding_mode();
 }
 
-//returns |n| mod m
-unsigned fracsion ( int n, unsigned m )
-{
-    if ( n < 0 )
-        return (m-((-n)%m))%m;
-    else
-        return (n%m);
-}
-
-/*
-//swap  a  and b
-inline void swap( big_int &a, big_int &b )
-{
-    a = a + b;
-    b = a - b;
-    a = a - b;
-}
-
-// Unused now
-inline long get_number_of_digits ( big_int b )
-{
-    return (b.length() - 1 ) / _Internal::bits_per_digit + 1;
-}
-*/
-
-big_float_impl & big_float_impl::operator = ( const big_int &b )
+big_float_impl & big_float_impl::operator = (const big_int &b)
 {
     s = b;
     normalize_1 ( prec, mode );
@@ -315,7 +260,7 @@ big_float_impl & big_float_impl::operator = ( const big_int &b )
 }
 
 // Normalization for big_float_impl number
-void big_float_impl::normalize_1 ( long prec, long mode )
+void big_float_impl::normalize_1 ( big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode )
 {
     this->prec = prec;
     this->mode = mode;
@@ -432,311 +377,20 @@ void big_float_impl::normalize_1 ( long prec, long mode )
 }
 
 
-//destructor
-big_float_impl::~big_float_impl()
-{}
-
 /*
 *  compare operations
 */
 
-int big_float_impl::sign () const
+int cmp (const big_float_impl & a, const big_float_impl & b)
 {
-    return s.sign();
-}
-
-int cmp ( const big_float_impl & a, const big_float_impl & b )
-{
-    big_float_impl temp = a - b;
+    big_float_impl temp (sub(a, b, std::max(a.get_precision(), b.get_precision()), big_float_impl::TO_NEAREST));
     return temp.sign();
-}
-
-bool operator == ( const big_float_impl & a, const big_float_impl & b )
-{
-    return  cmp ( a, b ) == 0;
-}
-
-bool operator != ( const big_float_impl & a, const big_float_impl & b )
-{
-    return cmp ( a, b ) != 0;
-}
-
-bool operator > (const big_float_impl & a, const big_float_impl & b)
-{
-    return cmp ( a, b ) == 1;
-}
-
-bool operator >= (const big_float_impl & a, const big_float_impl & b)
-{
-    return cmp ( a, b ) != -1;
-}
-
-bool operator < (const big_float_impl & a, const big_float_impl & b)
-{
-    return cmp ( a, b ) == -1;
-}
-
-bool operator <= (const big_float_impl & a, const big_float_impl & b)
-{
-    return cmp ( a, b ) != 1;
-}
-
-//set bits precision
-void big_float_impl::set_precision ( long p )
-{
-    CHECK_PREC(p)
-    prec = p;
-}
-
-//set rounding mode
-void big_float_impl::set_round_mode ( long m )
-{
-    CHECK_MODE(m)
-    mode = m;
-}
-
-//set default global bits precision
-void big_float_impl::set_global_precision ( long p )
-{
-    CHECK_PREC(p)
-    global_prec = p;
-}
-
-//set global rounding mode
-void big_float_impl::set_global_round_mode ( int m )
-{
-    CHECK_MODE(m)
-    global_mode = m;
-}
-
-//unary plus
-big_float_impl operator + ( const big_float_impl &a )
-{
-    return a;
-}
-
-//unary minus
-big_float_impl operator - ( const big_float_impl &a )
-{
-    big_float_impl b(-a.s, a.e, a.mode);
-    return b;
-}
-
-//operator +
-big_float_impl operator + (const big_float_impl & b, const big_float_impl & c)
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to perfom adding two big_float_impl numbers with different "
-            "rounding modes"
-    );//or may be use global_mode
-
-    return add
-    (
-        b,
-        c,
-        b.prec < c.prec? b.prec : c.prec,
-        b.mode
-    );
-}
-
-//operator -
-big_float_impl operator - (const big_float_impl & b, const big_float_impl & c)
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to subtraction two big_float_impl numbers with different "
-            "rounding modes"
-    );
-
-    return
-        sub
-        (
-            b,
-            c,
-            b.prec < c.prec ? b.prec : c.prec,
-            b.mode
-        );
-}
-
-//operator *
-big_float_impl operator * (const big_float_impl & b, const big_float_impl & c)
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to subtraction two big_float_impl numbers with different "
-            "rounding modes"
-    );
-
-    return
-        mul
-        (
-            b,
-            c,
-            b.prec < c.prec ? b.prec : c.prec,
-            b.mode
-        );
-}
-
-//operator /
-big_float_impl operator / (const big_float_impl & b, const big_float_impl & c)
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to perfom division two big_float_impl numbers with different "
-            "rounding modes"
-    );
-
-    return
-        div
-        (
-            b,
-            c,
-            b.prec < c.prec ? b.prec : c.prec,
-            b.mode
-        );
-}
-
-// adding ( the same as operator + )
-big_float_impl add(const big_float_impl & b, const big_float_impl & c )
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to perfom adding two big_float_impl numbers with different "
-            "rounding modes"
-    );//or may be use global_mode
-
-    return
-        add
-        (
-            b,
-            c,
-            b.prec < c.prec ? b.prec : c.prec,
-            b.mode
-        );
-}
-
-// subtraction ( the same as operator - )
-big_float_impl sub (const big_float_impl & b, const big_float_impl & c )
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to subtraction two big_float_impl numbers with different "
-            "rounding modes"
-    );
-
-    return
-        sub
-        (
-            b,
-            c,
-            b.prec < c.prec ? b.prec : c.prec,
-            b.mode
-        );
-}
-
-//multiplying ( the same as operator * )
-big_float_impl mul( const big_float_impl & b, const big_float_impl & c )
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to subtraction two big_float_impl numbers with different "
-            "rounding modes"
-    );
-
-    return
-        mul
-        (
-            b,
-            c,
-            b.prec < c.prec ? b.prec : c.prec,
-            b.mode
-        );
-}
-
-// division ( the same as operator / )
-big_float_impl div ( const big_float_impl &b, const big_float_impl & c )
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to perfom division two big_float_impl numbers with different "
-            "rounding modes"
-    );
-
-    return
-        div
-        (
-            b,
-            c,
-            b.prec < c.prec ? b.prec : c.prec,
-            b.mode
-        );
-}
-
-//adding with precision prec
-big_float_impl add(const big_float_impl & b, const big_float_impl & c, long prec)
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to perfom adding two big_float_impl numbers with different "
-            "rounding modes"
-    );
-
-    return add ( b, c, prec, b.mode );
-}
-
-//subtraction with precision prec
-big_float_impl sub(const big_float_impl & b, const big_float_impl & c, long prec)
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to perfom subtraction two big_float_impl numbers with different "
-            "rounding modes"
-    );
-
-    return sub( b, c, prec, b.mode );
-}
-
-//multiplying with precision prec
-big_float_impl mul(const big_float_impl & b, const big_float_impl & c, long prec)
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to perfom multiplying two big_float_impl numbers with different "
-            "rounding modes"
-    );
-
-    return mul ( b, c, prec, b.mode );
-}
-
-//division with precision prec
-big_float_impl div(const big_float_impl & b, const big_float_impl & c, long prec )
-{
-    ARAGELI_ASSERT_0
-    (
-        !(b.mode-c.mode) &&
-        "Try to perfom multiplying two big_float_impl numbers with different "
-            "rounding modes"
-    );
-
-    return div ( b, c, prec, b.mode);
 }
 
 //adding with precision prec, rounding mode is mode
 //(it is all the same the b and c are normlized or not)
 //TODO remove WARNINGS related with EXACT mode
-big_float_impl add ( const big_float_impl & b, const big_float_impl & c, long prec, int mode )
+big_float_impl add ( const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode )
 {
     CHECK_PREC(prec)
     CHECK_MODE(mode)
@@ -780,12 +434,11 @@ big_float_impl add ( const big_float_impl & b, const big_float_impl & c, long pr
 
     big_int ed = b_e - c_e;//or three times to compute or once to save
 
-    if ( ed > prec  && mode != EXACT/*+1 */) // ������� ����b_e - c_e �� ��� �mode == EXACT !!!
-    //  �������, ��� �� mode == TO_NAREST
+    if ( ed > prec  && mode != big_float_impl::EXACT)
     {
-        temp.s = b_s;//�� mode=EXACT, ��� ������, ������ � ��� ��
+        temp.s = b_s;//
         temp.e = b_e;
-        if ( mode != TO_NEAREST )
+        if ( mode != big_float_impl::TO_NEAREST )
         {
             temp.s = ( temp.s << 1 ) + c_s.sign();
             temp.e = temp.e - 1;
@@ -796,7 +449,7 @@ big_float_impl add ( const big_float_impl & b, const big_float_impl & c, long pr
         if ( ed.length() > _Internal::bits_per_digit /* PREC_MAX - b_s.length()*/ ) //ed > PREC_MAX and mode == EXACT
             big_float_impl_fatal_error( "can't perfom adding with EXACT rounding mode" );
 
-        b_s = b_s << ed/*.to_digit ()*/; //������� ����, �� mode == EXCACT � b_e - c_e �� ���
+        b_s = b_s << ed/*.to_digit ()*/;
 
         temp.s = c_s + b_s;
         temp.e = c_e;
@@ -806,22 +459,18 @@ big_float_impl add ( const big_float_impl & b, const big_float_impl & c, long pr
 }
 
 //subtraction
-big_float_impl sub(const big_float_impl & b, const big_float_impl & c, long prec, int mode)
+big_float_impl sub(const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode)
 {
     big_float_impl temp(c);
     temp.s = -temp.s;
-    temp = add ( b, temp, prec, mode);
+    temp = add (b, temp, prec, mode);
     return temp;
 }
 
 //myltiplying with precision prec, rounding mode is mode
 //(it is all the same are the b and c normlized or not)
-big_float_impl mul( const big_float_impl & b, const big_float_impl & c, long prec, int mode )
+big_float_impl mul(const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode)
 {
-    //if ( b.prec != c.prec )
-    //{    std::cout << "Warning! Perform mul with different precisions\n" << b.prec << " vs " << c.prec;}
-
-
     CHECK_PREC(prec)
     CHECK_MODE(mode)
     big_float_impl temp;
@@ -833,7 +482,7 @@ big_float_impl mul( const big_float_impl & b, const big_float_impl & c, long pre
 }
 
 //division (temporary version)
-big_float_impl div ( const big_float_impl & b, const big_float_impl & c, long prec, int mode)
+big_float_impl div (const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode)
 {
     if ( c.s==0 )
         return big_float_impl();//
@@ -847,33 +496,32 @@ big_float_impl div ( const big_float_impl & b, const big_float_impl & c, long pr
     return mul( x, b, prec, mode );
 }
 //not used for the time present
-big_float_impl divnu ( const big_float_impl & b, const big_float_impl & c, long prec, int mode)
-{
-    //��������1/� ��������� b
-    //� ��, �� ���� ����� �� ��� ���� �� ���1/2 �1
-    short k = 0;
-    big_float_impl x;
-    big_float_impl temp = 1;
-    temp.out ( std::cout, 'd');
-    x.s = c.s;
-    while ( x.s.length() % _Internal::bits_per_digit > 0 )
-    {
-        x.s = x.s << 1;
-        k++;
-    }
-    x.e = -( int )x.s.length();// / bits_per_digit;
-    for ( int i=0; i < prec + 1; i++ )
-    {
-        temp = mul (2,temp,prec,mode) - mul ( mul ( temp,temp,prec,mode ),x,prec,mode );
-    }
-    for (int i = 0; i < k; i++)
-    {
-        temp = temp *big_float_impl(2.0);
-    }
-    temp.e = temp.e + x.e - c.e;
-    temp = mul ( b, temp, prec, mode );
-    return temp;
-}
+//big_float_impl divnu (const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode)
+//{
+//    short k = 0;
+//    big_float_impl x;
+//    big_float_impl temp = 1;
+//    temp.out ( std::cout, 'd');
+//    x.s = c.s;
+//    while ( x.s.length() % _Internal::bits_per_digit > 0 )
+//    {
+//        x.s = x.s << 1;
+//        k++;
+//    }
+//    x.e = -( int )x.s.length();// / bits_per_digit;
+//    for ( int i=0; i < prec + 1; i++ )
+//    {
+//        temp = mul (2,temp,prec,mode) - mul ( mul ( temp,temp,prec,mode ),x,prec,mode );
+//    }
+//    for (int i = 0; i < k; i++)
+//    {
+//        temp = temp * big_float_impl(2.0);
+//    }
+//    temp.e = temp.e + x.e - c.e;
+//    temp = mul ( b, temp, prec, mode );
+//    return temp;
+//}
+
 //experimental method
 big_float_impl div_i ( const big_int & c )
 {
@@ -893,28 +541,6 @@ big_float_impl div_i ( const big_int & c )
     //std::cout << res.s << std::endl << res.e << std::endl;
     return res;
 }
-
-/*
-* stream operators
-*/
-// the name is self-explaining ( e.g  123.123000000 to 123.123 etc )
-static void reduce_final_zeros ( std::basic_string<char> &str )
-{
-    std::size_t last_zero = str.length() - 1;
-
-    while ( str[ last_zero ] == '0' )
-        last_zero--;
-    str.erase(last_zero + 1);
-    if ( str[last_zero] == '.' )
-        str.erase(last_zero--);
-    if ( str[last_zero] == '.' )
-        str.erase(last_zero);
-}
-
-//static big_float_impl::special_numbers big_float_impl::get_special_from_string ( const std::stringstream &str )
-//{
-//    /if ( str ")
-//}
 
 std::istream & operator >> ( std::istream &is , big_float_impl &fnum )
 {
@@ -1008,243 +634,13 @@ std::istream & operator >> ( std::istream &is , big_float_impl &fnum )
     return is;
 }
 
-std::ostream & operator << ( std::ostream &os , const big_float_impl &fnum )
+std::pair<std::basic_string<char>, big_float_impl::exp_t> big_float_impl::to_string (std::size_t n, int /*base*/) const
 {
-    if ( fnum.is_inf() || fnum.is_nan() )
-        os << fnum.special;
-
-    long flags = os.flags( );
-
-    if ( flags & std::ios::scientific )
-        fnum.out ( os, 'e' );
-    else if ( flags & std::ios :: fixed )
-        fnum.out ( os, 'f');
-    else
-        fnum.out(os, 'a');
-    return os;
-}
-
-/// Input number
-void big_float_impl :: in ( std::istream & ins, char c )
-{
-    switch  ( c )
-    {
-        case 'f':
-            ins >> *this;
-            break;
-        case 'd':
-            ins >> s >> e;
-            normalize_1 ();
-            break;
-        default:
-            big_float_impl_warning ( "unrecognized input format: " );
-            std::cerr << c << '\n';
-            ins >> *this;
-    }
-}
-//TODO Add rounding instead truncation
-void big_float_impl :: out ( std::ostream & os, char c  ) const
-{
-    using namespace _Internal;
-
-    if ( !s.sign() ) // show zero
-    {
-        switch( c )
-        {
-            case 'f': // 0.00...
-                os << "0.";
-                os.width( os.precision() );
-                os.fill('0');
-                os << "0";
-                break;
-            case 'e': // 0.000...e0 or 0.000...E0
-                os << "0.";
-                os.width( os.precision() );
-                os.fill('0');
-                os << "0";
-                if ( os.flags() & std::ios_base::uppercase )
-                    os << "E";
-                else
-                    os << "e";
-                os << "0";
-                break;
-            default: // just 0
-                os << "0";
-        }
-        return;
-    }
-
-    std::stringstream str;                  // for temporary output
-    std::ios_base::fmtflags prev_flags;     // ostream flags
-    big_int dm, de;                         // mantissa and exponenta in decimal representation
-    int  position;                          // decimal point position
-    std::basic_string<char> temp_str;       // for temporary output
-
-    if ( os.precision() > D_PREC_MAX )
-        os.precision( D_PREC_MAX );
-    prev_flags = os.flags ();
-
-    //don't take a lot of trouble over s    ignums
-    if ( s.sign() == -1 )
-        os << "-";
-
-    else if ( prev_flags & std::ios::showpos )
-        os << "+";
-
-    str.setf( std::ios::dec | std::ios::showpos ); // always out signum see below
-
-    switch ( c )
-    {
-        case 'f': //floating point mode e.g 123.456
-                position = s.length() + e.to_native_int<int>(); // Check this conversion good way to improve this function
-
-                //approximately evaluate floating point position in decimal representation
-                if ( position >= 0 )
-                    position = 1 + ( int )((position + 1) * log (2.0l) / log ( 10.0l ));
-                else
-                    position = (int)( (long double) position * log (2.0l) / log ( 10.0l ) );
-
-                if ( position + os.precision() > 0 ) //there is significant digits (probably)
-                {
-                    // convert to decimal and out in string stream
-                    do_dec_convert(dm, de, os.precision() + position, s, e);
-                    str << dm;
-                    temp_str = str.str();// save dm in non-const string variable for manipulation
-                    temp_str.erase(0,1); // erase signum ( it have been printed already )
-
-                    if ( position > 0 )
-                    {
-                        //insert decimal point in right position
-                        temp_str.insert( position = temp_str.length() + de.to_native_int<int>(), "." );
-                    }
-                    else //there is leading zeros
-                    {
-                        os << "0.";
-                        if ( position ) //one zero is produced already
-                        {
-                            os.width( -position );
-                            os.fill ( '0' );
-                            os << "0";
-                        }
-                        if (temp_str.length() <= os.precision() + position )
-                            position--, os << "0";
-                    }
-
-                    //erase excess digits and final zeros //without rounding!!
-                    temp_str.erase( position + os.precision() );
-                    reduce_final_zeros ( temp_str );
-                    os << temp_str;
-                }
-                else // no significant digits on this precision (only zeros)
-                    os << "0.0";
-
-                break;
-
-        case 'e':// exponential mode  e.g 1.23e456
-
-                do_dec_convert ( dm, de, os.precision(), s, e );
-                str << dm;
-                temp_str = str.str();
-                temp_str.erase(0,1); // erase signum ( it have been printed already )
-                temp_str.insert(1,".");
-                reduce_final_zeros ( temp_str );
-
-                //out
-                if ( prev_flags & std::ios::uppercase )
-                    os << temp_str << 'E' << de + os.precision();
-                else
-                    os << temp_str << 'e' << de + os.precision();
-
-                break;
-
-        case 'a': // auto format ( if neither scientific notation and not fixed notation are used )
-                do_dec_convert ( dm, de, os.precision(), s, e );
-                str << dm;
-                temp_str = str.str();
-                temp_str.erase(0,1);// erase signum ( it have been printed already )
-
-                if ( de.sign() < 0 && de.to_native_int<int>() > -4 - os.precision () ) // show number in fixed format
-                {
-                    position = temp_str.length()+ de.to_native_int<int>(); //determine floating point position
-                    if ( position <= 0 ) //there is leading zeros
-                    {
-                        os << "0.";
-                        if ( position ) //one zero is produced already
-                        {
-                            os.width( -position );
-                            os.fill ( '0' );
-                            os << "0";
-                        }
-                    }
-                    else if ( position != os.precision() )
-                        //insert decimal point in right position
-                        temp_str.insert ( position, "." );
-                    else
-                        temp_str.insert ( position, ".." ); //will be erased in followed
-
-                    //erase excess digits and //without rounding!!
-                    temp_str.erase( temp_str.length()-1 );
-                    reduce_final_zeros ( temp_str );
-                    os << temp_str;
-                }
-                else // use scientific format
-                {
-                    temp_str.insert( 1,"." );
-                    //erase excess digits //without rounding!!
-                    temp_str.erase( temp_str.length() - 1 );
-                    reduce_final_zeros ( temp_str );
-
-                    //out
-                    if ( prev_flags & std::ios::uppercase )
-                        os << temp_str << 'E' << de + os.precision();
-                    else
-                        os << temp_str << 'e' << de + os.precision();
-                }
-
-            break;
-
-        case 'b'://binary ( zero and one ). out significant and exponent separately
-            if ( s.sign() == -1 )
-                os << '-';
-            else if ( prev_flags & std::ios::showpos )
-                os << '+';
-            for ( int counter = s.length () - 1; counter >= 0 ; counter-- )
-                os << s [ counter ];
-
-            os << '\t';
-
-            if ( e.sign() == -1 )
-                os << '-';
-            else if ( prev_flags & std::ios::showpos )
-                os << '+';
-
-            for ( int counter = e.length () - 1; counter >= 0 ; counter-- )
-                os << e [ counter ];
-            break;
-
-        case 'd': // out significant and exponent separately, in decimal mode
-            os.setf( std::ios :: dec, std::ios::hex );
-            os << s << '\t' << e;
-            break;
-
-        case 'h': // out significant and exponent separately, in hex mode
-            os.setf( std::ios::hex, std::ios::dec );
-            os << s << '\t' << e;
-            break;
-
-        case 'o': // out significant and exponent separately, in oct mode
-            os.setf( std::ios :: oct, std::ios::dec | std::ios::hex );
-            os << s << '\t' << e;
-            break;
-
-        default:
-            std::cerr << "Warning!: unrecognized output format:" << c << std::endl;
-            os.setf( std::ios::dec);
-            os << s << '\t' << e;
-    }
-    //restore flags
-    os.setf ( prev_flags, os.flags() );
-
+    big_int dm, de;
+    do_dec_convert(dm, de, n, s,e);
+    std::ostringstream str;
+    str << dm;
+    return std::make_pair(str.str(), de - str.str().length());
 }
 
 /*
@@ -1360,17 +756,17 @@ big_int ifloor(const big_float_impl & a)
 //sqrt
 big_float_impl fsqrt( const big_float_impl & b )
 {
-    return fsqrt( b, big_float_impl :: global_prec, big_float_impl :: global_mode);
+    return fsqrt( b, big_float_impl::get_default_precision(), big_float_impl::get_default_rounding_mode());
 }
 
 //user must call fsqrt( const big_float_impl & b ) function instead two forward
 //functions ( because EXACT mode not supported yet )
-big_float_impl fsqrt(const big_float_impl & bf, long prec)
+big_float_impl fsqrt(const big_float_impl & bf, big_float_impl::prec_t prec)
 {
-    return fsqrt( bf, prec, big_float_impl :: global_mode);
+    return fsqrt( bf, prec, big_float_impl::get_default_rounding_mode());
 }
 
-big_float_impl fsqrt(const big_float_impl & bf, long prec, int mode)
+big_float_impl fsqrt(const big_float_impl & bf, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode)
 {
     if ( bf.s == 0 )
         return big_float_impl (prec,mode);
@@ -1398,35 +794,35 @@ big_float_impl fsqrt(const big_float_impl & bf, long prec, int mode)
     }
     res.s = sqrt ( res.s );
     res.e = res.e >> 1;
-    res.normalize_1 ( prec, mode );//error may be if mode == TO_INF
+    res.normalize_1 (prec,mode);//error may be if mode == TO_INF
 
     return res;
 }
 //Newton fsqrt
-big_float_impl nfsqrt ( const big_float_impl & bf, long prec, int mode )
+big_float_impl nfsqrt ( const big_float_impl & bf, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode )
 {
     big_float_impl res;
     //std::cout << bf << std::endl;
-    res.e = ((( bf.get_exponent() ) + bf.get_significant().length() - 1) >> 1) + 1;
+    res.e = ((( bf.get_exp() ) + bf.get_significant().length() - 1) >> 1) + 1;
     res.s = 1;
     //res.normalize_1();
-    std::cout << "x0 "<<res << std::endl;
+//    std::cout << "x0 "<<res << std::endl;
     //res.out ( std::cout, 'd' ) ;
     //std::cout << std::endl;
     std::size_t n = (long) (log ( (long double)prec + 1 ) / log ( 2.0l ) + 1.0);
 
     for ( std::size_t counter = 1; counter <= 2 * n; counter ++ )
     {
-        std::cout << div( bf, res, counter * 2, EXACT ) << std::endl;
-        res = add ( res,  div( bf, res, counter * 2, EXACT ), counter * 2, TO_NEAREST );
-        std::cout << res << std::endl;
+//        std::cout << div( bf, res, counter * 2, big_float_impl::rounding_mode_t::EXACT ) << std::endl;
+        res = add ( res,  div( bf, res, counter * 2, big_float_impl::EXACT ), counter * 2, big_float_impl::TO_NEAREST );
+//        std::cout << res << std::endl;
         res.e = res.e - 1;
-        std::cout << counter << " iter \t";
-        std::cout << res << std::endl;
+ //       std::cout << counter << " iter \t";
+ //       std::cout << res << std::endl;
         //res.out( std::cout, 'd' );
         //std::cout << std::endl;
     }
-    res.normalize_1 ( prec, mode );//error may be if mode == TO_INF
+    res.normalize_1 (prec, mode);//error may be if mode == TO_INF
 
     return res;
 }
@@ -1434,12 +830,12 @@ big_float_impl nfsqrt ( const big_float_impl & bf, long prec, int mode )
 big_float_impl frandom  ( long prec )
 {
     CHECK_PREC(prec)//
-    return big_float_impl ( big_int::random_with_length_or_less( prec ), big_int (-prec) );
+    return big_float_impl (big_int::random_with_length_or_less(prec), big_int(-prec));
 }
 //Random numbers
 big_float_impl frandom  ( )
 {
-    return big_float_impl ( big_int::random_with_length_or_less( big_float_impl::global_prec ), big_int (-big_float_impl::global_prec) );
+    return big_float_impl ( big_int::random_with_length_or_less(big_float_impl::get_default_precision() ), big_int (-big_float_impl::get_default_precision()) );
 }
 
 big_float_impl frandom1 ( long bits, const big_int & exp)
@@ -1448,61 +844,6 @@ big_float_impl frandom1 ( long bits, const big_int & exp)
     return big_float_impl (  big_int::random_with_length_or_less( bits ) + pow2<big_int>( bits - 1 ) , exp );
 }
 
-#if 0
-const std::string big_float_impl::get_lower_string ( const special_numbers sn )
-{
-    switch (sn)
-    {
-        case NAN    : return "nan";
-        case P_INF  : return "inf";
-        case M_INF  : return "+inf";
-        case P_ZERO : return "0";
-        case M_ZERO : return "-0";
-        case FINITE :
-        default     : return "finite";
-    }
-}
-
-const std::string big_float_impl::get_upper_string ( const special_numbers sn )
-{
-    switch (sn)
-    {
-        case NAN    : return "NAN";
-        case P_INF  : return "INF";
-        case M_INF  : return "-INF";
-        case P_ZERO : return "0";
-        case M_ZERO : return "-0";
-        case FINITE :
-        default     : return "FINITE";
-    }
-}
-
-std::ostream & operator << ( std::ostream &os, const big_float_impl::special_numbers &sn )
-{
-    return os << ( os.flags() & std::ios_base::uppercase  ?
-        big_float_impl::get_upper_string( sn ) : big_float_impl::get_lower_string( sn ));
-}
-
-std::istream & operator >> ( std::istream &is, big_float_impl::special_numbers &sn )
-{
-    char buf [5]  = {0};
-
-    is.getline(buf,4);
-    sn = big_float_impl::special_numbers(big_float_impl::FINITE);
-
-    //if ( !sn.is_special () )
-    {
-        is.putback(buf[3]);
-        is.putback(buf[2]);
-        is.putback(buf[1]);
-        is.putback(buf[0]);
-    }
-    return is;
-}
+}//namespace Arageli
 #endif
 
-long big_float_impl::global_prec = 350; //bits precision
-long big_float_impl::global_mode = TO_NEAREST; //rounding mode
-
-}
-#endif

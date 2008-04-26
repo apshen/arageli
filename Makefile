@@ -45,6 +45,17 @@ export COMMONCXXFLAGS += -DARAGELI_GMP -I$(GMP_INCLUDE)
 export COMMONLINKFLAGS += $(GMP_LINK)
 endif
 
+# In order to turn on MPFR support there are 2 options:
+# 1. Call "make -e MPFR_ENABLE=1"
+# 2. Uncomment next line
+# MPFR_ENABLE=1
+ifdef MPFR_ENABLE
+export MPFR_INCLUDE:=/usr/local/include
+export MPFR_LINK:=/usr/local/lib
+export COMMONCXXFLAGS += -DARAGELI_MPFR -I$(MPFR_INCLUDE)
+export COMMONLINKFLAGS += $(MPFR_LINK)
+endif
+
 .PHONY: arageli all check install clean example dvi TAGS perf script HTML
 
 arageli:
