@@ -455,7 +455,7 @@ public:
         //CHECK_MODE(m)
         mode = m;
     }
-    
+
     prec_t get_precision () const
     {
         return prec;
@@ -472,7 +472,7 @@ public:
         get_default_precision() = p;
     }
 
-    
+
     void set_default_round_mode (rounding_mode_t m)
     {
         //CHECK_MODE(m)
@@ -484,7 +484,7 @@ public:
         static prec_t p = 300;
         return p;
     }
-    
+
     static rounding_mode_t & get_default_rounding_mode()
     {
         static rounding_mode_t m = TO_NEAREST;
@@ -542,7 +542,7 @@ public:
         return (std::size_t) ((long double)(bits_precision) * log(2.0l) / log(10.0l));
     }
 
-     /// Compares two numbers
+    /// Compares two numbers
     /**
         Returns
         -  0  if a = b,
@@ -578,7 +578,7 @@ public:
     friend big_float_impl fsqrt(const big_float_impl & bf, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode);
     friend big_float_impl nfsqrt ( const big_float_impl & bf, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode );
 
-     /// Returns the next bigger integer
+    /// Returns the next bigger integer
     friend big_float_impl ceil  (const big_float_impl & a);
     /// Returns the next smaller integer
     friend big_float_impl floor (const big_float_impl & a);
@@ -670,7 +670,7 @@ public:
     //@}
     #endif
     friend std::istream & operator >> (std::istream &is , big_float_impl &fnum);
- private:
+private:
 
     void normalize_1 (prec_t prec = get_default_precision(), rounding_mode_t mode = get_default_rounding_mode());
 
