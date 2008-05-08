@@ -37,11 +37,11 @@
 
 #include "config.hpp"
 
-#define CHECK_PREC(p)    \
+#define CHECK_PREC(p)  {}  \
     ARAGELI_ASSERT_0(p >= PREC_MIN && p <= PREC_MAX && "Precision is out of range")
 
 #define CHECK_MODE(m)    \
-    ARAGELI_ASSERT_0(m >= big_float_impl::EXACT && m <= big_float_impl::TO_INF && "Try to use incorrect rounding mode")
+    ARAGELI_ASSERT_0(m >= big_float_impl::exact_rounding && m <= big_float_impl::round_outward_zero && "Try to use incorrect rounding mode")
 
 #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) ||    \
     defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_BIG_FLOAT)
@@ -200,49 +200,6 @@ void big_float_impl_fatal_error(const char *s)
 /*
 * Constructors
 */
-//constructor (from string to big_float_impl)
-big_float_impl::big_float_impl ( const char *str, long p ) :
-    prec (p),
-    mode (get_default_rounding_mode() )
-{
-    CHECK_PREC(prec)
-    std::istringstream s ( str );
-    s >> *this;
-}
-
-//constructor (from string to big_float_impl)
-big_float_impl::big_float_impl ( const char *str ) :
-    mode (get_default_rounding_mode())
-{
-    //first evaluate significant digits (mantissa) and set appropriate precision
-    size_t l;
-    size_t space = 0;
-
-    while ( isspace(str[space]) )
-        space++;
-    if ( str[space] == '+' || str [space] == '-' )
-        space++;
-
-    l = space;
-    while ( isdigit (str[l]) )
-        l++;
-    if ( str [l] == '.' )
-    {
-        while ( isdigit (str[++l]) );
-        l--;
-    }
-    l = l - space;
-    if ( !l )
-        *this = big_float_impl(); //zero
-    else
-    {
-        prec = (long ) ((long double) l * log (10.0l)/log(2.0l) + 1.0);
-        if ( prec < get_default_precision() )
-            prec = get_default_precision();
-        *this = big_float_impl (str, prec);
-    }
-}
-
 //constructor from big_int
 big_float_impl::big_float_impl (const big_int& i)
 {
@@ -272,7 +229,7 @@ void big_float_impl::normalize_1 ( big_float_impl::prec_t prec, big_float_impl::
 
     int s_len = s.length() - prec;
 
-    if ( mode == EXACT && s.length() <= PREC_MAX ||  (!s_len)  )
+    if ( mode == exact_rounding && s.length() <= PREC_MAX ||  (!s_len)  )
         return;// do nothing - mantissa has apropriate length
     if ( s_len < 0  )
     {
@@ -282,15 +239,15 @@ void big_float_impl::normalize_1 ( big_float_impl::prec_t prec, big_float_impl::
     }//write zero at the end and return
     ARAGELI_ASSERT_0
     (
-        mode!= EXACT &&
-        "Impossibly to perfom operarion with EXACT rounding mode ( length too long )"
+        mode!= exact_rounding &&
+        "Impossibly to perfom operarion with exact_rounding rounding mode ( length too long )"
     );
 
     /*
-    if ( mode == EXACT )
+    if ( mode == exact_rounding )
     {
-        mode = TO_NEAREST; // s.lenght > PREC_MAX
-        big_float_impl_error ( "can't perfom operarion with EXACT rounding mode" );
+        mode = round_to_nearest; // s.lenght > PREC_MAX
+        big_float_impl_error ( "can't perfom operarion with exact_rounding rounding mode" );
     }
     */
 
@@ -301,7 +258,7 @@ void big_float_impl::normalize_1 ( big_float_impl::prec_t prec, big_float_impl::
 
     switch (mode)
     {
-        case TO_NEAREST:
+        case round_to_nearest:
                         s = ( s + s.sign() ) >> 1;
                         e = e + 1;
                         if ( s.length() > prec )
@@ -310,11 +267,11 @@ void big_float_impl::normalize_1 ( big_float_impl::prec_t prec, big_float_impl::
                             e = e + 1;
                         }
                         break;
-        case TO_ZERO:
+        case round_toward_zero:
                         s = s >> 1;
                         e = e + 1;
                         break;
-        case TO_P_INF:
+        case round_toward_infinity:
                         if ( s.sign() < 0 )
                             s = s >> 1;
                         else
@@ -332,7 +289,7 @@ void big_float_impl::normalize_1 ( big_float_impl::prec_t prec, big_float_impl::
                             e = e + 1;
                         }
                         break;
-        case TO_M_INF:
+        case round_toward_neg_infinity:
                         if ( s.sign() > 0  )
                             s = s >> 1;
                         else
@@ -350,7 +307,7 @@ void big_float_impl::normalize_1 ( big_float_impl::prec_t prec, big_float_impl::
                             e = e + 1;
                         }
                         break;
-        case TO_INF:
+        case round_outward_zero:
                         //s=s/(max_digit+1);
                         if ( is_digit )
                             s = ( s >> 1 ) + s.sign();
@@ -383,13 +340,13 @@ void big_float_impl::normalize_1 ( big_float_impl::prec_t prec, big_float_impl::
 
 int cmp (const big_float_impl & a, const big_float_impl & b)
 {
-    big_float_impl temp (sub(a, b, std::max(a.get_precision(), b.get_precision()), big_float_impl::TO_NEAREST));
+    big_float_impl temp (sub(a, b, std::max(a.get_precision(), b.get_precision()), big_float_impl::round_to_nearest));
     return temp.sign();
 }
 
 //adding with precision prec, rounding mode is mode
 //(it is all the same the b and c are normlized or not)
-//TODO remove WARNINGS related with EXACT mode
+//TODO remove WARNINGS related with exact_rounding mode
 big_float_impl add ( const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode )
 {
     CHECK_PREC(prec)
@@ -434,11 +391,11 @@ big_float_impl add ( const big_float_impl & b, const big_float_impl & c, big_flo
 
     big_int ed = b_e - c_e;//or three times to compute or once to save
 
-    if ( ed > prec  && mode != big_float_impl::EXACT)
+    if ( ed > prec  && mode != big_float_impl::exact_rounding)
     {
         temp.s = b_s;//
         temp.e = b_e;
-        if ( mode != big_float_impl::TO_NEAREST )
+        if ( mode != big_float_impl::round_to_nearest )
         {
             temp.s = ( temp.s << 1 ) + c_s.sign();
             temp.e = temp.e - 1;
@@ -446,8 +403,8 @@ big_float_impl add ( const big_float_impl & b, const big_float_impl & c, big_flo
     }
     else
     {
-        if ( ed.length() > _Internal::bits_per_digit /* PREC_MAX - b_s.length()*/ ) //ed > PREC_MAX and mode == EXACT
-            big_float_impl_fatal_error( "can't perfom adding with EXACT rounding mode" );
+        if ( ed.length() > _Internal::bits_per_digit /* PREC_MAX - b_s.length()*/ ) //ed > PREC_MAX and mode == exact_rounding
+            big_float_impl_fatal_error( "can't perfom adding with exact_rounding rounding mode" );
 
         b_s = b_s << ed/*.to_digit ()*/;
 
@@ -542,105 +499,13 @@ big_float_impl div_i ( const big_int & c )
     return res;
 }
 
-std::istream & operator >> ( std::istream &is , big_float_impl &fnum )
-{
-    // is >> fnum.special;
-    //if ( fnum.is_special() ) return is;
-    char simbol;
-    big_int dm, de, bm,be;
-    long add = 0;
-
-    std::stringstream bufferm; //integer part of mantissa
-    std::stringstream buffere; //exponenta
-
-    do
-    {
-        is.get( simbol );
-    } while ( isspace ( simbol ) && !is.fail() );
-
-    if ( simbol == '-' || simbol == '+' ) // signum may be
-    {
-        bufferm << simbol;
-        is.get ( simbol );
-    }
-
-    if ( isdigit ( simbol ) ) // mantissa
-    {
-        bufferm << simbol;
-        is.get ( simbol );
-        while ( isdigit ( simbol ) && !is.fail() )
-        {
-            bufferm << simbol;
-            is.get ( simbol );
-        }
-    }
-
-    if ( simbol == '.' )//decimal point
-    {
-        simbol = is.get ();
-        while ( isdigit (simbol) && !is.fail() )
-        {
-            bufferm << simbol;
-            simbol = is.get();
-            add++;
-        }
-    }
-
-    if ( simbol == 'e' || simbol == 'E')//exponenta
-    {
-        is.get ( simbol );
-        if ( simbol == '-' || simbol == '+') // signum may be
-        {
-            buffere << simbol;
-            is.get ( simbol );
-        }
-        while ( isdigit (simbol)  && !is.fail() )
-        {
-            buffere << simbol;
-            is.get ( simbol );
-        }
-    }
-
-    if ( bufferm.str().empty() || bufferm.str() == "+" || bufferm.str() == "-")
-    {
-        fnum = big_float_impl ();//zero
-    }
-    else
-    {
-        bufferm >> dm;
-        if ( !bufferm.str().empty() && buffere.str() != "+" && buffere.str() != "-" )
-            buffere >> de;
-        de = de - add;
-        do_bin_convert (dm, de, fnum.prec, bm, be);
-        /*
-        if ( be.get_sign() != -1 )
-        {
-            bm = bm << (be - (be / bits_per_digit) * bits_per_digit);
-            be =  be  / bits_per_digit;
-        }
-        else
-        {
-            bm = bm << bits_per_digit + be - (be / bits_per_digit) * bits_per_digit;
-            be = be / bits_per_digit - 1;
-        }
-        std::cout << "bm = " << bm.length() << "    be = "  << be.length() << std::endl;
-        */
-        fnum = big_float_impl ( bm, be, fnum.mode );
-        //std::cout << fnum.get_significant()<< std::endl;
-        //std::cout << fnum.get_exponent()<< std::endl;
-    }
-
-    is.putback ( simbol );
-    return is;
-}
-
 std::pair<std::basic_string<char>, big_float_impl::exp_t> big_float_impl::to_string (std::size_t n, int /*base*/) const
 {
     big_int dm, de;
-    do_dec_convert(dm, de, n, s,e);
+    do_dec_convert(dm, de, n - 1, s,e);
     std::ostringstream str;
     str << dm;
-    return std::make_pair(str.str(), de - str.str().length());
+    return std::make_pair(str.str(), de + str.str().length() - (str.str()[0] == '-'));
 }
 
 /*
@@ -753,27 +618,15 @@ big_int ifloor(const big_float_impl & a)
         return temp;
     return temp - 1;
 }
-//sqrt
-big_float_impl fsqrt( const big_float_impl & b )
-{
-    return fsqrt( b, big_float_impl::get_default_precision(), big_float_impl::get_default_rounding_mode());
-}
 
-//user must call fsqrt( const big_float_impl & b ) function instead two forward
-//functions ( because EXACT mode not supported yet )
-big_float_impl fsqrt(const big_float_impl & bf, big_float_impl::prec_t prec)
+big_float_impl big_float_impl::sqrt (big_float_impl::prec_t p, big_float_impl::rounding_mode_t m) const
 {
-    return fsqrt( bf, prec, big_float_impl::get_default_rounding_mode());
-}
-
-big_float_impl fsqrt(const big_float_impl & bf, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode)
-{
-    if ( bf.s == 0 )
-        return big_float_impl (prec,mode);
-    big_float_impl res ( bf );
+    if (s == 0)
+        return big_float_impl (p, m);
+    big_float_impl res (*this);
     int l;
 
-    if ( res.e [ 0 ] )
+    if (res.e [0])
     {
         res.s = res.s << 1;
         res.e = res.e - 1;
@@ -782,7 +635,7 @@ big_float_impl fsqrt(const big_float_impl & bf, big_float_impl::prec_t prec, big
     l = (res.s.length() - 2 * prec - 1);
     l = (l / 2) * 2;
 
-    if ( l > 0 )
+    if (l > 0)
     {
         res.s = res.s >> l;
         res.e = res.e + l;
@@ -792,12 +645,13 @@ big_float_impl fsqrt(const big_float_impl & bf, big_float_impl::prec_t prec, big
         res.s = res.s << (-l) + 2;
         res.e = res.e + l - 2;
     }
-    res.s = sqrt ( res.s );
+    res.s = Arageli::sqrt (res.s);
     res.e = res.e >> 1;
-    res.normalize_1 (prec,mode);//error may be if mode == TO_INF
+    res.normalize_1 (prec,mode);//error may be if mode == round_outward_zero
 
     return res;
 }
+
 //Newton fsqrt
 big_float_impl nfsqrt ( const big_float_impl & bf, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode )
 {
@@ -813,8 +667,8 @@ big_float_impl nfsqrt ( const big_float_impl & bf, big_float_impl::prec_t prec, 
 
     for ( std::size_t counter = 1; counter <= 2 * n; counter ++ )
     {
-//        std::cout << div( bf, res, counter * 2, big_float_impl::rounding_mode_t::EXACT ) << std::endl;
-        res = add ( res,  div( bf, res, counter * 2, big_float_impl::EXACT ), counter * 2, big_float_impl::TO_NEAREST );
+//        std::cout << div( bf, res, counter * 2, big_float_impl::rounding_mode_t::exact_rounding ) << std::endl;
+        res = add ( res,  div( bf, res, counter * 2, big_float_impl::exact_rounding ), counter * 2, big_float_impl::round_to_nearest );
 //        std::cout << res << std::endl;
         res.e = res.e - 1;
 //       std::cout << counter << " iter \t";
@@ -822,7 +676,7 @@ big_float_impl nfsqrt ( const big_float_impl & bf, big_float_impl::prec_t prec, 
         //res.out( std::cout, 'd' );
         //std::cout << std::endl;
     }
-    res.normalize_1 (prec, mode);//error may be if mode == TO_INF
+    res.normalize_1 (prec, mode);//error may be if mode == round_outward_zero
 
     return res;
 }

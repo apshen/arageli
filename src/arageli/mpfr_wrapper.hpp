@@ -60,19 +60,19 @@ public:
     {
         //IEEE Standard for Radix-Independent Floating-Point Arithmetic
         round_to_nearest = GMP_RNDN,
-        round_toward_p_inf = GMP_RNDU,
-        round_toward_m_inf = GMP_RNDD,
+        round_toward_infinity = GMP_RNDU,
+        round_toward_neg_infinity = GMP_RNDD,
         round_toward_zero = GMP_RNDZ
     } rounding_mode_t; 
 
     static const prec_t max_prec = MPFR_PREC_MAX;
     static const prec_t min_prec = MPFR_PREC_MIN;
 
+    static const int io_base = 10;
     //constructors
     mpfr_wrapper () :
         mode (get_default_rounding_mode())
     {
-        std::cout << "Hello World\n";
         mpfr_init (rep);
     }
 
@@ -142,12 +142,12 @@ public:
         mpfr_init_set_ui(rep, x, static_cast<mpfr_rnd_t>(mode));
     }
 
-    mpfr_wrapper (const char *str, prec_t prec = get_default_precision(), rounding_mode_t m = get_default_rounding_mode(), int base = 10) :
-         mode (m)
-    {
-        mpfr_init2(rep, prec);
-        mpfr_set_str (rep, str, base, static_cast<mpfr_rnd_t>(m));
-    }
+//    mpfr_wrapper (const char *str, prec_t prec = get_default_precision(), rounding_mode_t m = get_default_rounding_mode(), int base = io_base) :
+//         mode (m)
+//    {
+//        mpfr_init2(rep, prec);
+//        mpfr_set_str (rep, str, base, static_cast<mpfr_rnd_t>(m));
+//    }
 
     mpfr_wrapper (float x) :
         mode (get_default_rounding_mode())
@@ -172,6 +172,13 @@ public:
     {
         mpfr_init2(rep, mpfr_get_prec(b.rep));
         mpfr_set (rep, b.rep, static_cast<mpfr_rnd_t>(b.get_rounding_mode()));
+    }
+
+    mpfr_wrapper (const big_int &x, rounding_mode_t m = get_default_rounding_mode()) :
+        mode (m)
+    {
+        //TODO: this require GMP enabled!
+        mpfr_init_set_z(rep, x.number->gmpdata, static_cast<mpfr_rnd_t>(mode)); 
     }
 
     ~mpfr_wrapper ()
@@ -361,8 +368,16 @@ public:
 
     mpfr_wrapper & operator = (const char *str)
     {
-        mpfr_init_set_str (rep, str, 10, static_cast<mpfr_rnd_t>(mode));
+        mpfr_set_str (rep, str, io_base, static_cast<mpfr_rnd_t>(mode));
     }
+    
+    mpfr_wrapper & operator = (const big_int &x)
+    {
+        //TODO: this require GMP enabled!
+        mpfr_set_z(rep, x.number->gmpdata, static_cast<mpfr_rnd_t>(mode));
+        return *this;
+    }
+
     //conversion to native types 
     operator char () const
     {
@@ -477,6 +492,38 @@ public:
         std::basic_string<char> man(cm);
         mpfr_free_str(cm);
         return std::make_pair(man, exp);
+    }
+
+    void from_string (const char *str, exp_t exp)
+    {
+        mpfr_set_str(get_rep(), str, io_base, get_mp_rounding_mode());
+        //TODO! Check for errors!
+        mpfr_set_exp(get_rep(), exp + mpfr_get_exp(get_rep()));
+    }    
+
+    //misc
+    void swap (mpfr_wrapper &c)
+    {
+        mpfr_swap (get_rep(), c.get_rep());
+    } 
+
+    mpfr_wrapper abs () const
+    {
+        mpfr_wrapper ret (get_precision(), get_rounding_mode()); 
+        mpfr_abs (ret.get_rep(), get_rep(), get_mp_rounding_mode());
+        return ret; 
+    } 
+
+    mpfr_wrapper sqrt(prec_t p, rounding_mode_t m) const
+    {
+        mpfr_wrapper ret(p, m); 
+        mpfr_sqrt(ret.get_rep(), get_rep(), ret.get_mp_rounding_mode());
+        return ret; 
+    }
+
+    void setsign (int s)
+    {
+        mpfr_setsign(get_rep(), get_rep(), s < 0, get_mp_rounding_mode());
     }
 
 private:

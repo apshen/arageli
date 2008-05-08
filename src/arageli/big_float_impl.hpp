@@ -86,13 +86,12 @@ public:
     //@{
     typedef enum
     {
-        EXACT = 1, ///< Rounds to the closest value
-        ROUND = 2, ///< Uses rules of "manual" computations
-        TO_NEAREST = 3, ///< Rounds towards the nearest number
-        TO_ZERO = 4, ///< Rounds towards zero
-        TO_P_INF = 5, ///< Rounds towards +infinity
-        TO_M_INF = 6, ///< Rounds towards -infinity
-        TO_INF = 7   ///< Rounds outwards zero
+        exact_rounding = -1,        ///< Rounds to the closest value
+        round_toward_zero,             ///< Rounds towards zero
+        round_to_nearest,             ///< Rounds towards the nearest number
+        round_toward_infinity,     ///< Rounds towards +infinity
+        round_toward_neg_infinity, ///< Rounds towards -infinity
+        round_outward_zero         ///< Rounds outwards zero
     } rounding_mode_t;
     //@}
 
@@ -206,19 +205,15 @@ public:
     prec (prec), mode (mode)
     {}
 
+    big_float_impl (const char *str);
+
     //constructor  (from two big_int to big_float_impl )
     big_float_impl (const man_t &s, const exp_t &e, rounding_mode_t mode = get_default_rounding_mode()) :
     e(e), s(s), mode (mode)
     {
-        ARAGELI_ASSERT_0( prec >= PREC_MIN && prec <= PREC_MAX )
         prec = s.length();
+        ARAGELI_ASSERT_0(prec >= PREC_MIN && prec <= PREC_MAX)
     }
-
-    big_float_impl (const char *str);                 ///< Converts str to a big_float_impl
-    big_float_impl (const char* str,long p );
-    //@}
-
-
 
     //copy constructor
     big_float_impl (const big_float_impl &b) :
@@ -466,14 +461,14 @@ public:
         return mode;
     }
 
-    void set_default_precision (prec_t p)
+    static void set_default_precision (prec_t p)
     {
         //CHECK_PREC(p)
         get_default_precision() = p;
     }
 
 
-    void set_default_round_mode (rounding_mode_t m)
+    static void set_default_round_mode (rounding_mode_t m)
     {
         //CHECK_MODE(m)
         get_default_rounding_mode() = m;
@@ -487,7 +482,7 @@ public:
 
     static rounding_mode_t & get_default_rounding_mode()
     {
-        static rounding_mode_t m = TO_NEAREST;
+        static rounding_mode_t m = round_to_nearest;
         return m;
     }
 
@@ -511,7 +506,7 @@ public:
 
     void setsign (int sign)
     {
-        s.number->sign = sign;
+        s = (sign * s.sign()) * s;
     }
 
     /// Swaps two numbers.
@@ -529,6 +524,13 @@ public:
     }
 
     std::pair<std::basic_string<char>, exp_t> to_string (std::size_t n, int base) const;
+
+    big_float_impl & from_string (const char *man, const exp_t &exp)
+    {
+        s = man;
+        e = exp;
+        return *this;
+    }
 
     /// Returns bits precision required to guarantee dec precision indicated
     static std::size_t dec2bits_precision ( std::size_t dec_precision )
@@ -572,10 +574,11 @@ public:
     friend big_float_impl div(const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode);
     friend big_float_impl divnu(const big_float_impl & b, const big_float_impl & c, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode);
     friend big_float_impl div_i (const big_int & c);
+    
     /** Square rooting. Up to prec binary digits
         The parameters prec and mode are optional and have the global defult
         values which can be set by set_global_precision.*/
-    friend big_float_impl fsqrt(const big_float_impl & bf, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode);
+    big_float_impl sqrt(prec_t prec, rounding_mode_t mode) const;
     friend big_float_impl nfsqrt ( const big_float_impl & bf, big_float_impl::prec_t prec, big_float_impl::rounding_mode_t mode );
 
     /// Returns the next bigger integer
@@ -669,7 +672,6 @@ public:
 
     //@}
     #endif
-    friend std::istream & operator >> (std::istream &is , big_float_impl &fnum);
 private:
 
     void normalize_1 (prec_t prec = get_default_precision(), rounding_mode_t mode = get_default_rounding_mode());
