@@ -776,6 +776,7 @@ public:
 private:
 
     friend class big_float_impl;    // see big_float_impl.hpp source file
+    friend class mpfr_wrapper;      // see mpfr_wrapper.hpp source file
 
     // the following type is used inside the big_int unit and implements
     // the storage for a Big Integer Number

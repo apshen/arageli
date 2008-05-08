@@ -38,6 +38,9 @@
 *
 **/
 
+#ifndef _ARAGELI_big_float_hpp
+#define _ARAGELI_big_float_hpp
+
 //TODO really need to include all these headers here? Think about moving corresponding functionality to separate files
 #include <cmath> //for isnan function.
 
@@ -46,6 +49,7 @@
 #include <sstream> //for stringstream
 #include <utility> //for pair
 #include <string> //for basic_string
+#include <cctype> //for isspace, etc
 
 #include "config.hpp"
 
@@ -77,10 +81,18 @@ public:
     rep (x)
     {}
 
+    big_float_t (const char *str, prec_t p = get_default_precision(), rounding_mode_t m = get_default_rounding_mode()) :
+    rep (p,m)
+    {
+        std::istringstream ss(str);
+        ss >> *this;
+    }
+    
     big_float_t (const big_float_t<rep_t> &b) :
     rep(b.get_rep())
     {}
 
+    //destructor
     ~big_float_t ()
     {}
 
@@ -119,9 +131,9 @@ public:
         return rep_t::get_default_rounding_mode();
     }
 
-    static void set_default_precision()
+    static void set_default_precision(prec_t prec)
     {
-        return rep_t::set_default_precision();
+        return rep_t::set_default_precision(prec);
     }
 
     static void set_default_rounding_mode()
@@ -184,7 +196,7 @@ template <>
 inline bool isnan(const float f)
 {
     #ifdef _MSC_VER
-    return static_cast<bool>(::_isnan(f));
+        return static_cast<bool>(::_isnan(f));
     #else
         return static_cast<bool> (std::isnan(f));
     #endif
@@ -347,7 +359,7 @@ template <typename BF>
 inline big_float_t<BF> operator - (const big_float_t<BF> &b)
 {
     big_float_t<BF> ret(b);
-    ret.setsign(-1);
+    ret.setsign(-sign(b));
     return ret;
 }
 
@@ -357,7 +369,7 @@ inline big_float_t<BF> add
 (
     const big_float_t<BF> &b,
     T x,
-    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision,
+    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precisio(),
     typename big_float_t<BF>::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -369,7 +381,7 @@ inline big_float_t<BF> add
 (
     T x,
     const big_float_t<BF> &b,
-    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision,
+    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename big_float_t<BF>::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -381,7 +393,7 @@ inline big_float_t<BF> add
 (
     const big_float_t<BF> &b,
     const big_float_t<BF> &c,
-    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision,
+    typename big_float_t<BF>::prec_t prec = big_float_t<BF>::get_default_precision(),
     typename big_float_t<BF>::rounding_mode_t mode = big_float_t<BF>::get_default_rounding_mode()
 )
 {
@@ -494,6 +506,24 @@ inline big_float_t<BF> div
 )
 {
     return big_float_t<BF>(div(b.get_rep(), c.get_rep(), prec, mode));
+}
+
+template<typename BF>
+big_float_t<BF> sqrt (const big_float_t<BF> &b, typename big_float_t<BF>::prec_t prec, typename big_float_t<BF>::ronding_mode_t mode)
+{
+    return b.get_rep().sqrt(prec, mode);
+}
+
+template<typename BF>
+big_float_t<BF> sqrt (const big_float_t<BF> &b, typename big_float_t<BF>::rounding_mode_t mode)
+{
+    return b.get_rep().sqrt(b.get_precision(), mode);
+}
+
+template<typename BF>
+big_float_t<BF> sqrt (const big_float_t<BF> &b)
+{
+    return b.get_rep().sqrt(b.get_precision(), b.get_rounding_mode());
 }
 
 //operator +
@@ -764,9 +794,9 @@ Ostream & big_float_t_out_fixed ( Ostream &os, std::ios_base::fmtflags flags, co
     //approximate how many decimal digits we need to retrieve
     size_t precision = os.precision();
 #if(__STDC_VERSION__ >= 199901L)
-    long position = 1 + precision + lround (static_cast<double> (exp) * M_LOG10_2);
+    long position = 1 + precision + static_cast<long>(lround (static_cast<double> (exp) * M_LOG10_2));
 #else
-    long position = 1 + precision + ceil (static_cast<double> (exp) * M_LOG10_2);
+    long position = 1 + precision + static_cast<long>(ceil (static_cast<double> (exp) * M_LOG10_2));
 #endif
     if ( position <= 0)
     {
@@ -818,14 +848,109 @@ Ostream & operator << (Ostream &os, const Arageli::big_float_t<BF> &b)
     return os;
 }
 
+namespace _Internal
+{
+
+//copied from _utility.hpp
+template <typename Ch, typename Tr>
+class auto_stream_exception
+{
+    std::basic_ios<Ch, Tr> &stream;
+    std::ios_base::iostate oldexcept;
+
+public:
+
+    auto_stream_exception
+    (
+        std::basic_ios<Ch, Tr> &stream_a,
+        std::ios_base::iostate except
+    ) :
+        stream(stream_a)
+    {
+        oldexcept = stream.exceptions();
+        stream.exceptions(except);
+    }
+
+    ~auto_stream_exception ()
+    {
+        stream.exceptions(oldexcept);
+    }
+};
+
+template <typename IStream>
+std::size_t get_decimal_string (IStream &in, std::basic_string<char> &s)
+{
+    if (!in) return 0;
+    while (std::isdigit(in.peek())) s.push_back(in.get());
+    return s.length();
+}
+
+template <typename IStream, typename IOStream, typename Exp>
+bool parse_float_number (IStream &in, IOStream &man, Exp &exp)
+{
+    char msign = 0, esign = 0;
+    std::basic_string<char> iman, fman, dexp; 
+
+    try
+    {
+        char sym;
+        auto_stream_exception<typename IStream::char_type, typename IStream::traits_type> ai(in, std::ios_base::eofbit);
+        while (in.get(sym) && std::isspace(sym)); //read one more symbol for future :)
+
+        if (sym != '+' && sym != '-') in.unget();
+        else msign = sym; //signum
+
+        get_decimal_string(in, iman);
+        
+        if (in.peek() == '.') in.get(sym); //point
+
+        get_decimal_string(in, fman);
+
+        //Six singular cases are possible here: "+", "-", "+.", "-.", "." and ""
+        if (iman.length() || fman.length()) //normal case
+        {
+            if ((sym = in.peek()) == 'e' || sym == 'E') in.get(sym); //exponent follows
+            if ((sym = in.peek()) == '+' || sym == '-') in.get(esign); 
+
+            get_decimal_string(in, dexp);
+        }
+    }
+    catch (std::ios_base::failure)
+    {
+        //end of stream reached!
+    }
+
+    if(!iman.length() && !fman.length()) //singular case
+    {
+        in.clear (in.rdstate() | std::ios_base::failbit);
+        return false;
+    }
+
+    if (dexp.length())
+    {
+        std::istringstream es(esign + dexp);
+        es >> exp;
+    }
+    else
+        exp = 0;
+    exp += iman.length();
+    if (msign) man << msign;
+    man << iman << fman;
+
+    return true;
+}
+
+}// namespace _Internal
+
+
 template <typename BF, typename Stream>
 Stream & operator >> (Stream &is, big_float_t<BF> &b)
 {
-    ARAGELI_ASSERT_ALWAYS("std::istream & operator >> (std::istream &is, big_float_t<BF> &b) not implemenetd yet!")
-    //WARNING! temporary solution! TODO add input error handling
-    //std::basic_string<char> str;
-    //is >> str;
-    //mpfr_strtofr(b.get_rep(), str.c_str(), 0, 10, b.get_mp_rounding_mode());
+    typename big_float_t<BF>::exp_t exp;
+    std::ostringstream man;
+    if ( _Internal::parse_float_number(is, man, exp))
+        b.get_rep().from_string(man.str().c_str(), exp);
+     
     return is;
 }
 
@@ -834,7 +959,7 @@ Stream & operator >> (Stream &is, big_float_t<BF> &b)
 template <typename BF>    \
 inline big_float_t<BF> FUNC (const big_float_t<BF> &b, typename big_float_t<BF>::prec_t prec, typename big_float_t<BF>::rounding_mode_t mode)    \
 {    \
-    return big_float_t<BF>(/*FUNC(b.get_rep(), prec, mode)*/);    \
+    return big_float_t<BF>(FUNC(b.get_rep(), prec, mode));    \
 }    \
 
 #define _ARAGELI_BIG_FLOAT_SPECIAL_BFUNC(FUNC)    \
@@ -1044,6 +1169,7 @@ big_float_t<BF> min (const big_float_t<BF> &b, const big_float_t<BF> &c)
         return c;
 }
 
+
 template <typename Outiter, typename BF>
 inline void generate_range_helper (big_float_t<BF>& t1, const big_float_t<BF>& t2, Outiter outiter)
 {
@@ -1066,3 +1192,4 @@ inline void generate_range_helper (big_float_t<BF>& t1, const big_float_t<BF>& t
     }
 #endif
 
+#endif
