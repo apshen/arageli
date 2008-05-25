@@ -406,7 +406,6 @@ Stream& io_binary<big_int>::input_stream (Stream& in, big_int& x)
 
 
 #include <cstdlib>
-#include <malloc.h>
 #include <sstream>
 #include <limits>
 #include <cctype>
@@ -449,7 +448,7 @@ digit* big_int::get_mem_for_data (std::size_t nitems)
 
 void big_int::free_data (digit *p)
 {
-    free(p);
+    std::free(p);
 }
 
 
