@@ -39,6 +39,9 @@
 #define _ARAGELI_fft_hpp_
 
 #include "config.hpp"
+
+#include <cstdlib>
+
 #include "bigar.hpp"
 #include "exception.hpp"
 
@@ -291,7 +294,7 @@ public:
                 delete [] alpha_powers[i];
             }
         }
-        free(alpha_powers);
+        std::free(alpha_powers);
         delete [] binary_reverse;
     };
 
