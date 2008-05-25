@@ -275,7 +275,7 @@ public:
         // Note that we compute powers for each iteration of FFT.
         // So we duplicate data in exchange for opportunity to have
         // a sequential access that speed up FFT calculation.
-        alpha_powers = (MT**)malloc(sizeof(MT*)*(num_of_alpha_powers+1));
+        alpha_powers = (MT**)std::malloc(sizeof(MT*)*(num_of_alpha_powers+1));
         binary_reverse = new MT[n];
         /* calculate alpha value */
         alpha_determination(p, root);
