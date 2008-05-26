@@ -44,6 +44,7 @@
 
 #include <fstream>
 #include <map>
+#include <list>
 #include <cmath>
 
 #include "exception.hpp"
@@ -57,6 +58,28 @@ namespace simplex_method
 {
 
 //  Alexey Polovinkin: code that must be refactored I'll note // AP ... // end AP
+double read_from_str(std::string str)
+{
+    std::istringstream str_stream(str);
+    double val = 0.0;
+    str_stream >> val;
+    return val;
+}
+
+template<typename T, typename Ctrler>
+void adv_simplex_method_alg<T, Ctrler>::InitReaderTables()
+{
+    m_BoundTypes["LO"] = lower;
+    m_BoundTypes["UP"] = upper;
+    m_BoundTypes["FX"] = fixed;
+    m_BoundTypes["FR"] = free;
+    m_BoundTypes["MI"] = lower_inf;
+    m_BoundTypes["PL"] = upper_inf;
+    m_BoundTypes["BV"] = binary;
+    m_BoundTypes["LI"] = lower_int;
+    m_BoundTypes["UI"] = upper_int;
+    m_BoundTypes["SC"] = semicont;
+}
 
 template<typename T, typename Ctrler>
 void adv_simplex_method_alg<T, Ctrler>::AllocateData()
@@ -340,11 +363,7 @@ void adv_simplex_method_alg<T, Ctrler>::ComputeReducedCosts()
     for (i = 0; i < m_NumStructVars; i++)
         cn[i] = m_C[m_NonBasicVarNums[i]];
 
-    // will be changed to improve performance
-    // m_D = cn - (cb * m_Binv) * m_N;
-    // AP
-    m_D = cn - cb * m_Amod;
-    // end AP
+    m_D = cn - (cb * m_Binv) * m_N;
 }
 
 
@@ -857,6 +876,350 @@ vector<T> adv_simplex_method_alg<T, Ctrler>::GetSolution()
 
 
 template <typename T, typename Ctrler>
+int adv_simplex_method_alg<T, Ctrler>::LoadTaskFromFileMPS(char* filename)
+{
+    InitReaderTables();
+    std::fstream mps_file(filename);
+    if(!mps_file)
+    {
+        // Temporary we use a common exception class.
+        invalid_argument e;
+        ARAGELI_EXCEPT_LOC_DESC
+        (
+            e,
+            std::string("Cannot open the file ") + filename + "."
+        );
+        throw e;
+    }
+    std::string curr_string, curr_token, curr_var_name, curr_row_name;
+    std::string prev_var_name = "";
+
+    enum
+    {
+        none,
+        obj_func,
+        rows_sect,
+        constraint_sect,
+        range_sect,
+        rhs_sect,
+        bounds_sect
+    }
+        stage = none;
+
+    ineqType ineq_type = _none_;
+    std::map<std::string, ineqType> ineq_types;
+    std::map<std::string, std::map<std::string, T> > constraint_coeffs;
+    std::map<std::string, T> var_coeffs;
+    std::map<std::string, size_t> row_numbers;
+    std::map<std::string, size_t> var_numbers;
+    std::map<std::string, T> rhs_values;
+    std::map<std::string, T> ranges_values;
+    std::map<std::string, std::list<std::pair<boundType, T> > > var_bounds;
+    size_t last_row_num = 0;
+    size_t last_var_num = 0;
+    T curr_value;
+    std::list<std::string> obj_list;
+    std::string obj_var_name;
+
+    while (1)
+    {
+        std::getline(mps_file, curr_string);
+        if (stage == none && curr_string.substr(0, 4) == "NAME") continue;
+        if (Arageli::stricmp(curr_string.c_str(), "endata") == 0)
+        {
+            break;
+        }
+        else if (Arageli::stricmp(curr_string.c_str(), "rows") == 0)
+        {
+            stage = rows_sect;
+            continue;
+        }
+        else if (Arageli::stricmp(curr_string.c_str(), "columns") == 0)
+        {
+            stage = constraint_sect;
+            continue;
+        }
+        else if (Arageli::stricmp(curr_string.c_str(), "rhs") == 0)
+        {
+            constraint_coeffs[prev_var_name] = var_coeffs;
+            stage = rhs_sect;
+            continue;
+        }
+        else if (Arageli::stricmp(curr_string.c_str(), "bounds") == 0)
+        {
+            stage = bounds_sect;
+            continue;
+        }
+        else
+        {
+            std::istringstream str_stream(curr_string);
+            switch (stage)
+            {
+            case rows_sect:
+                str_stream >> curr_token;
+                switch (curr_token[0])
+                {
+                case 'N':
+                    ineq_type = _none_;
+                    break;
+                case 'L':
+                    ineq_type = leq;
+                    break;
+                case 'G':
+                    ineq_type = geq;
+                    break;
+                case 'E':
+                    ineq_type = eq;
+                    break;
+                default:
+                    ;// set file format error
+                }
+                str_stream >> curr_row_name;
+                ineq_types[curr_row_name] = ineq_type;
+                row_numbers[curr_row_name] = last_row_num++;
+                obj_list.push_back(curr_row_name);
+                break;
+            case constraint_sect:
+                str_stream >> curr_var_name;
+                if (curr_var_name != prev_var_name)
+                {
+                    if (prev_var_name != "")
+                    {
+                        constraint_coeffs[prev_var_name] = var_coeffs;
+                        var_coeffs.clear();
+                    }
+                    var_numbers[curr_var_name] = last_var_num++;
+                    prev_var_name = curr_var_name;
+                }
+                do
+                {
+                    str_stream >> curr_row_name;
+                    str_stream >> curr_token;
+                    curr_value = read_from_str(curr_token);
+                    var_coeffs[curr_row_name] = curr_value;
+                }
+                while (!str_stream.eof());
+
+                break;
+            case range_sect:
+                str_stream >> curr_token; // dummy variable, name of current rhs
+                do
+                {
+                    str_stream >> curr_row_name;
+                    str_stream >> curr_token;
+                    curr_value = read_from_str(curr_token);
+                    ranges_values[curr_row_name] = curr_value;
+                }
+                while (!str_stream.eof());
+                break;
+            case rhs_sect:
+                str_stream >> curr_token; // dummy variable, name of current rhs
+                do
+                {
+                    str_stream >> curr_row_name;
+                    str_stream >> curr_token;
+                    curr_value = read_from_str(curr_token);
+                    rhs_values[curr_row_name] = curr_value;
+                }
+                while (!str_stream.eof());
+                break;
+            case bounds_sect:
+                str_stream >> curr_token;
+                boundType bound_type = m_BoundTypes[curr_token];
+                str_stream >> curr_token; // dummy variable, name of current bound
+                str_stream >> curr_var_name;
+                str_stream >> curr_token;
+                curr_value = read_from_str(curr_token);
+                std::pair<boundType, T> curr_bound(bound_type, curr_value);
+                if (var_bounds.find(curr_var_name) == var_bounds.end())
+                {
+                    var_bounds[curr_var_name] = std::list<std::pair<boundType, T> >();
+                }
+                var_bounds[curr_var_name].push_back(curr_bound);
+                break;
+            }
+        }
+    }
+
+    m_NumAuxVars = row_numbers.size() - 1; // one of the variables in this table is objective function
+    m_NumStructVars = var_numbers.size();
+
+    AllocateData();
+
+    if (obj_list.size() > 1 || obj_list.empty())
+    {
+        // add exception here
+    }
+    else
+    {
+        obj_var_name = *(obj_list.begin());
+    }
+
+    size_t obj_var_num = row_numbers[obj_var_name];
+    std::map<std::string, size_t>::iterator row_num_iter;
+    std::map<std::string, size_t>::iterator var_num_iter;
+    for (row_num_iter = row_numbers.begin(); row_num_iter != row_numbers.end(); row_num_iter++)
+    {
+        if ((*row_num_iter).second > obj_var_num) (*row_num_iter).second--;
+    }
+
+    // fill variable names
+    for (row_num_iter = row_numbers.begin(); row_num_iter != row_numbers.end(); row_num_iter++)
+    {
+        if ((*row_num_iter).first != obj_var_name)
+            m_VarNames[(*row_num_iter).second] = (*row_num_iter).first;
+    }
+    for (var_num_iter = var_numbers.begin(); var_num_iter != var_numbers.end(); var_num_iter++)
+    {
+        m_VarNames[(*var_num_iter).second + m_NumAuxVars] = (*var_num_iter).first;
+    }
+
+
+    // fill constraint matrix
+    for (size_t i = 0; i < m_NumAuxVars; i++)
+        m_A(i, i) = unit<T>();
+
+    std::map<std::string, std::map<std::string, T> >::iterator iter;
+    std::map<std::string, T>::iterator col_iter;
+    for (iter = constraint_coeffs.begin(); iter != constraint_coeffs.end(); iter++)
+    {
+        std::map<std::string, T> var_coeffs = (*iter).second;
+        for (col_iter = var_coeffs.begin(); col_iter != var_coeffs.end(); col_iter++)
+        {
+            if ((*col_iter).first != obj_var_name)
+            {
+                m_A(row_numbers[(*col_iter).first], m_NumAuxVars + var_numbers[(*iter).first]) = (*col_iter).second;
+            }
+            else
+            {
+                m_C[m_NumAuxVars + var_numbers[(*iter).first]] = (*col_iter).second;
+            }
+        }
+    }
+
+    // fill bounds arrays
+    for (i = 0; i < m_NumAuxVars + m_NumStructVars; i++)
+    {
+        m_LowerBounds[i] = null<T>();
+        m_IsLowerBoundsInf[i] = false;
+        m_UpperBounds[i] = null<T>();
+        m_IsUpperBoundsInf[i] = true;
+    }
+    std::map<std::string, T>::iterator rhs_iter;
+    for (rhs_iter = rhs_values.begin(); rhs_iter != rhs_values.end(); rhs_iter++)
+    {
+        std::string row_name = (*rhs_iter).first;
+        if (ineq_types[row_name] == geq)
+        {
+            m_IsLowerBoundsInf[row_numbers[row_name]] = false;
+            m_LowerBounds[row_numbers[row_name]] = (*rhs_iter).second;
+            if (ranges_values.find(row_name) != ranges_values.end())
+            {
+                m_IsUpperBoundsInf[row_numbers[row_name]] = false;
+                m_UpperBounds[row_numbers[row_name]] = (*rhs_iter).second + std::abs(ranges_values[row_name]);
+            }
+        }
+        else if (ineq_types[row_name] == leq)
+        {
+            m_IsUpperBoundsInf[row_numbers[row_name]] = false;
+            m_UpperBounds[row_numbers[row_name]] = (*rhs_iter).second;
+            if (ranges_values.find(row_name) != ranges_values.end())
+            {
+                m_IsLowerBoundsInf[row_numbers[row_name]] = false;
+                m_LowerBounds[row_numbers[row_name]] = (*rhs_iter).second - std::abs(ranges_values[row_name]);
+            }
+        }
+        else if (ineq_types[row_name] == eq)
+        {
+            m_IsLowerBoundsInf[row_numbers[row_name]] = false;
+            m_LowerBounds[row_numbers[row_name]] = (*rhs_iter).second;
+            m_IsUpperBoundsInf[row_numbers[row_name]] = false;
+            m_UpperBounds[row_numbers[row_name]] = (*rhs_iter).second;
+
+            // I don't understand the purpose of code below :)
+            if (ranges_values.find(row_name) != ranges_values.end())
+            {
+                if (ranges_values[row_name] < null<T>())
+                {
+                    m_LowerBounds[row_numbers[row_name]] = (*rhs_iter).second - std::abs(ranges_values[row_name]);
+                }
+                else if (ranges_values[row_name] > null<T>())
+                {
+                    m_UpperBounds[row_numbers[row_name]] = (*rhs_iter).second + std::abs(ranges_values[row_name]);
+                }
+
+            }
+        }
+        else
+        {
+            // show exception here
+        }
+    }
+
+    std::map<std::string, std::list<std::pair<boundType, T> > >::iterator bounds_iter;
+    std::string var_name;
+    std::list<std::pair<boundType, T> > curr_var_bounds;
+    std::list<std::pair<boundType, T> >::iterator curr_bounds_iter;
+    for (bounds_iter = var_bounds.begin(); bounds_iter != var_bounds.end(); bounds_iter++)
+    {
+        var_name = (*bounds_iter).first;
+        curr_var_bounds = (*bounds_iter).second;
+        size_t var_num = m_NumAuxVars + var_numbers[var_name];
+        for (curr_bounds_iter = curr_var_bounds.begin(); curr_bounds_iter != curr_var_bounds.end(); curr_bounds_iter++)
+        {
+            switch ((*curr_bounds_iter).first)
+            {
+            case lower:
+                m_IsLowerBoundsInf[var_num] = false;
+                m_LowerBounds[var_num] = (*curr_bounds_iter).second;
+                break;
+            case upper:
+                m_IsUpperBoundsInf[var_num] = false;
+                m_UpperBounds[var_num] = (*curr_bounds_iter).second;
+                break;
+            case fixed:
+                m_IsLowerBoundsInf[var_num] = false;
+                m_LowerBounds[var_num] = (*curr_bounds_iter).second;
+                m_IsUpperBoundsInf[var_num] = false;
+                m_UpperBounds[var_num] = (*curr_bounds_iter).second;
+                break;
+            case free:
+                m_IsLowerBoundsInf[var_num] = true;
+                m_LowerBounds[var_num] = null<T>();
+                m_IsUpperBoundsInf[var_num] = true;
+                m_UpperBounds[var_num] = null<T>();
+                break;
+            case lower_inf:
+                m_IsLowerBoundsInf[var_num] = true;
+                m_LowerBounds[var_num] = null<T>();
+                if (m_IsUpperBoundsInf[var_num])
+                {
+                    m_IsUpperBoundsInf[var_num] = false;
+                    m_UpperBounds[var_num] = null<T>();
+                }
+                break;
+            case upper_inf:
+                m_IsUpperBoundsInf[var_num] = true;
+                m_UpperBounds[var_num] = null<T>();
+                if (m_IsLowerBoundsInf[var_num])
+                {
+                    m_IsLowerBoundsInf[var_num] = false;
+                    m_LowerBounds[var_num] = null<T>();
+                }
+                break;
+            case binary:
+            case lower_int:
+            case upper_int:
+            case semicont:
+                ;// show exception here
+            };
+        }
+
+    }
+
+}
+
+template <typename T, typename Ctrler>
 int adv_simplex_method_alg<T, Ctrler>::LoadTaskFromFile(char* filename)
 {
     // TODO: Make lines shorter where they are greater than 80 characters.
@@ -1031,7 +1394,7 @@ start:
                 {
                     if (token_type == coeff_value || token_type == var_name)
                         return ARAGELI_LP_READ_ERROR;
-                    coeff = T(curr_token.c_str());    // WARNING! It restricts type T.
+                    coeff = read_from_str(curr_token);    // WARNING! It restricts type T.
                     token_type = coeff_value;
                     continue;
                 }
@@ -1127,15 +1490,15 @@ start:
                         return ARAGELI_LP_READ_ERROR;
                     if (token_type != constraint_type)
                     {
-                        coeff = T(curr_token.c_str());    // WARNING! It restricts type T.
+                        coeff = read_from_str(curr_token);    // WARNING! It restricts type T.
                         token_type = coeff_value;
                     }
                     else
                     {
                         right_side_values[curr_constraint_name] =
                             (coeff_sign == plus) ?
-                            T(curr_token.c_str()) :
-                            -T(curr_token.c_str());    // WARNING! It restricts type T.
+                            read_from_str(curr_token) :
+                            -read_from_str(curr_token);    // WARNING! It restricts type T.
                         all_constraint_coeffs[curr_constraint_name] = constraint_coeffs;
                         constraint_coeffs.clear();
                         token_type = none_;
@@ -1172,13 +1535,13 @@ start:
                 {
                     if (token_type == constraint_type)
                     {
-                        right_side_values[curr_constraint_name] = T(curr_token.c_str());    // WARNING! It restricts type T.
+                        right_side_values[curr_constraint_name] = read_from_str(curr_token);    // WARNING! It restricts type T.
                         all_constraint_coeffs[curr_constraint_name] = constraint_coeffs;
                         constraint_coeffs.clear();
                     }
                     else if (token_type == none_)
                     {
-                        coeff = T(curr_token.c_str());    // WARNING! It restricts type T. And so on...
+                        coeff = read_from_str(curr_token);    // WARNING! It restricts type T. And so on...
                         token_type = coeff_value;
                     }
                     else
@@ -1302,7 +1665,7 @@ start:
                     else
                     {
                         coeff =
-                            T(curr_token.c_str()) *
+                            read_from_str(curr_token) *
                             (coeff_sign == plus ? unit<T>() : -unit<T>());
                         is_coeff_plus_inf = false;
                         is_coeff_minus_inf = false;

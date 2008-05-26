@@ -219,6 +219,28 @@ enum optDirection
     DIR_MINIMIZE
 };
 
+enum ineqType
+{
+    geq,
+    eq,
+    leq,
+    _none_
+};
+
+enum boundType
+{
+    lower,
+    upper,
+    fixed,
+    free,
+    lower_inf,
+    upper_inf,
+    binary,
+    lower_int,
+    upper_int,
+    semicont
+};
+
 
 // WARNING! MACRO!
 #define ARAGELI_LP_READ_ERROR 100
@@ -248,6 +270,7 @@ class adv_simplex_method_alg
         operation before task solving and the load operation after solving
         is a hard restriction for Arageli.
     */
+    std::map<std::string, boundType> m_BoundTypes;
 
     typedef typename vector<T>::size_type size_type;
 
@@ -294,6 +317,8 @@ class adv_simplex_method_alg
 
     void InitInitialData();
 
+    void InitReaderTables();
+
     solvingResult SolveProblem();
 
     presolvingResult ArtificialBasisMethod();
@@ -317,6 +342,8 @@ public:
     {}
 
     int LoadTaskFromFile(char *filename);    // Sergey Lyalin: Отделить от основного кода! Пусть будет отдельная функция в отдельном файле.
+
+    int LoadTaskFromFileMPS(char* filename);
 
     solvingResult SimplexDriver();
     vector<T> GetSolution();
