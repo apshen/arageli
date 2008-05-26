@@ -47,6 +47,35 @@ void SolveFromFile()
     sm.SimplexDriver();
 }
 
+void SolveFromFileMPS()
+{
+    ofstream outfile("../example/adv_simplex_method.task.output1_mps.txt");
+
+    adv_simplex_method_alg_slog<ofstream>
+        ctrl_sm_slog(outfile);
+
+    simplex_method::adv_simplex_method_alg
+    <
+        double,
+        adv_simplex_method_alg_slog<ofstream>
+    >
+        sm(ctrl_sm_slog);
+
+    try
+    {
+        sm.LoadTaskFromFileMPS("../example/seba.mps");
+    }
+    catch(exception& e)
+    {
+        ARAGELI_EXCEPT_LOC(e);
+        cout
+            << "\nSomething wrong happened while reading the file."
+            << "\nDetailes:\n" << e;
+        return;
+    }
+
+}
+
 void SolveFromInput()
 {
     ofstream outfile("../example/adv_simplex_method.task.output2.txt"); // output file
@@ -96,7 +125,8 @@ void SolveFromInput()
 
 int main()
 {
-    SolveFromFile();
-    SolveFromInput();
+    SolveFromFileMPS();
+    //SolveFromFile();
+    //SolveFromInput();
     return 0;
 }
