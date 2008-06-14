@@ -83,6 +83,14 @@
     #endif
 #endif
 
+#if ARAGELI_PLATFORM == ARAGELI_PLATFORM_WINDOWS
+    #ifndef _WIN32_WINNT
+        #define _WIN32_WINNT 0x0400
+    #endif _WIN32_WINNT
+    #include <windows.h>
+    #undef min
+    #undef max
+#endif
 
 /// Turn on some debug output command to std::cout inlined to internal code.
 //#define ARAGELI_INLINE_DEBUG_OUTPUT
