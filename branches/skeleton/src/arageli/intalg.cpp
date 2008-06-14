@@ -570,7 +570,8 @@ T intsqrt (const T& a)
             r = (r + q) >> 1;
     }
 
-    ARAGELI_ASSERT_1(r*r <= a && (r+1)*(r+1) > a);
+    // WARNING! The following condition do not check all cases for bounded T.
+    ARAGELI_ASSERT_1(r*r <= a && (std::numeric_limits<T>::is_bounded || (r+1)*(r+1) > a));
     return r;
 }
 

@@ -1325,7 +1325,7 @@ inline big_int pow (const big_int& x, const big_int& p)
 /// Returns the base-2 logarithm of abs(x). If x == 0, returns -1.
 inline big_int log2 (const big_int& x)
 {
-    return x.length() - 1;
+    return x.length() - 1ul;
 }
 
 

@@ -217,6 +217,14 @@ public:
             calibrate();
     }
 
+    timer& operator+= (const timer& x)
+    {
+        ARAGELI_ASSERT_0(!x.is_active());
+        duration += x.duration; // WARNING! If overflow occurs?
+        absprec += x.absprec;
+        return *this;
+    }
+
 private:
 
 #ifdef _ARAGELI_WIN_PERFORMANCE_TIMER
