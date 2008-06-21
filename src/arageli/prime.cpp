@@ -39,7 +39,6 @@
 #include "prime.hpp"
 #include "exception.hpp"
 #include "powerest.hpp"
-#include "rand.hpp"
 #include "setenumrnd/grid.hpp"
 
 
@@ -122,10 +121,16 @@ bool is_pseudoprime_solovay_strassen (const T& x, const N& n, const T_factory& t
         return true;
     T jac;
     T a;
+
+    // We need integer random numbers from [2, x-1].
+    typedef set::grid1<T, T> int_grid;
+    int_grid int_2_xm1(2, x-1); // integer set from [2, x-1]
+    rnd::equiprob<int_grid> gen_2_xm1(int_2_xm1);   // random generator from [2, x-1]
+
     for (N i = null(n); i < n; ++i)
     {
-        a = rand(x-3);
-        a += 2;
+        a = gen_2_xm1();
+
         if (!is_unit(gcd(a,x)))
             return false;
         jac = jacobi(a, x);
@@ -153,7 +158,7 @@ bool is_pseudoprime_miller_rabin (const T& x, const N& n, const T_factory& tfctr
     const T start_q = (x - 1) >> 1;
 
     // We need integer random numbers from [2, x-1].
-    typedef set::grid1<T> int_grid;
+    typedef set::grid1<T, T> int_grid;
     int_grid int_2_xm1(2, x-1); // integer set from [2, x-1]
     rnd::equiprob<int_grid> gen_2_xm1(int_2_xm1);   // random generator from [2, x-1]
 
@@ -469,7 +474,13 @@ T rho_pollard(const T& n, const T_factory& tfctr)
 
     // Zolotykh - Computer Algebra
     ARAGELI_ASSERT_1(n >= 4);
-    T x0 = rand(n-1);
+
+    // We need integer random numbers from [0, n-1].
+    typedef set::grid1<T, T> int_grid;
+    int_grid int_0_nm1(0, n-1); // integer set from [0, n-1]
+    rnd::equiprob<int_grid> gen_0_nm1(int_0_nm1);   // random generator from [0, n-1]
+
+    T x0  = gen_0_nm1();
     T x = x0;
     T d;
     unsigned int i, j = 1;
@@ -775,9 +786,13 @@ T prev_probably_prime (T x)
 template<typename T, typename N>
 void rsa_generate_keys(N l, T& c, T& public_key, T& d)
 {
-    T p = rand(l/2);
-    //    init_random(time(NULL));
-    T q = rand(l/2);
+    // We need integer random numbers from [0, l/2].
+    typedef set::grid1<N> int_grid;
+    int_grid int_0_ld2(0, l/2); // integer set from [0, l/2]
+    rnd::equiprob<int_grid> gen_0_ld2(int_0_ld2);   // random generator from [0, l/2]
+
+    T p = gen_0_ld2();
+    T q = gen_0_ld2();
     public_key = p * q;
 
     T phi = (p-1)*(q-1);

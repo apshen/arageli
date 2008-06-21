@@ -90,7 +90,6 @@ namespace Arageli
 
 #include "smithpoly.hpp"
 #include "hermite.hpp"
-#include "rand.hpp"
 #include "sparse_polynom.hpp"
 #include <stdlib.h>
 #include <iostream>
@@ -423,7 +422,7 @@ matrix<T> smithPoly_rand(const matrix<T>& m)
         M c(s.nrows(), eye);
         for (i = 0; i < c.nrows(); i++)
             for(j = i+1; j < c.ncols(); j++)
-                c.el(i, j) = rand(maxRand);
+                c.el(i, j) = rand(maxRand);  // WARNING! Deprecated rand is used.
 
         #ifdef ARAGELI_INLINE_DEBUG_OUTPUT
             std::cout << step << " preconditioning: \n";
