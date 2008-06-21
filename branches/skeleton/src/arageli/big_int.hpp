@@ -1411,14 +1411,8 @@ inline Arageli::big_int abs (const Arageli::big_int& x)
 
 /// Raise x to a power p.
 /** Just uses Arageli::power. */
-inline Arageli::big_int pow (const Arageli::big_int& x, long int p)
-{
-    return Arageli::pow(x, p);
-}
-
-/// Raise x to a power p.
-/** Just uses Arageli::power. */
-inline Arageli::big_int pow (const Arageli::big_int& x, int p)
+template <typename T>
+inline Arageli::big_int pow (const Arageli::big_int& x, const T& p)
 {
     return Arageli::pow(x, p);
 }
