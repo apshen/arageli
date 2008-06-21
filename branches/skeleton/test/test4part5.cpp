@@ -49,7 +49,7 @@ using std::string;
 
 
 double rand_in_range (double x, double y)
-{ return (double(rand())/RAND_MAX)*(y-x) + x; }
+{ return (double(std::rand())/RAND_MAX)*(y-x) + x; }
 
 template <typename V1, typename V2>
 double angle (const V1& v1, const V2& v2)

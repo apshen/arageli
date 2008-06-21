@@ -75,7 +75,7 @@ namespace Arageli { namespace _Internal
     const extendeddigit BASE = 0x100000000ull;
     const int bits_per_digit = 32;
 #elif defined ARAGELI_LONG_LONG_SUPPORT
-    typedef unsigned long digit;
+    typedef unsigned int digit;
     typedef unsigned long long doubledigit;
     typedef unsigned long long extendeddigit;
     typedef unsigned short int bit;

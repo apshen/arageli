@@ -110,9 +110,6 @@ class big_int
     template <typename T_factory>
     friend big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
 
-    template <typename T_factory>
-    friend big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
-
     friend std::size_t magnitude (const big_int& x);
 
 public:
@@ -204,51 +201,61 @@ public:
 
     big_int (char x)
     {
+        alloc_zero();
         from_native_int(x);
     }
 
     big_int (signed char x)
     {
+        alloc_zero();
         from_native_int(x);
     }
 
     big_int (unsigned char x)
     {
+        alloc_zero();
         from_native_int(x);
     }
 
     big_int (signed short x)
     {
+        alloc_zero();
         from_native_int(x);
     }
 
     big_int (unsigned short x)
     {
+        alloc_zero();
         from_native_int(x);
     }
 
     big_int (signed int x)
     {
+        alloc_zero();
         from_native_int(x);
     }
 
     big_int (unsigned int x)
     {
+        alloc_zero();
         from_native_int(x);
     }
 
     big_int (signed long int x)
     {
+        alloc_zero();
         from_native_int(x);
     }
 
     big_int (unsigned long int x)
     {
+        alloc_zero();
         from_native_int(x);
     }
 
     big_int (bool x)
     {
+        alloc_zero();
         from_native_int(x);
     }
 
@@ -256,11 +263,13 @@ public:
 
         big_int (signed __int64 x)
         {
+            alloc_zero();
             from_native_int(x);
         }
 
         big_int (unsigned __int64 x)
         {
+            alloc_zero();
             from_native_int(x);
         }
 
@@ -270,11 +279,13 @@ public:
 
         big_int (signed long long x)
         {
+            alloc_zero();
             from_native_int(x);
         }
 
         big_int (unsigned long long x)
         {
+            alloc_zero();
             from_native_int(x);
         }
 
@@ -282,16 +293,19 @@ public:
 
     big_int (float x)
     {
+        alloc_zero();
         from_native_float(x);
     }
 
     big_int (double x)
     {
+        alloc_zero();
         from_native_float(x);
     }
 
     big_int (long double x)
     {
+        alloc_zero();
         from_native_float(x);
     }
 
@@ -1317,6 +1331,13 @@ inline big_int pow (const big_int& x, int p)
 
 /// Raise x in to a power p.
 /** Just uses Arageli::power. */
+inline big_int pow (const big_int& x, long int p)
+{
+    return power(x, p);
+}
+
+/// Raise x in to a power p.
+/** Just uses Arageli::power. */
 inline big_int pow (const big_int& x, const big_int& p)
 {
     return power(x, p);
@@ -1386,6 +1407,13 @@ inline Arageli::big_int sqrt (const Arageli::big_int& a)
 inline Arageli::big_int abs (const Arageli::big_int& x)
 {
     return Arageli::abs(x);
+}
+
+/// Raise x to a power p.
+/** Just uses Arageli::power. */
+inline Arageli::big_int pow (const Arageli::big_int& x, long int p)
+{
+    return Arageli::pow(x, p);
 }
 
 /// Raise x to a power p.

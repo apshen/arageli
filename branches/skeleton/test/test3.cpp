@@ -722,8 +722,8 @@ void test3_16 ()
 template <typename T, bool REFCNT>
 void rand_lpt (matrix<T, REFCNT>& a, Arageli::vector<T, REFCNT>& c, Arageli::vector<T, REFCNT>& b)
 {
-    size_t m = rand()%3 + 2;
-    size_t n = m + 1 + rand()%3;
+    size_t m = std::rand()%3 + 2;
+    size_t n = m + 1 + std::rand()%3;
 
     a.assign(m, n);
     c.resize(n);
@@ -733,11 +733,11 @@ void rand_lpt (matrix<T, REFCNT>& a, Arageli::vector<T, REFCNT>& c, Arageli::vec
     {
         for(size_t j = 0; j < n; ++j)
         {
-            a(i, j) = rand()%100;
-            c[j] = rand()%100;
+            a(i, j) = std::rand()%100;
+            c[j] = std::rand()%100;
         }
 
-        b[i] = rand()%100;
+        b[i] = std::rand()%100;
     }
 }
 

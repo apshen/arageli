@@ -174,8 +174,11 @@ public:
         #endif
     }
 
-    /// The minimal amount of time that can be measured.
-    /** Duration of one tick. The returned value is expressed in seconds. */
+    /// The minimal amount of time that can be measured. Approximated value.
+    /** Duration of the one tick. The returned value is expressed in seconds.
+        This value is approximated dependent on the system load and context.
+        It can vary from run to run of the program and from one to another call
+        of calibrate function. */
     static double resolution ()
     {
         first_calibrate();
@@ -205,12 +208,13 @@ public:
         is TBD. */
     static void calibrate ();
 
-    /// Retruns true iff timer class is calibrated.
+    /// Retruns true iff timer class has been calibrated already.
     static bool is_calibrated ()
     {
         return delta != 0;
     }
 
+    /// Calibrate timer (calls calibrate) if and only if the timer wasn't calibrated before.
     static void first_calibrate ()
     {
         if(!is_calibrated())
