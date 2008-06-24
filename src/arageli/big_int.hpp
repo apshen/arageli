@@ -171,15 +171,27 @@ public:
         @param str a string for initialization */
     big_int (const char* str);
 
-    /// Just a copy constructor (note: there is a link counter).
-    /** Copy constructor actually does not make a copy of number representation.
-        This solution is based on link counter. This constructor just increment
-        link counter and store in this object a pointer to number representation. */
+    /// Just a copy constructor (note: there may be a link counter).
+    /** Copy constructor actually does not make a copy of number representation
+        if reference counters is on. If so, the constructor just increment
+        reference counter and store in this object a pointer to number
+        representation.
+        To turn reference counter on or off see macro ARAGELI_BIG_INT_REFCNT. */
     big_int (const big_int& b)
     {
         ARAGELI_ASSERT_0(this != &b);
+
+        #ifdef ARAGELI_BIG_INT_REFCNT
+
         b.number->refs++;
         number = b.number;
+
+        #else
+
+        ARAGELI_ASSERT_1(b.number->refs == 1);
+        hard_copy_number(b);
+
+        #endif
     }
 
 
@@ -762,6 +774,15 @@ private:
         std::size_t newnitems
     );
 
+
+    #ifndef ARAGELI_BIG_INT_REFCNT
+
+    /// Copies b to this object not using reference counter.
+    void hard_copy_number (const big_int& b);
+
+    #endif
+
+
     // Erases leading zeros.
     static digit* optimize (std::size_t& new_len, digit * p, std::size_t len);
 
@@ -916,6 +937,10 @@ inline big_int& operator>>= (big_int& a, std::size_t b)
 {
     if(a.number->len == 1)
     {
+        #ifndef ARAGELI_BIG_INT_REFCNT
+            ARAGELI_ASSERT_1(a.number->refs == 1);
+        #endif
+
         if(a.number->refs > 1)
         {
             a.number->refs--;
