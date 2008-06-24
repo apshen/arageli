@@ -142,6 +142,13 @@
 #define ARAGELI_PERFORMANCE_TIMER
 
 
+/// Turns reference counter embedded in big_int on.
+/** Unfortunately there is no other ways to turn on or off this property
+    for big_int unlike other types, which have one optional template
+    parameter for this purpose. */
+//#define ARAGELI_BIG_INT_REFCNT
+
+
 /// The number of iterations in is_prime_small_primes_division function.
 #define ARAGELI_IS_PRIME_SMALL_PRIMES_DIVISION_NUMBER 20
 

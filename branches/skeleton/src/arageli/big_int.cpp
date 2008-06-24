@@ -478,6 +478,33 @@ void big_int::copy_data
     memmove(dest, source, newnitems * sizeof(digit));
 }
 
+
+#ifndef ARAGELI_BIG_INT_REFCNT
+
+void big_int::hard_copy_number (const big_int& b)
+{
+    if(b.number->sign)  // if b != 0
+    {
+        ARAGELI_ASSERT_1(b.number->data);
+        digit* data = get_mem_for_data(b.number->len);
+        copy_data(data, b.number->data, b.number->len);
+        try
+        {
+            alloc_number(b.number->sign, data, b.number->len);
+        }
+        catch(...)
+        {
+            free_data(data);
+            throw;
+        }
+    }
+    else    // b == 0
+        alloc_zero();
+}
+
+#endif
+
+
 /***************************/
 /*                         */
 /*    number allocation    */
@@ -500,6 +527,10 @@ void big_int::alloc_number
 
 void big_int::free_number()
 {
+    #ifndef ARAGELI_BIG_INT_REFCNT
+        ARAGELI_ASSERT_1(number->refs == 1);
+    #endif
+
     if(!number)return;
     number->refs--;
     if(number->refs)return;
@@ -612,12 +643,23 @@ big_int& big_int::operator= (const big_int & b)
 {
     ARAGELI_ASSERT_1(b.number->sign == -1 || b.number->sign == 0 || b.number->sign == 1);
 
-    // make a copy of a number, just increments the reference count
     if(number == b.number)
         return *this;
     free_number();
+
+    #ifdef ARAGELI_BIG_INT_REFCNT
+
+    // make a copy of a number, just increments the reference count
     b.number->refs++;
     number = b.number;
+
+    #else
+
+    ARAGELI_ASSERT_1(b.number->refs == 1);
+    hard_copy_number(b);
+
+    #endif
+
     return *this;
 }
 
