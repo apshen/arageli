@@ -94,7 +94,11 @@ void big_float::from_native_float(const T &f)
     prec = Nl::digits;
     mode = big_float::global_mode;
 
+    #ifdef ARAGELI_GMP
+    ARAGELI_ASSERT_ALWAYS_EX1(0, "GMP and big_float aren't compatible");
+    #else
     s.free_mem_and_alloc_number( f > 0 ? 1 : -1, man, digits_need + 1 );
+    #endif
 
     int ex;
     frexp (f, &ex);
@@ -143,7 +147,12 @@ T big_float::to_native_float () const
     _Internal::digit *p = new _Internal::digit [ digits_need ];
     ARAGELI_ASSERT_0(p && "the heap overflow");
 
+    #ifdef ARAGELI_GMP
+    ARAGELI_ASSERT_ALWAYS_EX1(0, "GMP and big_float aren't compatible");
+    #else
     std::memmove( p, temp.number->data, digits_need * sizeof (_Internal::digit));
+    #endif
+
     p [digits_need - 1] /*&= ~(_Internal::digit(1) << tlen %_Internal::bits_per_digit - 1)*/;
     T ret = s.sign() * ldexp (*((T*)p), e + (shift + Nl::max_exponent + Nl::digits - 3));
     delete [] p;
