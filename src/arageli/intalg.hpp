@@ -70,6 +70,8 @@ inline T inverse_mod (const T& a, const T& m, const T_factory& tfctr)
     T u, v;
     T r = euclid_bezout(a, m, u, v, tfctr);
     ARAGELI_ASSERT_0(is_unit(r));
+    ARAGELI_DEBUG_EXEC_1(T _tmp = is_negative(u) ? u + m : u);
+    ARAGELI_ASSERT_1(is_positive(_tmp) && _tmp < m);
     return is_negative(u) ? u + m : u;
 }
 

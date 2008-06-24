@@ -52,7 +52,19 @@
 #include "io.hpp"
 #include "powerest.hpp"
 #include "intalg.hpp"
+
+
+#ifdef ARAGELI_GMP
+
+#include <gmp.h>
+
+#else
+
 #include "bigar.hpp"
+
+#endif
+
+
 #include "gcd.hpp"
 
 #include "std_import.hpp"
@@ -65,6 +77,10 @@
     Big Integer Numbers, i.e. `arbitrary precision' integers.
     Implements some common library and standard C++ functions
     specialization and reloaded versions.
+
+    WARNING! Wrapper for GMP isn't memory-exception safe. The wrapper restricts
+    normal conversion from and to built-in integers bigger than long int and
+    buil-in floats bigger that double.
 */
 
 namespace Arageli
@@ -101,9 +117,14 @@ big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
     limits the maximum value of a number. */
 class big_int
 {
+
+#ifndef ARAGELI_GMP
+
     // A type for one elementary digit.
     // Number consist of sequence of objects of this type.
     typedef _Internal::digit digit;
+
+#endif
 
     friend class io_binary<big_int>;
 
@@ -111,6 +132,10 @@ class big_int
     friend big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr);
 
     friend std::size_t magnitude (const big_int& x);
+
+    #ifdef ARAGELI_GMP
+    friend big_int factorial (const big_int& a);
+    #endif
 
 public:
 
@@ -423,7 +448,7 @@ public:
     //@}
 
 
-    /// Returns true if the number is not zero and false otherwise.
+    /// Returns true if the number is zero and false otherwise.
     bool operator! () const
     {
         return is_null();
@@ -581,7 +606,15 @@ public:
         -  +1    if x > 0. */
     int sign () const
     {
+        #ifdef ARAGELI_GMP
+
+        return mpz_sgn(number->gmpdata);
+
+        #else
+
         return number->sign;
+
+        #endif
     }
 
     /// Return true if this number is zero.
@@ -699,10 +732,18 @@ public:
     /// Returns true if even, false if odd
     bool is_even () const
     {
+        #ifdef ARAGELI_GMP
+
+        return mpz_even_p(number->gmpdata);
+
+        #else
+
         if(number->len == 0)
             return true;
         else
             return !(operator[](0));
+
+        #endif
     }
 
 
@@ -714,10 +755,18 @@ public:
     /// Returns true if odd, false if even
     bool is_odd () const
     {
+        #ifdef ARAGELI_GMP
+
+        return mpz_odd_p(number->gmpdata);
+
+        #else
+
         if(!number->len)
             return false;
         else
             return operator[](0);
+
+        #endif
     }
 
     #ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
@@ -731,10 +780,14 @@ public:
         std::swap(number, x.number);
     }
 
+#ifndef ARAGELI_GMP
+
     const digit* _digits () const
     {
         return number->data;
     }
+
+#endif
 
 private:
 
@@ -745,23 +798,53 @@ private:
 
     struct big_struct
     {
+        #ifdef ARAGELI_GMP
+
+        mpz_t gmpdata;      // GMP-native storage for number
+        int refs;           // the number of points to this number
+
+        #else
+
         int sign;           // the sign: 0, 1 or -1
         digit *data;        // the storage for digits
         std::size_t len;    // the number of digits
         int refs;           // the number of points to this number
+
+        #endif
+
     } *number;
 
     // number allocation routines
+
+    #ifndef ARAGELI_GMP
     void alloc_number (int new_sign, digit* new_mem, std::size_t new_len);
+    #endif
+
     void free_number ();
+
+    #ifndef ARAGELI_GMP
     void free_mem_and_alloc_number (int new_sign, digit* new_data, std::size_t new_len);
+    #endif
 
     void alloc_zero ()
     {
+        #ifdef ARAGELI_GMP
+
+        number = new big_struct;
+        number->refs = 1;
+        mpz_init(number->gmpdata);
+
+        #else
+
         alloc_number(0, 0, 0);
+
+        #endif
     }
 
     void free_mem_and_alloc_zero ();
+
+
+    #ifndef ARAGELI_GMP
 
     static digit* get_mem_for_data (std::size_t nitems);
     static void free_data (digit *p);
@@ -775,6 +858,12 @@ private:
     );
 
 
+    // Erases leading zeros.
+    static digit* optimize (std::size_t& new_len, digit * p, std::size_t len);
+
+    #endif
+
+
     #ifndef ARAGELI_BIG_INT_REFCNT
 
     /// Copies b to this object not using reference counter.
@@ -782,9 +871,6 @@ private:
 
     #endif
 
-
-    // Erases leading zeros.
-    static digit* optimize (std::size_t& new_len, digit * p, std::size_t len);
 
     template <typename T>
     void from_native_int (const T& x);
@@ -798,9 +884,10 @@ private:
     template <typename T>
     T to_native_float () const;
 
+    #ifndef ARAGELI_GMP
     template <typename T>
     T to_native_int_without_sign () const;
-
+    #endif
 };
 
 
@@ -935,6 +1022,12 @@ inline big_int& operator<<= (big_int& a, const T& b)
 
 inline big_int& operator>>= (big_int& a, std::size_t b)
 {
+    #ifdef ARAGELI_GMP
+
+    return a = a >> b;
+
+    #else
+
     if(a.number->len == 1)
     {
         #ifndef ARAGELI_BIG_INT_REFCNT
@@ -956,6 +1049,8 @@ inline big_int& operator>>= (big_int& a, std::size_t b)
         a = a >> b;
 
     return a;
+
+    #endif
 }
 
 template <typename T>
@@ -1218,23 +1313,47 @@ _ARAGELI_big_int_MIXED_COMPARE3(long double)
 
 inline bool big_int::is_null () const
 {
+    #ifdef ARAGELI_GMP
+
+    return sign() == 0;
+
+    #else
+
     return number->sign == 0;
+
+    #endif
 }
 
 inline bool big_int::is_unit () const
 {
+    #ifdef ARAGELI_GMP
+
+    return mpz_cmp_si(number->gmpdata, +1) == 0;
+
+    #else
+
     return
         number->len == 1 &&
         number->sign == +1 &&
         *number->data == 1;
+
+    #endif
 }
 
 inline bool big_int::is_opposite_unit () const
 {
+    #ifdef ARAGELI_GMP
+
+    return mpz_cmp_si(number->gmpdata, -1) == 0;
+
+    #else
+
     return
         number->len == 1 &&
         number->sign == -1 &&
         *number->data == 1;
+
+    #endif
 }
 
 
@@ -1253,6 +1372,7 @@ public:
     static const T& unit ()
     {
         static const T unit_s = T(1);
+        ARAGELI_ASSERT_1(unit_s.is_unit());
         return unit_s;
     }
 
@@ -1266,6 +1386,7 @@ public:
     static const T& opposite_unit ()
     {
         static const T opposite_unit_s = T(-1);
+        ARAGELI_ASSERT_1(opposite_unit_s.is_opposite_unit());
         return opposite_unit_s;
     }
 
@@ -1279,6 +1400,7 @@ public:
     static const T& null ()
     {
         static const T null_s;
+        ARAGELI_ASSERT_1(null_s.is_null());
         return null_s;
     }
 
@@ -1381,6 +1503,15 @@ inline big_int log2 (const big_int& x)
 template <typename T_factory>
 inline big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr)
 {
+    #ifdef ARAGELI_GMP
+
+    big_int res;
+    ARAGELI_ASSERT_1(res.number->refs == 1);
+    mpz_gcd(res.number->gmpdata, a.number->gmpdata, b.number->gmpdata);
+    return res;
+
+    #else
+
     if(a.number->len == 1 && b.number->len == 1)
     {
         // As this is Euclid's algorithm for two integers
@@ -1390,7 +1521,24 @@ inline big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr)
     }
     else
         return euclid(a, b, tfctr);
+
+    #endif
 }
+
+
+#ifdef ARAGELI_GMP
+
+inline big_int factorial (const big_int& a)
+{
+    ARAGELI_ASSERT_0(!is_negative(a));
+    ARAGELI_ASSERT_0(mpz_fits_ulong_p(a.number->gmpdata));
+    big_int res;
+    ARAGELI_ASSERT_1(res.number->refs == 1);
+    mpz_fac_ui(res.number->gmpdata, mpz_get_ui(a.number->gmpdata));
+    return res;
+}
+
+#endif
 
 
 /// Retruns a number of digits in a given number with specified radix.
@@ -1414,7 +1562,15 @@ std::size_t ndigits (big_int x, std::size_t r);
 */
 inline std::size_t magnitude (const big_int& x)
 {
+    #ifdef ARAGELI_GMP
+
+    return mpz_size(x.number->gmpdata);
+
+    #else
+
     return x.number->len;
+
+    #endif
 }
 
 }

@@ -34,6 +34,17 @@
 
 # build arageli library
 
+# In order to turn on GMP support there are 2 options:
+# 1. Call "make -e GMP_ENABLE=1"
+# 2. Uncomment next line
+# GMP_ENABLE=1
+ifdef GMP_ENABLE
+export GMP_INCLUDE:=/usr/local/include
+export GMP_LINK:=/usr/local/lib
+export COMMONCXXFLAGS += -DARAGELI_GMP -I$(GMP_INCLUDE)
+export COMMONLINKFLAGS += $(GMP_LINK)
+endif
+
 .PHONY: arageli all check install clean example dvi TAGS perf script HTML
 
 arageli:

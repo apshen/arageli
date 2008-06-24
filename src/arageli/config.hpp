@@ -149,6 +149,13 @@
 //#define ARAGELI_BIG_INT_REFCNT
 
 
+/// Turns GMP support on.
+/** This macro allows big_int to use GMP. Do not forget to point to
+    GMP include directory so, that <gmp.h> will be correct
+    reference to the GMP header file. */
+#define ARAGELI_GMP
+
+
 /// The number of iterations in is_prime_small_primes_division function.
 #define ARAGELI_IS_PRIME_SMALL_PRIMES_DIVISION_NUMBER 20
 
