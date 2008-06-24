@@ -52,6 +52,7 @@
 #include "config.hpp"
 
 #include <cmath>
+#include <limits>
 #include "std_import.hpp"
 #include "big_int.hpp"
 
@@ -761,6 +762,81 @@ big_float fsqrt( const big_float & b );
 
 namespace std
 {
+
+/// Specialization of std::numeric_limits for Arageli::big_float.
+template <> class numeric_limits<Arageli::big_float>
+{
+    typedef Arageli::big_float TTT;
+
+public:
+
+    static const bool is_specialized = true;
+
+    static TTT min () throw()
+    {
+        return TTT();
+    }
+
+    static TTT max () throw()
+    {
+        return TTT();
+    }
+
+    static const int digits = 0;
+    static const int digits10 = 0;
+    static const bool is_signed = true;
+    static const bool is_integer = false;
+    static const bool is_exact = false;
+    static const int radix = 2;
+
+    static TTT epsilon () throw()
+    {
+        return TTT();   // WARNING! TRY TO RETURN A VALID VALUE.
+    }
+
+    static TTT round_error () throw()
+    {
+        return TTT();   // WARNING! TRY TO RETURN A VALID VALUE.
+    }
+
+    static const int min_exponent = 0;
+    static const int min_exponent10 = 0;
+    static const int max_exponent = 0;
+    static const int max_exponent10 = 0;
+    static const bool has_infinity = false; // ???
+    static const bool has_quiet_NaN = false;    // ???
+    static const bool has_signaling_NaN = false;    // ???
+    static const float_denorm_style has_denorm = denorm_absent; // ???
+    static const bool has_denorm_loss = false;  // ???
+
+    static TTT infinity () throw()
+    {
+        return TTT();
+    }
+
+    static TTT quiet_NaN () throw()
+    {
+        return TTT();
+    }
+
+    static TTT signaling_NaN () throw()
+    {
+        return TTT();
+    }
+
+    static TTT denorm_min () throw()
+    {
+        return TTT();
+    }
+
+    static const bool is_iec559 = false;
+    static const bool is_bounded = false;
+    static const bool is_modulo = false;
+    static const bool traps = true;
+    static const bool tinyness_before = false;
+    static const float_round_style round = round_toward_zero;   // ???
+};
+
 
 inline Arageli::big_float abs(const Arageli::big_float &x)
 {
