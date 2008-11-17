@@ -685,7 +685,7 @@ inline big_float_t<BF> operator *= (big_float_t<BF> &b, T x)
 template <typename BF>
 inline big_float_t<BF> operator -= (big_float_t<BF> &b, const big_float_t<BF> &c)
 {
-    return (b = b + c);
+    return (b = b - c);
 }
 
 template <typename BF>
