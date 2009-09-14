@@ -37,10 +37,10 @@
 #include <list>
 #include <sstream>
 
+#include "_utility.hpp"
 #include "matrix.hpp"
 #include "vector.hpp"
 //#include "gauss.hpp"
-#include "_utility.hpp"
 
 
 namespace Arageli
