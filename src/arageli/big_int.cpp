@@ -419,6 +419,10 @@ Stream& io_binary<big_int>::output_stream (Stream& out, const big_int& x)
         const mpz_t& t = x.number->gmpdata;
         std::size_t len = mpz_size(t);
         output_binary_stream(out, len);
+
+        // TODO: Try to use import/export routines in GMP
+        // (see GMP Manual, 5.14 Integer Import and Export).
+
         for(std::size_t i = 0; i < len; ++i)
             output_binary_stream(out, mpz_getlimbn(t, i));
     }
@@ -475,6 +479,9 @@ Stream& io_binary<big_int>::input_stream (Stream& in, big_int& x)
         std::size_t shift = 0;
         mpz_t tmp;
         mpz_init(tmp);
+
+        // TODO: Try to use import/export routines in GMP
+        // (see GMP Manual, 5.14 Integer Import and Export).
 
         for(std::size_t i = 0; i < len; ++i, shift += mp_bits_per_limb)
         {
