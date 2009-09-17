@@ -153,7 +153,7 @@
 /** This macro allows big_int to use GMP. Do not forget to point to
     GMP include directory so, that <gmp.h> will be correct
     reference to the GMP header file. */
-#define ARAGELI_GMP
+//#define ARAGELI_GMP
 
 
 /// The number of iterations in is_prime_small_primes_division function.
@@ -206,6 +206,66 @@
     #define ARAGELI_LONG_LONG_SUPPORT
 #elif defined(ARAGELI_LONG_LONG_SUPPORT_DISABLE) && defined(ARAGELI_LONG_LONG_SUPPORT)
     #undef ARAGELI_LONG_LONG_SUPPORT
+#endif
+
+// List of supported platform extentions.
+
+#define ARAGELI_X64_NATIVE_SUPPORT
+
+/// Support for Microsoft specific intrinsics mnemonics.
+#define ARAGELI_MICROSOFT_INTRIN_SUPPORT
+
+/// Support for Intel (R) MMX.
+#define ARAGELI_INTEL_MMX_SUPPORT
+
+/// Support for Intel (R) SSE exculuding __m64 type (see ARAGELI_INTEL_MMX_SUPPORT for it).
+#define ARAGELI_INTEL_SSE_SUPPORT
+
+/// Support for Intel (R) SSE 2.
+#define ARAGELI_INTEL_SSE2_SUPPORT
+
+// Exceptions for platform extentions.
+
+#if (defined(WIN64) || defined(_WIN64)) && defined(_MSC_VER)
+#undef ARAGELI_INTEL_MMX_SUPPORT
+#endif
+
+// Additional declarations for platform extentions.
+
+#ifdef ARAGELI_X64_NATIVE_SUPPORT
+
+namespace Arageli
+{
+
+#if defined(ARAGELI_INT64_SUPPORT)
+typedef unsigned __int64 uint64_t;
+typedef signed __int64 int64_t;
+#elif defined(ARAGELI_LONG_LONG_SUPPORT)
+typedef unsigned long long uint64_t;
+typedef signed long long int64_t;
+#else
+#error Cannot determine which type should be used to represent 64-bit wide integers.
+#endif
+
+}
+
+#endif
+
+#ifdef ARAGELI_MICROSOFT_INTRIN_SUPPORT
+#include <intrin.h>
+#pragma intrinsic(_BitScanForward)
+#endif
+
+#ifdef ARAGELI_INTEL_MMX_SUPPORT
+#include <mmintrin.h>
+#endif
+
+#ifdef ARAGELI_INTEL_SSE_SUPPORT
+#include <xmmintrin.h>
+#endif
+
+#ifdef ARAGELI_INTEL_SSE2_SUPPORT
+#include <emmintrin.h>
 #endif
 
 
