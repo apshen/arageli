@@ -44,11 +44,11 @@
     \mainpage
 
     This is a documentation for library
-    <a href="http://www.unn.ru/cs/arageli">Arageli</a>
+    <a href="http://www.arageli.org">Arageli</a>
     founded by
     <a href="http://www.uic.nnov.ru/~zny">Nikolai Yu. Zolotykh</a>
     and maintaining by
-    <a href="http://www.unn.ru/cs/arageli/people.html">Arageli Project Team</a>.
+    <a href="http://www.arageli.org/people.html">Arageli Project Team</a>.
 
     WARNING! The library is documented PARTIALLY. Moreover, some parts and fragments of
     this documentation are presented in Russian.
