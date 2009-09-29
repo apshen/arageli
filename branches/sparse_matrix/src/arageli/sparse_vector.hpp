@@ -42,9 +42,9 @@
 
 #include <cstddef>
 #include <utility>
+#include <vector>
 
 #include "type_traits.hpp"
-#include "vector.hpp"
 
 // REFERENCE ADDITIONAL HEADERS HERE
 
@@ -72,6 +72,23 @@ ARAGELI_REGISTER_TAG(listpair_t)
 struct deqpair_t {};
 
 ARAGELI_REGISTER_TAG(deqpair_t)
+
+
+namespace _Internal
+{
+
+/// Internal representation for Arageli::sparse_vector class based on vector of pairs.
+/** Each pair represents one stored element of the vector with value and its index. */
+template <typename T, bool REFCNT, typename A, typename size_type = std::size_t>
+struct sparse_vector_vecpair
+{
+    typedef std::pair<size_type, T> pair;
+    typedef typename A::template rebind<pair>::other pair_allocator;
+    typedef std::vector<pair, A> representation1;
+    typedef Arageli::refcntr_proxy<representation1, REFCNT, std::size_t, A> representation2;
+};
+
+}
 
 
 namespace cnfg
@@ -218,9 +235,57 @@ template
 >
 class sparse_vector
 {
+public:
 
+    /// Configurator.
+    typedef typename _Internal::sparse_vector_param_extractor<T, Param>::configurator configurator;
+
+    /// Spectator.
+    typedef typename _Internal::sparse_vector_param_extractor<T, Param>::spectator spectator;
+
+private:
+
+    /// Internal representation; solely depends on configurator.
+    typedef typename configurator::representation Rep;
 
 public:
+
+    // Basic types.
+
+    /// Element type.
+    typedef T value_type;
+
+    /// Element type.
+    typedef T element_type;
+
+    /// Lvalue for element type.
+    typedef T& reference;
+
+    /// Constant lvalue for element type.
+    typedef const T& const_reference;
+
+    /// Unsigned integer type for size and absolute index representation.
+    /** Can represent each non-negative value of difference_type. */
+    typedef typename Rep::size_type size_type;
+
+    /// Signed integer type for offsets and relative index representation.
+    typedef typename Rep::difference_type difference_type;
+
+    /// Pointer to value type.
+    typedef T* pointer;
+
+    /// Pointer to constant value type.
+    typedef const T* const_pointer;
+
+
+    // Iterators.
+
+
+    // Mechanism to make sparse_vector with some modifications in template parameters.
+
+
+    // Members.
+
 };
 
 
