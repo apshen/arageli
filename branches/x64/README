@@ -49,14 +49,21 @@ itself.
 
 1.1. To compile the library
 
-You need one of the C++ standard compilers. We have checked
-compilation with GCC 4.0.4 (Linux), GCC 3.2.2 (Linux),
-Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14
-for 80x86 (included in Visual Studio 2005),
-Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 15
-for 80x86 (included in Visual Studio 2008)
-Intel(R) C++ Compiler for 32-bit applications, Version 9.0
-(Windows).
+You need one of the C++ 1998 standard compilers. We have checked
+compilation with:
+    - GCC 4.0.4 (Linux) (NOT CONFIRMED),
+    - GCC 3.2.2 (Linux) (NOT CONFIRMED),
+    - Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14
+      for 80x86 (included in Visual Studio 2005) (NOT CONFIRMED),
+    - Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 15
+      for 80x86 (included in Visual Studio 2008),
+    - Microsoft (R) C/C++ Optimizing Compiler Version 15 for x64
+      (included in Visual Studio 2008),
+    - Intel(R) C++ Compiler for 32-bit applications, Version 9.0
+      (Windows) (NOT CONFIRMED).
+Please let us know if you faced troubles with those compilers or
+you have success or faulure to build with other C++
+compilers/platforms.
 
 1.2 To create all guides (not auto generated)
 
