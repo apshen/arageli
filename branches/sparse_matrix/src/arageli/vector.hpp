@@ -220,10 +220,10 @@ public:
     /// Signed integer type for offsets and relative index representation.
     typedef typename Rep::difference_type difference_type;
 
-    /// Pointer to const item type.
+    /// Pointer to item type.
     typedef typename Rep::pointer pointer;
 
-    /// Pointer to item type.
+    /// Pointer to constant item type.
     typedef typename Rep::const_pointer const_pointer;
 
     /// Iterator type.

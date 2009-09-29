@@ -197,8 +197,15 @@ public:
         return refcntr_m->refs();
     }
 
-    // возвращает true, если значение осталось прежним,
-    // false, если была сделана новая копия
+    /// Makes an individual copy of the representation for this descriptor.
+    /** If this descriptor already has individual copy of the value, the function
+        does nothing and returns true. In this case all references to the value
+        (references and pointers) will be valid after the function returns.
+        If the descriptor isn't unique for the value (there are one or more other
+        descriptors with the same value), the function makes individual copy of
+        the value and return false. In this case all references to the value
+        (references and pointers) will point to another representation that isn't
+        belonged to this descriptor. */
     bool unique ()
     {
         if(refs() == 1)
