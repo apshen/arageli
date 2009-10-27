@@ -641,6 +641,19 @@ template
 >
 Out& operator<< (Out& out, const algebraic<TP1, TS1, Poly1, Seg1, Cfg1>& x);
 
+/// Input algebraic number in the format "(polynomial, segment)", "(polynomial)" or just a "value".
+template
+<
+    typename In,
+
+    typename TP1,
+    typename TS1,
+    typename Poly1,
+    typename Seg1,
+    typename Cfg1
+>
+In& operator>> (In& in, algebraic<TP1, TS1, Poly1, Seg1, Cfg1>& x);
+
 
 //template <typename TP1, typename TS1, typename Poly1, typename Seg1, typename Cfg1>
 //algebraic<TP1, TS1, Poly1, Seg1, Cfg1>::algebraic (const char* s)
