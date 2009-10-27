@@ -241,8 +241,20 @@ inline std::size_t nbits (const T& a)
 
 /// Compute number of bit in binary notation of a
 template <typename T, typename T_factory>
-std::size_t nbits(T a, const T_factory& tfctr);
+std::size_t nbits (T a, const T_factory& tfctr);
 
+
+template <typename T_factory>
+inline std::size_t nbits (float, const T_factory tfctr)
+{
+    return std::numeric_limits<unsigned char>::digits*sizeof(float);
+}
+
+template <typename T_factory>
+inline std::size_t nbits (double, const T_factory tfctr)
+{
+    return std::numeric_limits<unsigned char>::digits*sizeof(double);
+}
 
 /// Computes factorial via just successive multiplication (by definition).
 /** Computes a*(a-1)*(a-2)* ... *3*2. */
