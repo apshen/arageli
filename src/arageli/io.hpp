@@ -738,6 +738,13 @@ inline const char* input_binary (const char* in, T& x)
 }
 
 
+template <typename T>
+inline char* input_binary (char* in, T& x)
+{
+    return const_cast<char*>(input_binary(static_cast<const char*>(in), x));
+}
+
+
 /// Stores an array of object states to a memory location. Seft-delimeted binary serialization.
 /** Serialization in the Simple Binary format corresponding to type T. */
 template <typename T>
