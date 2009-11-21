@@ -146,6 +146,8 @@
 #include "skeleton.hpp"
 #include "triangulation.hpp"
 #include "lll.hpp"
+#include "lll_di.hpp"
+#include "sc_reduction.hpp"
 #include "gram_schmidt.hpp"
 #include "intconvex.hpp"
 #include "ctrl_slog.hpp"
