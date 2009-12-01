@@ -39,6 +39,9 @@
 
 #include "config.hpp"
 
+#include <limits.h> //GCC 4.3 fix
+#include <cstring> //GCC 4.3 fix
+
 #include <iostream>
 #include <algorithm>
 #include <utility>
