@@ -168,6 +168,8 @@
 #include "rational.hpp"
 #include "vector.hpp"
 #include "matrix.hpp"
+#include "sparse_vector.hpp"
+#include "sparse_matrix.hpp"
 #include "sparse_polynom.hpp"
 #include "interval.hpp"
 #include "algebraic.hpp"
