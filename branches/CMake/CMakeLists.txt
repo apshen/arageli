@@ -7,4 +7,4 @@ set (EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 add_subdirectory (src/arageli)
 add_subdirectory (tool/ts/src/ts)
-
+add_subdirectory (test)
