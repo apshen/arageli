@@ -27,7 +27,9 @@ inline bool lll_di_size_reduction (
     int j,
     B_type& B,
     H_type& H,
+    // See review note from Sergey S. Lyalin below.
     matrix<double, false>& Bfl,
+    // See review note from Sergey S. Lyalin below.
     matrix<double, false>& Mufl,
     int tau
 )
@@ -68,7 +70,9 @@ inline bool lll_di_deep_insertion (
     B_type& B,
     H_type& H,
     c_type delta,
+    // See review note from Sergey S. Lyalin below.
     matrix<double, false>& Bfl,
+    // See review note from Sergey S. Lyalin below.
     matrix<double, false>& Mufl
 )
 {
@@ -127,6 +131,21 @@ bool lll_di_reduction (B_type& B, H_type& H, c_type c)
 
     index n = B.ncols();
     index m = B.nrows();
+
+    // --------------------------------------------------------
+    // Review note from Sergey S. Lyalin
+    //
+    // The following two definition introduces `double' as
+    // a type for intermediate calculations. Please consider
+    // to use such type which you can pass through template
+    // arguments for lll_di_reduction function. It should be
+    // passed through additional argument that is called
+    // configurator. Please isolate all separate cases of
+    // that usage to one or several typedefs inside the file
+    // and then work with me to implement it through
+    // Arageli::configurator.
+    // Desirability of this change was confirmed with Zolotykh.
+    // --------------------------------------------------------
 
     // Bfl is a floating point approximation to matrix B
     matrix<double, false> Bfl(m, n, fromsize);
