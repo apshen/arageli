@@ -1,141 +1,21 @@
-add_library (arageli STATIC
-                        advsimplmeth.cpp;
-						algebraic.cpp;
-						algebrslt.cpp;
-						bareiss.cpp;
-						berlekamp_hensel.cpp;
-						bigar.cpp;
-						big_const.cpp;
-						big_float.cpp;
-						big_int.cpp;
-						cantor_zassenhaus.cpp;
-						cone.cpp;
-						exception.cpp;
-						gauss.cpp;
-						gcd.cpp;
-						generic.cpp;
-						gram_schmidt.cpp;
-						groebner_basis.cpp;
-						hermite.cpp;
-						intalg.cpp;
-						intconvex.cpp;
-						intcount_barvinok.cpp;
-						io.cpp;
-						karatsuba.cpp;
-						linopt.cpp;
-						lll.cpp;
-						logarithm.cpp;
-						matrix.cpp;
-						motzkin_burger.cpp;
-						orthogonal.cpp;
-						pollard_mult.cpp;
-						polyhedron.cpp;
-						polyhedron_relation.cpp;
-						polynom.cpp;
-						powerest.cpp;
-						prime.cpp;
-						rational.cpp;
-						resultant.cpp;
-						sideset.cpp;
-						smith.cpp;
-						smithpoly.cpp;
-						solve_linsys.cpp;
-						sparse_multipolynom.cpp;
-						sparse_polynom.cpp;
-						sturm.cpp;
-						tex_cartesian2d.cpp;
-						texout.cpp;
-						timer.cpp;
-						triangulation.cpp;
-						type_opers.cpp;
-						type_traits.cpp;
-						_utility.cpp;
-						vecalg.cpp;
-						vector.cpp;
-						winograd.cpp;
-						advsimplmeth.hpp;
-						algebraic.hpp;
-						algebrslt.hpp;
-						arageli.hpp;
-						auto_link.hpp;
-						bareiss.hpp;
-						basefuncs.hpp;
-						berlekamp_hensel.hpp;
-						bigar.hpp;
-						big_const.hpp;
-						big_float.hpp;
-						big_int.hpp;
-						cantor_zassenhaus.hpp;
-						cmp.hpp;
-						cone.hpp;
-						config.hpp;
-						ctrl_latexlog.hpp;
-						ctrl_slog.hpp;
-						exception.hpp;
-						factory.hpp;
-						fft.hpp;
-						frwrddecl.hpp;
-						functional.hpp;
-						function_traits.hpp;
-						gauss.hpp;
-						gcd.hpp;
-						generic.hpp;
-						gram_schmidt.hpp;
-						groebner_basis.hpp;
-						hermite.hpp;
-						intalg.hpp;
-						intconvex.hpp;
-						intcount_barvinok.hpp;
-						interval.hpp;
-						io.hpp;
-						iomanip.hpp;
-						iteradapt.hpp;
-						karatsuba.hpp;
-						linopt.hpp;
-						lll.hpp;
-						logarithm.hpp;
-						matrix.hpp;
-						misc.hpp;
-						mixcomp.hpp;
-						motzkin_burger.hpp;
-						orthogonal.hpp;
-						pollard_mult.hpp;
-						polyalg.hpp;
-						polyhedron.hpp;
-						polyhedron_relation.hpp;
-						polynom.hpp;
-						powerest.hpp;
-						prime.hpp;
-						rand.hpp;
-						random.hpp;
-						rational.hpp;
-						refcntr.hpp;
-						residue.hpp;
-						resultant.hpp;
-						rndbase.hpp;
-						setenumrnd.hpp;
-						sideset.hpp;
-						simplex_method.hpp;
-						skeleton.hpp;
-						smith.hpp;
-						smithpoly.hpp;
-						solve_linsys.hpp;
-						sparse_multipolynom.hpp;
-						sparse_polynom.hpp;
-						sqrfree.hpp;
-						std_import.hpp;
-						sturm.hpp;
-						tex_cartesian2d.hpp;
-						texout.hpp;
-						timer.hpp;
-						triangulation.hpp;
-						type_opers.hpp;
-						type_pair_traits.hpp;
-						type_traits.hpp;
-						_utility.hpp;
-						vecalg.hpp;
-						vector.hpp;
-						winograd.hpp
-                        )
+# Common compiler flags for all configurations
+add_definitions (-DARAGELI_SOURCE -MD)
 
-set_target_properties (arageli PROPERTIES DEBUG_OUTPUT_NAME arageli32d RELEASE_OUTPUT_NAME arageli32r TEST_OUTPUT_NAME arageli32t FAST_OUTPUT_NAME arageli32f)
+# Target-specific compilers flags
+set (arageli_cxx_flags "-O2 -DARAGELI_DEBUG_LEVEL=1")
+set (aragelitest_cxx_flags "-g -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION")
+
+# Generate list of source files
+aux_source_directory (. root_src)
+aux_source_directory (hermite hermite_src)
+aux_source_directory (smith smith_src)
+set (arageli_src ${root_src} ${smith_src} ${hermite_src})
+
+# Targets
+add_library (arageli STATIC ${arageli_src})
+add_library (aragelitest STATIC ${arageli_src})
+
+# Associate targets with compiler flags
+set_target_properties (arageli PROPERTIES COMPILE_FLAGS ${arageli_cxx_flags})
+set_target_properties (aragelitest PROPERTIES COMPILE_FLAGS ${aragelitest_cxx_flags})
+
