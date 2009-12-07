@@ -41,6 +41,7 @@
 
 
 #include <cstddef>
+#include <cstdlib>  // it maybe for std::rand only
 #include <limits>
 #include <cmath>
 
@@ -92,7 +93,7 @@ void big_int::from_native_int (const T& x)
     typedef std::numeric_limits<T> Nl;
     ARAGELI_ASSERT_1(Nl::is_specialized);
     ARAGELI_ASSERT_1(Nl::is_integer);
-    alloc_zero();
+    free_mem_and_alloc_zero();
 
     if(Arageli::is_null(x))
         return;
@@ -162,7 +163,7 @@ void big_int::from_native_float (const T& x)
     ARAGELI_ASSERT_0(!(Nl::has_signaling_NaN && x == Nl::signaling_NaN()));
     ARAGELI_ASSERT_0(!(Nl::has_denorm && x == Nl::denorm_min()));
 
-    alloc_zero();
+    free_mem_and_alloc_zero();
 
     if(x > opposite_unit(x) && x < unit(x))
         return;
@@ -959,7 +960,7 @@ int cmp (const big_int & a, const big_int & b)
 
 digit random_digit ()
 {
-    if(_Internal::max_digit <= RAND_MAX)return rand();
+    if(_Internal::max_digit <= RAND_MAX)return std::rand();
 
     static const std::size_t rand_max_len = big_int(RAND_MAX).length();    // WARNING! It is not efficient.
     const std::size_t n =
@@ -968,7 +969,7 @@ digit random_digit ()
 
     digit res = 0;
     for(std::size_t i = 0; i < n; ++i)
-        (res <<= rand_max_len) |= rand();    // WARNING! Lower bits from rand is
+        (res <<= rand_max_len) |= std::rand();    // WARNING! Lower bits from rand is
                                             // placed to higher bits of the result.
     return res;
 }

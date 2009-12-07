@@ -48,10 +48,20 @@ using namespace Arageli;
 template <typename T, bool REFCNT>
 matrix<T, REFCNT> rand_matrix(size_t m, size_t n, const T& max)
 {
+    typedef set::grid1<T> int_grid;
+    typedef rnd::equiprob<int_grid> rnd_int_grid;
+
+    // store seed to make different matrices for each call of this function
+    static typename rnd_int_grid::seed_type local_seed = 0;
+    ++local_seed;
+
+    int_grid int_0_max(0, max); // integer set from [0, max]
+    rnd::equiprob<int_grid> gen(local_seed, int_0_max);   // random generator from [0, max]
+
     matrix<T, REFCNT> res(m, n, fromsize);
     for (typename matrix<T>::size_type i = 0; i < res.nrows(); i++)
         for (typename matrix<T>::size_type j = 0; j < res.ncols(); j++)
-            res.el(i, j) = rand(max);
+            res.el(i, j) = gen();
     return res;
 }
 
@@ -64,10 +74,20 @@ Note that \f$M\f$ is in hermite form and \f$det(M)=1\f$.
 template <typename T, bool REFCNT>
 matrix<T, REFCNT> rand_matrix_upper_diagonal(size_t n, const T& max)
 {
+    typedef set::grid1<T> int_grid;
+    typedef rnd::equiprob<int_grid> rnd_int_grid;
+
+    // store seed to make different matrices for each call of this function
+    static typename rnd_int_grid::seed_type local_seed = 0;
+    ++local_seed;
+
+    int_grid int_0_max(0, max); // integer set from [0, max]
+    rnd::equiprob<int_grid> gen(local_seed, int_0_max);   // random generator from [0, max]
+
     matrix<T, REFCNT> res(n, eye);
     for (typename matrix<T>::size_type i = 0; i < res.nrows(); i++)
         for (typename matrix<T>::size_type j = i+1; j < res.ncols(); j++)
-            res.el(i, j) = rand(max);
+            res.el(i, j) = gen();
     return res;
 }
 
