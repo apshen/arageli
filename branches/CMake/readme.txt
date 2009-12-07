@@ -4,8 +4,8 @@
 
 ********************************************************************
 
-Copyright (C) Nikolai Yu. Zolotykh, 1999--2007
-Copyright (C) Sergey S. Lyalin, 2005--2007
+Copyright (C) Nikolai Yu. Zolotykh, 1999--2009
+Copyright (C) Sergey S. Lyalin, 2005--2009
 University of Nizhni Novgorod, Russia.
 
 Arageli is a C++ library and a package of programs for
@@ -17,7 +17,7 @@ arbitrary precision, rational numbers, vectors, matrices,
 polynomials etc. Arageli is written in C++ and use power and
 expressiveness of the language.
 
-The home page: http://www.unn.ru/cs/arageli
+The home page: http://www.arageli.org
 
 The Arageli Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License version 2
@@ -52,7 +52,9 @@ itself.
 You need one of the C++ standard compilers. We have checked
 compilation with GCC 4.0.4 (Linux), GCC 3.2.2 (Linux),
 Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14
-for 80x86 (included in Visual Studio .NET 2005),
+for 80x86 (included in Visual Studio 2005),
+Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 15
+for 80x86 (included in Visual Studio 2008)
 Intel(R) C++ Compiler for 32-bit applications, Version 9.0
 (Windows).
 
@@ -73,7 +75,7 @@ documented items from sources.
 
 1.5 To create Arageli User's Guide
 
-You need to complied with requirements from 1.2, 1.3, 1.4;
+You need to be complied with requirements from 1.2, 1.3, 1.4;
 Microsoft Windows environment. Without Microsoft Windows Shell
 you need to compile a lot of files manually.
 
@@ -85,7 +87,7 @@ changes to the repository.
 
 If you need some part of the library compiled (both library or
 documentation), you can download it at the home page of Arageli
-http://www.unn.ru/cs/arageli.
+http://www.arageli.org.
 
 
 2. Building
@@ -95,8 +97,11 @@ the distributive but some of them are spread along the directories.
 Choose proper platform directory for your system and build all
 or a particular part of the distributive.
 
-If you use Microsoft Visual Studio .NET 2005, you can build
+If you use Microsoft Visual Studio 2005, you can build
 solution that located at build/msvs_2005/arageli_all.sln.
+
+If you use Microsoft Visual Studio 2008, you can build
+solution that located at build/msvs_2008/arageli_all.sln.
 
 If you are in some Linux system, you can build the library,
 test system and test set by the make utility. To make only
@@ -144,6 +149,6 @@ static library file to link with your application/library.
 4. Additional Documentation and Feedback
 
 Some ready-to-use documentation files already present in doc
-directory of the distributive. Go to http://www.unn.ru/cs/arageli
+directory of the distributive. Go to http://www.arageli.org
 for updates and news. Mail questions, comments and suggestions on
 support.arageli@gmail.com.

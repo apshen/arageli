@@ -1154,7 +1154,7 @@ public:
     typedef I degree_type;
 
     /// Monom type that is used to building the polynomial.
-    typedef monom<F, I> monom;
+    typedef Arageli::monom<F, I> monom; //GCC 4.3 fix ( Arageli:: )
 
     /// Reference counter property. True iff the counter is turned on.
     static const bool refcounting = REFCNT;
