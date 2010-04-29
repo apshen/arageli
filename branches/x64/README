@@ -53,8 +53,6 @@ You need one of the C++ 1998 standard compilers. We have checked
 compilation with:
     - GCC 4.0.4 (Linux) (NOT CONFIRMED),
     - GCC 3.2.2 (Linux) (NOT CONFIRMED),
-    - Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 14
-      for 80x86 (included in Visual Studio 2005) (NOT CONFIRMED),
     - Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 15
       for 80x86 (included in Visual Studio 2008),
     - Microsoft (R) C/C++ Optimizing Compiler Version 15 for x64
@@ -104,8 +102,9 @@ the distributive but some of them are spread along the directories.
 Choose proper platform directory for your system and build all
 or a particular part of the distributive.
 
-If you use Microsoft Visual Studio 2005, you can build
-solution that located at build/msvs_2005/arageli_all.sln.
+If you use Microsoft Visual Studio 2005, you can try to build
+solution that located at build/msvs_2005/arageli_all.sln. Please
+be informed that support of Visual Studio 2005 is deprecated.
 
 If you use Microsoft Visual Studio 2008, you can build
 solution that located at build/msvs_2008/arageli_all.sln.
