@@ -52,7 +52,7 @@
 #include <sstream>
 #include <list>
 
-
+#include <typeinfo> //gcc 4.3 fix
 //****************************************************************************
 
 namespace Arageli
