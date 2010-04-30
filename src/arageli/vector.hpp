@@ -1383,13 +1383,19 @@ private:
 
 public:
 
-    #if 0
+    #if 0   // TODO: CHECK FOR WHY THIS IS DISABLED.
     /**    Inserts item sequence in iterator range [first, last)
         before item 'pos' (it's iterator).
         All elements on and after 'pos' are shifting to back. */
     template <typename In>
     void insert (iterator pos, In first, In last)
-    { unique(); return rep().insert(pos, first, last); }
+    {
+        // Convert iterators to indices because iterators can be invalidated after unique().
+        size_t ipos = pos - begin();
+
+        unique();
+        return rep().insert(ipos, first, last);
+    }
 
     /**    Inserts item sequence in iterator range [first, last)
         before item 'pos' (it's index).
@@ -1401,7 +1407,13 @@ public:
     /**    Inserts 'n' copies of 'val' before item 'pos' (it's iterator).
         All elements on and after 'pos' are shifting to back. */
     void insert (iterator pos, size_type n, const T& val)
-    { unique(); rep().insert(pos, n, val); }
+    {
+        // Convert iterators to indices because iterators can be invalidated after unique().
+        size_t ipos = pos - begin();
+
+        unique();
+        rep().insert(ipos, n, val);
+    }
 
     /**    Inserts 'n' copies of 'val' before item 'pos' (it's index).
         All elements on and after 'pos' are shifting to back. */
@@ -1413,8 +1425,12 @@ public:
     iterator erase (iterator pos)
     {
         ARAGELI_ASSERT_0(pos != end());
+
+        // Convert iterators to indices because iterators can be invalidated after unique().
+        size_t ipos = pos - begin();
+
         unique();
-        return rep().erase(pos);
+        return rep().erase(rep().begin() + ipos);
     }
 
     /// Deletes item by index 'pos'.
@@ -1428,8 +1444,13 @@ public:
     {
         ARAGELI_ASSERT_0(first <= last);
         ARAGELI_ASSERT_0(first != end() || last == end());
+
+        // Convert iterators to indices because iterators can be invalidated after unique().
+        size_t ifirst = first - begin();
+        size_t ilast = last - begin();
+
         unique();
-        rep().erase(first, last);
+        rep().erase(rep().begin() + ifirst, rep().begin() + ilast);
     }
 
     /// Deletes items beginning from index 'pos' and next 'n' items.
