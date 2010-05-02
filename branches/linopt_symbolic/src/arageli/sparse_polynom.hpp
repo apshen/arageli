@@ -696,8 +696,11 @@ inline int cmp
     const monom<F2, I2>& m2
 )
 {
-    if(int dres = cmp(m1.degree(), m2.degree()))
-        return dres;
+    int signcoef;
+    if(int sres = cmp(signcoef = sign(m1.coef()), sign(m2.coef())))
+        return sres;
+    else if(int dres = cmp(m1.degree(), m2.degree()))
+        return dres*signcoef;
     else
         return cmp(m1.coef(), m2.coef());
 }
