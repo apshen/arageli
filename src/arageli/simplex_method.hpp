@@ -1328,14 +1328,18 @@ void artificial_basis_create (matrix<T1, REFCNT1>& a, vector<T2, REFCNT2>& basis
 {
     ARAGELI_ASSERT_0(!a.is_empty());
 
+    {
+        T1& pattern = a(0, 0);
+        std::fill_n(a.begin(), a.ncols(), null(pattern));
+
+        for(std::size_t i = 1; i < a.nrows(); ++i)
+            a.sub_rows(0, i);
+
+        // WARNING. Replace it to the special form of insert when it will have been written.
+        a.insert_cols(1, a.nrows() - 1, null<T1>(pattern)); // pattern cannot be used after this line
+    }
+
     T1& pattern = a(0, 0);
-    std::fill_n(a.begin(), a.ncols(), null(pattern));
-
-    for(std::size_t i = 1; i < a.nrows(); ++i)
-        a.sub_rows(0, i);
-
-    // WARNING. Replace it to the special form of insert when it will have been written.
-    a.insert_cols(1, a.nrows() - 1, null<T1>(pattern));
 
     basis.resize(a.nrows() - 1);
 
