@@ -196,6 +196,33 @@ linopt_result intlinear_minimize_dual_canonical
 );
 
 
+/// Solve linear programming problem in the form ax <= b with known dual-allowable basis.
+/** A giver problem is represented as min(cx) with ax <= b, where
+    a is a matrix, x is a variable vector, b is vector of constants.
+    Output is indices of basis inequalities which defines the solution (basis)
+    and the solution itself (basis_x) and the value of cx for result point.
+*/
+template
+<
+    typename A,
+    typename B,
+    typename C,
+    typename Res,
+    typename BasisX,
+    typename Basis
+>
+void /*linopt_result*/ linear_minimize_ineq_dual_allow
+(
+    const A& a,
+    const B& b,
+    const C& c,
+    const Basis& start_basis,
+    Res& res,
+    BasisX& basis_x,
+    Basis& basis
+);
+
+
 } // namesapce Arageli
 
 
