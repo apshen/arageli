@@ -39,6 +39,8 @@
 #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) ||    \
     defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_linopt)
 
+#include <iostream>     // WARNING! TEMPORARY! FOR DEBUGGING PURPOSES ONLY
+
 #include "factory.hpp"
 #include "vector.hpp"
 #include "simplex_method.hpp"
@@ -384,6 +386,79 @@ linopt_result intlinear_minimize_dual_canonical
     }
 
     return ret;
+}
+
+
+template
+<
+    typename A,
+    typename B,
+    typename C,
+    typename Res,
+    typename BasisX,
+    typename Basis
+>
+void /*linopt_result*/ linear_minimize_ineq_dual_allow
+(
+    const A& a,
+    const B& b,
+    const C& c,
+    const Basis& start_basis,
+    Res& res,
+    BasisX& basis_x,
+    Basis& basis
+)
+{
+    ARAGELI_ASSERT_0(a.nrows() == b.size());
+    ARAGELI_ASSERT_0(a.ncols() == c.size());
+    ARAGELI_ASSERT_0(a.ncols() == start_basis.size());
+
+    // Start to form column simplex table: copying values.
+
+    A table(a.nrows() + 1, a.ncols() + 1, fromsize);
+    for(size_t j = 0; j < a.ncols(); ++j)
+        table(0, j+1) = c(j);
+    for(size_t i = 0; i < a.nrows(); ++i)
+    {
+        table(i+1, 0) = b(i);
+        for(size_t j = 0; j < a.ncols(); ++j)
+            table(i+1, j+1) = a(i, j);
+    }
+
+    ARAGELI_ASSERT_1(is_null(table(0, 0)));
+
+    // Pivot basis elements and create a correct dual-allowable column simplex table.
+
+    for(size_t i = 0; i < start_basis.size(); ++i)
+    {
+        size_t pivot = start_basis(i)+1;  // addressable in table
+        typedef typename A::element_type T;
+        const T& pivot_el = table(pivot, i+1);
+        if(!is_opposite_unit(pivot_el))
+            table.div_col(i+1, -pivot_el);
+        ARAGELI_ASSERT_1(is_opposite_unit(pivot_el));
+
+        for(size_t j = 0; j < table.ncols(); ++j)
+        {
+            if(j == i+1)continue;
+
+            if(!is_null(table(pivot, j)))
+                table.addmult_cols(j, i+1, safe_reference(table(pivot, j)));
+
+            ARAGELI_ASSERT_1(is_null(table(pivot, j)));
+        }
+    }
+
+    output_aligned(std::cout, table);   // WARNING! TEMPORARY! FOR DEBUGGING PURPOSES ONLY
+
+    basis = start_basis+1;
+    cout << simplex_method::dual_col_iters(table, basis);   // WARNING! TEMPORARY! FOR DEBUGGING PURPOSES ONLY
+    basis -= 1;
+
+    output_aligned(std::cout << '\n', table);   // WARNING! TEMPORARY! FOR DEBUGGING PURPOSES ONLY
+    std::cout << basis;    // WARNING! TEMPORARY! FOR DEBUGGING PURPOSES ONLY
+
+    //return ;
 }
 
 
