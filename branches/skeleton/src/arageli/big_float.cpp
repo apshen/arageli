@@ -999,7 +999,10 @@ std::istream & operator >> ( std::istream &is , big_float &fnum )
         }
         std::cout << "bm = " << bm.length() << "    be = "  << be.length() << std::endl;
         */
-        fnum = big_float ( bm, be, fnum.mode );
+        if(bm.is_null() && be.is_null())
+            fnum = big_float();
+        else
+            fnum = big_float ( bm, be, fnum.mode );
         //std::cout << fnum.get_significant()<< std::endl;
         //std::cout << fnum.get_exponent()<< std::endl;
     }
