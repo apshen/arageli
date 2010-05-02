@@ -1233,35 +1233,36 @@ public:
     template <typename Val>
     iterator insert_fromval (iterator pos, const Val& val)
     {
-        // TODO: Make it faster.
-        size_type ipos = pos - rep().begin();
-        insert_fromval(ipos, val);
-        return rep().begin() + ipos;
+        ARAGELI_ASSERT_0(store.refs() == 1);
+        ARAGELI_ASSERT_0(rep().begin() <= pos);
+        ARAGELI_ASSERT_0(pos < rep().end());
+        return rep().insert(pos, val);
     }
 
     /// Inserts item with value 'val' before item 'pos' (it's index).
     template <typename Val>
     void insert_fromval (size_type pos, const Val& val)
     {
-        unique();
-        rep().insert(rep().begin() + pos, val);
+        insert_fromval(begin() + pos, val);
     }
 
     template <typename Vec>
     iterator insert_fromvec (iterator pos, const Vec& vec)
     {
-        // TODO: Make it faster.
-        size_type ipos = pos - rep().begin();
-        insert_fromvec(ipos, vec);
-        return rep().begin() + ipos;
+        ARAGELI_ASSERT_0(store.refs() == 1);
+        ARAGELI_ASSERT_0(rep().begin() <= pos);
+        ARAGELI_ASSERT_0(pos <= rep().end());
+        size_type i = pos - rep().begin() + vec.size();
+        rep().insert(pos, vec.begin(), vec.end());
+
+        // WARNING! IT SHOULD BE CLARIFIED WHAT POSITION WE RETURN WHEN VECTOR IS INSERTED
+        return rep().begin() + i;   // the next element after inserted
     }
 
     template <typename Vec>
     void insert_fromvec (size_type pos, const Vec& vec)
     {
-        // TODO: Make it faster.
-        unique();
-        rep().insert(rep().begin() + pos, vec.begin(), vec.end());
+        insert_fromvec(begin() + pos, vec);
     }
 
     template <typename Str>
@@ -1282,6 +1283,10 @@ public:
     template <typename X>
     iterator insert (iterator pos, const X& x)
     {
+        ARAGELI_ASSERT_0(store.refs() == 1);
+        ARAGELI_ASSERT_0(rep().begin() <= pos);
+        ARAGELI_ASSERT_0(pos <= rep().end());
+
         size_type ipos = pos - rep().begin();
         insert(ipos, x);
         return rep().begin() + ipos;
@@ -1390,11 +1395,10 @@ public:
     template <typename In>
     void insert (iterator pos, In first, In last)
     {
-        // Convert iterators to indices because iterators can be invalidated after unique().
-        size_t ipos = pos - begin();
-
-        unique();
-        return rep().insert(ipos, first, last);
+        ARAGELI_ASSERT_0(store.refs() == 1);
+        ARAGELI_ASSERT_0(rep().begin() <= pos);
+        ARAGELI_ASSERT_0(pos <= rep().end());
+        return rep().insert(pos, first, last);
     }
 
     /**    Inserts item sequence in iterator range [first, last)
@@ -1408,11 +1412,11 @@ public:
         All elements on and after 'pos' are shifting to back. */
     void insert (iterator pos, size_type n, const T& val)
     {
-        // Convert iterators to indices because iterators can be invalidated after unique().
-        size_t ipos = pos - begin();
+        ARAGELI_ASSERT_0(store.refs() == 1);
+        ARAGELI_ASSERT_0(rep().begin() <= pos);
+        ARAGELI_ASSERT_0(pos <= rep().end());
 
-        unique();
-        rep().insert(ipos, n, val);
+        rep().insert(pos, n, val);
     }
 
     /**    Inserts 'n' copies of 'val' before item 'pos' (it's index).
@@ -1424,13 +1428,10 @@ public:
     /// Deletes item by iterator 'pos'.
     iterator erase (iterator pos)
     {
-        ARAGELI_ASSERT_0(pos != end());
-
-        // Convert iterators to indices because iterators can be invalidated after unique().
-        size_t ipos = pos - begin();
-
-        unique();
-        return rep().erase(rep().begin() + ipos);
+        ARAGELI_ASSERT_0(store.refs() == 1);
+        ARAGELI_ASSERT_0(rep().begin() <= pos);
+        ARAGELI_ASSERT_0(pos <= rep().end());
+        return rep().erase(pos);
     }
 
     /// Deletes item by index 'pos'.
@@ -1442,15 +1443,13 @@ public:
     /// Deletes items in iterator range [first, last).
     void erase (iterator first, iterator last)
     {
+        ARAGELI_ASSERT_0(store.refs() == 1);
+        ARAGELI_ASSERT_0(rep().begin() <= first);
         ARAGELI_ASSERT_0(first <= last);
-        ARAGELI_ASSERT_0(first != end() || last == end());
+        ARAGELI_ASSERT_0(last <= rep().end());
 
-        // Convert iterators to indices because iterators can be invalidated after unique().
-        size_t ifirst = first - begin();
-        size_t ilast = last - begin();
-
-        unique();
-        rep().erase(rep().begin() + ifirst, rep().begin() + ilast);
+        // WARNING! HACK FOR VS 2008; see artifact #2870186
+        rep().erase(first - begin() + begin(), last - begin() + begin());
     }
 
     /// Deletes items beginning from index 'pos' and next 'n' items.
@@ -1479,7 +1478,6 @@ public:
     void pop_front ()
     {
         ARAGELI_ASSERT_0(!is_empty());
-        //unique();
         erase(size_type(0));
     }
 
@@ -1511,7 +1509,12 @@ public:
     {
         if(x != y)
         {
-            unique();
+            ARAGELI_ASSERT_0(store.refs() == 1);
+            ARAGELI_ASSERT_0(rep().begin() <= x);
+            ARAGELI_ASSERT_0(x < rep().end());
+            ARAGELI_ASSERT_0(rep().begin() <= y);
+            ARAGELI_ASSERT_0(y < rep().end());
+
             std::iter_swap(x, y);
         }
     }
