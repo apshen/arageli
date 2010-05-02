@@ -319,7 +319,7 @@ In& operator>> (In& in, algebraic<TP1, TS1, Poly1, Seg1, Cfg1>& x)
     // WARNING! MAKE THIS MORE ACCURATE!
 
     typedef algebraic<TP1, TS1, Poly1, Seg1, Cfg1> Algebraic;
-    
+
     char ch = 0;
     if(!(in >> ch))
     {
@@ -336,7 +336,7 @@ In& operator>> (In& in, algebraic<TP1, TS1, Poly1, Seg1, Cfg1>& x)
             x = Algebraic(value);
         return in;
     }
-    
+
     Poly1 poly;
     if(!(in >> poly))
     {
