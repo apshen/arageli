@@ -1235,7 +1235,7 @@ public:
     {
         ARAGELI_ASSERT_0(store.refs() == 1);
         ARAGELI_ASSERT_0(rep().begin() <= pos);
-        ARAGELI_ASSERT_0(pos < rep().end());
+        ARAGELI_ASSERT_0(pos <= rep().end());
         return rep().insert(pos, val);
     }
 
