@@ -463,6 +463,9 @@ public:
                 std::not1(func::is_null<F>())
             ).base();
 
+        ARAGELI_ASSERT_1(store.begin() <= i);
+        ARAGELI_ASSERT_1(i <= store.end());
+
         store.erase(i, store.end());
     }
 
