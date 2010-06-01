@@ -193,7 +193,7 @@
 #include "setenumrnd/vector.hpp"
 
 #include "algebraic/algorithm_class.hpp"
-#include "algebraic/factory_polynum.hpp"
+//#include "algebraic/factory_polynum.hpp"
 #include "algebraic/matrix_frobeniuss_form.hpp"
 #include "algebraic/polynomial_number.hpp"
 #include "algebraic/stop_indication_algorithm_class.hpp"

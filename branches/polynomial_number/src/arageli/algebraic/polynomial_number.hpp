@@ -178,4 +178,56 @@ public:
 };
 
 
+/// Specialization of common factory template for algebraic number (PolynomialNumber)
+template <>
+struct factory<PolynomialNumber >
+{
+private:
+
+    typedef PolynomialNumber T;
+
+public:
+
+    static const bool is_specialized = true;
+
+    static const T& unit ()
+    {
+        static const T unit_s = T(rational<big_int>(1, 1));
+        return unit_s;
+    }
+
+    static const T& unit (const T& x)
+    {
+        static const T unit_s(*(x.BasisPol), rational<big_int>(1, 1)); 
+        return unit_s;
+    }
+
+    static const T& opposite_unit ()
+    {
+        static const T opposite_unit_s = T(rational<big_int>(-1, 1));
+        return opposite_unit_s;
+    }
+
+    static const T& opposite_unit (const T& x)
+    {
+        static const T opposite_unit_s = T(*(x.BasisPol), rational<big_int>(-1, 1));
+        return opposite_unit_s;
+    }
+
+    static const T& null ()
+    {
+        static const T null_s = T(rational<big_int>(0, 1));
+        return null_s;
+    }
+
+
+    static const T& null (const T& x)
+    {
+        static const T null_s(*(x.BasisPol), rational<big_int>(0, 1)); 
+        return null_s; 
+    }
+
+};
+
+
 #endif
