@@ -198,7 +198,7 @@ public:
 
     static const T& unit (const T& x)
     {
-        static const T unit_s(*(x.BasisPol), rational<big_int>(1, 1)); 
+        static const T unit_s(*(x.BasisPol), rational<big_int>(1, 1));
         return unit_s;
     }
 
@@ -223,8 +223,8 @@ public:
 
     static const T& null (const T& x)
     {
-        static const T null_s(*(x.BasisPol), rational<big_int>(0, 1)); 
-        return null_s; 
+        static const T null_s(*(x.BasisPol), rational<big_int>(0, 1));
+        return null_s;
     }
 
 };
