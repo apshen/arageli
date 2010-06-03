@@ -121,7 +121,7 @@ public:
 
     //arithmetics operation
     PolynomialNumber operator -() const;
-    friend PolynomialNumber abs(PolynomialNumber& POL);
+    friend PolynomialNumber abs (const PolynomialNumber& POL);
 
     //PolynomialNumber abs(PolynomialNumber& POL);
 
@@ -178,6 +178,9 @@ public:
 };
 
 
+PolynomialNumber abs (const PolynomialNumber& POL);
+
+
 /// Specialization of common factory template for algebraic number (PolynomialNumber)
 template <>
 struct factory<PolynomialNumber >
@@ -228,6 +231,16 @@ public:
     }
 
 };
+
+namespace std
+{
+
+inline PolynomialNumber abs (const PolynomialNumber& x)
+{
+    return ::abs(x);
+}
+
+}
 
 
 #endif
