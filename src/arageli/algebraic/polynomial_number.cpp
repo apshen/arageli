@@ -349,7 +349,7 @@ PolynomialNumber PolynomialNumber::operator -() const
     return S;
 }
 /**/
-PolynomialNumber abs(PolynomialNumber &POL) //PolynomialNumber::
+PolynomialNumber abs(const PolynomialNumber &POL) //PolynomialNumber::
 {
     //return (POL < null(POL)) ? -POL : POL;
 
