@@ -288,10 +288,98 @@ template
 >
 Out& operator<< (Out& out, const algebraic<TP1, TS1, Poly1, Seg1, Cfg1>& x)
 {
-    out << "(" << x.polynom() << ", " << x.segment() << ")";
+    const Poly1& poly = x.polynom();
+    const Seg1& seg = x.segment();
+    if(poly.degree() == 1 && seg.left() <= seg.right())
+    {
+        typedef typename Poly1::monom Monom;
+        const Monom& free_term = *poly.monoms_begin();
+        if(free_term.degree() == 1)
+            out << null<TS1>();
+        else
+            out << -free_term.coef()/poly.leading_coef();
+    }
+    else
+        out << "(" << x.polynom() << ", " << x.segment() << ")";
     return out;
 }
 
+template
+<
+    typename In,
+
+    typename TP1,
+    typename TS1,
+    typename Poly1,
+    typename Seg1,
+    typename Cfg1
+>
+In& operator>> (In& in, algebraic<TP1, TS1, Poly1, Seg1, Cfg1>& x)
+{
+    // WARNING! MAKE THIS MORE ACCURATE!
+
+    typedef algebraic<TP1, TS1, Poly1, Seg1, Cfg1> Algebraic;
+
+    char ch = 0;
+    if(!(in >> ch))
+    {
+        return in;
+    }
+
+    if(ch != '(')
+    {
+        in.putback(ch);
+        in.clear();
+        // Read simple number.
+        TS1 value;
+        if(in >> value)
+            x = Algebraic(value);
+        return in;
+    }
+
+    Poly1 poly;
+    if(!(in >> poly))
+    {
+        in.clear(std::ios_base::badbit);
+        return in;
+    }
+
+    if(!(in >> ch))
+    {
+        in.clear(std::ios_base::badbit);
+        return in;
+    }
+
+    if(ch != ',')
+    {
+        in.putback(ch);
+        in.clear();
+        x = Algebraic(poly);
+        return in;
+    }
+
+    Seg1 seg;
+    if(!(in >> seg))
+    {
+        in.clear(std::ios_base::badbit);
+        return in;
+    }
+
+    if(!(in >> ch))
+    {
+        in.clear(std::ios_base::badbit);
+        return in;
+    }
+
+    if(ch != ')')
+    {
+        in.clear(std::ios_base::badbit);
+        return in;
+    }
+
+    x = Algebraic(poly, seg);
+    return in;
+}
 
 }
 
