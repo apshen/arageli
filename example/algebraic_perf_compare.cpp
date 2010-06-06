@@ -65,16 +65,15 @@ int main ()
         cout << "Please wait while performance statistics is being gathered for Arageli::PolynomialNumber..." << flush;
         {
 
-            // The following code doesn't work.
-            // Natalia TODO
+            // The following code doesn't work. See explanation below.
             //matrix<PolynomialNumber> a = "((1, 2, 3), (4, 5, 6), (7, 8, 9))", b, q;
 
             basis_field baspol("x^2-2");
 
             matrix<PolynomialNumber> a(3, PolynomialNumber(baspol), fromval), b, q;
 
-            // The following code doesn't work without setting of baspol in the previous line.
-            // Natalia TODO
+            // The following code doesn't work without setting of baspol in the previous line,
+            // because later use sign() function, that requared basis_field
             for(int i = 0; i < 9; ++i)
                 a(i/3, i%3) = i-1;
 

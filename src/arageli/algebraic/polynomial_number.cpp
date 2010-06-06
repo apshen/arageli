@@ -554,8 +554,19 @@ bool PolynomialNumber::operator ==(const PolynomialNumber &POL) const
     if ( BasisPol == POL.BasisPol || POL.BasisPol == NULL || BasisPol == NULL )
     {
         if ( Pol() == POL.Pol() ) return true;
+        return false;
     }
     else return false;
+}
+
+bool PolynomialNumber::operator !=(const PolynomialNumber &POL) const
+{
+    if ( BasisPol == POL.BasisPol || BasisPol == NULL || POL.BasisPol == NULL )
+    {
+        if ( Pol() == POL.Pol() ) return false;
+        return true;
+    }
+    return true;
 }
 
 int PolynomialNumber::operator <(const PolynomialNumber &POL) const
@@ -938,5 +949,22 @@ int PolynomialNumber::signums(const s_p_rat f, const s_p_int g)
 
     return j * Arageli::sign(rdet);
 }
+
+PolynomialNumber& PolynomialNumber::operator --()
+{
+    sparse_polynom<rational<big_int>> pol = this->Pol();
+    pol--;
+    this->Pol(pol);
+    return *this;
+}
+
+PolynomialNumber& PolynomialNumber::operator ++()
+{
+    sparse_polynom<rational<big_int>> pol = this->Pol();
+    pol++;
+    this->Pol(pol);
+    return *this;
+}
+
 
 } //- end namespace Arageli --------------------------------------------------------

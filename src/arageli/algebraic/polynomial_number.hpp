@@ -141,6 +141,7 @@ public:
     PolynomialNumber& operator %=(const PolynomialNumber &POL);
 
     bool operator ==(const PolynomialNumber &POL) const;
+    bool operator !=(const PolynomialNumber &POL) const;
     int operator <(const PolynomialNumber &POL) const;
     int operator >(const PolynomialNumber &POL) const;
     int operator <=(const PolynomialNumber &POL) const;
@@ -176,12 +177,14 @@ public:
 
     int signums(const s_p_rat f, const s_p_int g); /// Shevchenko - Gruzdev method's
 
+    PolynomialNumber& operator --();
+    PolynomialNumber& operator ++();
 };
 
 
 PolynomialNumber abs (const PolynomialNumber& POL);
 
-/// Reads a PolynomialNumber from a string notation.
+/// Output a PolynomialNumber.
 template <typename Ch, typename ChT>
 inline std::basic_ostream<Ch, ChT>& operator<<
 (
@@ -192,6 +195,78 @@ inline std::basic_ostream<Ch, ChT>& operator<<
     return out << x.Pol();
 }
 
+/// Input a PolynomialNumber from a string, can be represent as (basis_field, pol), (basis_field, ), (,pol) or just 'pol'.
+template <typename Ch, typename ChT>
+inline std::basic_istream<Ch, ChT>& operator>> 
+(
+    std::basic_istream<Ch, ChT>& in,
+    PolynomialNumber& x
+)
+{
+    char ch = 0;
+    if(!(in >> ch))
+    {
+        return in;
+    }
+
+    if(ch != '(')
+    {
+        in.putback(ch);
+        in.clear();
+        sparse_polynom<rational<big_int> > pol;
+        if(in >> pol)
+            x.Pol(pol);
+        return in;
+    }
+
+    sparse_polynom<big_int > baspol;
+    if(!(in >> baspol))
+    {
+        in.clear(std::ios_base::badbit);
+        return in;
+    }
+
+    if(!(in >> ch))
+    {
+        in.clear(std::ios_base::badbit);
+        return in;
+    }
+
+    if(ch != ',')
+    {
+        in.putback(ch);
+        in.clear();
+        basis_field bas(baspol);
+        PolynomialNumber f(bas);
+        x = f;
+        return in;
+    }
+
+    sparse_polynom<rational<big_int> > pol_full;
+    if(!(in >> pol_full))
+    {
+        in.clear(std::ios_base::badbit);
+        return in;
+    }
+
+    if(!(in >> ch))
+    {
+        in.clear(std::ios_base::badbit);
+        return in;
+    }
+
+    if(ch != ')')
+    {
+        in.clear(std::ios_base::badbit);
+        return in;
+    }
+
+    basis_field bas_full(baspol);
+    PolynomialNumber f_full(baspol);
+    f_full.Pol(pol_full);
+    x = f_full;
+    return in;
+}
 
 /// Specialization of common factory template for algebraic number (PolynomialNumber)
 template <>
