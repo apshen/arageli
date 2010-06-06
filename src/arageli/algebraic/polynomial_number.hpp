@@ -180,6 +180,16 @@ public:
 
 PolynomialNumber abs (const PolynomialNumber& POL);
 
+template <typename Ch, typename ChT>
+inline std::basic_ostream<Ch, ChT>& operator<<
+(
+    std::basic_ostream<Ch, ChT>& out,
+    const PolynomialNumber& x
+)
+{
+    return out << x.Pol();
+}
+
 
 /// Specialization of common factory template for algebraic number (PolynomialNumber)
 template <>
