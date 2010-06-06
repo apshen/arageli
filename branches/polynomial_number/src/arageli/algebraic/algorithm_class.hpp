@@ -27,16 +27,19 @@
 *****************************************************************************/
 
 
-#ifndef ALGORITHM_CLASS_H
-#define ALGORITHM_CLASS_H
+#ifndef ALGEBRAIC_algorithm_class_hpp
+#define ALGEBRAIC_algorithm_class_hpp
 
-#include "../arageli.hpp"
+#include "../sparse_polynom.hpp"
+#include "../rational.hpp"
+#include "../big_int.hpp"
 
-using namespace Arageli;
+#include "../std_import.hpp"
 
-#if 1
+namespace Arageli
+{
 
-// BINARY SEARCH METHOD
+/// BINARY SEARCH METHOD
 template <typename T, typename StopCriteria>
 class sign_binarypolnum_alg
 {
@@ -65,9 +68,9 @@ public:
     };
 };
 
-//bool is_it_out = true; //extern
 
-// CHAIN FRACTION METHOD
+
+/// CHAIN FRACTION METHOD
 template <typename T, typename StopCriteria>
 class sign_chainfraction_alg
 {
@@ -89,25 +92,12 @@ public:
             calc_fraction_3(pol, p_q_1, p_q_2);
             rational< big_int> p_q_j = p_q_1;
 
-#if 0
-            std::cout << "p_q_1 = " << p_q_1 << std::endl;
-            std::cout << "p_q_2 = " << p_q_2 << std::endl;
-            std::cout << "p_q_j = " << p_q_j << std::endl;
-#endif
-
             while ( (j < 1000) && (!StopPolNumCFM(POL, p_q_j, j)) )
             {
                 p_q_j = p_q_2;
                 p_q_2 = calc_fraction(pol, p_q_j, p_q_1);
                 p_q_1 = p_q_j;
                 j++;
-
-#if 0
-                std::cout << "j = " << j << std::endl;
-                std::cout << "p_q_1 = " << p_q_1 << std::endl;
-                std::cout << "p_q_2 = " << p_q_2 << std::endl;
-                std::cout << "p_q_j = " << p_q_j << std::endl;
-#endif
             }
 
             return j * sign(POL.Pol().subs(p_q_j));
@@ -117,17 +107,8 @@ public:
 // fanction's for method of suitable fractions -------------------------------------------------
     int Dih(const sparse_polynom< big_int> & pol, const rational< big_int> & M) const
     {
-
-#if 0
-        std::cout << std::endl << "Dih" << std::endl;
-#endif
-
         rational< big_int> u(0, 1), v = M + 1;
         rational< big_int> x = Arageli::floor((u+v)/2); //big_int x = big_int((u+v)/2);
-
-#if 0
-        std::cout << "u = " << u << "  v = " << v << "  x = " << x << std::endl;
-#endif
 
         int i = 0;
         while ( x != u ) // x != u && i < 19
@@ -136,11 +117,6 @@ public:
             if ( pol.subs(x)*pol.subs(u) < 0 ) v = rational< big_int>(x,1);
             else u = rational< big_int>(x,1);
             x = Arageli::floor((u+v)/2); //x = (big_int)(u+v)/2;
-
-#if 0
-            std::cout << "i = " << i << "  u = " << u << "  v = " << v << "  x = " << x << std::endl;
-#endif
-
         }
         return (int)x;
     };
@@ -148,37 +124,17 @@ public:
 // ---------------------------------------------------------------------------------------------
     big_int calc_H(const sparse_polynom< big_int> & Pol) const  //Pol
     {
-
-#if 0
-        std::cout << std::endl << "calc_H" << std::endl;
-#endif
-
         sparse_polynom< big_int> pol = sparse_polynom< big_int>(Pol);
         big_int cmax = pol.leading_coef();
         for (sparse_polynom< big_int>::coef_iterator ci = pol.coefs_begin(), cj = pol.coefs_end(); ci != cj; ++ci)
             if (cmax < Arageli::abs(*ci) ) cmax = Arageli::abs(*ci);
-
-#if 0
-        std::cout << "pol = " << pol << "  cmax = " << cmax << std::endl << std::endl;
-#endif
-
         return cmax;
     };
 
 // ---------------------------------------------------------------------------------------------
     rational< big_int> calc_M(const sparse_polynom< big_int> & pol) const
     {
-
-#if 0
-        std::cout << std::endl << "calc_M" << std::endl;
-#endif
-
         big_int coef = pol.leading_coef();
-
-#if 0
-        std::cout << "coef = " << coef << std::endl;
-#endif
-
         return (1 + (rational< big_int>)calc_H(pol)/Arageli::abs(coef));
     };
 
@@ -187,31 +143,12 @@ public:
                         rational< big_int> & p_q_1,
                         rational< big_int> & p_q_2) const //const
     {
-
-#if 0
-        std::cout << std::endl << "calc_fraction_3" << std::endl;
-#endif
-
         big_int p0 = 1;
         big_int q0 = 0;
         rational< big_int> M = calc_M(pol);
 
-#if 0
-        std::cout << "M = " << M << std::endl;
-#endif
-
         int c = Dih(pol, M);
-
-#if 0
-        std::cout << "c = " << c << std::endl;
-#endif
-
         int n = pol.degree();
-
-#if 0
-        std::cout << "n = " << n << std::endl;
-        std::cout << "p0 = " << p0 << "  q0 = " << q0 << "  pol = " << pol << "  M = " << M << "  c = " << c << "  n = " << n << std::endl;
-#endif
 
         sparse_polynom< big_int> monom_n = sparse_polynom< big_int>::monom(1, n);
         sparse_polynom< big_int> monom_x = sparse_polynom< big_int>::monom(1, -1);
@@ -223,30 +160,11 @@ public:
         pol = pol.subs(monom_x);
         pol *= monom_n;
 
-#if 0
-        std::cout << "pol = " << pol << std::endl;
-#endif
-
         M = calc_M(pol);
-
-#if 0
-        std::cout << "M = " << M << std::endl;
-#endif
-
         c = Dih(pol, M);
-
-#if 0
-        std::cout << "c = " << c << std::endl;
-        std::cout << "p1 = " << p1 << "  q1 = " << q1 << "  pol = " << pol << "  M = " << M << "  c = " << c << std::endl;
-#endif
 
         p_q_1 = rational< big_int>(p1, q1);
         p_q_2 = rational< big_int>(c*p1 + p0, c*q1 + q0);
-
-#if 0
-        std::cout << "p_q_1 = " << p_q_1 << "  p_q_2 = " << p_q_2 << std::endl << std::endl;
-#endif
-
     };
 
 // ---------------------------------------------------------------------------------------------
@@ -254,19 +172,11 @@ public:
                                     const rational< big_int> & p_q_j1,
                                     const rational< big_int> & p_q_j2) const //const
     {
-#if 0
-        std::cout << std::endl << "calc_fraction" << std::endl;
-#endif
-
         big_int p_j1 = p_q_j1.numerator();
         big_int q_j1 = p_q_j1.denominator();
         rational< big_int> M = calc_M(pol);
         int n = pol.degree();
         int c = Dih(pol, M);
-
-#if 0
-        std::cout << "p_j1 = " << p_j1 << "  q_j1 = " << q_j1 << "  pol = " << pol << "  M = " << M << "  c = " << c << "  n = " << n << std::endl;
-#endif
 
         sparse_polynom< big_int> monom_n = sparse_polynom< big_int>::monom(1, n);
         sparse_polynom< big_int> monom_x = sparse_polynom< big_int>::monom(1, -1);
@@ -281,33 +191,11 @@ public:
         big_int p_j = c*p_j1 + p_j2;
         big_int q_j = c*q_j1 + q_j2;
 
-#if 0
-        std::cout << "p_j2 = " << p_j2 << "  q_j2 = " << q_j2 << "  pol = " << pol << "  M = " << M << "  c = " << c << std::endl;
-        std::cout << "p_j = " << p_j << "  q_j = " << q_j << std::endl << std::endl;
-#endif
-
         return rational< big_int>(p_j, q_j);
     };
 
-
-    /*
-    //fanction's for method of suitable fractions ---------------------------
-    void calc_p_q(big_int* p, big_int* q, rational< big_int>* p_q)
-    {
-        p_q[0] = rational< big_int>(1,1);
-        for (int i = 1; i < 200; i++ )
-        {
-            p_q[i] = rational< big_int>(p[i],q[i]);
-        }
-    }
-    //extern big_int* p;
-    //extern big_int* q;
-    //
-    //extern rational< big_int>* p_q;
-    */
 };
 
-#endif
 
-
+} //- end namespace Arageli --------------------------------------------------------
 #endif

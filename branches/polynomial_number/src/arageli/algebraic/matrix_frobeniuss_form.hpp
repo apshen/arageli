@@ -27,12 +27,18 @@
 *****************************************************************************/
 
 
-#ifndef MATRIX_FROBRNIUSS_FORM_H
-#define MATRIX_FROBENIUSS_FORM_H
+#ifndef ALGEBRAIC_matrix_frobeniuss_form_hpp
+#define ALGEBRAIC_matrix_frobeniuss_form_hpp
 
-#include "../arageli.hpp"
+#include "../config.hpp"
 
-using namespace Arageli;
+#include "../matrix.hpp"
+#include "../sparse_polynom.hpp"
+#include "../rational.hpp"
+#include "../big_int.hpp"
+
+namespace Arageli
+{
 
 typedef sparse_polynom< big_int>::monom_iterator monoms;
 typedef sparse_polynom< rational< big_int>>::monom_iterator monoms_r;
@@ -42,4 +48,5 @@ void Frobeniuss(int degr, sparse_polynom< big_int> g, matrix<big_int> &F);
 
 void Resz(int m, matrix<big_int> &F);
 
+} //- end namespace Arageli --------------------------------------------------------
 #endif
