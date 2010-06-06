@@ -28,9 +28,12 @@
 
 
 #include "polynomial_number.hpp"
+#include "../gauss.hpp"
 
+namespace Arageli
+{
 
-//class basis_field
+/// class basis_field
 
 basis_field::basis_field():
     M_m(1,1), LBasisPol_m(0), HBasisPol_m(0)
@@ -111,19 +114,16 @@ PolynomialNumber::PolynomialNumber():
     L_m(0, 1), H_m(0, 1), F_m(0, 1), U_m(0, 1), SepL_m(0, 1), j_1_B(0), j_2_B(0), j_3_B(0), j_1_C(0), j_2_C(0), j_3_C(0)
 {
     BasisPol = NULL;
-    Pol_m = "1";
+    Pol_m = "1"; // TODO make this Pol_m = null();
 }
 
 PolynomialNumber::PolynomialNumber(basis_field & BP):
     L_m(0, 1), H_m(0, 1), F_m(0, 1), U_m(0, 1), SepL_m(0, 1), j_1_B(0), j_2_B(0), j_3_B(0), j_1_C(0), j_2_C(0), j_3_C(0)
 {
-    /*if ( &BP != NULL )
-        */  BasisPol = &BP;
-    /* else
-        BasisPol = NULL;*/
-    Pol_m = "1";
+    BasisPol = &BP;
+    Pol_m = "1"; // TODO make this Pol_m = null();
 }
-/**/
+
 PolynomialNumber::PolynomialNumber(basis_field & BP, rational< big_int> m): //monom< rational< big_int>> m)
     L_m(m), H_m(m), F_m(0, 1), SepL_m(0, 1), j_1_B(0), j_2_B(0), j_3_B(0), j_1_C(0), j_2_C(0), j_3_C(0)
 {
@@ -139,7 +139,7 @@ PolynomialNumber::PolynomialNumber(const PolynomialNumber &POL)
     {
         BasisPol = POL.BasisPol;
     }
-    Pol(POL.Pol()); //Pol_m = POL.Pol();
+    Pol(POL.Pol()); 
     F_m = POL.F();
     U_m = POL.U();
     SepL_m = POL.SepL();
@@ -348,11 +348,9 @@ PolynomialNumber PolynomialNumber::operator -() const
     S.Pol(pol);
     return S;
 }
-/**/
-PolynomialNumber abs(const PolynomialNumber &POL) //PolynomialNumber::
-{
-    //return (POL < null(POL)) ? -POL : POL;
 
+PolynomialNumber abs(const PolynomialNumber &POL) 
+{
     PolynomialNumber S(POL);
     if ( S.is_positive(S) ) return S;
     else
@@ -433,7 +431,6 @@ PolynomialNumber& PolynomialNumber::operator -=(const PolynomialNumber &POL)
 
 const PolynomialNumber PolynomialNumber::InversePolNum()
 {
-    //PolynomialNumber InvPol(*BasisPol);
     if (BasisPol != NULL )
     {
         if ( gcd(Pol(),BasisPol->BasisPol()) == 1 )
@@ -554,10 +551,11 @@ PolynomialNumber& PolynomialNumber::operator %=(const PolynomialNumber &POL)
 
 bool PolynomialNumber::operator ==(const PolynomialNumber &POL) const
 {
-    if ( BasisPol != POL.BasisPol ) return false;
-    else
-        if ( Pol() != POL.Pol() ) return false;
-        else return true;
+    if ( BasisPol == POL.BasisPol || POL.BasisPol == NULL || BasisPol == NULL )
+    {
+        if ( Pol() == POL.Pol() ) return true;
+    }
+    else return false;
 }
 
 int PolynomialNumber::operator <(const PolynomialNumber &POL) const
@@ -876,10 +874,9 @@ int PolynomialNumber::signCFMPOL_j_3_c(const PolynomialNumber &POL)
 
 
 
-/**/
 //\ Method's //------------------------------------------------------------------------------
 
-//Shevchenko - Gruzdev method's
+/// Shevchenko - Gruzdev signum method's
 int PolynomialNumber::signums(const s_p_rat f, const s_p_int g)
 {
     s_p_int gmain = s_p_int(g);
@@ -941,3 +938,5 @@ int PolynomialNumber::signums(const s_p_rat f, const s_p_int g)
 
     return j * Arageli::sign(rdet);
 }
+
+} //- end namespace Arageli --------------------------------------------------------

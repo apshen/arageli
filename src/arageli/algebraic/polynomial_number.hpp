@@ -27,8 +27,8 @@
 *****************************************************************************/
 
 
-#ifndef POLYNOMIAL_NUMBER_HPP
-#define POLYNOMIAL_NUMBER_HPP
+#ifndef ALGEBRAIC_polynomial_number_hpp
+#define ALGEBRAIC_polynomial_number_hpp
 
 #include <math.h>
 #include "../arageli.hpp"
@@ -37,7 +37,8 @@
 #include "matrix_frobeniuss_form.hpp"
 
 
-using namespace Arageli;
+namespace Arageli
+{
 
 typedef Arageli::sparse_polynom<big_int > s_p_int;
 typedef Arageli::sparse_polynom<rational< big_int> > s_p_rat;
@@ -173,13 +174,14 @@ public:
     int signCFMPOL_j_2_c(const PolynomialNumber & POL);
     int signCFMPOL_j_3_c(const PolynomialNumber & POL);
 
-    int signums(const s_p_rat f, const s_p_int g); //Shevchenko - Gruzdev method's
+    int signums(const s_p_rat f, const s_p_int g); /// Shevchenko - Gruzdev method's
 
 };
 
 
 PolynomialNumber abs (const PolynomialNumber& POL);
 
+/// Reads a PolynomialNumber from a string notation.
 template <typename Ch, typename ChT>
 inline std::basic_ostream<Ch, ChT>& operator<<
 (
@@ -242,12 +244,14 @@ public:
 
 };
 
+} //- end namespace Arageli --------------------------------------------------------
+
 namespace std
 {
 
-inline PolynomialNumber abs (const PolynomialNumber& x)
+inline Arageli::PolynomialNumber abs (const Arageli::PolynomialNumber& x)
 {
-    return ::abs(x);
+    return Arageli::abs(x);
 }
 
 }

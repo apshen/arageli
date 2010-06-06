@@ -29,6 +29,8 @@
 
 #include "matrix_frobeniuss_form.hpp"
 
+namespace Arageli
+{
 
 void Frobeniuss(int degr, sparse_polynom< big_int> g, matrix<big_int> &F)
 {
@@ -74,3 +76,5 @@ void Resz(int m, matrix<big_int> &F)
         for (int j = 0; j < m; j++)
             F(i,j) = 0;
 }
+
+} //- end namespace Arageli --------------------------------------------------------

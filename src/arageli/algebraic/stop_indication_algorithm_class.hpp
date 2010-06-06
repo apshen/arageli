@@ -27,12 +27,17 @@
 *****************************************************************************/
 
 
-#ifndef STOP_INDICATION_ALGORITHM_CLASS_H
-#define STOP_INDICATION_ALGORITHM_CLASS_H
+#ifndef ALGEBRAIC_stop_indication_algorithm_class_hpp
+#define ALGEBRAIC_stop_indication_algorithm_class_hpp
 
-#include "../arageli.hpp"
+#include "../config.hpp"
+#include "../rational.hpp"
+#include "../big_int.hpp"
+#include "../sparse_polynom.hpp"
+#include "../powerest.hpp"
 
-using namespace Arageli;
+namespace Arageli
+{
 
 // STOP INDICATIONS FOR BINARY SEARCH METHOD
 
@@ -188,18 +193,7 @@ class sign_chainfraction_abs_stop_criteria
 public:
     bool operator() (const T &POL, const rational< big_int> &x, int j)
     {
-#if 0
-        std::cout << std::endl << "stop creteria " << std::endl;
-#endif
-
         rational< big_int> delta = rational< big_int>(1, power(x.denominator(),2)); //SignChainFractionMetodPolNum
-
-#if 0
-        std::cout << "x.denominator = " << x.denominator() << " delta = " << delta << std::endl;
-        std::cout << "BasisPol = " << POL.BasisPol->BasisPol() << "  pol = " << POL.Pol() << std::endl;
-        std::cout << "abs(POL.Pol().subs(x)) = " << Arageli::abs(POL.Pol().subs(x)) << " POL.F = " << POL.F() << std::endl;
-#endif
-
         if ( Arageli::abs(POL.Pol().subs(x)) >= POL.F()*delta ) return true;        //+ 1
         return false;
     };
@@ -220,18 +214,7 @@ class sign_chainfraction_u_stop_criteria
 public:
     bool operator() (const T &POL, const rational< big_int> &x, int j)
     {
-#if 0
-        std::cout << std::endl << "stop creteria " << std::endl;
-#endif
-
         rational< big_int> delta = rational< big_int>(1, power(x.denominator(),2)); //SignChainFractionMetodPolNum
-
-#if 0
-        std::cout << "x.denominator = " << x.denominator() << " delta = " << delta << std::endl;
-        std::cout << "BasisPol = " << POL.BasisPol->BasisPol() << "  pol = " << POL.Pol() << std::endl;
-        std::cout << "POL.U() = " << POL.U() << " POL.F = " << POL.F() << std::endl;
-#endif
-
         if ( POL.U() >= POL.F()*delta ) return true;        //+ 1
         return false;
     };
@@ -252,18 +235,7 @@ class sign_chainfraction_sepl_stop_criteria
 public:
     bool operator() (const T &POL, const rational< big_int> &x, int j)
     {
-#if 0
-        std::cout << std::endl << "stop creteria " << std::endl;
-#endif
-
         rational< big_int> delta = rational< big_int>(1, power(x.denominator(),2)); //SignChainFractionMetodPolNum
-
-#if 0
-        std::cout << "x.denominator = " << x.denominator() <<  std::endl;
-        std::cout << "BasisPol = " << POL.BasisPol->BasisPol() << "  pol = " << POL.Pol() << std::endl;
-        std::cout << " delta = " << delta << " POL.SepL = " << POL.SepL() << std::endl;
-#endif
-
         if ( delta <= POL.SepL() ) return true;        //+ 1
         return false;
     };
@@ -356,4 +328,5 @@ class sign_chainfraction_j_3_c_stop_alg:public sign_chainfraction_alg<T, sign_ch
 {};
 //=====================================================================================================
 
+} //- end namespace Arageli --------------------------------------------------------
 #endif
