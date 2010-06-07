@@ -197,7 +197,7 @@ inline std::basic_ostream<Ch, ChT>& operator<<
 
 /// Input a PolynomialNumber from a string, can be represent as (basis_field, pol), (basis_field, ), (,pol) or just 'pol'.
 template <typename Ch, typename ChT>
-inline std::basic_istream<Ch, ChT>& operator>> 
+inline std::basic_istream<Ch, ChT>& operator>>
 (
     std::basic_istream<Ch, ChT>& in,
     PolynomialNumber& x
