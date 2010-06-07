@@ -139,7 +139,7 @@ PolynomialNumber::PolynomialNumber(const PolynomialNumber &POL)
     {
         BasisPol = POL.BasisPol;
     }
-    Pol(POL.Pol()); 
+    Pol(POL.Pol());
     F_m = POL.F();
     U_m = POL.U();
     SepL_m = POL.SepL();
@@ -349,7 +349,7 @@ PolynomialNumber PolynomialNumber::operator -() const
     return S;
 }
 
-PolynomialNumber abs(const PolynomialNumber &POL) 
+PolynomialNumber abs(const PolynomialNumber &POL)
 {
     PolynomialNumber S(POL);
     if ( S.is_positive(S) ) return S;
