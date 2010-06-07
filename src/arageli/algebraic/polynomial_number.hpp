@@ -184,6 +184,18 @@ public:
 
 PolynomialNumber abs (const PolynomialNumber& POL);
 
+/// Signum for PolynomialNumber.
+inline int sign (const PolynomialNumber& POL)
+{
+    if ( POL.Pol().degree() == 0 )
+        return Arageli::sign(POL.Pol().leading_coef());
+    else
+    {
+        sign_binarypolnum_abs_stop_alg< PolynomialNumber> s;
+        return s(POL);
+    }
+}
+
 /// Output a PolynomialNumber.
 template <typename Ch, typename ChT>
 inline std::basic_ostream<Ch, ChT>& operator<<
@@ -195,7 +207,7 @@ inline std::basic_ostream<Ch, ChT>& operator<<
     return out << x.Pol();
 }
 
-/// Input a PolynomialNumber from a string, can be represent as (basis_field, pol), (basis_field, ), (,pol) or just 'pol'.
+/// Input a PolynomialNumber from a string, can be represent as 'polynom'.
 template <typename Ch, typename ChT>
 inline std::basic_istream<Ch, ChT>& operator>>
 (
@@ -209,15 +221,16 @@ inline std::basic_istream<Ch, ChT>& operator>>
         return in;
     }
 
+    /* TODO. Does not work. Don't know why.
     if(ch != '(')
-    {
+    {*/
         in.putback(ch);
         in.clear();
         sparse_polynom<rational<big_int> > pol;
         if(in >> pol)
             x.Pol(pol);
         return in;
-    }
+    /*}
 
     sparse_polynom<big_int > baspol;
     if(!(in >> baspol))
@@ -265,7 +278,7 @@ inline std::basic_istream<Ch, ChT>& operator>>
     PolynomialNumber f_full(baspol);
     f_full.Pol(pol_full);
     x = f_full;
-    return in;
+    return in;*/
 }
 
 /// Specialization of common factory template for algebraic number (PolynomialNumber)

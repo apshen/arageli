@@ -571,30 +571,26 @@ bool PolynomialNumber::operator !=(const PolynomialNumber &POL) const
 
 int PolynomialNumber::operator <(const PolynomialNumber &POL) const
 {
-    sign_binarypolnum_abs_stop_alg< PolynomialNumber> s;
-    if ( s(POL - *this) > 0 ) return 1;
-    else return 0;
+    if ( Arageli::sign(POL - *this) > 0 ) return 1;
+    return 0;
 }
 
 int PolynomialNumber::operator >(const PolynomialNumber &POL) const
 {
-    sign_binarypolnum_abs_stop_alg< PolynomialNumber> s;
-    if ( s(*this - POL) > 0 ) return 1;
-    else return 0;
+    if ( Arageli::sign(*this - POL) > 0 ) return 1;
+    return 0;
 }
 
 int PolynomialNumber::operator <=(const PolynomialNumber &POL) const
 {
-    sign_binarypolnum_abs_stop_alg< PolynomialNumber> s;
-    if ( s(POL - *this) >= 0 ) return 1;
-    else return 0;
+    if ( Arageli::sign(POL - *this) >= 0 ) return 1;
+    return 0;
 }
 
 int PolynomialNumber::operator >=(const PolynomialNumber &POL) const
 {
-    sign_binarypolnum_abs_stop_alg< PolynomialNumber> s;
-    if ( s(*this - POL) >= 0 ) return 1;
-    else return false;
+    if ( Arageli::sign(*this - POL) >= 0 ) return 1;
+    return 0;
 }
 
 bool PolynomialNumber::is_positive(const PolynomialNumber &POL) const //
@@ -606,7 +602,9 @@ bool PolynomialNumber::is_positive(const PolynomialNumber &POL) const //
     }
     else
     {
-        rational< big_int> coef = POL.Pol().leading_coef();
+        rational< big_int> coef = 0;
+        if ( !POL.Pol().is_null() )
+            coef = POL.Pol().leading_coef();
         if ( Arageli::sign(coef) > 0 ) return true;
         return false;
     }
@@ -621,7 +619,9 @@ bool PolynomialNumber::is_negative(const PolynomialNumber &POL) const
     }
     else
     {
-        rational< big_int> coef = POL.Pol().leading_coef();
+        rational< big_int> coef = 0;
+        if ( !POL.Pol().is_null() )
+            coef = POL.Pol().leading_coef();
         if ( Arageli::sign(coef) < 0 ) return true;
         return false;
     }
@@ -794,10 +794,14 @@ void PolynomialNumber::Calculate_j_C()
 
 int PolynomialNumber::sign() const
 {
-    sign_binarypolnum_abs_stop_alg< PolynomialNumber> s;
-    return s(*this);
+    if ( this->Pol().degree() == 0 )
+        return Arageli::sign(this->Pol().leading_coef());
+    else
+    {
+        sign_binarypolnum_abs_stop_alg< PolynomialNumber> s;
+        return s(*this);
+    }
 }
-
 
 int PolynomialNumber::signPOL_abs(const PolynomialNumber &POL)
 {
