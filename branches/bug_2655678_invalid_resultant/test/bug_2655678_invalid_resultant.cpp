@@ -44,7 +44,52 @@ using namespace Arageli;
 namespace
 {
 
-// PLACE AUXILIARY CODE HERE
+template <typename P1, typename P2>
+bool test_resultant_sylvester_1 (const P1& pol1, const P2& pol2)
+{
+    bool is_ok = true;
+
+    typedef typename P1::coef_type Coef_type;   // WARNING! CHOOSE BETWEEN P1::coef_type and P2::coef_type.
+
+    Coef_type resA = resultant(pol1, pol2);
+    Coef_type resB = resultant(pol2, pol1);
+    Coef_type resC = det(sylvester(pol1, pol2));
+    Coef_type resD = det(sylvester(pol2, pol1));
+
+    if(resC != resD)
+    {
+        is_ok = false;
+        tout
+            << "det(sylvester(" << pol1 << ", " << pol2 << ")) == " << resC << " != "
+            << resD << " == det(sylvester(" << pol2 << ", " << pol1 << "))\n";
+    }
+
+    if(resA != resB)
+    {
+        is_ok = false;
+        tout
+            << "resultant(" << pol1 << ", " << pol2 << ") == " << resA << " != "
+            << resB << " == resultant(" << pol2 << ", " << pol1 << ")\n";
+    }
+
+    if(resA != resC)
+    {
+        is_ok = false;
+        tout
+            << "resultant(" << pol1 << ", " << pol2 << ") == " << resA << " != "
+            << resC << " == det(sylvester(" << pol1 << ", " << pol2 << "))\n";
+    }
+
+    if(resB != resC)
+    {
+        is_ok = false;
+        tout
+            << "resultant(" << pol2 << ", " << pol1 << ") == " << resB << " != "
+            << resC << " == det(sylvester(" << pol1 << ", " << pol2 << "))\n";
+    }
+
+    return is_ok;
+}
 
 }
 
@@ -59,45 +104,75 @@ TEST_FUNCTION
 
     ARAGELI_TS_ALLEXCEPT_CATCH_REGION_BEGIN
     {
-        sparse_polynom<big_int> pol1 = "2*x^2+x+1";
-        sparse_polynom<big_int> pol2 = "4*x+1";
+        is_ok &=
+            test_resultant_sylvester_1
+            (
+                sparse_polynom<big_int>("2*x^2+x+1"),
+                sparse_polynom<big_int>("4*x+1")
+            );
 
-        big_int resA = resultant(pol1, pol2);
-        big_int resB = resultant(pol2, pol1);
-        big_int resC = det(sylvester(pol1, pol2));
-        big_int resD = det(sylvester(pol2, pol1));
+        is_ok &=
+            test_resultant_sylvester_1
+            (
+                sparse_polynom<big_int>("4*x^2+x+1"),
+                sparse_polynom<big_int>("2*x+1")
+            );
 
-        if(resC != resD)
-        {
-            is_ok = false;
-            tout
-                << "det(sylvester(" << pol1 << ", " << pol2 << ")) == " << resC << " != "
-                << resD << " == det(sylvester(" << pol2 << ", " << pol1 << "))\n";
-        }
+        is_ok &=
+            test_resultant_sylvester_1
+            (
+                sparse_polynom<big_int>("2*x^2+x+1"),
+                sparse_polynom<big_int>("4*x^2+1")
+            );
 
-        if(resA != resB)
-        {
-            is_ok = false;
-            tout
-                << "resultant(" << pol1 << ", " << pol2 << ") == " << resA << " != "
-                << resB << " == resultant(" << pol2 << ", " << pol1 << ")\n";
-        }
+        is_ok &=
+            test_resultant_sylvester_1
+            (
+                sparse_polynom<big_int>("4*x^2+x+1"),
+                sparse_polynom<big_int>("4*x+1")
+            );
 
-        if(resA != resC)
-        {
-            is_ok = false;
-            tout
-                << "resultant(" << pol1 << ", " << pol2 << ") == " << resA << " != "
-                << resC << " == det(sylvester(" << pol1 << ", " << pol2 << "))\n";
-        }
+        is_ok &=
+            test_resultant_sylvester_1
+            (
+                sparse_polynom<big_int>("4*x^2+x+1"),
+                sparse_polynom<big_int>("4*x^2+1")
+            );
 
-        if(resB != resC)
-        {
-            is_ok = false;
-            tout
-                << "resultant(" << pol2 << ", " << pol1 << ") == " << resB << " != "
-                << resC << " == det(sylvester(" << pol1 << ", " << pol2 << "))\n";
-        }
+        is_ok &=
+            test_resultant_sylvester_1
+            (
+                sparse_polynom<big_int>("2*x^2+x+2"),
+                sparse_polynom<big_int>("4*x+1")
+            );
+
+        is_ok &=
+            test_resultant_sylvester_1
+            (
+                sparse_polynom<big_int>("4*x^2+x+2"),
+                sparse_polynom<big_int>("2*x+1")
+            );
+
+        is_ok &=
+            test_resultant_sylvester_1
+            (
+                sparse_polynom<big_int>("2*x^2+x+2"),
+                sparse_polynom<big_int>("4*x^2+1")
+            );
+
+        is_ok &=
+            test_resultant_sylvester_1
+            (
+                sparse_polynom<big_int>("4*x^2+x+2"),
+                sparse_polynom<big_int>("4*x+1")
+            );
+
+        is_ok &=
+            test_resultant_sylvester_1
+            (
+                sparse_polynom<big_int>("4*x^2+x+2"),
+                sparse_polynom<big_int>("4*x^2+1")
+            );
     }
     ARAGELI_TS_ALLEXCEPT_CATCH_REGION_END
 
