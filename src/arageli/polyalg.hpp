@@ -118,6 +118,8 @@ void polynom_pseudodivide_simple
         polynom_divide_simple(p1*multiplier, p2, pq, pr);
         ////COUTCOM std::cout << "\npq = " << pq;
     }
+
+    ARAGELI_ASSERT_1(p1*multiplier == pq*p2 + pr);
 }
 
 

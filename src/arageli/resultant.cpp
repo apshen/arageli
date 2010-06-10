@@ -121,15 +121,22 @@ void subresultants_nonmodular
     typename P2::degree_type n = p2.degree();
 
     index j;
-    if(m > n)
-        j = m-1;
+    if(m >= n)
+    {
+        j = (m > n ? m-1 : n);
+        s.resize(j+2);
+        s[j+1] = p1;
+        s[j] = p2;
+    }
     else
-        j = n;
-
-    s.resize(j+2);
-
-    s[j+1] = p1;
-    s[j] = p2;
+    {
+        // swap input arguments
+        swap(m, n);
+        j = (m > n ? m-1 : n);
+        s.resize(j+2);
+        s[j+1] = p2;
+        s[j] = p1;
+    }
 
     vector<Coef, false> rr(j+2);
 
@@ -139,12 +146,16 @@ void subresultants_nonmodular
     {
         P& sj = s[j];
         index r = sj.degree();    // P should return -1 when polynomial is null.
+        ARAGELI_ASSERT_1(!is_null(sj) || is_null(sj) && r == -1);
 
         for(index k = j-1; k >= r+1; --k)
             s[k] = null(s[k]);
 
         if(j > r && r >= 0)
+        {
+            ARAGELI_ASSERT_2((sj*pow(sj.leading_coef(), j-r)) / pow(rr[j+1], j-r) * pow(rr[j+1], j-r) == (sj*pow(sj.leading_coef(), j-r)));
             s[r] = (sj*pow(sj.leading_coef(), j-r)) / pow(rr[j+1], j-r);
+        }
 
         if(r <= 0)break;
 
@@ -153,6 +164,7 @@ void subresultants_nonmodular
             polynom_pseudodivide_simple(s[j+1], sj, pq, s[r-1], mult);
         }
 
+        ARAGELI_ASSERT_2(s[r-1] / pow(-rr[j+1], j-r+2) * pow(-rr[j+1], j-r+2) == s[r-1]);
         s[r-1] /= pow(-rr[j+1], j-r+2);
         j = r-1;
         rr[j+1] = s[j+1].leading_coef();
