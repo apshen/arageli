@@ -64,6 +64,16 @@ TEST_FUNCTION
 
         big_int resA = resultant(pol1, pol2);
         big_int resB = resultant(pol2, pol1);
+        big_int resC = det(sylvester(pol1, pol2));
+        big_int resD = det(sylvester(pol2, pol1));
+
+        if(resC != resD)
+        {
+            is_ok = false;
+            tout
+                << "det(sylvester(" << pol1 << ", " << pol2 << ")) == " << resC << " != "
+                << resD << " == det(sylvester(" << pol2 << ", " << pol1 << "))\n";
+        }
 
         if(resA != resB)
         {
@@ -71,6 +81,22 @@ TEST_FUNCTION
             tout
                 << "resultant(" << pol1 << ", " << pol2 << ") == " << resA << " != "
                 << resB << " == resultant(" << pol2 << ", " << pol1 << ")\n";
+        }
+
+        if(resA != resC)
+        {
+            is_ok = false;
+            tout
+                << "resultant(" << pol1 << ", " << pol2 << ") == " << resA << " != "
+                << resC << " == det(sylvester(" << pol1 << ", " << pol2 << "))\n";
+        }
+
+        if(resB != resC)
+        {
+            is_ok = false;
+            tout
+                << "resultant(" << pol2 << ", " << pol1 << ") == " << resB << " != "
+                << resC << " == det(sylvester(" << pol1 << ", " << pol2 << "))\n";
         }
     }
     ARAGELI_TS_ALLEXCEPT_CATCH_REGION_END
