@@ -452,6 +452,7 @@ TEST_FUNCTION(skeleton_motzkin_burger, "Test skeleton_motzkin_burger function.")
     fail |= !simple_convex_test<big_int>();
     fail |= !simple_convex_test<rational<int> >();
     fail |= !simple_convex_test<rational<big_int> >();
+    fail |= !simple_convex_test<PolynomialNumber>();
     fail |= !note_from_Catherine();
 
     return fail ? resFAIL : resOK;

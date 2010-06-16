@@ -260,6 +260,8 @@ bool poly_test1
 
 TEST_FUNCTION(dense_sparse_polynom, "Testing sparse_polynom and polynom template classes together.")
 {
+    #define ARAGELI_ERROR_DISABLED_PolynomialNumber 1
+
     int seed = 1, coverage = ARAGELI_TESTSYS_COVERAGE_DEFAULT;
 
     std::size_t maxdeg = 4;
@@ -282,6 +284,10 @@ TEST_FUNCTION(dense_sparse_polynom, "Testing sparse_polynom and polynom template
         CALL_TEST_1(rational<int>, int)
         CALL_TEST_1(rational<big_int>, big_int)
 
+#if ARAGELI_ERROR_DISABLED_PolynomialNumber == 0
+        CALL_TEST_1(PolynomialNumber, int)
+        CALL_TEST_1(PolynomialNumber, big_int)
+#endif
 
         #define CALL_TEST_2(P, T, T1)    \
             is_ok &= poly_test1    \
@@ -307,6 +313,19 @@ TEST_FUNCTION(dense_sparse_polynom, "Testing sparse_polynom and polynom template
         CALL_TEST_2(sparse_polynom, rational<int>, int)
         CALL_TEST_2(sparse_polynom, rational<big_int>, big_int)
 
+#if ARAGELI_ERROR_DISABLED_PolynomialNumber == 0
+        CALL_TEST_2(polynom, PolynomialNumber, int)
+        CALL_TEST_2(polynom, PolynomialNumber, big_int)
+        CALL_TEST_2(sparse_polynom, PolynomialNumber, int)
+        CALL_TEST_2(sparse_polynom, PolynomialNumber, big_int)
+#endif
+
+#if ARAGELI_ERROR_DISABLED_PolynomialNumber != 0
+
+        tout << "ARAGELI_ERROR_DISABLED_PolynomialNumber != 0\nSo some tests are disabled due to PolynomialNumber compilation problem. See source of this test for detailes.\n";
+        is_ok = false;
+
+#endif
     }
     catch(const Arageli::exception& e)
     {

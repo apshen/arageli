@@ -86,6 +86,7 @@ TEST_FUNCTION
     fail |= mandatoryConstFunctions<vector<int> >();
     fail |= mandatoryConstFunctions<rational<int> >();
     fail |= mandatoryConstFunctions<big_int>();
+    fail |= mandatoryConstFunctions<PolynomialNumber>();
 
     fail |= mandatoryConstFunctions<sparse_polynom<big_int> >();
     fail |= mandatoryConstFunctions<monom<big_int> >();
@@ -108,6 +109,11 @@ TEST_FUNCTION
     fail |= mandatoryConstFunctions<matrix<residue<int> > >();
     fail |= mandatoryConstFunctions<vector<residue<int> > >();
 
+    //fail |= mandatoryConstFunctions<polynom<PolynomialNumber > >();  // WARNING! POSTPONED
+    fail |= mandatoryConstFunctions<sparse_polynom<PolynomialNumber > >();
+    fail |= mandatoryConstFunctions<monom<PolynomialNumber> >();
+    fail |= mandatoryConstFunctions<matrix<PolynomialNumber> >();
+    fail |= mandatoryConstFunctions<vector<PolynomialNumber> >();
 
     if (fail)
         return resFAIL;
