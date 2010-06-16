@@ -40,9 +40,17 @@
 namespace Arageli
 {
 
+// WARNING!
+// TODO for Natalia Klemenova: Please enclose the following two definitions
+// into some special namespace; do not leave them in Arageli -- they are too
+// special for your implementation needs, they are shouldn't be public.
+// Consider to use Arageli::_Internal namespace.
 typedef sparse_polynom< big_int>::monom_iterator monoms;
 typedef sparse_polynom< rational< big_int>>::monom_iterator monoms_r;
 
+// WARNING!
+// TODO for Natalia Klemenova: Please, provide brief documentation for the two
+// following functions.
 
 void Frobeniuss(int degr, sparse_polynom< big_int> g, matrix<big_int> &F);
 

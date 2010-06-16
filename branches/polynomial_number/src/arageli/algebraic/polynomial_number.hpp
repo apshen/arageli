@@ -40,6 +40,11 @@
 namespace Arageli
 {
 
+// WARNING!
+// TODO for Natalia Klemenova: Please enclose the following two definitions
+// into some special namespace; do not leave them in Arageli -- they are too
+// special for your implementation needs, they are shouldn't be public.
+// Consider to use Arageli::_Internal namespace.
 typedef Arageli::sparse_polynom<big_int > s_p_int;
 typedef Arageli::sparse_polynom<rational< big_int> > s_p_rat;
 
@@ -69,6 +74,12 @@ public:
     big_int HBasisPol() const;
 };
 
+// WARNING!
+// TODO for Natalia Klemenova: Please, provide brief documentation for this class and all the methods.
+// WARNING!
+// TODO for Natalia Klemenova: Consider to use regular for Arageli naming conventions
+// for this class naming. My suggestion: the name should begins with algebraic_.
+// Note: this class is a good replacment for Arageli::algebraic for special usages.
 class PolynomialNumber
 {
 private:

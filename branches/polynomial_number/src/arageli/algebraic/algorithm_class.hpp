@@ -58,8 +58,10 @@ public:
             rational< big_int> x = (u+v)/big_int(2);
             while ( (j < 1000) && (!StopPolNum(POL, x, j)) )
             {
-                if ( sign(POL.BasisPol->BasisPol().subs(x)) == sign(POL.BasisPol->BasisPol().subs(v)) ) v = x;
-                else u = x;
+                if ( sign(POL.BasisPol->BasisPol().subs(x)) == sign(POL.BasisPol->BasisPol().subs(v)) )
+                    v = x;
+                else
+                    u = x;
                 j++;
                 x = (u + v)/((big_int)2);
             }
@@ -80,7 +82,8 @@ public:
     {
         StopCriteria StopPolNumCFM;
 
-        if ( POL.Pol().is_null() ) return 0;
+        if ( POL.Pol().is_null() )
+            return 0;
         else
         {
             sparse_polynom< big_int> pol = sparse_polynom< big_int>(POL.BasisPol->BasisPol());
@@ -104,7 +107,7 @@ public:
         }
     };
 
-// fanction's for method of suitable fractions -------------------------------------------------
+// functions for method of suitable fractions -------------------------------------------------
     int Dih(const sparse_polynom< big_int> & pol, const rational< big_int> & M) const
     {
         rational< big_int> u(0, 1), v = M + 1;
@@ -138,7 +141,7 @@ public:
         return (1 + (rational< big_int>)calc_H(pol)/Arageli::abs(coef));
     };
 
-// fanction's for method of suitable fractions -------------------------------------------------
+// functions for method of suitable fractions -------------------------------------------------
     void calc_fraction_3(sparse_polynom< big_int> & pol,
                         rational< big_int> & p_q_1,
                         rational< big_int> & p_q_2) const //const
@@ -168,9 +171,12 @@ public:
     };
 
 // ---------------------------------------------------------------------------------------------
-    rational< big_int> calc_fraction(sparse_polynom< big_int> & pol,
-                                    const rational< big_int> & p_q_j1,
-                                    const rational< big_int> & p_q_j2) const //const
+    rational< big_int> calc_fraction
+    (
+        sparse_polynom< big_int> & pol,
+        const rational< big_int> & p_q_j1,
+        const rational< big_int> & p_q_j2
+    ) const //const
     {
         big_int p_j1 = p_q_j1.numerator();
         big_int q_j1 = p_q_j1.denominator();
