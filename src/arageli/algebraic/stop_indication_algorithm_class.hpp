@@ -57,7 +57,8 @@ public:
 
 template <typename T>
 class sign_binarypolnum_abs_stop_alg:public sign_binarypolnum_alg<T, sign_binarypolnum_abs_stop_criteria<T> >
-{};
+{
+};
 //=====================================================================================================
 
 
@@ -77,7 +78,8 @@ public:
 
 template <typename T>
 class sign_binarypolnum_u_stop_alg:public sign_binarypolnum_alg<T, sign_binarypolnum_u_stop_criteria<T> >
-{};
+{
+};
 //=====================================================================================================
 
 
@@ -97,7 +99,8 @@ public:
 
 template <typename T>
 class sign_binarypolnum_sepl_stop_alg:public sign_binarypolnum_alg<T, sign_binarypolnum_sepl_stop_criteria<T> >
-{};
+{
+};
 //=====================================================================================================
 
 
@@ -118,7 +121,8 @@ public:
 
 template <typename T>
 class sign_binarypolnum_u_sepl_stop_alg:public sign_binarypolnum_alg<T, sign_binarypolnum_u_sepl_stop_criteria<T> >
-{};
+{
+};
 //=====================================================================================================
 
 
@@ -137,7 +141,8 @@ public:
 
 template <typename T>
 class sign_binarypolnum_j_1_b_stop_alg:public sign_binarypolnum_alg<T, sign_binarypolnum_j_1_b_stop_criteria<T> >
-{};
+{
+};
 //=====================================================================================================
 
 
@@ -156,7 +161,8 @@ public:
 
 template <typename T>
 class sign_binarypolnum_j_2_b_stop_alg:public sign_binarypolnum_alg<T, sign_binarypolnum_j_2_b_stop_criteria<T> >
-{};
+{
+};
 //=====================================================================================================
 
 
@@ -175,7 +181,8 @@ public:
 
 template <typename T>
 class sign_binarypolnum_j_3_b_stop_alg:public sign_binarypolnum_alg<T, sign_binarypolnum_j_3_b_stop_criteria<T> >
-{};
+{
+};
 //=====================================================================================================
 
 
