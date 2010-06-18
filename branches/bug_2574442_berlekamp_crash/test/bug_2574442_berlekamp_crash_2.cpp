@@ -65,6 +65,16 @@ TEST_FUNCTION
             vector<sparse_polynom<big_int> > vp;
             Arageli::factorize_berlekamp(g, (big_int)5, vp);
         }
+
+        {
+            sparse_polynom<big_int> g = "x^2-5*x+1";
+            g.leading_coef() = 0;   // make non-normal polynomial with one zero coefficient
+            if(g.is_normal())
+            {
+                tout << "Polynomial g = " << g << " should be treated as non-normal, but g.is_normal() == true.";
+                is_ok = false;
+            }
+        }
     }
     ARAGELI_TS_ALLEXCEPT_CATCH_REGION_END
 
