@@ -998,6 +998,7 @@ void residue_berlekamp_router (const P& p, const M& m, VP& res, Func func)
         i->module() = m;
         i->normalize();
     }
+    rp.normalize(); // to shrink possible zero coefficients
     /*dbg*///com std::cout<<"2rp="<<rp<<"\n";
     vector<RP> rres = rp.is_const() ? vector<RP>(1, rp, fromval) : func(rp);
     /*dbg*///com std::cout<<"rres="<<rres<<"\n";
