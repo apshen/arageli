@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-    test/bug_2574442_berlekamp_crash.cpp
+    test/bug_2574442_berlekamp_crash_2.cpp
 
     This file is a part of the Arageli library test base.
 
@@ -28,12 +28,12 @@
 *****************************************************************************/
 
 /**
-    \file bug_2574442_berlekamp_crash.cpp
-    \brief This file includes test for bug #2574442.
+    \file bug_2574442_berlekamp_crash_2.cpp
+    \brief This file includes test for bug #2574442, part 2.
 
     This is a test for bug #2574442: Error in residue_berlekamp_router(...)
     function. It tests a couple of features inside sparse_polynom and
-    berlekamp implementation itself.
+    berlekamp implementation itself. Part 2.
 */
 
 
@@ -52,20 +52,14 @@ namespace
 
 TEST_FUNCTION
 (
-    residue_berlekamp_router_bug_2574442,
-    "Test for bug #2574442: Error in residue_berlekamp_router."
+    residue_berlekamp_router_bug_2574442_2,
+    "Test for bug #2574442: Error in residue_berlekamp_router. Part 2."
 )
 {
     bool is_ok = true;
 
     ARAGELI_TS_ALLEXCEPT_CATCH_REGION_BEGIN
     {
-        {
-            sparse_polynom<big_int> g = "x^2-x+5";
-            vector<sparse_polynom<big_int> > vp;
-            Arageli::factorize_berlekamp(g, (big_int)5, vp);
-            is_ok &= (product(vp) == g);
-        }
         {
             sparse_polynom<big_int> g = "x^2-5*x+1";
             vector<sparse_polynom<big_int> > vp;

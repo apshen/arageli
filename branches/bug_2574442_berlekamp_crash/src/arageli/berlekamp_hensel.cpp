@@ -245,6 +245,7 @@ vector<sparse_polynom<T> > berlekamp (const sparse_polynom<T>& f)
 template <typename P>
 vector<P> pre_berlekamp (const P& p)
 {
+    ARAGELI_ASSERT_1(p.is_normal());
     /*dbg*///com std::cout<<"pre_berlekamp stated, p="<<p<<"\n";
     if(p.is_const())return vector<P>(1, p, fromval);
     /*dbg*///com std::cout<<"type of P="<<typeid(P).name()<<"\n";
@@ -282,6 +283,15 @@ vector<P> pre_berlekamp (const P& p)
     }
 
     res[0] *= lc;
+
+    #ifdef ARAGELI_DEBUG_LEVEL >= 1
+    {
+        // Check if all res elements are normal.
+        typedef typename vector<P>::const_iterator VPCI;
+        for(VPCI i = res.begin(); i != res.end(); ++i)
+            ARAGELI_ASSERT_1_CUST(i->is_normal());
+    }
+    #endif
 
     ARAGELI_ASSERT_1(product(res) == p);
     /*dbg*///com std::cout<<"res="<<res<<"\npre_berlekamp finished\n\n";
