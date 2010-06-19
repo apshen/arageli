@@ -71,7 +71,7 @@ TEST_FUNCTION
             g.leading_coef() = 0;   // make non-normal polynomial with one zero coefficient
             if(g.is_normal())
             {
-                tout << "Polynomial g = " << g << " should be treated as non-normal, but g.is_normal() == true.";
+                tout << "Polynomial g = " << g << " should be treated as non-normal, but g.is_normal() gets true.";
                 is_ok = false;
             }
         }
