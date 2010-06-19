@@ -60,7 +60,7 @@ TEST_FUNCTION
     ARAGELI_TS_ALLEXCEPT_CATCH_REGION_BEGIN
     {
         // If the bug exists, uncomment the following line to prevent test system from hanging.
-        return resHANG;
+        //return resHANG;
 
         {
             matrix<int> res(3);
