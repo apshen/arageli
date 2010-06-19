@@ -333,7 +333,7 @@ bool lll_reduction_int(B_type& B, H_type& H)
             _Internal::lll_size_reduction_int(B, H, Lambda, d, k, k - 1);
 
 
-        if (4*d[k + 1]*d[k - 1] < 3*d[k]*d[k] - 4*Lambda(k, k - 1))
+        if (4*d[k + 1]*d[k - 1] < 3*d[k]*d[k] - 4*Lambda(k, k - 1)*Lambda(k, k - 1))
         {
             _Internal::lll_interchange_int(B, H, Lambda, d, k, k_max);
             k = max(1, k - 1);
