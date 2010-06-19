@@ -291,7 +291,12 @@ sparse_polynom<F, I, REFCNT>::sparse_polynom (const char* str)
 template <typename F, typename I, bool REFCNT>
 bool sparse_polynom<F, I, REFCNT>::is_normal () const
 {
+    // WARNING! PERFORMANCE!
+    // Next two checks (for degree order and zero coefficients) are made
+    // in two separate passes through the monomial sequence. It should be done
+    // in only one pass.
     return
+        // find if there are any degree strong order violations and ...
         std::adjacent_find
         (
             rep().begin(),
@@ -299,10 +304,13 @@ bool sparse_polynom<F, I, REFCNT>::is_normal () const
             std::not2(monom_degree_less<monom>())
         ) == rep().end()
         &&
+        // ... and if there are any zero coefficients
+        std::find_if
         (
-            rep().empty() ||
-            !rep().front().is_null()
-        );
+            rep().begin(),
+            rep().end(),
+            std::mem_fun_ref(&monom::is_null)
+        ) == rep().end();
 }
 
 
