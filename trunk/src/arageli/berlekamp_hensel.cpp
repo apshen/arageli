@@ -289,7 +289,7 @@ vector<P> pre_berlekamp (const P& p)
         // Check if all res elements are normal.
         typedef typename vector<P>::const_iterator VPCI;
         for(VPCI i = res.begin(); i != res.end(); ++i)
-            ARAGELI_ASSERT_1_CUST(i->is_normal());
+            ARAGELI_ASSERT_1(i->is_normal());
     }
     #endif
 
