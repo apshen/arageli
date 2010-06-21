@@ -44,6 +44,7 @@
 #include "vector.hpp"
 #include "matrix.hpp"
 #include "sideset.hpp"
+#include "exception.hpp"
 
 
 namespace Arageli
@@ -58,6 +59,13 @@ VVV& sides_structure_cone (const C& c, VVV& v)
 
     // We find each side, determine its dimention and store it
     // in corresponding entry of v as a set of base rays (numbers of them).
+
+    ARAGELI_ERROR
+    (
+        "It is known that there are inputs for which this funciton works incorrectly: sides_structure_cone.\n"
+        "If you are sure that you need to call this function anyway, please comment the lines that produces "
+        "this error message. "
+    );
 
     c.normalize_all();    // make relation matrix minimal
     matrix<bool> rel = c.relation();
