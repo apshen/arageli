@@ -109,6 +109,13 @@ void subresultants_nonmodular
     // Source: Buhberger and others, p. 168, alg. 4.1
     // We have a problem with sign of the result subresultants.
 
+    ARAGELI_ERROR
+    (
+        "It is known that there are inputs for which this function works incorrectly: subresultants_nonmodular.\n"
+        "If you are sure that you need to call this function anyway, please comment the lines that produces "
+        "this error message out. "
+    );
+
     ARAGELI_ASSERT_0(!is_null(p1));
     ARAGELI_ASSERT_0(!is_null(p2));
 
@@ -166,6 +173,15 @@ template <typename P1, typename P2, typename PCFactory>
 typename P1::coef_type resultant_nonmodular
 (const P1& p1, const P2& p2, PCFactory fctr)
 {
+    {
+        // WARNING! THIS IS WORKAROUND FOR BUG IN subresultants_nonmodular, see bug #2655678.
+
+        typedef typename P1::coef_type T;
+        matrix<T, false> m;
+        sylvester(p1, p2, m);
+        return det(m);
+    }
+
     // WARNING! Need to choose from P1::coef_type and P2::coef_type
     // insted just P1::coef_type as a type of the return value.
 
