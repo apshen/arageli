@@ -560,6 +560,23 @@ inline std::string tracing_indent ()
 #endif
 
 
+#ifdef NDEBUG
+    #define ARAGELI_ERROR(MSG)    \
+        {    \
+            ::std::ostringstream buf;    \
+            buf << MSG << "\nFile: " << __FILE__ << " : " << __LINE__ << '\n';    \
+            throw ::Arageli::exception(buf.str());    \
+        }
+#else
+    #define ARAGELI_ERROR(MSG)    \
+    {    \
+        ::std::cerr << MSG << "\nFile: " << __FILE__ << " : " << __LINE__ << '\n';    \
+        ::std::cin.get();    \
+        ::std::abort();    \
+    }
+#endif
+
+
 } // namespace Arageli
 
 
