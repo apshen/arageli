@@ -783,43 +783,6 @@ T prev_probably_prime (T x)
 }
 
 
-template<typename T, typename N>
-void rsa_generate_keys(N l, T& c, T& public_key, T& d)
-{
-    // We need integer random numbers from [0, l/2].
-    typedef set::grid1<N> int_grid;
-    int_grid int_0_ld2(0, l/2); // integer set from [0, l/2]
-    rnd::equiprob<int_grid> gen_0_ld2(int_0_ld2);   // random generator from [0, l/2]
-
-    T p = gen_0_ld2();
-    T q = gen_0_ld2();
-    public_key = p * q;
-
-    T phi = (p-1)*(q-1);
-
-    for
-    (
-        c = 3;
-        !is_unit(gcd(c, phi));
-        c = c + 2
-    );
-
-    d = inverse_mod(c, phi);
-}
-
-template<typename T>
-T rsa_encyph(const T& x, const T& c, const T& key)
-{
-    return power_mod(x, c, key);
-}
-
-template<typename T>
-T rsa_decyph(const T& y, const T& d, const T& key)
-{
-    return power_mod(y, d, key);
-}
-
-
 template <typename T>
 T next_mersen_prime_degree (const T& n)
 {

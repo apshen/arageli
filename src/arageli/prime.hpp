@@ -529,33 +529,6 @@ inline T prev_probably_prime (T x);
 
 //@}
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-/// @name Cryptographic algorithms.
-
-//@{
-
-/**
-    Generate RSA kyes.
-    l is the length of public key
-*/
-template<typename T, typename N>
-void rsa_generate_keys (N l, T& c, T& public_key, T& d);
-
-/**
-    rsa encyphering
-*/
-template<typename T>
-T rsa_encyph (const T& x,  const T& c, const T& key);
-
-/**
-    rsa decyphering
-*/
-template<typename T>
-T rsa_decyph (const T& y,  const T& d, const T& key);
-
-
-//@}
-
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /// @Generation of big prime numbers.
