@@ -6,7 +6,6 @@
 
     Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
     REPLACE OR/AND REFERENCE ADDITIONAL COPYRIGHTS HERE
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2

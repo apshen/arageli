@@ -6,7 +6,6 @@
 
 Copyright (C) Nikolai Yu. Zolotykh, 1999--2010
 Copyright (C) Sergey S. Lyalin, 2005--2010
-University of Nizhni Novgorod, Russia.
 
 Arageli is a C++ library and a package of programs for
 computations in arithmetic, algebra, geometry, linear and integer
