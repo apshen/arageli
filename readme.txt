@@ -51,17 +51,14 @@ itself.
 
 You need one of the C++ 1998 standard compilers. We have checked
 compilation with:
-    - GCC 4.0.4 (Linux) (NOT CONFIRMED),
-    - GCC 3.2.2 (Linux) (NOT CONFIRMED),
+    - GCC 4.1.3 20070929 (prerelease) (Ubuntu 4.1.2-16ubuntu2),
     - Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 15
       for 80x86 (included in Visual Studio 2008),
     - Microsoft (R) C/C++ Optimizing Compiler Version 15 for x64
-      (included in Visual Studio 2008),
-    - Intel(R) C++ Compiler for 32-bit applications, Version 9.0
-      (Windows) (NOT CONFIRMED).
+      (included in Visual Studio 2008).
 Please let us know if you faced troubles with those compilers or
-you have success or faulure to build with other C++
-compilers/platforms.
+you have success or faulure to build with other C++ compilers/platforms
+to include or exclude them to/from the list.
 
 1.2 To create all guides (not auto generated)
 
