@@ -50,13 +50,13 @@
     and maintaining by
     <a href="http://www.arageli.org/people.html">Arageli Project Team</a>.
 
-    WARNING! The library is documented PARTIALLY. Moreover, some parts and fragments of
-    this documentation are presented in Russian.
+    <b>WARNING!</b> The library is being developed. Some features are defined
+    only partially, some parts have bugs. Please use it with care.
 
-    There are a lot of guides in addition to this reference documentation.
-    But the most part of them are written in Russian. See the doc directory of the package.
-    We recomend <a href="../Arageli_Users_Guide.pdf">Arageli User's Guide</a> for first
-    reading (in English).
+    <b>WARNING!</b> The library is documented PARTIALLY. Moreover, some parts
+    and fragments of this documentation are presented in Russian only. If you
+    have problems to read such documentation, please write a letter to
+    <a href="mailto:support.arageli@gmail.com">Arageli Support Service</a>.
 
     Arageli is a C++ library for computations in <b>AR</b>ithmetic,
     <b>A</b>lgebra, <b>GE</b>ometry,
