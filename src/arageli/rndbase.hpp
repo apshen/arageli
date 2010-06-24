@@ -8,7 +8,6 @@
     Lib_firstlyss::Math::Rnd that was been writing in 2003--2004.
 
     Copyright (C) 2003, 2004, 2006 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2

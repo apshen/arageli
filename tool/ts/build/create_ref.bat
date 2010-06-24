@@ -5,7 +5,6 @@
 @rem     This file is a part of the Arageli library.
 @rem
 @rem     Copyright (C) 2005--2007 Sergey S. Lyalin
-@rem     University of Nizhni Novgorod, Russia
 @rem
 @rem     The Arageli Library is free software; you can redistribute it and/or
 @rem     modify it under the terms of the GNU General Public License version 2

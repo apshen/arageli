@@ -8,7 +8,6 @@
     Do not use it directly in you code other then Arageli code.
 
     Copyright (C) 1999 -- 2005 Nikolai Yu. Zolotykh
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2

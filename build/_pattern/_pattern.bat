@@ -8,7 +8,6 @@
 @rem
 @rem     Copyright (C) 2005--2007 Sergey S. Lylain
 @rem     REFERENCE ADDITIONAL COPYRIGHTS HERE
-@rem     University of Nizhni Novgorod, Russia
 @rem
 @rem     The Arageli Library is free software; you can redistribute it and/or
 @rem     modify it under the terms of the GNU General Public License version 2

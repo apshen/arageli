@@ -6,7 +6,6 @@
 
     Copyright (C) 2005--2006 Alexander Pshenichnikov
     Copyright (C) 2005--2006 Nikolay Santalov
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
