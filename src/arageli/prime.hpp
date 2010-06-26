@@ -4,7 +4,7 @@
 
     This file is a part of Arageli library.
 
-    Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
+    Copyright (C) 1999--2006, 2010 Nikolai Yu. Zolotykh
     Copyright (C) 2006 Aleksey Bader
 
     The Arageli Library is free software; you can redistribute it and/or
