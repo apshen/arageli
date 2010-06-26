@@ -6,7 +6,7 @@
 
     WARNIG. This file has no complate implementation.
 
-    Copyright (C) 1999 -- 2005 Nikolai Yu. Zolotykh
+    Copyright (C) 1999 -- 2005, 2008 Nikolai Yu. Zolotykh
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
