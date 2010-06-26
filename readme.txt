@@ -38,7 +38,19 @@ please contact Arageli Support Service support.arageli@gmail.com.
 
 ********************************************************************
 
+Table of Content
 
+    1. Software Requirements
+        1.1 To compile the library
+        1.2 To build all guides distributed as LaTeX sources
+        1.3 To build The Reference Guide
+    2. Building
+        2.1 Microsoft Windows
+        2.2 Linux
+    3. Using
+    4. Additional Documentation and Feedback
+
+********************************************************************
 
 1. Software Requirements
 
@@ -52,7 +64,7 @@ This section describes different sets of tools that are
 necessary for building particular parts of Arageli package.
 
 
-1.1. To compile the library
+1.1 To compile the library
 
 You need one of the C++ 1998 standard (or later) compilers. We
 have checked correct compilation with:
@@ -91,7 +103,7 @@ If you need some part of the library compiled (both library or
 documentation), you can download it at the home page of Arageli
 http://www.arageli.org.
 
-
+********************************************************************
 
 2. Building
 
@@ -150,7 +162,7 @@ You can use CXXFLAGS, ARAGELICXXFLAGS and TESTSCXXFLAGS
 variables to set specific command line parameters to tune
 compilation of different parts as usual.
 
-
+********************************************************************
 
 3. Using
 
@@ -168,7 +180,7 @@ directory. There are several Arageli static libraries;
 see parameters of the build script to choose right version of
 static library file to link with your application/library.
 
-
+********************************************************************
 
 4. Additional Documentation and Feedback
 
