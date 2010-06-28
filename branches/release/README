@@ -1,11 +1,24 @@
 ********************************************************************
 
                 The Arageli Library Readme File
+                     Version 2.2.9 Prealpha
 
 ********************************************************************
 
-Copyright (C) Nikolai Yu. Zolotykh, 1999--2010
-Copyright (C) Sergey S. Lyalin, 2005--2010
+Copyright (C) 1999--2010  Nikolai Yu. Zolotykh
+
+Copyright (C) 2000        Agafonov E.A.
+Copyright (C) 2002, 2006  Max A. Alekseyev
+Copyright (C) 2005--2007  Aleksey Bader
+Copyright (C) 2006        Anna Bestaeva
+Copyright (C) 2006--2007  Sergey V. Lobanov
+Copyright (C) 2005--2010  Sergey S. Lyalin
+Copyright (C) 2005--2006  Alexander Pshenichnikov
+Copyright (C) 2006        Alexey Polovinkin
+Copyright (C) 2005--2006  Nikolay Santalov
+Copyright (C) 2006        Ekaterina Shchukina
+Copyright (C) 2005--2006  Andrey Somsikov
+
 
 Arageli is a C++ library and a package of programs for
 computations in arithmetic, algebra, geometry, linear and integer
@@ -49,6 +62,7 @@ Table of Content
         2.2 Linux
     3. Using
     4. Additional Documentation and Feedback
+    5. Known issues/bugs
 
 ********************************************************************
 
@@ -114,10 +128,6 @@ or a particular part of the distributive.
 
 
 2.1 Microsoft Windows
-
-If you use Microsoft Visual Studio 2005, you can try to build
-solution that located at build/msvs_2005/arageli_all.sln. Please
-be informed that support of Visual Studio 2005 is deprecated.
 
 If you use Microsoft Visual Studio 2008, you can build
 solution that located at build/msvs_2008/arageli_all.sln.
@@ -188,3 +198,30 @@ Some ready-to-use documentation files already present in doc
 directory of the distributive. Go to http://www.arageli.org
 for updates and news. Mail questions, comments and suggestions on
 support.arageli@gmail.com.
+
+If you want to work directly with resources at http://sourceforge.net
+please report bugs in group "Release 2.2.9" at the project page.
+Also please create feature requests if you think that a particular
+feature should be in the library. If you don't want to deal with
+sourceforge.net directly, please send all issues you found to
+support.arageli@gmail.com.
+
+********************************************************************
+
+5. Known issues/bugs
+
+Here is a list of documented bugs that is related to this release
+and which you can monitor at http://sourceforge.net. All these
+bugs can be found in special group "Release 2.2.9".
+
+    #3018788 -- A lot of warning coming from big_int::from_native_int
+    #2870186 -- Arageli::vector uses old iterators after unique call
+    #1893627 -- The same output file names for executables
+
+Besides these bugs please note that different components in this
+release do not have consistent and solid interface because they all
+are in different stages of development. Several functions have
+warning records (find WARNING! in sources) about various aspects of
+their implementation. Some functions marked as incorrect (you will
+permanently have a run-time error if call them). A lot of algorithm
+implementations is naive, so do not expect superb performance from them.
