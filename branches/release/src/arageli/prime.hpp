@@ -4,9 +4,8 @@
 
     This file is a part of Arageli library.
 
-    Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
+    Copyright (C) 1999--2006, 2010 Nikolai Yu. Zolotykh
     Copyright (C) 2006 Aleksey Bader
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -525,33 +524,6 @@ inline T next_probably_prime (T x);
 /// Finds the previous before x probably prime number via appropriate algorithm.
 template <typename T>
 inline T prev_probably_prime (T x);
-
-
-//@}
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-/// @name Cryptographic algorithms.
-
-//@{
-
-/**
-    Generate RSA kyes.
-    l is the length of public key
-*/
-template<typename T, typename N>
-void rsa_generate_keys (N l, T& c, T& public_key, T& d);
-
-/**
-    rsa encyphering
-*/
-template<typename T>
-T rsa_encyph (const T& x,  const T& c, const T& key);
-
-/**
-    rsa decyphering
-*/
-template<typename T>
-T rsa_decyph (const T& y,  const T& d, const T& key);
 
 
 //@}

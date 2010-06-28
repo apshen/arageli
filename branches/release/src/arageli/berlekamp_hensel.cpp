@@ -4,8 +4,7 @@
 
     This file is a part of the Arageli library.
 
-    Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 1999--2006, 2010 Nikolai Yu. Zolotykh
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -289,7 +288,7 @@ vector<P> pre_berlekamp (const P& p)
         // Check if all res elements are normal.
         typedef typename vector<P>::const_iterator VPCI;
         for(VPCI i = res.begin(); i != res.end(); ++i)
-            ARAGELI_ASSERT_1_CUST(i->is_normal());
+            ARAGELI_ASSERT_1(i->is_normal());
     }
     #endif
 

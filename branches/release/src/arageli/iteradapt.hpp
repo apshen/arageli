@@ -3,7 +3,6 @@
     iteradapt.hpp
 
     Copyright (C) 2005--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
 
     16.04.2005
 

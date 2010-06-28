@@ -5,8 +5,7 @@
     This file is a part of the Arageli library test base.
 
     Copyright (C) 1999--2007 Nikolai Yu. Zolotykh
-    REFERENCE ADDITIONAL COPYRIGHTS HERE
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 2008 Sergey S. Lyalin
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2

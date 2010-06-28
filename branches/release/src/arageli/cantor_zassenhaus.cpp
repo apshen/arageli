@@ -5,7 +5,6 @@
     This file is a part of the Arageli library.
 
     Copyright (C) 2006--2007 Sergey V. Lobanov
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2

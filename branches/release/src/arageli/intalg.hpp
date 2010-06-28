@@ -11,7 +11,6 @@
     Copyright (C) 2005--2007 Sergey S. Lyalin
     Copyright (C) 2005--2006 Aleksey Bader
     Copyright (C) 2006 Anna Bestaeva
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
