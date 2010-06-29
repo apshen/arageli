@@ -5,21 +5,6 @@
 
 ********************************************************************
 
-Copyright (C) 1999--2010  Nikolai Yu. Zolotykh
-
-Copyright (C) 2000        Agafonov E.A.
-Copyright (C) 2002, 2006  Max A. Alekseyev
-Copyright (C) 2005--2007  Aleksey Bader
-Copyright (C) 2006        Anna Bestaeva
-Copyright (C) 2006--2007  Sergey V. Lobanov
-Copyright (C) 2005--2010  Sergey S. Lyalin
-Copyright (C) 2005--2006  Alexander Pshenichnikov
-Copyright (C) 2006        Alexey Polovinkin
-Copyright (C) 2005--2006  Nikolay Santalov
-Copyright (C) 2006        Ekaterina Shchukina
-Copyright (C) 2005--2006  Andrey Somsikov
-
-
 Arageli is a C++ library and a package of programs for
 computations in arithmetic, algebra, geometry, linear and integer
 linear programming. Arageli is a library for dealing with precise,
@@ -63,6 +48,7 @@ Table of Content
     3. Using
     4. Additional Documentation and Feedback
     5. Known issues/bugs
+    6. Contributors
 
 ********************************************************************
 
@@ -225,3 +211,20 @@ warning records (find WARNING! in sources) about various aspects of
 their implementation. Some functions marked as incorrect (you will
 permanently have a run-time error if call them). A lot of algorithm
 implementations is naive, so do not expect superb performance from them.
+
+********************************************************************
+
+6. Contributors
+
+    - Nikolai Yu. Zolotykh
+    - Agafonov E.A.
+    - Max A. Alekseyev
+    - Aleksey Bader
+    - Anna Bestaeva
+    - Sergey V. Lobanov
+    - Sergey S. Lyalin
+    - Alexander Pshenichnikov
+    - Alexey Polovinkin
+    - Nikolay Santalov
+    - Ekaterina Shchukina
+    - Andrey Somsikov
