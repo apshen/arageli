@@ -39,13 +39,13 @@ please contact Arageli Support Service support.arageli@gmail.com.
 Table of Content
 
     1. Software Requirements
-        1.1 To compile the library
+        1.1 To build the library
         1.2 To build all guides distributed as LaTeX sources
         1.3 To build The Reference Guide
     2. Building
         2.1 Microsoft Windows
         2.2 Linux
-    3. Using
+    3. How to use
     4. Additional Documentation and Feedback
     5. Known issues/bugs
     6. Contributors
@@ -64,7 +64,7 @@ This section describes different sets of tools that are
 necessary for building particular parts of Arageli package.
 
 
-1.1 To compile the library
+1.1 To build the library
 
 You need one of the C++ 1998 standard (or later) compilers. We
 have checked correct compilation with:
@@ -160,7 +160,7 @@ compilation of different parts as usual.
 
 ********************************************************************
 
-3. Using
+3. How to use
 
 To use the library in your application you have to include
 one or several necessary header files from ./src/arageli
@@ -210,7 +210,8 @@ are in different stages of development. Several functions have
 warning records (find WARNING! in sources) about various aspects of
 their implementation. Some functions marked as incorrect (you will
 permanently have a run-time error if call them). A lot of algorithm
-implementations is naive, so do not expect superb performance from them.
+implementations is naive, so do not expect superb performance from
+them.
 
 ********************************************************************
 
