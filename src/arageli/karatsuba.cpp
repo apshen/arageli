@@ -56,23 +56,29 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n)
 
     T k = m >> 1;
 
-    if (!is_null(k) && n > k && n > ARAGELI_KARATSUBA_THRESHOLD)
+    if (is_null(k) // one-digit numbers are being multiplied
+        || n <= k  // one of multipliers is more than 2 times bigger then another one
+        || n <= ARAGELI_KARATSUBA_THRESHOLD) // one of multipliers is too small
     {
-        T k2 = k << 1;
-        N *W0 = w+k2;
-        N *W1 = w+k;
-        N *W2 = w;
+        // no sence to use karatsuba algorithm in this case
+        return _Internal::do_mult_classic(u, v, w, m, n);
+    }
+    else
+    {
+        // Divide multipliers in two
         const N *U0 = u+k;
         const N *U1 = u;
         const N *V0 = v+k;
         const N *V1 = v;
+        // 
+        T k2 = k << 1;
+        N *W0 = w+k2;
+        N *W1 = w+k;
+        N *W2 = w;
 
         T Clen, C1len, C2len, UV0len, UV1len;
 
-        // allocate temprary space
-        // N *C1 = new N[k+2];
         N *C1 = t;
-        // N *C2 = new N[k+2];
         N *C2 = t+k+2;
         N *C = t+m+4;
         t += 2*m+6;
@@ -143,223 +149,8 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n)
 
         t -= 2*m+6;
     }
-    else
-    {
-        // no sence to use karatsuba algorithm in this case
-        return _Internal::do_mult_classic(u, v, w, m, n);
-    };
 
     return (w[m+n-1] != 0) ? (m+n): (m+n-1);
-};
-
-/**
- * Preliminary conditions: w[2*n-1] = 0!
- */
-// This implementation was taken from GMP library.
-template <typename N,typename T>
-T do_mult_karatsuba(N *r, const N *u, const N *v, N *t, T n)
-{
-    ARAGELI_ASSERT_0(n >= 1);
-
-    T i;
-    N w, w0, w1;
-    const N *x, *y;
-    T n2 = n >> 1;  // floor(n/2);
-    ARAGELI_ASSERT_0(n2 > 0);
-    int sign = 0;
-
-    if (n & 1)
-    {
-        // Odd length
-        // Computing u0-u1. Result stores in r.
-        T n3 = n - n2;
-        w = u[n2];
-        if (w)
-        {   // here u0 is greater than u1, i.e. (u0 - u1) > 0
-            w -= _Internal::do_sub(r, u, u+n3, n2, n2);
-        }
-        else
-        {
-            i = n2;
-            do{
-                --i;
-                w0 = u[i];
-                w1 = u[n3+i];
-            }while ((w0 == w1) && (i != 0));
-            if (w0 < w1)
-            {   // here u1 is greater than u0, so compute (u1 - u0) and store sign.
-                x = u+n3;
-                y = u;
-                sign = ~0;
-            }
-            else
-            {
-                x = u;
-                y = u+n3;
-            }
-            _Internal::do_sub(r, x, y, n2, n2);
-        }
-        r[n2] = w;
-
-        // Computing v0-v1. Result stores in r+n3.
-        w = v[n2];
-        if (w)
-        {   // here v0 is greater than v1, i.e. (v0 - v1) > 0
-            w -= _Internal::do_sub(r+n3, v, v+n3, n2, n2);
-        }
-        else
-        {
-            i = n2;
-            do{
-                --i;
-                w0 = v[i];
-                w1 = v[n3+i];
-            }while ((w0 == w1) && (i != 0));
-            if (w0 < w1)
-            {   // here v1 is greater than v0, so compute (v1 - v0) and store sign.
-                x = v+n3;
-                y = v;
-                sign = ~sign;
-            }
-            else
-            {
-                x = v;
-                y = v+n3;
-            }
-            _Internal::do_sub(r+n3, x, y, n2, n2);
-        }
-        r[n] = w;
-
-        T n1 = n+1;
-        if (n2 < ARAGELI_KARATSUBA_THRESHOLD)
-        {
-            if (n3 < ARAGELI_KARATSUBA_THRESHOLD)
-            {
-                _Internal::do_mult_classic(r, r+n3, t, n3, n3);
-                _Internal::do_mult_classic(u, v, r, n3, n3);
-            }
-            else
-            {
-                // TODO:Check if we get into this branch!!
-                do_mult_karatsuba(t, r, r+n3, t+n1, n3);
-                do_mult_karatsuba(r, u, v, t+n1, n3);
-            }
-            _Internal::do_mult_classic(u+n3, v+n3, r+n1, n2, n2);
-        }
-        else
-        {
-            do_mult_karatsuba(t, r, r+n3, t+n1, n3);
-            do_mult_karatsuba(r, u, v, t+n1, n3);
-            do_mult_karatsuba(r+n1, u+n3, v+n3, t+n1, n2);
-        }
-        if (sign)
-        {
-            _Internal::do_add(t, r, n1, n1);
-        }
-        else
-        {
-            _Internal::do_sub(t, r, t, n1, n1);
-        }
-
-        T nm1 = n-1;
-        if (_Internal::do_add(t, r+n1, nm1, nm1))
-        {
-            N x = (t[nm1] + 1) & _Internal::max_digit;
-            t[nm1] = x;
-            if (x == 0)
-            {
-                t[n] = (t[n] + 1) & _Internal::max_digit;
-            }
-        }
-        if (_Internal::do_add(r+n3, t, n1, n1))
-        {
-            int cy = 1;
-            for (int i = 0; cy; ++i)
-            {
-                N t = r[n1 + n3 + i];
-                r[n1 + n3 + i] += cy;
-                cy = r[n1 + n3 + i] < t;
-            }
-        }
-    }
-    else
-    {
-        // Even length
-        i = n2;
-        do
-        {
-            --i;
-            w0 = u[i];
-            w1 = u[n2+i];
-        }
-        while ((w0 == w1) && (i != 0));
-        if (w0 < w1)
-        {
-            x = u+n2;
-            y = u;
-            sign = ~0;
-        }
-        else
-        {
-            x = u;
-            y = u+n2;
-        }
-        _Internal::do_sub(r, x, y, n2, n2);
-
-        i = n2;
-        do
-        {
-            --i;
-            w0 = v[i];
-            w1 = v[n2+i];
-        }
-        while ((w0 == w1) && (i != 0));
-        if (w0 < w1)
-        {
-            x = v+n2;
-            y = v;
-            sign = ~sign;
-        }
-        else
-        {
-            x = v;
-            y = v+n2;
-        }
-        _Internal::do_sub(r+n2, x, y, n2, n2);
-
-        if (n2 < ARAGELI_KARATSUBA_THRESHOLD)
-        {
-            _Internal::do_mult_classic(r, r+n2, t, n2, n2);
-            _Internal::do_mult_classic(u, v, r, n2, n2);
-            _Internal::do_mult_classic(u+n2, v+n2, r+n, n2, n2);
-        }
-        else
-        {
-            do_mult_karatsuba(t, r, r+n2, t+n, n2);
-            do_mult_karatsuba(r, u, v, t+n, n2);
-            do_mult_karatsuba(r+n, u+n2, v+n2, t+n, n2);
-        }
-
-        if (sign)
-        {
-            w = _Internal::do_add(t, r, n, n);
-        }
-        else
-        {
-            w = -1*_Internal::do_sub(t, r, t, n, n);
-        }
-        w += _Internal::do_add(t, r+n, n, n);
-        w += _Internal::do_add(r+n2, t, n, n);
-        int i = 0;
-        do
-        {
-            N t = r[n + n2 + i];
-            r[n + n2 + i] += w;
-            w = r[n + n2 + i] < t;
-            ++i;
-        }while(w && (i < 2*n - n + n2));
-    }
-    return (r[2*n-1]) ? 2*n : 2*n - 1;
 };
 
 }
