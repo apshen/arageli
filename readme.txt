@@ -1,11 +1,9 @@
 ********************************************************************
 
                 The Arageli Library Readme File
+                   Version 2.2.9.397 Prealpha
 
 ********************************************************************
-
-Copyright (C) Nikolai Yu. Zolotykh, 1999--2010
-Copyright (C) Sergey S. Lyalin, 2005--2010
 
 Arageli is a C++ library and a package of programs for
 computations in arithmetic, algebra, geometry, linear and integer
@@ -41,14 +39,16 @@ please contact Arageli Support Service support.arageli@gmail.com.
 Table of Content
 
     1. Software Requirements
-        1.1 To compile the library
+        1.1 To build the library
         1.2 To build all guides distributed as LaTeX sources
         1.3 To build The Reference Guide
     2. Building
         2.1 Microsoft Windows
         2.2 Linux
-    3. Using
+    3. How to use
     4. Additional Documentation and Feedback
+    5. Known issues/bugs
+    6. Contributors
 
 ********************************************************************
 
@@ -64,7 +64,7 @@ This section describes different sets of tools that are
 necessary for building particular parts of Arageli package.
 
 
-1.1 To compile the library
+1.1 To build the library
 
 You need one of the C++ 1998 standard (or later) compilers. We
 have checked correct compilation with:
@@ -94,7 +94,7 @@ correct building with Windows doxygen 1.7.0 bits.
 
 
 To create all parts of the distributive you should have all
-programs referenced at 1.1--1.4. If you plan to contribute into
+programs referenced at 1.1--1.3. If you plan to contribute into
 the library, we recommend you to have all these programs and
 additionally Subversion client installation to be able to commit
 changes to the repository.
@@ -109,15 +109,9 @@ http://www.arageli.org.
 
 Almost all build scripts are located in build directory of
 the distributive but some of them are spread along the directories.
-Choose proper platform directory for your system and build all
-or a particular part of the distributive.
 
 
 2.1 Microsoft Windows
-
-If you use Microsoft Visual Studio 2005, you can try to build
-solution that located at build/msvs_2005/arageli_all.sln. Please
-be informed that support of Visual Studio 2005 is deprecated.
 
 If you use Microsoft Visual Studio 2008, you can build
 solution that located at build/msvs_2008/arageli_all.sln.
@@ -164,7 +158,7 @@ compilation of different parts as usual.
 
 ********************************************************************
 
-3. Using
+3. How to use
 
 To use the library in your application you have to include
 one or several necessary header files from ./src/arageli
@@ -188,3 +182,48 @@ Some ready-to-use documentation files already present in doc
 directory of the distributive. Go to http://www.arageli.org
 for updates and news. Mail questions, comments and suggestions on
 support.arageli@gmail.com.
+
+If you want to work directly with resources at http://sourceforge.net
+please report bugs in group "Release 2.2.9" at the project page.
+Also please create feature requests if you think that a particular
+feature should be in the library. If you don't want to deal with
+sourceforge.net directly, please send all issues you found to
+support.arageli@gmail.com.
+
+********************************************************************
+
+5. Known issues/bugs
+
+Here is a list of documented bugs that is related to this release
+and which you can monitor at http://sourceforge.net. All these
+bugs can be found in special group "Release 2.2.9".
+
+    #3018788 -- A lot of warning coming from big_int::from_native_int
+    #2870186 -- Arageli::vector uses old iterators after unique call
+    #1893627 -- The same output file names for executables
+
+Besides these bugs please note that different components in this
+release do not have consistent and solid interface because they all
+are in different stages of development. Several functions have
+warning records (find WARNING! in sources) about various aspects of
+their implementation. Some functions marked as incorrect (you will
+permanently have a run-time error if call them). A lot of algorithm
+implementations is naive, so do not expect superb performance from
+them.
+
+********************************************************************
+
+6. Contributors
+
+    - Nikolai Yu. Zolotykh
+    - Agafonov E.A.
+    - Max A. Alekseyev
+    - Aleksey Bader
+    - Anna Bestaeva
+    - Sergey V. Lobanov
+    - Sergey S. Lyalin
+    - Alexander Pshenichnikov
+    - Alexey Polovinkin
+    - Nikolay Santalov
+    - Ekaterina Shchukina
+    - Andrey Somsikov

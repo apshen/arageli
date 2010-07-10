@@ -125,6 +125,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/bigobj"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../../tool/ts/src;../../../src"
 				PreprocessorDefinitions="WIN64;_DEBUG;_CONSOLE;ARAGELI_DEBUG_LEVEL=3"
