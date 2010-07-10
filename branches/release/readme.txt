@@ -94,7 +94,7 @@ correct building with Windows doxygen 1.7.0 bits.
 
 
 To create all parts of the distributive you should have all
-programs referenced at 1.1--1.4. If you plan to contribute into
+programs referenced at 1.1--1.3. If you plan to contribute into
 the library, we recommend you to have all these programs and
 additionally Subversion client installation to be able to commit
 changes to the repository.
@@ -109,8 +109,6 @@ http://www.arageli.org.
 
 Almost all build scripts are located in build directory of
 the distributive but some of them are spread along the directories.
-Choose proper platform directory for your system and build all
-or a particular part of the distributive.
 
 
 2.1 Microsoft Windows
