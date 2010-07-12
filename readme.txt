@@ -1,7 +1,7 @@
 ********************************************************************
 
                 The Arageli Library Readme File
-                     Version 2.2.9 Prealpha
+                     Version Trunk Prealpha
 
 ********************************************************************
 
@@ -184,7 +184,7 @@ for updates and news. Mail questions, comments and suggestions on
 support.arageli@gmail.com.
 
 If you want to work directly with resources at http://sourceforge.net
-please report bugs in group "Release 2.2.9" at the project page.
+please report bugs in the public bug tracker at the project page.
 Also please create feature requests if you think that a particular
 feature should be in the library. If you don't want to deal with
 sourceforge.net directly, please send all issues you found to
@@ -195,8 +195,10 @@ support.arageli@gmail.com.
 5. Known issues/bugs
 
 Here is a list of documented bugs that is related to this release
-and which you can monitor at http://sourceforge.net. All these
-bugs can be found in special group "Release 2.2.9".
+and which you can monitor at http://sourceforge.net.
+
+    [  THE FOLLOWING LIST OF BUGS ISN'T MAINTAINED ON THE REGULAR      ]
+    [  BASE FOR TRUNK AND MAY BE OUT OF DATE -- UPDATE BEFORE RELEASE  ]
 
     #3018788 -- A lot of warning coming from big_int::from_native_int
     #2870186 -- Arageli::vector uses old iterators after unique call
