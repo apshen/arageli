@@ -134,7 +134,7 @@ big_float frandom  (long bits);
 big_float frandom  ( );
 big_float frandom1 (long bits, const big_int & exp = 0 );
 
-    
+
 class big_float
 {
 
