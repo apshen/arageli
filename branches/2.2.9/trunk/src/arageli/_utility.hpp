@@ -591,6 +591,15 @@ inline int stricmp (const std::string& x, const std::string& y)
 }
 
 
+template <typename T1, typename T2>
+inline bool is_converted_to (const T2& x)
+{
+    // WARNING! IT IS SOMETIMES INCORRECT: CONSIDER TWO 32-BIT INTEGERS, T1 IS SIGNED, T2 IS UNSIGNED,
+    // BOTH ARE THE SAME SIZE, AND x = MAX(T2)
+    return T2(T1(x)) == x;
+}
+
+
 } // namespace Arageli
 
 
