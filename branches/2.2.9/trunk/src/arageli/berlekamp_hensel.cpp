@@ -283,7 +283,7 @@ vector<P> pre_berlekamp (const P& p)
 
     res[0] *= lc;
 
-    #ifdef ARAGELI_DEBUG_LEVEL >= 1
+    #if ARAGELI_DEBUG_LEVEL >= 1
     {
         // Check if all res elements are normal.
         typedef typename vector<P>::const_iterator VPCI;
