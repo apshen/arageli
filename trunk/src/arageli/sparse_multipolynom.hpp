@@ -441,7 +441,7 @@ public:
         if(multidegree_m.size() > x.multidegree_m.size())
         {
             for(size_type i = 0; i < x.multidegree_m.size(); ++i)
-                multidegree_m[i] += x.multidegree_m.size();
+                multidegree_m[i] += x.multidegree_m.size(); // WARNING! IS IT CORRECT?
         }
         else if(multidegree_m.size() < x.multidegree_m.size())
             multidegree_m.resize(x.multidegree_m.size());
