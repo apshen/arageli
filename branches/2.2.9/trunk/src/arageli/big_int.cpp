@@ -298,7 +298,8 @@ T big_int::to_native_float () const
 
         if(blen - 1 > Nl::digits)
         {
-            expon = blen - 1 - Nl::digits;
+            ARAGELI_ASSERT_1(size_t(int(blen - 1 - Nl::digits)) == blen - 1 - Nl::digits);
+            expon = static_cast<int>(blen - 1 - Nl::digits);
             t >>= expon;
         }
 
