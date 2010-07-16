@@ -44,7 +44,7 @@ all: arageli check example dvi TAGS perf script HTML
 check:
 	$(MAKE) -C tool/ts/src/ts/
 	$(MAKE) -C test
-	$(MAKE) runtests
+	make runtests
 
 perf:
 	$(MAKE) -C perf
@@ -60,11 +60,11 @@ install:
 
 # run script to satisfy Coding Guidelines
 script:
-	python ./tool/script/tab_finding.py ./
-	python ./tool/script/crlf_finding.py ./
-#	python ./tool/script/end_spaces_del.py ./
-#	python ./tool/script/crlf2lf.py ./
-#	python ./tool/script/tab_replacing.py ./
+	./tool/script/tab_finding.py ./
+	./tool/script/crlf_finding.py ./
+#	./tool/script/end_spaces_del.py ./
+#	./tool/script/crlf2lf.py ./
+#	./tool/script/tab_replacing.py ./
 
 # build documentation for arageli library
 dvi:

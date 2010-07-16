@@ -1,7 +1,7 @@
 ********************************************************************
 
                 The Arageli Library Readme File
-                     Version Trunk Prealpha
+                   Version 2.2.9.412 Prealpha
 
 ********************************************************************
 
@@ -69,11 +69,18 @@ necessary for building particular parts of Arageli package.
 You need one of the C++ 1998 standard (or later) compilers. We
 have checked correct compilation with:
 
-    - GCC 4.1.3 20070929 (prerelease) (Ubuntu 4.1.2-16ubuntu2),
+    - GCC 4.1.3 20070929 (prerelease) (Ubuntu 4.1.2-16ubuntu2)
+      (64-bit),
+    - GCC 4.4.3 (Ubuntu 4.4.3-4ubuntu5) (32-bit),
     - Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 15
       for 80x86 (included in Visual Studio 2008),
     - Microsoft (R) C/C++ Optimizing Compiler Version 15 for x64
-      (included in Visual Studio 2008).
+      (included in Visual Studio 2008),
+    - Microsoft (R) 32-bit C/C++ Optimizing Compiler Version
+      16.00.30319.01 for 80x86 (included in Visual Studio 2010),
+    - Microsoft (R) C/C++ Optimizing Compiler Version 16.00.30319.01
+      for x64 (included in Visual Studio 2010)
+
 
 Please let us know if you are face troubles with those compilers or
 you have success or failure to build with other C++ compilers/
@@ -184,7 +191,7 @@ for updates and news. Mail questions, comments and suggestions on
 support.arageli@gmail.com.
 
 If you want to work directly with resources at http://sourceforge.net
-please report bugs in the public bug tracker at the project page.
+please report bugs in group "Release 2.2.9" at the project page.
 Also please create feature requests if you think that a particular
 feature should be in the library. If you don't want to deal with
 sourceforge.net directly, please send all issues you found to
@@ -195,10 +202,8 @@ support.arageli@gmail.com.
 5. Known issues/bugs
 
 Here is a list of documented bugs that is related to this release
-and which you can monitor at http://sourceforge.net.
-
-    [  THE FOLLOWING LIST OF BUGS ISN'T MAINTAINED ON THE REGULAR      ]
-    [  BASE FOR TRUNK AND MAY BE OUT OF DATE -- UPDATE BEFORE RELEASE  ]
+and which you can monitor at http://sourceforge.net. All these
+bugs can be found in special group "Release 2.2.9".
 
     #3018788 -- A lot of warning coming from big_int::from_native_int
     #2870186 -- Arageli::vector uses old iterators after unique call

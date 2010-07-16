@@ -41,7 +41,7 @@
 */
 
 /// Version of the library.
-#define ARAGELI_VERSION "2.2.10"
+#define ARAGELI_VERSION "2.2.9"
 
 
 /// Controls whether cpp-files would be included into corresponding hpp-files.
