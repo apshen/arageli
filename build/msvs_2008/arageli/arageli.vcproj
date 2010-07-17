@@ -66,6 +66,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalOptions="/ignore:4221"
 				OutputFile="$(OutDir)/arageli32d.lib"
 			/>
 			<Tool
@@ -120,7 +121,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -133,6 +134,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalOptions="/ignore:4221"
 				OutputFile="$(OutDir)/arageli64d.lib"
 			/>
 			<Tool
@@ -200,6 +202,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalOptions="/ignore:4221"
 				OutputFile="$(OutDir)/arageli32r.lib"
 			/>
 			<Tool
@@ -268,6 +271,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalOptions="/ignore:4221"
 				OutputFile="$(OutDir)/arageli64r.lib"
 			/>
 			<Tool
@@ -336,6 +340,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalOptions="/ignore:4221"
 				OutputFile="$(OutDir)/arageli32f.lib"
 			/>
 			<Tool
@@ -405,6 +410,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalOptions="/ignore:4221"
 				OutputFile="$(OutDir)/arageli64f.lib"
 			/>
 			<Tool
@@ -472,6 +478,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalOptions="/ignore:4221"
 				OutputFile="$(OutDir)/arageli32t.lib"
 			/>
 			<Tool
