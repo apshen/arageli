@@ -85,6 +85,56 @@ const unsigned long PREC_MAX = _Internal::max_digit;
 const unsigned long D_PREC_MAX =
     ( long ) (_Internal::max_digit * log ( 2.0l ) / log ( 10.0l ));
 
+
+class big_float;
+
+std::ostream & operator << (std::ostream & s, const big_float & x);
+std::istream & operator >> (std::istream & s, big_float & x);
+int cmp(const big_float & a, const big_float & b);
+bool operator ==(const big_float & a, const big_float & b);
+bool operator !=(const big_float & a, const big_float & b);
+bool operator > (const big_float & a, const big_float & b);
+bool operator >=(const big_float & a, const big_float & b);
+bool operator < (const big_float & a, const big_float & b);
+bool operator <=(const big_float & a, const big_float & b);
+big_float operator + (const big_float & a);
+big_float operator - (const big_float & a);
+big_float add(const big_float & b, const big_float & c, long prec, int mode);
+big_float add(const big_float & b, const big_float & c, long prec);
+big_float add(const big_float & b, const big_float & c);
+big_float sub(const big_float & b, const big_float & c, long prec, int mode);
+big_float sub(const big_float & b, const big_float & c, long prec);
+big_float sub(const big_float & b, const big_float & c);
+big_float mul(const big_float & b, const big_float & c, long prec, int mode);
+big_float mul(const big_float & b, const big_float & c, long prec);
+big_float mul(const big_float & b, const big_float & c);
+big_float div(const big_float & b, const big_float & c, long prec, int mode);
+big_float div(const big_float & b, const big_float & c, long prec);
+big_float div(const big_float & b, const big_float & c);
+big_float divnu(const big_float & b, const big_float & c, long prec, int mode);
+big_float div_i ( const big_int & c );
+big_float fsqrt(const big_float & b,/* const big_float & c,*/ long prec, int mode);
+big_float fsqrt(const big_float & b,/* const big_float & c,*/ long prec);
+big_float fsqrt(const big_float & b/*, const big_float & c*/);
+big_float nfsqrt(const big_float & b,/* const big_float & c,*/ long prec, int mode);
+big_float operator + (const big_float & b, const big_float & c);
+big_float operator - (const big_float & b, const big_float & c);
+big_float operator * (const big_float & b, const big_float & c);
+big_float operator / (const big_float & b, const big_float & c);
+big_float & operator += (big_float & b, const big_float & c);
+big_float & operator -= (big_float & b, const big_float & c);
+big_float & operator *= (big_float & b, const big_float & c);
+big_float & operator /= (big_float & b, const big_float & c);
+big_float ceil  (const big_float & a);
+big_float floor (const big_float & a);
+big_float frac  (const big_float & a);
+big_int iceil (const big_float & a);
+big_int ifloor(const big_float & a);
+big_float frandom  (long bits);
+big_float frandom  ( );
+big_float frandom1 (long bits, const big_int & exp = 0 );
+
+
 class big_float
 {
 
@@ -580,7 +630,7 @@ public:
     /// Returns random number in the interval 0 <=x < 1 with prec lenght of mantissa
     friend big_float frandom  ( );
     /// Returns random number with prec lenght of mantissa and with exp as exponent
-    friend big_float frandom1 (long bits, const big_int & exp = 0 );
+    friend big_float frandom1 (long bits, const big_int & exp);
 
     /// Returns 1 iff the number is Nan, Infinity or 0
     bool is_special ( void ) const

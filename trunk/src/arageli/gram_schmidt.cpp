@@ -49,8 +49,9 @@ bool gram_schmidt(B_type& B, Mu_type& Mu)
     typedef typename B_type::value_type T;
 
     Mu.resize(B.ncols(), B.ncols());
+    index B_ncols = B.ncols();
 
-    for (index k = 0; k < B.ncols(); k++)
+    for (index k = 0; k < B_ncols; k++)
     {
         Mu(k, k) = dotprod(B.copy_col(k), B.copy_col(k));
         if(is_null(Mu(k, k)))
