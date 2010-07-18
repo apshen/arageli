@@ -5,8 +5,7 @@
     This file is a part of Arageli library.
 
     Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
-    Copyright (C) 2005--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 2005--2010 Sergey S. Lyalin
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -42,7 +41,7 @@
 */
 
 /// Version of the library.
-#define ARAGELI_VERSION "2.2.9"
+#define ARAGELI_VERSION "2.2.10"
 
 
 /// Controls whether cpp-files would be included into corresponding hpp-files.

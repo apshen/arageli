@@ -10,7 +10,6 @@
 #
 #    Copyright (C) 1999--2007 Nikolai Yu. Zolotykh
 #    Copyright (C) 2006--2007 Aleksey Bader
-#    University of Nizhni Novgorod, Russia
 #
 #    The Arageli Library is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU General Public License version 2
@@ -56,7 +55,7 @@ all: arageli check example dvi TAGS perf script HTML
 check:
 	$(MAKE) -C tool/ts/src/ts/
 	$(MAKE) -C test
-	make runtests
+	$(MAKE) runtests
 
 perf:
 	$(MAKE) -C perf
@@ -72,11 +71,11 @@ install:
 
 # run script to satisfy Coding Guidelines
 script:
-	./tool/script/tab_finding.py ./
-	./tool/script/crlf_finding.py ./
-#	./tool/script/end_spaces_del.py ./
-#	./tool/script/crlf2lf.py ./
-#	./tool/script/tab_replacing.py ./
+	python ./tool/script/tab_finding.py ./
+	python ./tool/script/crlf_finding.py ./
+#	python ./tool/script/end_spaces_del.py ./
+#	python ./tool/script/crlf2lf.py ./
+#	python ./tool/script/tab_replacing.py ./
 
 # build documentation for arageli library
 dvi:

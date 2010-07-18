@@ -6,8 +6,6 @@
 
     Copyright (C) 2007 Sergey V. Lobanov
 
-    University of Nizhni Novgorod, Russia
-
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
     as published by the Free Software Foundation.

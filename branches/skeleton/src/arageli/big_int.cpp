@@ -6,8 +6,7 @@
 
     WARNIG. This file has no complate implementation.
 
-    Copyright (C) 1999 -- 2005 Nikolai Yu. Zolotykh
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 1999 -- 2005, 2008 Nikolai Yu. Zolotykh
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -362,7 +361,8 @@ T big_int::to_native_float () const
 
         if(blen - 1 > Nl::digits)
         {
-            expon = blen - 1 - Nl::digits;
+            ARAGELI_ASSERT_1(size_t(int(blen - 1 - Nl::digits)) == blen - 1 - Nl::digits);
+            expon = static_cast<int>(blen - 1 - Nl::digits);
             t >>= expon;
         }
 

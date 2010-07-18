@@ -4,8 +4,7 @@
 
     This file is a part of the Arageli library.
 
-    Copyright (C) 2005--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 2005--2010 Sergey S. Lyalin
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -121,8 +120,12 @@ bool read_literal (std::istream& in, const char* s)
     if(!in)
         return false;
 
-    char ch;
-    in >> ch;
+    char ch = 0;
+    do
+    {
+        ch = in.get();
+    }while(in && std::isspace(ch) && ch != '\n');
+
     if(!in)
         return false;
     if(*s != ch)

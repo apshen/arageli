@@ -5,7 +5,6 @@
     This file is a part of the Arageli library.
 
     Copyright (C) 2006 Alexey Polovinkin
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -111,7 +110,7 @@ void adv_simplex_method_alg<T, Ctrler>::CheckVarTypes()
 template<typename T, typename Ctrler>
 void adv_simplex_method_alg<T, Ctrler>::SetConstraintMatrix (const matrix<T>& A)
 {
-    typename matrix<T>::size_type i = 0, j = 0;
+    int i = 0, j = 0;
     SetNumAuxVars(A.nrows());
     SetNumStructVars(A.ncols());
     AllocateData();
@@ -128,7 +127,7 @@ template<typename T, typename Ctrler>
 void adv_simplex_method_alg<T, Ctrler>::SetObjFuncCoeffs(const vector<T>& c)
 {
     m_C.resize(m_NumAuxVars + m_NumStructVars);
-    for (size_type i = 0; i < m_NumStructVars; i++)
+    for (int i = 0; i < m_NumStructVars; i++)
         m_C[i + m_NumAuxVars] = c[i];
 }
 
@@ -151,7 +150,7 @@ void adv_simplex_method_alg<T, Ctrler>::SetIsBoundsInf
 {
     m_IsLowerBoundsInf.assign(is_lower_bounds_inf);
     m_IsUpperBoundsInf.assign(is_upper_bounds_inf);
-    for (size_type i = 0; i < m_NumAuxVars + m_NumStructVars; i++)
+    for (int i = 0; i < m_NumAuxVars + m_NumStructVars; i++)
     {
         if (m_IsLowerBoundsInf[i])
             m_LowerBounds[i] = null<T>();
@@ -189,7 +188,7 @@ solvingResult adv_simplex_method_alg<T, Ctrler>::SolveProblem()
 template <typename T, typename Ctrler>
 void adv_simplex_method_alg<T, Ctrler>::InitInitialData()
 {
-    size_type i = 0;
+    int i = 0;
     m_IterNum = 0;
     m_BasicVarNums.resize(m_NumAuxVars);
     m_NonBasicVarNums.resize(m_NumStructVars);
@@ -1419,7 +1418,7 @@ start:
     sort(var_names.begin(), var_names.end());
     std::map<std::string, int> var_indexes;
 
-    for (i = 0; i < var_names.size(); i++)
+    for (i = 0; i < static_cast<int>(var_names.size()); i++)
         var_indexes[var_names[i]] = i;
 
 

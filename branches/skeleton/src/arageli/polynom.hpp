@@ -8,8 +8,7 @@
     Significantly rewrited by Sergey Lyalin.
 
     Copyright (C) 2005 Andrey Somsikov
-    Copyright (C) 2006--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 2006--2007, 2010 Sergey S. Lyalin
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -462,6 +461,9 @@ public:
                 RIter(store.begin()),
                 std::not1(func::is_null<F>())
             ).base();
+
+        ARAGELI_ASSERT_1(store.begin() <= i);
+        ARAGELI_ASSERT_1(i <= store.end());
 
         store.erase(i, store.end());
     }
