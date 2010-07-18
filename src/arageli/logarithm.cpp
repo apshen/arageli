@@ -6,7 +6,6 @@
 
     Copyright (C) 2005--2006 Alexander Pshenichnikov
     Copyright (C) 2005--2006 Nikolay Santalov
-    University of Nizhni Novgorod, Russia
 
     23.12.2005
 

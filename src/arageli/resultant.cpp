@@ -5,8 +5,7 @@
     This file is a part of the Arageli library.
 
     Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
-    Copyright (C) 2005--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 2005--2007, 2010 Sergey S. Lyalin
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -109,6 +108,13 @@ void subresultants_nonmodular
     // Source: Buhberger and others, p. 168, alg. 4.1
     // We have a problem with sign of the result subresultants.
 
+    ARAGELI_ERROR
+    (
+        "It is known that there are inputs for which this function works incorrectly: subresultants_nonmodular.\n"
+        "If you are sure that you need to call this function anyway, please comment the lines that produces "
+        "this error message out. "
+    );
+
     ARAGELI_ASSERT_0(!is_null(p1));
     ARAGELI_ASSERT_0(!is_null(p2));
 
@@ -166,6 +172,15 @@ template <typename P1, typename P2, typename PCFactory>
 typename P1::coef_type resultant_nonmodular
 (const P1& p1, const P2& p2, PCFactory fctr)
 {
+    {
+        // WARNING! THIS IS WORKAROUND FOR BUG IN subresultants_nonmodular, see bug #2655678.
+
+        typedef typename P1::coef_type T;
+        matrix<T, false> m;
+        sylvester(p1, p2, m);
+        return det(m);
+    }
+
     // WARNING! Need to choose from P1::coef_type and P2::coef_type
     // insted just P1::coef_type as a type of the return value.
 

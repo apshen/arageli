@@ -5,8 +5,7 @@
     This file is a part of the Arageli library.
 
     Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
-    Copyright (C) 2005--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 2005--2010 Sergey S. Lyalin
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -52,7 +51,7 @@
 #include <sstream>
 #include <list>
 
-
+#include <typeinfo> //gcc 4.3 fix
 //****************************************************************************
 
 namespace Arageli
@@ -557,6 +556,23 @@ inline std::string tracing_indent ()
 #define ARAGELI_TRACE_END(STATEMENT)    /* nothing */
 #define ARAGELI_TRACE_BEGIN_AUTO(STATEMENT1, STATEMENT2)    /* nothing */
 
+#endif
+
+
+#ifdef NDEBUG
+    #define ARAGELI_ERROR(MSG)    \
+        {    \
+            ::std::ostringstream buf;    \
+            buf << MSG << "\nFile: " << __FILE__ << " : " << __LINE__ << '\n';    \
+            throw ::Arageli::exception(buf.str());    \
+        }
+#else
+    #define ARAGELI_ERROR(MSG)    \
+    {    \
+        ::std::cerr << MSG << "\nFile: " << __FILE__ << " : " << __LINE__ << '\n';    \
+        ::std::cin.get();    \
+        ::std::abort();    \
+    }
 #endif
 
 

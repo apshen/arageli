@@ -6,7 +6,6 @@
 
     Copyright (C) 2005--2006 Alexander Pshenichnikov
     Copyright (C) 2005--2006 Nikolay Santalov
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -48,6 +47,7 @@
 
 #include <cmath>
 #include "big_float.hpp"
+#include "_utility.hpp"
 
 
 namespace Arageli
@@ -87,8 +87,8 @@ void big_float::from_native_float(const T &f)
 
     man [ digits_need ] =
         (
-            (*p << _Internal::bits_per_digit - bits_remain) >>
-            _Internal::bits_per_digit - bits_remain
+            (*p << (_Internal::bits_per_digit - bits_remain)) >>
+            (_Internal::bits_per_digit - bits_remain)
         ) | (1U << bits_remain);
 
     prec = Nl::digits;
@@ -269,7 +269,8 @@ big_float::big_float ( const big_int &s, const big_int &e, long mode ) :
     s (s),
     mode ( mode )
 {
-    prec = s.length();
+    ARAGELI_ASSERT_1(is_converted_to<long>(s.length()));
+    prec = static_cast<long>(s.length());
     ARAGELI_ASSERT_0( prec >= PREC_MIN && prec <= PREC_MAX )
 }
 
@@ -277,7 +278,8 @@ big_float::big_float ( const big_int &s, const big_int &e, long mode ) :
 big_float::big_float (const big_int& i)
 {
     s = big_int(i);
-    prec = i.length();
+    ARAGELI_ASSERT_1(is_converted_to<long>(s.length()));
+    prec = static_cast<long>(i.length());
     CHECK_PREC(prec)
     mode = big_float::global_mode;
 }
@@ -1095,11 +1097,12 @@ void big_float :: out ( std::ostream & os, char c  ) const
         os << "+";
 
     str.setf( std::ios::dec | std::ios::showpos ); // always out signum see below
+    ARAGELI_ASSERT_1(is_converted_to<int>(s.length())); // to be sure with the following conversions
 
     switch ( c )
     {
         case 'f': //floating point mode e.g 123.456
-                position = s.length() + e.to_native_int<int>(); // Check this conversion good way to improve this function
+                position = static_cast<int>(s.length()) + e.to_native_int<int>(); // Check this conversion good way to improve this function
 
                 //approximately evaluate floating point position in decimal representation
                 if ( position >= 0 )
@@ -1118,7 +1121,7 @@ void big_float :: out ( std::ostream & os, char c  ) const
                     if ( position > 0 )
                     {
                         //insert decimal point in right position
-                        temp_str.insert( position = temp_str.length() + de.to_native_int<int>(), "." );
+                        temp_str.insert( position = static_cast<int>(temp_str.length()) + de.to_native_int<int>(), "." );
                     }
                     else //there is leading zeros
                     {
@@ -1168,7 +1171,8 @@ void big_float :: out ( std::ostream & os, char c  ) const
 
                 if ( de.sign() < 0 && de.to_native_int<int>() > -4 - os.precision () ) // show number in fixed format
                 {
-                    position = temp_str.length()+ de.to_native_int<int>(); //determine floating point position
+
+                    position = static_cast<int>(temp_str.length()) + de.to_native_int<int>(); //determine floating point position
                     if ( position <= 0 ) //there is leading zeros
                     {
                         os << "0.";
@@ -1386,7 +1390,8 @@ big_float fsqrt(const big_float & bf, long prec, int mode)
         res.e = res.e - 1;
     }
 
-    l = (res.s.length() - 2 * prec - 1);
+    ARAGELI_ASSERT_1(is_converted_to<int>(res.s.length()));
+    l = (static_cast<int>(res.s.length()) - 2 * prec - 1);
     l = (l / 2) * 2;
 
     if ( l > 0 )

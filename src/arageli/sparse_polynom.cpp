@@ -5,8 +5,7 @@
     This file is a part of Arageli library.
 
     Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
-    Copyright (C) 2005--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 2005--2010 Sergey S. Lyalin
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -291,7 +290,12 @@ sparse_polynom<F, I, REFCNT>::sparse_polynom (const char* str)
 template <typename F, typename I, bool REFCNT>
 bool sparse_polynom<F, I, REFCNT>::is_normal () const
 {
+    // WARNING! PERFORMANCE!
+    // Next two checks (for degree order and zero coefficients) are made
+    // in two separate passes through the monomial sequence. It should be done
+    // in only one pass.
     return
+        // find if there are any degree strong order violations and ...
         std::adjacent_find
         (
             rep().begin(),
@@ -299,10 +303,13 @@ bool sparse_polynom<F, I, REFCNT>::is_normal () const
             std::not2(monom_degree_less<monom>())
         ) == rep().end()
         &&
+        // ... and if there are any zero coefficients
+        std::find_if
         (
-            rep().empty() ||
-            !rep().front().is_null()
-        );
+            rep().begin(),
+            rep().end(),
+            std::mem_fun_ref(&monom::is_null)
+        ) == rep().end();
 }
 
 

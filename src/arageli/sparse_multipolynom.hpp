@@ -6,7 +6,6 @@
 
     Copyright (C) 1999--2007 Nikolai Yu. Zolotykh
     Copyright (C) 2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -442,7 +441,7 @@ public:
         if(multidegree_m.size() > x.multidegree_m.size())
         {
             for(size_type i = 0; i < x.multidegree_m.size(); ++i)
-                multidegree_m[i] += x.multidegree_m.size();
+                multidegree_m[i] += x.multidegree_m.size(); // WARNING! IS IT CORRECT?
         }
         else if(multidegree_m.size() < x.multidegree_m.size())
             multidegree_m.resize(x.multidegree_m.size());

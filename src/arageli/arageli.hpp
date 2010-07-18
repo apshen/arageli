@@ -4,9 +4,8 @@
 
     This file is a part of the Arageli library.
 
-    Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
-    Copyright (C) 2006--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 1999--2010 Nikolai Yu. Zolotykh
+    Copyright (C) 2006--2010 Sergey S. Lyalin
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -44,19 +43,19 @@
     \mainpage
 
     This is a documentation for library
-    <a href="http://www.unn.ru/cs/arageli">Arageli</a>
+    <a href="http://www.arageli.org">Arageli</a>
     founded by
     <a href="http://www.uic.nnov.ru/~zny">Nikolai Yu. Zolotykh</a>
     and maintaining by
-    <a href="http://www.unn.ru/cs/arageli/people.html">Arageli Project Team</a>.
+    <a href="http://www.arageli.org/people.html">Arageli Project Team</a>.
 
-    WARNING! The library is documented PARTIALLY. Moreover, some parts and fragments of
-    this documentation are presented in Russian.
+    <b>WARNING!</b> The library is being developed. Some features are defined
+    only partially, some parts have bugs. Please use it with care.
 
-    There are a lot of guides in addition to this reference documentation.
-    But the most part of them are written in Russian. See the doc directory of the package.
-    We recomend <a href="../Arageli_Users_Guide.pdf">Arageli User's Guide</a> for first
-    reading (in English).
+    <b>WARNING!</b> The library is documented PARTIALLY. Moreover, some parts
+    and fragments of this documentation are presented in Russian only. If you
+    have problems to read such documentation, please write a letter to
+    <a href="mailto:support.arageli@gmail.com">Arageli Support Service</a>.
 
     Arageli is a C++ library for computations in <b>AR</b>ithmetic,
     <b>A</b>lgebra, <b>GE</b>ometry,

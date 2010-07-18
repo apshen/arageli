@@ -5,7 +5,6 @@
     This file is a part of the Arageli library.
 
     Copyright (C) 2005--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -38,6 +37,9 @@
 #define _ARAGELI__utility_hpp_
 
 #include "config.hpp"
+
+#include <limits.h> //GCC 4.3 fix
+#include <cstring> //GCC 4.3 fix
 
 #include <iostream>
 #include <algorithm>
@@ -586,6 +588,15 @@ inline int stricmp (const std::string& x, const std::string& y)
     static lt_str_2 sc;    // default locale
     ARAGELI_ASSERT_1(!(sc(y, x) && sc(x, y)));  // both cannot be true
     return sc(y, x)-sc(x, y);   // magic? ;) no! it's simple!
+}
+
+
+template <typename T1, typename T2>
+inline bool is_converted_to (const T2& x)
+{
+    // WARNING! IT IS SOMETIMES INCORRECT: CONSIDER TWO 32-BIT INTEGERS, T1 IS SIGNED, T2 IS UNSIGNED,
+    // BOTH ARE THE SAME SIZE, AND x = MAX(T2)
+    return T2(T1(x)) == x;
 }
 
 

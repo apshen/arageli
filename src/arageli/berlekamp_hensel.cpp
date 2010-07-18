@@ -4,8 +4,7 @@
 
     This file is a part of the Arageli library.
 
-    Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
-    University of Nizhni Novgorod, Russia
+    Copyright (C) 1999--2006, 2010 Nikolai Yu. Zolotykh
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -245,6 +244,7 @@ vector<sparse_polynom<T> > berlekamp (const sparse_polynom<T>& f)
 template <typename P>
 vector<P> pre_berlekamp (const P& p)
 {
+    ARAGELI_ASSERT_1(p.is_normal());
     /*dbg*///com std::cout<<"pre_berlekamp stated, p="<<p<<"\n";
     if(p.is_const())return vector<P>(1, p, fromval);
     /*dbg*///com std::cout<<"type of P="<<typeid(P).name()<<"\n";
@@ -282,6 +282,15 @@ vector<P> pre_berlekamp (const P& p)
     }
 
     res[0] *= lc;
+
+    #if ARAGELI_DEBUG_LEVEL >= 1
+    {
+        // Check if all res elements are normal.
+        typedef typename vector<P>::const_iterator VPCI;
+        for(VPCI i = res.begin(); i != res.end(); ++i)
+            ARAGELI_ASSERT_1(i->is_normal());
+    }
+    #endif
 
     ARAGELI_ASSERT_1(product(res) == p);
     /*dbg*///com std::cout<<"res="<<res<<"\npre_berlekamp finished\n\n";
@@ -988,6 +997,7 @@ void residue_berlekamp_router (const P& p, const M& m, VP& res, Func func)
         i->module() = m;
         i->normalize();
     }
+    rp.normalize(); // to shrink possible zero coefficients
     /*dbg*///com std::cout<<"2rp="<<rp<<"\n";
     vector<RP> rres = rp.is_const() ? vector<RP>(1, rp, fromval) : func(rp);
     /*dbg*///com std::cout<<"rres="<<rres<<"\n";

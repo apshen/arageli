@@ -6,7 +6,6 @@
 
     Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
     Copyright (C) 2005--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -1154,7 +1153,7 @@ public:
     typedef I degree_type;
 
     /// Monom type that is used to building the polynomial.
-    typedef monom<F, I> monom;
+    typedef Arageli::monom<F, I> monom; //GCC 4.3 fix ( Arageli:: )
 
     /// Reference counter property. True iff the counter is turned on.
     static const bool refcounting = REFCNT;

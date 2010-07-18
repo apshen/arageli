@@ -7,7 +7,6 @@
 #    This file is a part of the Arageli library.
 #
 #    Copyright (C) 2006--2007 Aleksey Bader
-#    University of Nizhni Novgorod, Russia
 #
 #    The Arageli Library is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU General Public License version 2
@@ -61,8 +60,18 @@ class TreeReplacer:
             return
         names.sort()
         for name in names:
-            if name.startswith("tools"):
-                continue # Skip tools directory. Rewrite this condition.
+            if name.startswith("readme.txt"):
+                continue # Skip readme.txt as it is for Windows
+            if name.startswith("Doxyfile"):
+                continue
+            if name.startswith("Doxyfile_pattern"):
+                continue
+#            if name.startswith("tools"):
+#                continue # Skip tools directory. Rewrite this condition.
+            if name.endswith(".bat"):
+                continue # Skip Windows bat-files
+            if name.endswith(".in.txt"):
+                continue # Skip input text files for examples
             if name.endswith(".vcproj"):
                 continue # Skip project files
             if name.endswith(".sln"):

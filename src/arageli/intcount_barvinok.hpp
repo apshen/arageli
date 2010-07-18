@@ -13,7 +13,6 @@
 
     Copyright (C) 2006 Ekaterina Shchukina
     Copyright (C) 2006--2007 Sergey S. Lyalin
-    University of Nizhni Novgorod, Russia
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2

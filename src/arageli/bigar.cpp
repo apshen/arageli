@@ -5,7 +5,6 @@
     This file is a part of the Arageli library.
 
     Copyright (C) 1999 -- 2005 Nikolai Yu. Zolotykh
-    University of Nizhni Novgorod, Russia
 
     Updated by Agafonov E.A. 2000
 
