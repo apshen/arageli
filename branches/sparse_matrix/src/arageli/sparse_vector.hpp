@@ -82,6 +82,9 @@ void copy_to(A &dst, const B &src);
 
 template <typename T,typename A, typename B>
 void copy_to(A &dst, const Arageli::vector<T> &src);
+
+template <typename T>
+bool is_notvalid(const T &value);
 }
 
 namespace sprsvc_rep
@@ -158,7 +161,7 @@ public:
         return it->first;
     }
 
-    ValType & el() const
+    inline ValType & el() const
     {
         return it->second;
     }
@@ -738,7 +741,7 @@ public:
 
     void set_elem(size_t real_ind, size_t ind, const T & t)
     {
-        ARAGELI_ASSERT_0(ind<n && real_ind<real_size()&& !is_null(t));
+        ARAGELI_ASSERT_0(ind<n && real_ind<real_size()&& !sprsvc_comp::is_notvalid(t));
 
         raw_set_elem(real_ind,ind,t);
 
@@ -968,7 +971,7 @@ public:
     {
         ARAGELI_ASSERT_0(i<n);
 
-        if(!is_null(t))
+        if(!sprsvc_comp::is_notvalid(t))
         {
             ins(i,t);
         }
@@ -980,7 +983,7 @@ public:
 
     void set_elem(size_t real_ind, size_t ind, const T & t)
     {
-        ARAGELI_ASSERT_0(ind<n && real_ind<real_size()&& !is_null(t));
+        ARAGELI_ASSERT_0(ind<n && real_ind<real_size()&& !sprsvc_comp::is_notvalid(t));
 
         raw_set_elem(real_ind,ind,t);
 
@@ -1194,7 +1197,7 @@ public:
     void insert(size_t i, const T &t)
     {
         ARAGELI_ASSERT_0(i<n);
-        if(!is_null(t))
+        if(!sprsvc_comp::is_notvalid(t))
         {
             ins(i, t);
         }
@@ -1203,7 +1206,7 @@ public:
 
     void set_elem(size_t real_ind, size_t ind, const T & t)
     {
-        ARAGELI_ASSERT_0(ind<n && !is_null(t));
+        ARAGELI_ASSERT_0(ind<n && !sprsvc_comp::is_notvalid(t));
 
         raw_set_elem(real_ind,ind,t);
     }
@@ -1315,131 +1318,131 @@ using namespace sprsvc_rep;
 /// Some template function for sparse vector representation on vector of pairs
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 template <typename T, bool REFCNT>
-void copy_to(sparsevec_vecpair_t<T,REFCNT> &dst, const sparsevec_vecpair_t<T,REFCNT> &src);
+inline void copy_to(sparsevec_vecpair_t<T,REFCNT> &dst, const sparsevec_vecpair_t<T,REFCNT> &src);
 
 template <typename T, bool REFCNT>
-void copy_to(sparsevec_vecpair_t<T,REFCNT> &dst, const Arageli::vector<T> &src);
+inline void copy_to(sparsevec_vecpair_t<T,REFCNT> &dst, const Arageli::vector<T> &src);
 
-template <typename T, bool REFCNT>
-void add(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2);
-
-template <typename T, bool REFCNT>
-void sub(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2);
-
-template <typename T, bool REFCNT>
-void mul(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv, const T &val);
-
-template <typename T, bool REFCNT>
-void div(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv, const T &val);
-
-template <typename T, bool REFCNT>
-void dot(T &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2);
-
-template <typename T, bool REFCNT>
-void dot(T &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const Arageli::vector<T> &vec);
-
-template <typename T, bool REFCNT>
-void add_in(sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2);
-
-template <typename T, bool REFCNT>
-void sub_in(sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2);
-
-template <typename T, bool REFCNT>
-void mul_in(sparsevec_vecpair_t<T,REFCNT> &sv, const T &val);
-
-template <typename T, bool REFCNT>
-void div_in(sparsevec_vecpair_t<T,REFCNT> &sv, const T &val);
+//template <typename T, bool REFCNT>
+//void add(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2);
+//
+//template <typename T, bool REFCNT>
+//void sub(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2);
+//
+//template <typename T, bool REFCNT>
+//void mul(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv, const T &val);
+//
+//template <typename T, bool REFCNT>
+//void div(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv, const T &val);
+//
+//template <typename T, bool REFCNT>
+//void dot(T &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2);
+//
+//template <typename T, bool REFCNT>
+//void dot(T &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const Arageli::vector<T> &vec);
+//
+//template <typename T, bool REFCNT>
+//void add_in(sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2);
+//
+//template <typename T, bool REFCNT>
+//void sub_in(sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2);
+//
+//template <typename T, bool REFCNT>
+//void mul_in(sparsevec_vecpair_t<T,REFCNT> &sv, const T &val);
+//
+//template <typename T, bool REFCNT>
+//void div_in(sparsevec_vecpair_t<T,REFCNT> &sv, const T &val);
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /// Some template function for sparse vector representation on pair of vectors
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 template <typename T, bool REFCNT>
-void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const sparsevec_pairvec_t<T,REFCNT> &src);
+inline void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const sparsevec_pairvec_t<T,REFCNT> &src);
 
 template <typename T, bool REFCNT>
-void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const Arageli::vector<T> &src);
+inline void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const Arageli::vector<T> &src);
 
 template <typename T, bool REFCNT>
-void add(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2);
+inline void add(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2);
 
 template <typename T, bool REFCNT>
-void sub(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2);
+inline void sub(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2);
 
 template <typename T, bool REFCNT>
-void mul(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv, const T &val);
+inline void mul(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv, const T &val);
 
 template <typename T, bool REFCNT>
-void div(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv, const T &val);
+inline void div(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv, const T &val);
 
 template <typename T, bool REFCNT>
-void dot(T &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2);
+inline void dot(T &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2);
 
 template <typename T, bool REFCNT>
-void dot(T &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const Arageli::vector<T> &vec);
+inline void dot(T &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const Arageli::vector<T> &vec);
 
 template <typename T, bool REFCNT>
-void add_in(sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2);
+inline void add_in(sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2);
 
 template <typename T, bool REFCNT>
-void sub_in(sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2);
+inline void sub_in(sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2);
 
 template <typename T, bool REFCNT>
-void mul_in(sparsevec_pairvec_t<T,REFCNT> &sv, const T &val);
+inline void mul_in(sparsevec_pairvec_t<T,REFCNT> &sv, const T &val);
 
 template <typename T, bool REFCNT>
-void div_in(sparsevec_pairvec_t<T,REFCNT> &sv, const T &val);
+inline void div_in(sparsevec_pairvec_t<T,REFCNT> &sv, const T &val);
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /// All sparse vector representation template function
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 template <typename A, typename B>
-void copy_to(A &dst, const B &src);
+inline void copy_to(A &dst, const B &src);
 
 template <typename T, typename A, typename B>
-void copy_to(A &dst, const Arageli::vector<T> &src);
+inline void copy_to(A &dst, const Arageli::vector<T> &src);
 
 template <typename T, typename A>
-void copy_to(Arageli::vector<T> &dst, const A &src);
+inline void copy_to(Arageli::vector<T> &dst, const A &src);
 
 template <typename A, typename B>
-bool equal(const A &sv1, const B &sv2);
+inline bool equal(const A &sv1, const B &sv2);
 
 template <typename A, typename B>
-bool non_equal(const A &sv1, const B &sv2);
+inline bool non_equal(const A &sv1, const B &sv2);
 
 template <typename A, typename B>
-void add(A &res, const A &sv1, const B &sv2);
+inline void add(A &res, const A &sv1, const B &sv2);
 
 template <typename A, typename B>
-void sub(A &res, const A &sv1, const B &sv2);
+inline void sub(A &res, const A &sv1, const B &sv2);
 
 template <typename T, typename A>
-void mul(A &res, const A &sv, const T &val);
+inline void mul(A &res, const A &sv, const T &val);
 
 template <typename T, typename A>
-void div(A &res, const A &sv, const T &val);
+inline void div(A &res, const A &sv, const T &val);
 
 template <typename T, typename A, typename B>
-void dot(T &res, const A &sv1, const B &sv2);
+inline void dot(T &res, const A &sv1, const B &sv2);
 
 template <typename A, typename B>
-void add_in(A &sv1, const B &sv2);
+inline void add_in(A &sv1, const B &sv2);
 
 template <typename A, typename B>
-void sub_in(A &sv1, const B &sv2);
+inline void sub_in(A &sv1, const B &sv2);
 
 template <typename T, typename A>
-void mul_in(A &sv, const T &val);
+inline void mul_in(A &sv, const T &val);
 
 template <typename T, typename A>
-void div_in(A &sv, const T &val);
+inline void div_in(A &sv, const T &val);
 
 template <typename A, typename B>
-size_t struct_intersection(const A &sv1, const B &sv2);
+inline size_t struct_intersection(const A &sv1, const B &sv2);
 
 template <typename A, typename B>
-size_t struct_union(const A &sv1, const B &sv2);
+inline size_t struct_union(const A &sv1, const B &sv2);
 
 template <typename A, typename B>
-bool struct_disjoint(const A &sv1, const B &sv2);
+inline bool struct_disjoint(const A &sv1, const B &sv2);
 
 }// namespace sprsvc_comp
 

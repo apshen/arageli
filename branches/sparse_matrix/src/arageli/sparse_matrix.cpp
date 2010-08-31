@@ -795,9 +795,12 @@ void mul_struct(Arageli::vector<T1> &res, const A &sm, const Arageli::vector<T2>
     ARAGELI_ASSERT_0(sm.n==vec.size());
 
     res.resize(sm.m);
-    for(size_t i=0;i<sm.m; ++i)
+	T1 *pRes = &res[0];
+	A::Rep::const_iterator itr = sm.rep.begin();
+	A::Rep::const_iterator itr_end = sm.rep.end();;
+    for( ;itr!=itr_end; ++itr)
     {
-        res[i] = sm.rep[i]*vec;
+        *pRes++ = (*itr)*vec;
     }
 }
 
@@ -811,12 +814,15 @@ void mul_struct_accross(Arageli::vector<T1> &res, const A &sm, const Arageli::ve
     A::RepLine::const_indraw_iterator it_end;
     for(size_t i=0;i<sm.m; ++i)
     {
-        it = sm.rep[i].begin();
-        it_end = sm.rep[i].end();
-        for(; it!=it_end; ++it)
-        {
-            res[it.ind()] += it.el()*vec[i];
-        }
+		if(!is_null(vec[i]))
+		{
+			it = sm.rep[i].begin();
+			it_end = sm.rep[i].end();
+			for(; it!=it_end; ++it)
+			{
+				res[it.ind()] += it.el()*vec[i];
+			}
+		}
     }
 }
 
