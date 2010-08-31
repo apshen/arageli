@@ -230,7 +230,7 @@ void sparsevec_vecpair_t<T,REFCNT>::remove_useless()
     size_t l=0;
     for(;i<rep.size();++i)
     {
-        if(is_null(rep[i].second)|| (i>0 && rep[i-1].first==rep[i].first))
+        if(sprsvc_comp::is_notvalid(rep[i].second)|| (i>0 && rep[i-1].first==rep[i].first))
         {
             continue;
         }
@@ -277,7 +277,6 @@ void sparsevec_vecpair_t<T,REFCNT>::reserve_mem(size_t elem_count)
         {
             count=elem_count;
         }
-        rep.resize(0);
         Rep temp;
         rep.swap(temp);
         rep.resize(count);
@@ -524,7 +523,7 @@ void sparsevec_pairvec_t<T,REFCNT>::remove_useless()
 
     for(;i<rep.first.size();++i)
     {
-        if(is_null(rep.second[i])|| (i>0 && rep.first[i-1]==rep.first[i]))
+        if(sprsvc_comp::is_notvalid(rep.second[i])|| (i>0 && rep.first[i-1]==rep.first[i]))
         {
             continue;
         }
@@ -573,8 +572,6 @@ void sparsevec_pairvec_t<T,REFCNT>::reserve_mem(size_t elem_count)
         {
             count=elem_count;
         }
-        rep.first.resize(0);
-        rep.second.resize(0);
         Rep temp;
         rep.first.swap(temp.first);
         rep.second.swap(temp.second);
@@ -741,6 +738,25 @@ inline void sparsevec_mappair_t<T,REFCNT>::push_back(size_t ind, const T & t)
 namespace sprsvc_comp
 {
 using namespace sprsvc_rep;
+
+template <typename T>
+inline bool is_notvalid(const T &value)
+{
+	return is_null<T>(value);
+}
+
+template <>
+inline bool is_notvalid<float>(const float &value)
+{
+	return fabs(value)<0.000001;
+}
+
+template <>
+inline bool is_notvalid<double>(const double &value)
+{
+	return fabs(value)<0.000000000000001;
+}
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Implementation of some template function for sparse vector on vector of pairs
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -762,7 +778,7 @@ void copy_to(sparsevec_vecpair_t<T,REFCNT> &dst, const Arageli::vector<T> &src)
     size_t count=0;
     for(int i=0;i<dst.n;i++)
     {
-        if(!is_null(src[i]))
+        if(!sprsvc_comp::is_notvalid(src[i]))
         {
             ++count;
         }
@@ -770,7 +786,7 @@ void copy_to(sparsevec_vecpair_t<T,REFCNT> &dst, const Arageli::vector<T> &src)
     dst.rep.resize(count);
     for (size_t i=0,k=0;i<dst.n;++i)
     {
-        if(!is_null(src[i]))
+        if(!sprsvc_comp::is_notvalid(src[i]))
         {
             dst.rep[k].first = i;
             dst.rep[k++].second = src[i];
@@ -782,287 +798,292 @@ void copy_to(sparsevec_vecpair_t<T,REFCNT> &dst, const Arageli::vector<T> &src)
 #endif
 }
 
-template <typename T, bool REFCNT>
-void add(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2)
-{
-    ARAGELI_ASSERT_0( sv1.size()==sv2.size());
-    ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
+//template <typename T, bool REFCNT>
+//void add(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2)
+//{
+//    ARAGELI_ASSERT_0( sv1.size()==sv2.size());
+//    ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
+//
+//    res.n=sv1.n;
+//    size_t
+//        i=0,
+//        j=0,
+//        count=0;
+//
+//    // symbolic part
+//    res.resize_mem_struct(struct_union(sv1, sv2));
+//    // numerical part
+//    typedef sparsevec_vecpair_t<T,REFCNT>::Elem Elem;
+//    for (;i < sv2.real_size();++i)
+//    {
+//        while (j < sv1.real_size()&& sv1.rep[j].first < sv2.rep[i].first)
+//        {
+//            res.rep[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
+//            ++j;
+//        }
+//
+//        if (j < sv1.real_size()&& sv1.rep[j].first == sv2.rep[i].first)
+//        {
+//            res.rep[count++]=Elem(sv1.rep[j].first,sv1.rep[j].second+sv2.rep[i].second);
+//            ++j;
+//        }
+//        else
+//        {
+//            res.rep[count++] = Elem(sv2.rep[i].first,sv2.rep[i].second);
+//        }
+//    }
+//
+//    while (j < sv1.real_size())
+//    {
+//        res.rep[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
+//        ++j;
+//    }
+//    /*********************************************************************************************/
+//
+//#ifdef ARAGELI_DEBUG_LEVEL_3
+//    res.ordered = true;
+//#endif
+//}
+//
+//template <typename T, bool REFCNT>
+//void sub(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2)
+//{
+//    ARAGELI_ASSERT_0( sv1.size()==sv2.size());
+//    ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
+//
+//    res.n=sv1.n;
+//    size_t
+//        i=0,
+//        j=0,
+//        count=0;
+//
+//    // symbolic part
+//    res.resize_mem_struct(struct_union(sv1, sv2));
+//    // numerical part
+//    typedef sparsevec_vecpair_t<T,REFCNT>::Elem Elem;
+//    for (;i < sv2.real_size();++i)
+//    {
+//        while (j < sv1.real_size()&& sv1.rep[j].first < sv2.rep[i].first)
+//        {
+//            res.rep[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
+//            ++j;
+//        }
+//
+//        if (j < sv1.real_size()&& sv1.rep[j].first == sv2.rep[i].first)
+//        {
+//            res.rep[count++]=Elem(sv1.rep[j].first,sv1.rep[j].second-sv2.rep[i].second);
+//            ++j;
+//        }
+//        else
+//        {
+//            res.rep[count++] = Elem(sv2.rep[i].first,-sv2.rep[i].second);
+//        }
+//    }
+//
+//    while (j < sv1.real_size())
+//    {
+//        res.rep[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
+//        ++j;
+//    }
+//    /*********************************************************************************************/
+//
+//#ifdef ARAGELI_DEBUG_LEVEL_3
+//    res.ordered = true;
+//#endif
+//}
+//
+//template <typename T, bool REFCNT>
+//void mul(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv, const T &val)
+//{
+//    res.n = sv.n;
+//    res.resize_mem_struct(sv.real_size());
+//    for (size_t j = 0;j < sv.real_size();++j)
+//    {
+//        res.rep[j].first = sv.rep[j].first;
+//        res.rep[j].second = sv.rep[j].second*val;
+//    }
+//
+//#ifdef ARAGELI_DEBUG_LEVEL_3
+//    res.ordered = sv.ordered;
+//#endif
+//}
+//
+//template <typename T, bool REFCNT>
+//void div(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv, const T &val)
+//{
+//    res.n = sv.n;
+//    res.resize_mem_struct(sv.real_size());
+//    for (size_t j = 0;j < sv.real_size();++j)
+//    {
+//        res.rep[j].first = sv.rep[j].first;
+//        res.rep[j].second = sv.rep[j].second/val;
+//    }
+//
+//#ifdef ARAGELI_DEBUG_LEVEL_3
+//    res.ordered = sv.ordered;
+//#endif
+//}
 
-    res.n=sv1.n;
-    size_t
-        i=0,
-        j=0,
-        count=0;
+//template <typename T, bool REFCNT>
+//void dot(T &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2)
+//{
+//    ARAGELI_ASSERT_0( sv1.size()==sv2.size());
+//    ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
+//
+//    res = null<T>();
+//    size_t
+//        i=0,
+//        j=0;
+//    size_t count=0;
+//    for (;i < sv2.real_size()&& j < sv1.real_size();)
+//    {
+//        if(sv1.rep[j].first == sv2.rep[i].first)
+//        {
+//            res += sv1.rep[j].second * sv2.rep[i].second;
+//            ++j;
+//            ++i;
+//        }
+//        else if(sv1.rep[j].first < sv2.rep[i].first)
+//        {
+//            ++j;
+//        }
+//        else
+//        {
+//            ++i;
+//        }
+//    }
+//}
 
-    // symbolic part
-    res.resize_mem_struct(struct_union(sv1, sv2));
-    // numerical part
-    typedef sparsevec_vecpair_t<T,REFCNT>::Elem Elem;
-    for (;i < sv2.real_size();++i)
-    {
-        while (j < sv1.real_size()&& sv1.rep[j].first < sv2.rep[i].first)
-        {
-            res.rep[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
-            ++j;
-        }
-
-        if (j < sv1.real_size()&& sv1.rep[j].first == sv2.rep[i].first)
-        {
-            res.rep[count++]=Elem(sv1.rep[j].first,sv1.rep[j].second+sv2.rep[i].second);
-            ++j;
-        }
-        else
-        {
-            res.rep[count++] = Elem(sv2.rep[i].first,sv2.rep[i].second);
-        }
-    }
-
-    while (j < sv1.real_size())
-    {
-        res.rep[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
-        ++j;
-    }
-    /*********************************************************************************************/
-
-#ifdef ARAGELI_DEBUG_LEVEL_3
-    res.ordered = true;
-#endif
-}
-
-template <typename T, bool REFCNT>
-void sub(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2)
-{
-    ARAGELI_ASSERT_0( sv1.size()==sv2.size());
-    ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
-
-    res.n=sv1.n;
-    size_t
-        i=0,
-        j=0,
-        count=0;
-
-    // symbolic part
-    res.resize_mem_struct(struct_union(sv1, sv2));
-    // numerical part
-    typedef sparsevec_vecpair_t<T,REFCNT>::Elem Elem;
-    for (;i < sv2.real_size();++i)
-    {
-        while (j < sv1.real_size()&& sv1.rep[j].first < sv2.rep[i].first)
-        {
-            res.rep[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
-            ++j;
-        }
-
-        if (j < sv1.real_size()&& sv1.rep[j].first == sv2.rep[i].first)
-        {
-            res.rep[count++]=Elem(sv1.rep[j].first,sv1.rep[j].second-sv2.rep[i].second);
-            ++j;
-        }
-        else
-        {
-            res.rep[count++] = Elem(sv2.rep[i].first,-sv2.rep[i].second);
-        }
-    }
-
-    while (j < sv1.real_size())
-    {
-        res.rep[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
-        ++j;
-    }
-    /*********************************************************************************************/
-
-#ifdef ARAGELI_DEBUG_LEVEL_3
-    res.ordered = true;
-#endif
-}
-
-template <typename T, bool REFCNT>
-void mul(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv, const T &val)
-{
-    res.n = sv.n;
-    res.resize_mem_struct(sv.real_size());
-    for (size_t j = 0;j < sv.real_size();++j)
-    {
-        res.rep[j].first = sv.rep[j].first;
-        res.rep[j].second = sv.rep[j].second*val;
-    }
-
-#ifdef ARAGELI_DEBUG_LEVEL_3
-    res.ordered = sv.ordered;
-#endif
-}
-
-template <typename T, bool REFCNT>
-void div(sparsevec_vecpair_t<T,REFCNT> &res, const sparsevec_vecpair_t<T,REFCNT> &sv, const T &val)
-{
-    res.n = sv.n;
-    res.resize_mem_struct(sv.real_size());
-    for (size_t j = 0;j < sv.real_size();++j)
-    {
-        res.rep[j].first = sv.rep[j].first;
-        res.rep[j].second = sv.rep[j].second/val;
-    }
-
-#ifdef ARAGELI_DEBUG_LEVEL_3
-    res.ordered = sv.ordered;
-#endif
-}
-
-template <typename T, bool REFCNT>
-void dot(T &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2)
-{
-    ARAGELI_ASSERT_0( sv1.size()==sv2.size());
-    ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
-
-    res = null<T>();
-    size_t
-        i=0,
-        j=0;
-    size_t count=0;
-    for (;i < sv2.real_size()&& j < sv1.real_size();)
-    {
-        if(sv1.rep[j].first == sv2.rep[i].first)
-        {
-            res += sv1.rep[j].second * sv2.rep[i].second;
-            ++j;
-            ++i;
-        }
-        else if(sv1.rep[j].first < sv2.rep[i].first)
-        {
-            ++j;
-        }
-        else
-        {
-            ++i;
-        }
-    }
-}
-
-template <typename T, bool REFCNT>
-void dot(T &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const Arageli::vector<T> &vec)
-{
-    ARAGELI_ASSERT_0( sv1.size()==vec.size());
-    res = null<T>();
-    size_t i=0;
-
-    for (;i < sv1.real_size();++i)
-    {
-        res += sv1.rep[i].second * vec[sv1.rep[i].first];
-    }
-}
-
-template <typename T, bool REFCNT>
-void add_in(sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2)
-{
-    ARAGELI_ASSERT_0( sv1.size()==sv2.size());
-    ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
-
-    sparsevec_vecpair_t<T,REFCNT>::Rep temp;
-    size_t
-        i=0,
-        j=0,
-        count=0;
-
-    // symbolic part
-    temp.resize(struct_union(sv1, sv2));
-    // numerical part
-    typedef sparsevec_vecpair_t<T,REFCNT>::Elem Elem;
-    for (;i < sv2.real_size();++i)
-    {
-        while (j < sv1.real_size()&& sv1.rep[j].first < sv2.rep[i].first)
-        {
-            temp[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
-            ++j;
-        }
-
-        if (j < sv1.real_size()&& sv1.rep[j].first == sv2.rep[i].first)
-        {
-            temp[count++]=Elem(sv1.rep[j].first,sv1.rep[j].second+sv2.rep[i].second);
-            ++j;
-        }
-        else
-        {
-            temp[count++] = Elem(sv2.rep[i].first,sv2.rep[i].second);
-        }
-    }
-
-    while (j < sv1.real_size())
-    {
-        temp[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
-        ++j;
-    }
-    /*********************************************************************************************/
-    temp.swap(sv1.rep);
-}
-
-template <typename T, bool REFCNT>
-void sub_in(sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2)
-{
-    ARAGELI_ASSERT_0( sv1.size()==sv2.size());
-    ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
-
-    sparsevec_vecpair_t<T,REFCNT>::Rep temp;
-    size_t
-        i=0,
-        j=0,
-        count=0;
-
-    /****************************************symbolic part****************************************/
-    temp.resize(struct_union(sv1, sv2));
-    /****************************************numerical part***************************************/
-    typedef sparsevec_vecpair_t<T,REFCNT>::Elem Elem;
-    for (;i < sv2.real_size();++i)
-    {
-        while (j < sv1.real_size()&& sv1.rep[j].first < sv2.rep[i].first)
-        {
-            temp[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
-            ++j;
-        }
-
-        if (j < sv1.real_size()&& sv1.rep[j].first == sv2.rep[i].first)
-        {
-            temp[count++]=Elem(sv1.rep[j].first,sv1.rep[j].second-sv2.rep[i].second);
-            ++j;
-        }
-        else
-        {
-            temp[count++] = Elem(sv2.rep[i].first,-sv2.rep[i].second);
-        }
-    }
-
-    while (j < sv1.real_size())
-    {
-        temp[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
-        ++j;
-    }
-    /*********************************************************************************************/
-    temp.swap(sv1.rep);
-}
-
-template <typename T, bool REFCNT>
-void mul_in(sparsevec_vecpair_t<T,REFCNT> &sv, const T &val)
-{
-    for (size_t j = 0;j < sv.real_size();++j)
-    {
-        sv.rep[j].first     = sv.rep[j].first;
-        sv.rep[j].second    = sv.rep[j].second*val;
-    }
-}
-
-template <typename T, bool REFCNT>
-void div_in(sparsevec_vecpair_t<T,REFCNT> &sv, const T &val)
-{
-    for (size_t j = 0;j < sv.real_size();++j)
-    {
-        sv.rep[j].first     = sv.rep[j].first;
-        sv.rep[j].second    = sv.rep[j].second/val;
-    }
-}
+//template <typename T, bool REFCNT>
+//void dot(T &res, const sparsevec_vecpair_t<T,REFCNT> &sv1, const Arageli::vector<T> &vec)
+//{
+//    ARAGELI_ASSERT_0( sv1.size()==vec.size());
+//    res = null<T>();
+//    size_t i=0;
+//
+//	int h = sv1.real_size();
+//
+//	const sparsevec_vecpair_t<T,REFCNT>::Elem *el = &sv1.rep[0];
+//	const sparsevec_vecpair_t<T,REFCNT>::Elem *el_end = &sv1.rep[h-1];
+//	
+//    for (;el <= el_end; ++el)
+//    {
+//        res += el->second * vec[el->first];
+//    }
+//}
+//
+//template <typename T, bool REFCNT>
+//void add_in(sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2)
+//{
+//    ARAGELI_ASSERT_0( sv1.size()==sv2.size());
+//    ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
+//
+//    sparsevec_vecpair_t<T,REFCNT>::Rep temp;
+//    size_t
+//        i=0,
+//        j=0,
+//        count=0;
+//
+//    // symbolic part
+//    temp.resize(struct_union(sv1, sv2));
+//    // numerical part
+//    typedef sparsevec_vecpair_t<T,REFCNT>::Elem Elem;
+//    for (;i < sv2.real_size();++i)
+//    {
+//        while (j < sv1.real_size()&& sv1.rep[j].first < sv2.rep[i].first)
+//        {
+//            temp[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
+//            ++j;
+//        }
+//
+//        if (j < sv1.real_size()&& sv1.rep[j].first == sv2.rep[i].first)
+//        {
+//            temp[count++]=Elem(sv1.rep[j].first,sv1.rep[j].second+sv2.rep[i].second);
+//            ++j;
+//        }
+//        else
+//        {
+//            temp[count++] = Elem(sv2.rep[i].first,sv2.rep[i].second);
+//        }
+//    }
+//
+//    while (j < sv1.real_size())
+//    {
+//        temp[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
+//        ++j;
+//    }
+//    /*********************************************************************************************/
+//    temp.swap(sv1.rep);
+//}
+//
+//template <typename T, bool REFCNT>
+//void sub_in(sparsevec_vecpair_t<T,REFCNT> &sv1, const sparsevec_vecpair_t<T,REFCNT> &sv2)
+//{
+//    ARAGELI_ASSERT_0( sv1.size()==sv2.size());
+//    ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
+//
+//    sparsevec_vecpair_t<T,REFCNT>::Rep temp;
+//    size_t
+//        i=0,
+//        j=0,
+//        count=0;
+//
+//    /****************************************symbolic part****************************************/
+//    temp.resize(struct_union(sv1, sv2));
+//    /****************************************numerical part***************************************/
+//    typedef sparsevec_vecpair_t<T,REFCNT>::Elem Elem;
+//    for (;i < sv2.real_size();++i)
+//    {
+//        while (j < sv1.real_size()&& sv1.rep[j].first < sv2.rep[i].first)
+//        {
+//            temp[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
+//            ++j;
+//        }
+//
+//        if (j < sv1.real_size()&& sv1.rep[j].first == sv2.rep[i].first)
+//        {
+//            temp[count++]=Elem(sv1.rep[j].first,sv1.rep[j].second-sv2.rep[i].second);
+//            ++j;
+//        }
+//        else
+//        {
+//            temp[count++] = Elem(sv2.rep[i].first,-sv2.rep[i].second);
+//        }
+//    }
+//
+//    while (j < sv1.real_size())
+//    {
+//        temp[count++] = Elem(sv1.rep[j].first,sv1.rep[j].second);
+//        ++j;
+//    }
+//    /*********************************************************************************************/
+//    temp.swap(sv1.rep);
+//}
+//
+//template <typename T, bool REFCNT>
+//void mul_in(sparsevec_vecpair_t<T,REFCNT> &sv, const T &val)
+//{
+//    for (size_t j = 0;j < sv.real_size();++j)
+//    {
+//        sv.rep[j].first     = sv.rep[j].first;
+//        sv.rep[j].second    = sv.rep[j].second*val;
+//    }
+//}
+//
+//template <typename T, bool REFCNT>
+//void div_in(sparsevec_vecpair_t<T,REFCNT> &sv, const T &val)
+//{
+//    for (size_t j = 0;j < sv.real_size();++j)
+//    {
+//        sv.rep[j].first     = sv.rep[j].first;
+//        sv.rep[j].second    = sv.rep[j].second/val;
+//    }
+//}
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Implementation of some template function for sparse vector on pair of vectors
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 template <typename T, bool REFCNT>
-void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const sparsevec_pairvec_t<T,REFCNT> &src)
+inline void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const sparsevec_pairvec_t<T,REFCNT> &src)
 {
     dst.n=src.n;
     dst.rep=src.rep;
@@ -1073,13 +1094,13 @@ void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const sparsevec_pairvec_t<T,REF
 }
 
 template <typename T, bool REFCNT>
-void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const Arageli::vector<T> &src)
+inline void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const Arageli::vector<T> &src)
 {
     dst.n=src.size();
     size_t count=0;
     for(int i=0;i<dst.n;i++)
     {
-        if(!is_null(src[i]))
+        if(!sprsvc_comp::is_notvalid(src[i]))
         {
             ++count;
         }
@@ -1087,7 +1108,7 @@ void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const Arageli::vector<T> &src)
     dst.resize_mem_struct(count);
     for (size_t i=0,k=0;i<dst.n;++i)
     {
-        if(!is_null(src[i]))
+        if(!sprsvc_comp::is_notvalid(src[i]))
         {
             dst.rep.first[k] = i;
             dst.rep.second[k++] = src[i];
@@ -1100,7 +1121,7 @@ void copy_to(sparsevec_pairvec_t<T,REFCNT> &dst, const Arageli::vector<T> &src)
 }
 
 template <typename T, bool REFCNT>
-void add(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2)
+inline void add(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1150,7 +1171,7 @@ void add(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT>
 }
 
 template <typename T, bool REFCNT>
-void sub(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2)
+inline void sub(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1200,7 +1221,7 @@ void sub(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT>
 }
 
 template <typename T, bool REFCNT>
-void mul(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv, const T &val)
+inline void mul(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv, const T &val)
 {
     res.n = sv.n;
     res.resize_mem_struct(sv.real_size());
@@ -1216,7 +1237,7 @@ void mul(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT>
 }
 
 template <typename T, bool REFCNT>
-void div(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv, const T &val)
+inline void div(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT> &sv, const T &val)
 {
     res.n = sv.n;
     res.resize_mem_struct(sv.real_size());
@@ -1232,7 +1253,7 @@ void div(sparsevec_pairvec_t<T,REFCNT> &res, const sparsevec_pairvec_t<T,REFCNT>
 }
 
 template <typename T, bool REFCNT>
-void dot(T &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2)
+inline void dot(T &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1263,7 +1284,7 @@ void dot(T &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairv
 }
 
 template <typename T, bool REFCNT>
-void dot(T &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const Arageli::vector<T> &vec)
+inline void dot(T &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const Arageli::vector<T> &vec)
 {
     ARAGELI_ASSERT_0( sv1.size()==vec.size());
 
@@ -1277,7 +1298,7 @@ void dot(T &res, const sparsevec_pairvec_t<T,REFCNT> &sv1, const Arageli::vector
 }
 
 template <typename T, bool REFCNT>
-void add_in(sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2)
+inline void add_in(sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1330,7 +1351,7 @@ void add_in(sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFC
 }
 
 template <typename T, bool REFCNT>
-void sub_in(sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2)
+inline void sub_in(sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFCNT> &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1382,7 +1403,7 @@ void sub_in(sparsevec_pairvec_t<T,REFCNT> &sv1, const sparsevec_pairvec_t<T,REFC
 }
 
 template <typename T, bool REFCNT>
-void mul_in(sparsevec_pairvec_t<T,REFCNT> &sv, const T &val)
+inline void mul_in(sparsevec_pairvec_t<T,REFCNT> &sv, const T &val)
 {
     for (size_t j = 0;j < sv.real_size();++j)
     {
@@ -1392,7 +1413,7 @@ void mul_in(sparsevec_pairvec_t<T,REFCNT> &sv, const T &val)
 }
 
 template <typename T, bool REFCNT>
-void div_in(sparsevec_pairvec_t<T,REFCNT> &sv, const T &val)
+inline void div_in(sparsevec_pairvec_t<T,REFCNT> &sv, const T &val)
 {
     for (size_t j = 0;j < sv.real_size();++j)
     {
@@ -1404,7 +1425,7 @@ void div_in(sparsevec_pairvec_t<T,REFCNT> &sv, const T &val)
 // All sparse vector template function implementation
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 template <typename A, typename B>
-void copy_to(A &dst, const B &src)
+inline void copy_to(A &dst, const B &src)
 {
     dst.n=src.n;
     dst.clear();
@@ -1426,7 +1447,7 @@ void copy_to(A &dst, const B &src)
 }
 
 template <typename T, typename A>
-void copy_to(A &dst, const Arageli::vector<T> &src)
+inline void copy_to(A &dst, const Arageli::vector<T> &src)
 {
     dst.n=src.size();
     dst.clear();
@@ -1435,7 +1456,7 @@ void copy_to(A &dst, const Arageli::vector<T> &src)
         size_t count=0;
         for(int i=0;i<dst.n;i++)
         {
-            if(!is_null(src[i]))
+            if(!sprsvc_comp::is_notvalid(src[i]))
             {
                 ++count;
             }
@@ -1444,7 +1465,7 @@ void copy_to(A &dst, const Arageli::vector<T> &src)
     }
     for (size_t i=0;i<dst.n;++i)
     {
-        if(!is_null(src[i]))
+        if(!sprsvc_comp::is_notvalid(src[i]))
         {
             dst.push_back(i,src[i]);
         }
@@ -1456,7 +1477,7 @@ void copy_to(A &dst, const Arageli::vector<T> &src)
 }
 
 template <typename T, typename A>
-void copy_to(Arageli::vector<T> &dst, const A &src)
+inline void copy_to(Arageli::vector<T> &dst, const A &src)
 {
     A::const_indraw_iterator it_src = src.begin();
     A::const_indraw_iterator it_src_end = src.end();
@@ -1470,7 +1491,7 @@ void copy_to(Arageli::vector<T> &dst, const A &src)
 }
 
 template <typename A, typename B>
-bool equal(const A &sv1, const B &sv2)
+inline bool equal(const A &sv1, const B &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1483,11 +1504,11 @@ bool equal(const A &sv1, const B &sv2)
         B::const_indraw_iterator it_sv2_end = sv2.end();
         while(true)
         {
-            while(it_sv1!=it_sv1_end && is_null(it_sv1.el()))
+            while(it_sv1!=it_sv1_end && sprsvc_comp::is_notvalid(it_sv1.el()))
             {
                 ++it_sv1;
             }
-            while(it_sv2!=it_sv2_end && is_null(it_sv2.el()))
+            while(it_sv2!=it_sv2_end && sprsvc_comp::is_notvalid(it_sv2.el()))
             {
                 ++it_sv2;
             }
@@ -1520,13 +1541,13 @@ bool equal(const A &sv1, const B &sv2)
 }
 
 template <typename A, typename B>
-bool non_equal(const A &sv1, const B &sv2)
+inline bool non_equal(const A &sv1, const B &sv2)
 {
     return !equal(sv1, sv2);
 }
 
 template <typename A, typename B>
-void add(A &res, const A &sv1, const B &sv2)
+inline void add(A &res, const A &sv1, const B &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1573,7 +1594,7 @@ void add(A &res, const A &sv1, const B &sv2)
 }
 
 template <typename A, typename B>
-void sub(A &res, const A &sv1, const B &sv2)
+inline void sub(A &res, const A &sv1, const B &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1620,7 +1641,7 @@ void sub(A &res, const A &sv1, const B &sv2)
 }
 
 template <typename T, typename A>
-void mul(A &res, const A &sv, const T &val)
+inline void mul(A &res, const A &sv, const T &val)
 {
     res.n = sv.n;
     res.clear();
@@ -1641,7 +1662,7 @@ void mul(A &res, const A &sv, const T &val)
 }
 
 template <typename T, typename A>
-void div(A &res, const A &sv, const T &val)
+inline void div(A &res, const A &sv, const T &val)
 {
     res.n = sv.n;
     res.clear();
@@ -1663,7 +1684,7 @@ void div(A &res, const A &sv, const T &val)
 }
 
 template <typename T, typename A, typename B>
-void dot(T &res, const A &sv1, const B &sv2)
+inline void dot(T &res, const A &sv1, const B &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1694,7 +1715,7 @@ void dot(T &res, const A &sv1, const B &sv2)
 }
 
 template <typename T, typename A>
-void dot(T &res, const A &sv, const Arageli::vector<T> &vec)
+inline void dot(T &res, const A &sv, const Arageli::vector<T> &vec)
 {
     ARAGELI_ASSERT_0( sv.size()==vec.size());
 
@@ -1709,7 +1730,7 @@ void dot(T &res, const A &sv, const Arageli::vector<T> &vec)
 }
 
 template <typename A, typename B>
-void add_in(A &sv1, const B &sv2)
+inline void add_in(A &sv1, const B &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1755,7 +1776,7 @@ void add_in(A &sv1, const B &sv2)
 }
 
 template <typename A, typename B>
-void sub_in(A &sv1, const B &sv2)
+inline void sub_in(A &sv1, const B &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1802,7 +1823,7 @@ void sub_in(A &sv1, const B &sv2)
 }
 
 template <typename T, typename A>
-void mul_in(A &sv, const T &val)
+inline void mul_in(A &sv, const T &val)
 {
     A::raw_iterator it_sv     = sv.begin();
     A::raw_iterator it_sv_end = sv.end();
@@ -1813,7 +1834,7 @@ void mul_in(A &sv, const T &val)
 }
 
 template <typename T, typename A>
-void div_in(A &sv, const T &val)
+inline void div_in(A &sv, const T &val)
 {
     A::raw_iterator it_sv     = sv.begin();
     A::raw_iterator it_sv_end = sv.end();
@@ -1824,7 +1845,7 @@ void div_in(A &sv, const T &val)
 }
 
 template <typename A, typename B>
-size_t struct_intersection(const A &sv1, const B &sv2)
+inline size_t struct_intersection(const A &sv1, const B &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1850,7 +1871,7 @@ size_t struct_intersection(const A &sv1, const B &sv2)
 }
 
 template <typename A, typename B>
-size_t struct_union(const A &sv1, const B &sv2)
+inline size_t struct_union(const A &sv1, const B &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1885,7 +1906,7 @@ size_t struct_union(const A &sv1, const B &sv2)
 }
 
 template <typename A, typename B>
-bool struct_disjoint(const A &sv1, const B &sv2)
+inline bool struct_disjoint(const A &sv1, const B &sv2)
 {
     ARAGELI_ASSERT_0( sv1.size()==sv2.size());
     ARAGELI_ASSERT_2( sv1.is_ordered()&& sv2.is_ordered());
@@ -1943,53 +1964,53 @@ sparse_vector<T,Param>
 }
 
 template<typename T,typename Param>
-void sparse_vector<T,Param>::resize(size_t n)
+inline void sparse_vector<T,Param>::resize(size_t n)
 {
     rep.resize(n);
 }
 
 template<typename T,typename Param>
-void sparse_vector<T,Param>::reserve_mem(size_t i)
+inline void sparse_vector<T,Param>::reserve_mem(size_t i)
 {
     rep.reserve_mem(i);
 }
 
 template<typename T,typename Param>
-void sparse_vector<T,Param>::resize_mem_struct(size_t elem_count)
+inline void sparse_vector<T,Param>::resize_mem_struct(size_t elem_count)
 {
     rep.resize_mem_struct(elem_count);
 }
 
 template<typename T,typename Param>
-const T & sparse_vector<T,Param>::operator[](size_t i) const
+inline const T & sparse_vector<T,Param>::operator[](size_t i) const
 {
     return rep.get(i);
 }
 
 template<typename T,typename Param>
 template<typename T1, typename Param1>
-sparse_vector<T,Param> & sparse_vector<T,Param>::operator= (const sparse_vector<T1,Param1> &sv)
+inline sparse_vector<T,Param> & sparse_vector<T,Param>::operator= (const sparse_vector<T1,Param1> &sv)
 {
     sprsvc_comp::copy_to(rep, sv.rep);
     return *this;
 }
 
 template<typename T,typename Param>
-sparse_vector<T,Param> & sparse_vector<T,Param>::operator= (const sparse_vector &sv)
+inline sparse_vector<T,Param> & sparse_vector<T,Param>::operator= (const sparse_vector &sv)
 {
     sprsvc_comp::copy_to(rep, sv.rep);
     return *this;
 }
 
 template<typename T,typename Param>
-sparse_vector<T,Param> & sparse_vector<T,Param>::operator= (const Arageli::vector<T> &vec)
+inline sparse_vector<T,Param> & sparse_vector<T,Param>::operator= (const Arageli::vector<T> &vec)
 {
     sprsvc_comp::copy_to(rep, vec);
     return *this;
 }
 
 template<typename T,typename Param>
-sparse_vector<T,Param> & sparse_vector<T,Param>::operator= (const char *ch)
+inline sparse_vector<T,Param> & sparse_vector<T,Param>::operator= (const char *ch)
 {
     std::istringstream buf(ch);
     // WARNING. It is valid if there are no virtual function.
@@ -2001,7 +2022,7 @@ sparse_vector<T,Param> & sparse_vector<T,Param>::operator= (const char *ch)
 
 template<typename T,typename Param>
 template<typename inT, typename inParam>
-sparse_vector<T,Param> & sparse_vector<T,Param>::operator+=(const sparse_vector<inT,inParam> &sv)
+inline sparse_vector<T,Param> & sparse_vector<T,Param>::operator+=(const sparse_vector<inT,inParam> &sv)
 {
     sprsvc_comp::add_in(rep, sv.rep);
     return *this;
@@ -2009,28 +2030,28 @@ sparse_vector<T,Param> & sparse_vector<T,Param>::operator+=(const sparse_vector<
 
 template<typename T,typename Param>
 template<typename inT, typename inParam>
-sparse_vector<T,Param> & sparse_vector<T,Param>::operator-=(const sparse_vector<inT,inParam> &sv)
+inline sparse_vector<T,Param> & sparse_vector<T,Param>::operator-=(const sparse_vector<inT,inParam> &sv)
 {
     sprsvc_comp::sub_in(rep, sv.rep);
     return *this;
 }
 
 template<typename T,typename Param>
-sparse_vector<T,Param> & sparse_vector<T,Param>::operator*=(const T &val)
+inline sparse_vector<T,Param> & sparse_vector<T,Param>::operator*=(const T &val)
 {
     sprsvc_comp::mul_in(rep, val);
     return *this;
 }
 
 template<typename T,typename Param>
-sparse_vector<T,Param> & sparse_vector<T,Param>::operator/=(const T &val)
+inline sparse_vector<T,Param> & sparse_vector<T,Param>::operator/=(const T &val)
 {
     sprsvc_comp::div_in(rep, val);
     return *this;
 }
 
 template<typename T,typename Param>
-sparse_vector<T,Param>::operator vector<T> ()
+inline sparse_vector<T,Param>::operator vector<T> ()
 {
     vector<T> dst;
     copy_to(dst, *this);
@@ -2325,7 +2346,7 @@ In& input_list
             return in;
         else if(_Internal::read_literal(in, separator))
         {// "t,"
-            if(!is_null(t))
+            if(!sprsvc_comp::is_notvalid(t))
             {
                 buf_ind.push_back(i);
                 buf_val.push_back(t);
@@ -2375,7 +2396,7 @@ In& input_list
         }
         else if(*second_bracket == 0 || _Internal::read_literal(in, second_bracket))
         {// "t)"
-            if(!is_null(t))
+            if(!sprsvc_comp::is_notvalid(t))
             {
                 buf_ind.push_back(i);
                 buf_val.push_back(t);
@@ -2388,6 +2409,7 @@ In& input_list
         return in;
     }
 
+	x.clear();
     x.resize(i);
     if(!x.dynamic())
     {
@@ -2416,7 +2438,7 @@ inline bool is_null(const sparse_vector<T, Param>& x)
     it_end = x.end();
     for(;it!=it_end;++it)
     {
-        if(!is_null(it.el()))
+        if(!sprsvc_comp::is_notvalid(it.el()))
         {
             return false;
         }
