@@ -1,0 +1,1582 @@
+\documentclass{article}
+
+\usepackage{verbatim}
+\usepackage{xspace}
+
+\usepackage[unicode]{hyperref}
+
+\usepackage{pstricks}
+\usepackage{pst-node}           % PSTricks package for nodes
+\usepackage{pst-tree}           % PSTricks package for trees
+%\usepackage{pst-3dplot}
+%\usepackage{amsmath} % ��� cfrac
+\psset{linewidth=0.5pt,arrowlength=2.8}
+
+
+\newcommand{\Skeleton}{{\sc Skeleton}\xspace}
+\newcommand{\SkeletonVersion}{{\sc 02.01.03}\xspace}
+\newcommand{\SkeletonDate}{October 19, 2010}
+\newcommand{\params}{\smallskip\hangindent=2\parindent}
+\newcommand{\Arageli}{{\sc Arageli}\xspace}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+
+\newcommand{\NN}{{\cal N}}
+\newcommand{\BB}{{\cal B}}
+\newcommand{\LL}{{\cal L}}
+\newcommand{\LD}{{\cal LD}}
+\newcommand{\PP}{{\cal P}}
+\newcommand{\RRR}{{\cal R}}
+\newcommand{\SSS}{{\cal S}}
+\newcommand{\ZZ}{{\rm\bf Z}}
+\newcommand{\QQ}{{\rm\bf Q}}
+\newcommand{\RR}{{\rm\bf R}}
+\newcommand{\VV}{{\rm\bf V}}
+\newcommand{\CC}{{\rm\bf C}}
+\newcommand{\ee}{{\rm\bf e}}
+\newcommand{\ff}{{\rm\bf f}}
+\newcommand{\FF}{{\cal F}}
+\renewcommand{\Re}{\mathop{\rm Re}\nolimits}
+\renewcommand{\Im}{\mathop{\rm Im}\nolimits}
+\newcommand{\VS}{\mathop{\rm VS}\nolimits}
+\newcommand{\dist}{\mathop{\rm dist}\nolimits}
+\newcommand{\Aff}{\mathop{\rm Aff}\nolimits}
+\newcommand{\Lin}{\mathop{\rm Lin}\nolimits}
+\newcommand{\NonNeg}{\mathop{\rm NonNeg}\nolimits}
+\newcommand{\Conv}{\mathop{\rm Conv}\nolimits}
+\newcommand{\Ker}{\mathop{\rm Ker}\nolimits}
+\newcommand{\rank}{\mathop{\rm rank}\nolimits}
+\newcommand{\pr}{\mathop{\rm pr}\nolimits}
+\newcommand{\ort}{\mathop{\rm ort}\nolimits}
+\newcommand{\set}[1]{\left\{ #1\right\}}
+\newcommand{\oset}[1]{\left\langle #1\right\rangle}
+%\newcommand{\intie}[1]{\left[ #1\right]}
+\newcommand{\intie}[1]{\left\lfloor #1\right\rfloor}
+\newcommand{\intieup}[1]{\left\lceil #1\right\rceil}
+\newcommand{\transpose}{^{\top}}
+\newcommand{\GCD}{\mathop{\rm ���}\nolimits}
+\newcommand{\LCC}{\mathop{\rm ���}\nolimits}
+\newcommand{\diag}{\mathop{\rm diag}}
+\newcommand{\defect}{\mathop{\rm def}\nolimits}
+\newcommand{\degree}{\mathop{\rm deg}\nolimits}
+\newcommand{\pp}{\stackrel{.}{+}}
+\newcommand{\Sum}{\sum\limits}
+\newcommand{\tr}{\mathop{\rm tr}\nolimits}
+\newcommand{\lexmin}{\mathop{\rm lexmin}\limits}
+\newcommand{\comments}[1]{}
+\newcommand{\titlebf}[1]{\par\noindent{\bf #1.}}
+\newcommand{\titlesc}[1]{\par\noindent{\sc #1.}}
+\newcommand{\fracc}[2]{\frac{\textstyle #1\strut}{\textstyle #2\strut}}
+\newcommand{\fraccc}[2]{\leavevmode\kern.1em\raise.5ex\hbox{\scriptsize $#1$}
+  \kern-.1em / \kern-.15em \lower.25ex\hbox{\scriptsize $#2$}\,}
+\newcommand{\fr}[1]{\fbox{$#1$}}
+\newcommand{\newsubsection}{\medskip\centerline{* * *}\medskip\nopagebreak}
+\newenvironment{narrowarray}[1]{\arraycolsep=0.15em\begin{array}{#1}}{\end{array}}
+\newcommand{\lpp}[2]{\begin{array}{c}#1\\[8pt]{} #2\end{array}}
+\newcommand{\no}[1]{^{(#1)}}
+\newcommand{\tpsb}[2]{\begin{MAT}(e){cc} #1 & \star \\ & #2 \\ \end{MAT}}
+\newcommand{\tpsn}[1]{\begin{MAT}(e){cc} #1 & \\ & \\    \end{MAT}}
+\newcommand{\Ref}[1]{{\rm (\ref{#1})}}
+\newcommand{\xhat}{{\widehat x}}
+\newcommand{\xtilde}{{\widetilde x}}
+\newcommand{\xbar}{{\overline{x}}}
+\newcommand{\uhat}{{\widehat u}}
+\newcommand{\utilde}{{\widetilde u}}
+\newcommand{\ahat}{{\widehat a}}
+\newcommand{\atilde}{{\widetilde a}}
+\newcommand{\bhat}{{\widehat b}}
+\newcommand{\btilde}{{\widetilde b}}
+\newcommand{\chat}{{\widehat c}}
+\newcommand{\fhat}{{\widehat f}}
+\newcommand{\ctilde}{{\widetilde c}}
+\newcommand{\vtilde}{{\widetilde v}}
+\newcommand{\wtilde}{{\widetilde w}}
+\newcommand{\ytilde}{{\widetilde y}}
+\newcommand{\ttilde}{{\widetilde t}}
+\newcommand{\Btilde}{{\widetilde B}}
+\newcommand{\Ntilde}{{\widetilde N}}
+
+\newcounter{formula}
+%\newcounter{formula}[chapter]
+\renewcommand{\theformula}{\arabic{formula}}
+%\renewcommand{\theformula}{\thechapter.\arabic{formula}}
+%\newcommand{\tag}[1]{\refstepcounter{formula}
+%  \eqno{(\theformula:#1)}\label{#1}}
+\newcommand{\tag}[1]{\refstepcounter{formula}
+  \eqno{(\theformula)}\label{#1}}
+
+
+\begin{document}
+
+\title{\Skeleton \SkeletonVersion Manual}
+
+\date{\SkeletonDate}
+
+\author{Nikolai Yu. Zolotykh\\[0.5em]
+\small with participation of Aleksey Bader, Sergey Lobanov, Sergey Lyalin\\[1em]
+ N.I.\,Lobachevsky State University of Nizhni Novgorod, Russia}
+
+\maketitle
+
+\begin{abstract}
+This paper describes \Skeleton: implementation of several new variations of
+well-known Double Description Method (DDM) for solving the vertex and facet
+enumeration problems for convex polyhedra. New enhancements makes \Skeleton 
+quite competitive in comparison with other implementations of DDM.
+The source code of \Skeleton \SkeletonVersion is available at
+\url{http://www.uic.nnov.ru/~zny/skeleton}.
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+\newcommand{\AB}{(A\transpose,B\transpose)}%{\left(\begin{array}{c}{A\\ B}\end{array}\right)}
+
+\section{What's new?}
+\ 
+
+\params \Skeleton 02.00.00 May 7, 2006\\ It is new, completely re-written, fast version of \Skeleton.
+
+\params \Skeleton 02.00.01 November 1, 2006\\
+\Skeleton now runs on Linux platform. Source code is available.
+
+\params \Skeleton 02.00.02 November 7, 2006\\
+Floating point arithmetic is now supported.
+
+\params \Skeleton 02.00.03 May 30, 2007\\
+Time bug fixed.
+%\item edges
+%Vertices of 2d and 3d polyhedra are in clockwise or anticlockwise direction.
+
+\params \Skeleton 02.00.04 October 6, 2009\\
+A bug occuring on 64 bit architecture fixed. (Thanks to Sergey Lyalin and Sergey Lobanov.)
+
+\params \Skeleton 02.01.00 November 16, 2009:
+\begin{itemize}
+\item The possibility to explicitly set a system of linear equations in addition to a system of linear inequalities.
+      See \verb$--skeletonformat$ option.
+\item New option \verb$--ridges$ for constructing ridges.
+\item New option \verb$--facetadjacency$ for constructing lists of adjacent facets.
+\item New option \verb$--verifyine$ to determine implicit equations and redundand inequalities in the input system.
+\item Avis--Fukuda format is now (partially) supported. See \verb$--avisfukudaformat$ option.
+\item New option \verb$--silence$ is available.      
+\item New options \verb$--inputfromstdin$, \verb$--noinputfromstdin$ are now available.
+\item According GNU style in long option names double hyphen is used instead of single hypen, 
+      for example, \verb$--minindex$ instead of \verb$-minindex$.
+\item \verb$-graphinc$ option is renamed \verb$--graphadj$ (from {\it graph of potential adjacency}).
+\item \verb$-inc$ option is renamed \verb$--dis$ (from {\it discrepancies}).
+\item \verb$-minedges$, \verb$-maxedges$ options are renamed \verb$--minpairs$ and \verb$--maxpairs$
+      correspondingly.
+\item \verb$-incext$, \verb$-noincext$, \verb$-incine$, \verb$-noincine$ options are renamed 
+      \verb$--extinc$, \verb$--noextinc$, \verb$--ineinc$, \verb$--noineinc$ correspondingly.
+\end{itemize}
+
+\params \Skeleton 02.01.01 July 11, 2010\\
+      Installation procedure became simpler.
+      Make file (for Linux) and project file (for MS Visual Studio) are provided now.
+      \Arageli is in the \Skeleton distribution now and you need not install \Arageli separately.
+      A lot of thanks to Aleksey Bader and Sergey Lyalin.
+
+\params \Skeleton 02.01.02 July 15, 2010\\
+      An installation bug is fixed.
+      Thanks to Aleksey Bader, Sergey Lyalin and Sergey Lobanov.
+      Now in this manual instead of term {\em skeleton} (not program \Skeleton) I use
+      the term {\em ossature}.
+
+\params \Skeleton 02.01.03 October 19, 2010\\
+      A bug connected with division by GCD when using skeleton format is fixed.
+
+
+\section{Introduction}
+
+It is well known that any polyhedron in $\RR^d$
+can be represented by the following two ways:
+\begin{enumerate}
+  \item[(1)] as a set of solutions to the system of linear inequalities, or
+
+  \item[(2)] as the (Minkowski's) sum of the conic hull of some vectors and 
+                           the convex hull of some points in $\RR^d$.
+\end{enumerate}
+
+The problem to generate representation (2) if representation (1) is available
+is called the {\em vertex enumeration problem}. The converse one
+is called the {\em facet enumeration problem}, or {\em convex hull problem}.
+
+Analogously, any polyhedral cone in $\RR^d$
+can be represented by the following two ways:
+\begin{enumerate}
+  \item[(1)] as a set of solutions to the system of homogenius linear inequalities, or
+  \item[(2)] as a set of all non-negative linear combinations of some vectors in $\RR^d$.
+\end{enumerate}
+
+There is a standard way to reduce vertex/facet enumeration problem for polyhedra
+to the correspondent problem for polyhedral cones. From theoretical point of view
+it is convenient to consider both problems just for polyhedral cones. 
+
+The program \Skeleton implements several variations of Double Description
+Method (DDM) \cite{MRTT53} solving the vertex and facet enumeration
+problems. DDM is considered in a few papers and monographs 
+\cite{Burger56,Chernikova64,Chernikova65,Chernikov68,VPSh84,Chernikova68,FQ88,Verge92,FP96,ShCh97,ShG2003}.
+
+\Skeleton works with the system of linear inequalities whose entries
+are integers (arbitrary precision or $4$ bytes long ints) or reals
+(double floating point numbers). 
+
+In our implementation we
+use ideas descibed in \cite{VPSh84,FP96,ShCh97} and some new enhancements.
+All these makes \Skeleton quite competitive in comparison with other
+implementations of DDM, in particular, \cite{Verge92,Fukuda02,Gruzdev2003}. Early version of
+\Skeleton is described in \cite{Zolotykh97}.
+
+\Skeleton can be distributed under the terms of GNU GENERAL PUBLIC LICENSE Version 2. 
+Read file COPYING.
+
+Thanks to Sergey Lobanov you can use \Skeleton on-line (without install it).
+Visit \url{http://www.arageli.org}.
+
+
+
+\section{Theoretical Preliminaries}
+
+\subsection{Polyhedral Cones}
+
+{\em Polyhedral cone} $C$ is the set of all solutions to a system of 
+homogenius linear inequalities and equations $Ax\ge 0$, $Bx= 0$:
+$$
+C = \set{x \in \RR^d:~ Ax \ge 0,~ Bx = 0},   \eqno(\star)
+$$
+where $A \in \RR^{m \times d}$, $B \in \RR^{t \times d}$
+($m$ or/and $t$ may be equal to $0$ that corresponds to the case when
+inequalities or/and equations are absent accordingly).
+The case of system of equations and inequalities can be obviously reduced 
+to the case of system with only inequalities. For this instead of $Bx = 0$ 
+we can consider $Bx\ge 0$ and $-Bx\ge 0$. But it will be more convinient to
+consider the more general case.
+
+The maximal subspace contained in the cone $C$ can be
+described as a set of all solutions to the system $Ax = 0$, $Bx = 0$. The dimension
+of this subspace is equal to $d - \rank \AB$. The cone is called {\em
+pointed} if it contains only zero subspace, that's equivalent to $\rank \AB = d$.
+
+Let $a\in\RR^d$, $a\ne 0$.
+The hyper-plane $\set{x\in\RR^d:~ ax=0}$ is called {\em supporting} for the cone $C$
+if %$C\cap\set{x:~ ax= 0}\ne\emptyset$ and 
+$C\subseteq\set{x:~ ax\ge 0}$ or
+$C\subseteq\set{x:~ ax\le 0}$. The intersection of the cone with a supporting
+hyper-plain is called its {\em face}.
+
+Consider the system of vectors $u_1,\dots,u_p$ in $\RR^d$. 
+The {\em linear hull} $\Lin(u_1,\dots,u_p)$ of the system is the set 
+of all linear combinations of these
+vectors:
+$$
+\Lin(u_1,\dots,u_p) = 
+\set{\lambda_1 u_1 + \dots + \lambda_p u_p:~ \lambda_i \in \RR~ (i=1,\dots,p)}.
+$$
+The {\em non-negative}, or {\em conic}, {\em hull} $\NonNeg(u_1,\dots,u_p)$ 
+of the system is the set 
+of all non-negative linear combinations:
+$$
+\NonNeg(u_1,\dots,u_p) = \set{\lambda_1 u_1 + \dots + \lambda_p u_p:~ 
+\lambda_i \in \RR,~\lambda_i \ge 0~ (i=1,\dots,p)}.
+$$
+
+\begin{theorem}[Minkowski]
+For any polyhedral cone $C$ in $\RR^d$ there exist vectors
+$u_1,\dots,u_p$, $v_1,\dots,v_q$ in $\RR^d$ such that
+$$
+C=\Lin(u_1,\dots,u_p) + \NonNeg(v_1,\dots,v_q).  \eqno(\star\star)
+$$
+\end{theorem}
+
+Obviously, w.l.g. in Minkowski's theorem 
+we can omit $\Lin(u_1,\dots,u_p)$ item and instead of $(\star\star)$ 
+write simply $C=\NonNeg(v_1,\dots,v_q)$.
+
+Using matrix notation we can re-formulate Minkowski's theorem as follows.
+For any matrices $A \in \RR^{m\times d}$ and $B \in \RR^{t\times d}$ there exist matrices 
+$V\in \RR^{q\times d}$ and $U\in \RR^{p\times d}$ such that
+$$
+\set{x\in\RR^d:~Ax\ge 0, ~ Bx = 0} = 
+\set{x = \mu V + \lambda U :~ \mu \in \RR^n,~ \mu \ge 0,~ \lambda \in \RR^s}.
+$$
+
+Vectors $u_1,\dots,u_p$, $v_1,\dots,v_q$ (equvalently,
+matrices $U$ and $V$) can be chosen in such a way that 
+the following {\em properties of minimality} hold:
+\begin{enumerate}
+  \item $p = d - \rank \AB$
+        and $\Lin(u_1,\dots,u_p)$ is the maximal subspace $L$ included in $C$
+        (so, the system $u_1,\dots,u_p$ is a basis of $L$); and
+  \item $q$ is minimal among all possible $q$ such that ($\star\star$)
+        holds (this means also that the system $v_1,\dots,v_q$ is irreducible); 
+        in this case the system $v_1,\dots,v_q$ is called an {\em ossature}
+        of the cone $C$.
+\end{enumerate}
+The vectors in an ossature are unique up to any positive multiplyer and any item in $L$.
+If the cone $C$ is pointed, i.e. $\rank \AB = d$ and, hence, $p=0$, then $v_1,\dots,v_q$ 
+(and --- up to positive multiplyer --- only they)
+are {\em extreme rays} of $C$. We'll say that two vectors in an ossature are
+{\em adjacent} if minimal face containing both does not contain any other vector in the ossature.
+
+The converse theorem to Minkowski's one is correct and is known as Weyl's theorem.
+
+\begin{theorem}[Weyl]
+For any vectors
+$u_1,\dots,u_p$, $v_1,\dots,v_q$ in $\RR^d$ there exist matrices
+$A\in \RR^{m\times d}$ and $B\in \RR^{t\times d}$ such that
+$$
+\Lin(u_1,\dots,u_p) + \NonNeg(v_1,\dots,v_q) = \set{x\in\RR^d:~Ax\ge 0,~Bx= 0}.
+$$
+\end{theorem}
+
+Obviously, w.l.g. in Weyl's theorem 
+we can omit linear equations $Bx=0$ and 
+simply write $\Lin(u_1,\dots,u_p) + \NonNeg(v_1,\dots,v_q) = \set{x\in\RR^d:~Ax\ge 0}$.
+
+Using matrix notation we can re-formulate Weyl's theorem as follows.
+For any matrices 
+$U\in \RR^{p\times d}$ and $V\in \RR^{q\times d}$ 
+there exist matrices $A \in \RR^{m\times d}$ and $B\in \RR^{t\times d}$ such that
+$$                 
+\set{x = \lambda U + \mu V:~ \lambda \in \RR^p,~ \mu \in \RR^q,~ \mu \ge 0} =
+\set{x\in\RR^d:~Ax\ge 0,~Bx= 0}.
+$$
+
+Matrices $A$ and $B$ can be chosen in such a way that 
+the following {\em properties of minimality} hold:
+\begin{enumerate}
+  \item $t = d - \rank \set{u_1,\dots,u_p, v_1,\dots,v_q}$
+        and $\set{x: Bx = 0}$ is the minimal subspace containing $C$
+        (this means also that the system $Bx = 0$ is irreducible); and
+  \item $m$ is minimal among all possible $m$ such that ($\star$)
+        holds (this means also that the system $Ax \ge 0$ is irreducible).
+\end{enumerate}
+The rows in such a matrix $A$ are unique up to any positive multiplyer and
+any item which is linear combinations of rows in $B$. The rows in $A$
+correspond to faces of maximum dimension. In particular, if the cone $C$ is
+full-dimensional, i.e. $\rank \set{u_1,\dots,u_p, v_1,\dots,v_q} = d$ and,
+hence, $t=0$, then the rows in $A$ correspond to {\em facets} of $C$.
+
+These theorems suggest two fundamental problems. First one is to obtain a dual representation
+($\star\star$) if a representation ($\star$) is known. The second problem is converse.
+It turns out that these problems are computationaly equivalent as the following theorem shows.
+So, we can concentate on the first problem.
+
+\begin{theorem}[Farkas--Minkowski--Weyl]
+If 
+$$
+C=\set{x\in\RR^d:~Ax\ge 0, ~ Bx = 0} = 
+\set{x = \mu V + \lambda U :~ \mu \in \RR^q,~ \mu \ge 0,~ \lambda \in \RR^p}
+$$
+then
+$$
+C'=\set{x\in\RR^d:~Vx\ge 0, ~ Ux = 0} = 
+\set{x = \mu A + \lambda B :~ \mu \in \RR^m,~ \mu \ge 0,~ \lambda \in \RR^t}.
+$$
+\end{theorem}
+
+Moreover, if rows in $V$ and $U$ form an ossature of $C$ and a basis of minimal subspace
+correspondingly, then $Vx\ge 0$, $Ux = 0$ are irreducible systems determining
+$C'$ and viceversa. Analogous property is true for $A$ and $B$.
+
+
+
+
+\subsection{Polyhedra}
+
+{\em Polyhedron} $P$ is the set of all solutions to a system of 
+linear inequalities and equations $Ax\ge b$, $Bx= c$:
+$$
+P = \set{x \in \RR^d:~ Ax \ge b,~ Bx = c},  \eqno(*)
+$$
+where $A \in \RR^{m \times d}$, $B \in \RR^{t \times d}$, $b\in \RR^{m}$, $c\in \RR^t$
+($m$ or/and $t$ may be equal to $0$ that corresponds to the case when
+inequalities or/and equations are absent accordingly).
+The case of system of equations and inequalities can be obviously reduced 
+to the case of system with only inequalities. But it will be more convinient to
+consider the more general case.
+
+Let $a\in\RR^d$, $a\ne 0$, $\alpha \in \RR$.
+The hyper-plane $\set{x\in\RR^d:~ ax=\alpha}$ is called {\em supporting} for the polyhedron $P$
+if $P\cap\set{x:~ ax= \alpha}\ne\emptyset$ and 
+$P\subseteq\set{x:~ ax\ge \alpha}$ or
+$P\subseteq\set{x:~ ax\le \alpha}$. The intersection of the polyhedron with a supporting
+hyper-plane is called a {\em face} of the polyhedron. The face whith dimension $0$ 
+(i.e. a point) is called a {\em vertex} of $P$.
+
+
+Consider the system of vectors $w_1,\dots,w_s$ in $\RR^d$. 
+%The {\em affine hull} $\Aff(u_1,\dots,u_s)$ of the system is the set 
+%of all {\em affine combinations} of these vectors, i.e.:
+%$$
+%\Aff(u_1,\dots,u_s) = 
+%\set{\lambda_1 u_1 + \dots + \lambda_s u_s:~ \lambda_i \in \RR,~ \sum_{i=1}^s\lambda_i=1}.
+%$$
+The {\em convex hull} $\Conv(w_1,\dots,w_s)$ of the system is the set 
+of all {\em convex combinations} of these vectors, i.e.:
+$$
+\Conv(w_1,\dots,w_s) = 
+\set{\lambda_1 w_1 + \dots + \lambda_s w_s:~ \lambda_i \in \RR,~ \lambda_i \ge 0,~
+\sum_{i=1}^s\lambda_i=1}.
+$$
+The set of points in $\RR^d$ which can be represented as a convex hull of some
+finite system of points is called {\em polytope}.
+
+From Minkowski's theorem we get the following.
+
+\begin{theorem}
+For any polyhedron $P$ in $\RR^d$ there exist vectors
+$u_1,\dots,u_p$, $v_1,\dots,v_q$, $w_1,\dots,w_s$ in $\RR^d$ such that
+$$
+P=\Lin(u_1,\dots,u_p) + \NonNeg(v_1,\dots,v_q) + \Conv(w_1,\dots,w_s). \eqno(**)
+$$
+So, any polyhedron is the sum of a cone and a polytope.
+\end{theorem}
+
+Obviously, w.l.g. in the theorem 
+we can omit $\Lin(u_1,\dots,u_p)$ item and instead of $(**)$ 
+write simply $P=\NonNeg(v_1,\dots,v_q)+ \Conv(w_1,\dots,w_s)$.
+
+
+Vectors $u_1,\dots,u_p$, $v_1,\dots,v_q$, $w_1,\dots,w_s$ 
+can be chosen in such a way that 
+the following {\em properties of minimality} hold:
+\begin{enumerate}
+  \item $u_1,\dots,u_p$ is a basis of the subspace $L$ associated with
+        the maximal linear variety in $P$; and
+  \item $q$ and $s$ are minimal among all possible $q$ and $s$ such that ($**$)
+        holds (this means also that the systems $v_1,\dots,v_q$ and
+        $w_1,\dots,w_s$ are irreducible).
+\end{enumerate}
+In this case 
+vectors $w_1,\dots,w_s$ are unique up to any item in $L$;
+vectors $v_1,\dots,v_q$ are unique up to any positive multiplyer and any item in $L$.
+If $p=0$ then points $w_1,\dots,w_s$ (and only they) are vertices of $P$
+          and vectors $v_1,\dots,v_q$ (and only they) are extreme rays of $P$.
+
+
+The problem of constructing the representation $(**)$ if representation $(*)$  is available
+is called
+the {\em vertex enumeration problem}. 
+It can be reduced to the analogous problem for cones as follows.
+
+Consider the cone in $\RR^{d+1}$
+$$
+C = \set{(x_1,\dots,x_n,x_{n+1})\transpose \in \RR^{d+1}:
+~ Ax\ge bx_{n+1}, 
+~ Bx=cx_{n+1},
+~x_{n+1} \ge 0},
+$$
+where $x=(x_1,\dots,x_n)\transpose$.
+For the cone $C$ we can get a dual representation
+$$
+C=\Lin(\overline{u}_1,\dots,\overline{u}_p) + \NonNeg(\overline{v}_1,\dots,\overline{v}_q)
+$$
+for some vectors 
+$\overline{u}_1,\dots,\overline{u}_p$, 
+$\overline{v}_1,\dots,\overline{v}_q$ in $\RR^{d+1}$.
+
+Let 
+$\overline{u}_i=(u_i,u_{i,n+1})$ $(i=1,\dots,p)$, 
+$\overline{v}_i=(v_i,v_{i,n+1})$ $(i=1,\dots,q)$.
+Since the system of homogenius linear inequalities and equations contains the inequality
+$x_{n+1} \ge 0$, then it is clear that $u_{i,n+1} = 0$ $(i=1,\dots,p)$.
+Suppose w.l.g. that 
+$v_{i,n+1} = 0$ $(i=1,\dots,s)$, $v_{i,n+1} \ne 0$ $(i=s+1,\dots,q)$.
+Now it is not hard to see that the initial polyhedron $P$ has the following dual representation:
+$$
+\begin{narrowarray}{ccl}
+P & = & \Lin(u_1,\dots,u_p) +   \\[.3em]
+  &   &  + \NonNeg(v_1,\dots,v_s) + 
+           \Conv\left(\fracc{1}{v_{s+1,d+1}}\cdot v_{s+1},\dots,\fracc{1}{v_{q,d+1}}\cdot v_q\right).
+\end{narrowarray}
+$$
+Moreover, if the system $\overline{u}_1,\dots,\overline{u}_p$ 
+is a basis of the maximal linear subspace in $C$ and
+the system $\overline{v}_1,\dots,\overline{v}_q$ is an ossature of $C$ then
+the system of vectors constructed to describe $P$ also has the property of
+minimality. In particular, if $p=0$ then 
+$\fracc{1}{v_{s+1,d+1}}\cdot v_{s+1},\dots,\fracc{1}{v_{q,d+1}}\cdot v_q$
+are vertices of $P$.
+
+From Weyl's theorem we get the following.
+
+\begin{theorem}
+For any vectors
+$u_1,\dots,u_p$, $v_1,\dots,v_q$, $w_1,\dots,w_s$,  in $\RR^d$ there exist matrices
+$A\in \RR^{m\times d}$ and $B\in \RR^{t\times d}$ and vectors $b\in \RR_m$, $c\in \RR^t$ such that
+$$
+\begin{array}{r}
+\Lin(u_1,\dots,u_p) + \NonNeg(v_1,\dots,v_q) + \Conv(w_1,\dots,w_s)=\qquad\qquad\qquad\\[.3em]
+=\set{x\in\RR^d:~Ax\ge b,~Bx=c}.
+\end{array}
+$$
+\end{theorem}
+
+
+Matrices $A$ and $B$ can be chosen in such a way that 
+the following {\em properties of minimality} hold:
+\begin{enumerate}
+  \item the system $Bx = c$ is irreducible and 
+        $\set{x: Bx = c}$ is the minimal linear variety containing $P$; and
+  \item $m$ is minimal among all possible $m$ such that ($*$)
+        holds (this means also that the system $Ax \ge 0$ is irreducible).
+\end{enumerate}
+In this case the rows in the matrix $(A, b)$ correspond to faces of maximum dimension. In
+particular, if $P$ is full-dimensional, i.e. 
+$$\rank \set{u_1,\dots,u_p, v_1,\dots,v_q, w_1 - w_s,\dots,w_{s-1}-w_s} = d$$ 
+and, hence, $t=0$, then the rows in $(A, b)$ 
+correspond to {\em facets} of $P$.
+
+The problem of constructing the representation $(*)$ if representation $(**)$ is available
+is called
+the {\em facet enumeration problem}, or the {\em convex hull problem}. 
+It can be reduced to the analogous problem for cones as follows.
+
+In $\RR^{d+1}$ consider the cone
+$$
+C=
+\Lin(\overline{u}_1,\dots,\overline{u}_p) + 
+\NonNeg(\overline{v}_1,\dots,\overline{v}_q, \overline{w}_1,\dots,\overline{w}_s),
+$$
+where 
+$\overline{u}_i = (u_i, 0)$ $(i=1,\dots,p)$, 
+$\overline{v}_i = (v_i, 0)$ $(i=1,\dots,q)$, 
+$\overline{w}_i = (w_i, 1)$ $(i=1,\dots,s)$ 
+and find its representation 
+$$
+C=\set{(x_1,\dots,x_d,x_{d+1})\transpose\in\RR^{d+1}:~ Ax-bx_{d+1} \ge 0, ~ Bx -cx_{d+1}= 0},
+$$
+where $x=(x_1,\dots,x_d)\in\RR^d$.
+Now it is not hard to see that the initial polyhedron $P$ 
+has the following representation:
+$$
+P=\set{x\in\RR^d:~Ax\ge b,~Bx= c}.
+$$
+Moreover, if $A$, $B$, $b$, $c$ are such that each of the systems
+$Ax-bx_{d+1} \ge 0$ and $Bx = cx_{d+1}$ is irreducible and
+$\set{(x_1,\dots,x_d,x_{d+1})\transpose\in\RR^{d+1}:~Bx -cx_{d+1}= 0}$ is
+the minimal subspace containing $C$ then the system of inequalities and
+equations constructed to describe $P$ also has a property of minimality.
+
+
+
+\subsection{The main idea of the algorithm}
+
+Given a matrix $A\in\RR^{m\times d}$, DDM generates
+a basis of maximal subspace and an ossature of the cone $C=\set{x\in\RR^d:~Ax\ge 0}$.
+Obviously, the case then the cone is defined by a system of linear
+inequalities and equations can be reduced to the case with only inequalities.
+
+In the preliminary step of DDM the rank $r$ of $A$ and a basis of the
+maximal subspace containing in $C$ are founded. Also, an ossature of the
+cone determined by some irreducible subsystem containing $r$ inequalities
+is generated. Then, other inequalities are added one after the other and
+every time the ossature is re-conctructed. Consider this slightly in
+detail.
+
+Let $K$ be a cone determined by some subsystem of $Ax\ge 0$.
+Suppose that an ossature of $K$  is known.
+Consider what will happen with the ossature then a new inequality $ax \ge 0$ 
+is added. 
+
+Each vector in the ossature of $K$
+falls to one of the following sets: 
+\begin{enumerate}
+  \item $W_0$ is the set of all vectors $w$ in the ossature such that $aw = 0$;
+  \item $W_+$ is the set of all vectors $w$ in the ossature such that $aw \ge 0$;
+  \item $W_-$ is the set of all vectors $w$ in the ossature such that $aw \le 0$.
+\end{enumerate}
+A ossature of the new cone is formed by all elements in $W_+$ and $W_0$
+and vectors which we obtain as follows. For each pair of vectors
+$w'\in W_+$ and $w''\in W_-$ adjacent in $K$ we obtain their linear combination $w$
+satisfying to equality $aw=0$. Every such $w$ should be included to the ossature
+of the new cone.
+        
+Variations of DDM differs one from another by 
+ordering in which inequalities are choose from the system,
+the methods used to find adjacent rays,
+a time when the adjacency is computed and others \cite{VPSh84,FP96,ShCh97}.
+Checking the adjacency seems the most time-expensive procedure in DDM
+and different techniques to determine what pairs of vectors should be 
+verifying are used \cite{FP96}.
+
+\section{How to Build}
+
+The source code of \Skeleton is available at 
+\verb$http://uic.nnov.ru/~zny/skeleton$.
+The package contains a documentation, examples, \Arageli library and three C++ files:
+\verb$skeleton.cpp$, \verb$ddm.hpp$ and \verb$ddmio.hpp$.
+
+\Skeleton uses \Arageli library \cite{Arageli}.
+\Arageli is included in the distribution and it will be compiled automatically.
+To use newer version of \Arageli (for example downloaded from
+the site \cite{Arageli}), just replace it in the directory
+\verb$tools/arageli$.
+
+To compile the code in standard Linux environment you need \verb$gcc$ version 4 or above. Type
+\begin{verbatim}
+    make
+\end{verbatim}
+We supposed to be in the root directory of \Skeleton distribution, so after that command, binary
+\verb$skeleton$ will appear in the root directory of the distribution.
+
+To compile the code in Windows you can use MS Visual Studio 2008 or later. Please refer to
+\verb$msvs_2008$ directory and \verb$skeleton.sln$ solution file (just build entire solution).
+Note that for this building way, executables will appear in \verb$bin$ directory and will be named by pattern
+\verb$skeleton{32,64}{d,r,f,t}.exe$ corresponding to choosen configuration (32 or 64 bit and
+Debug, Release, Fast or Test configuration). The fastest configuration is Fast (\verb$skeleton32f.exe$ or
+\verb$skeleton64f.exe$ depending on operating system used), so make sure
+that Fast configuration is choosen before building MS Visual Studio solution.
+
+
+\section{How to Use}
+
+Given a matrix $A\in\ZZ^{m\times d}$, program \Skeleton generates
+a basis of maximal subspace and an ossature of the cone $C=\set{x\in\RR^d:~Ax\ge 0}$.
+
+To use \Skeleton, first of all, one should prepare a file with your data. 
+The file must contain the size and entries of matrix $A$.
+%Entries of $A$ should be integer.
+Numbers are separated by spaces and blank lines.
+For example, if you want to find an ossature of the cone $C$
+defined as a set of solution to the system
+$$
+\left\{
+\begin{narrowarray}{cccccccccl}
+ & x_1 &   &     &   &    &   &     & \ge & 0, \\
+-& x_1 &   &     &  +& x_3&  +& x_4 & \ge & 0, \\
+ &     &  -& x_2 &  +& x_3&   &     & \ge & 0, \\
+ &     &   &     &   & x_3&  +& x_4 & \ge & 0, \\
+ & x_1 &  +& x_2 &   &    &  +& x_4 & \ge & 0, \\
+-& x_1 &  -& x_2 &   &    &  -& x_4 & \ge & 0  \\
+\end{narrowarray}
+\right.
+$$
+then the input file (say \verb$example.ine$) is
+\verbatiminput{../examples/example.ine}
+ 
+To run \Skeleton just type in the command prompt:
+\begin{verbatim}
+skeleton filename
+\end{verbatim}
+where \verb$filename$ is the name of the input file.
+Example:
+\begin{verbatim}
+skeleton example.ine
+\end{verbatim}
+(The file \verb$example.ine$ and other example files mentioned below is in the folder \verb$examples$.)
+
+\Skeleton produces two files: ``output'' file, ``log'' file
+and ``summary'' file. 
+By default, their names are obtained by adding
+extention \verb$.out$, \verb$.log$, \verb$.sum$  respectively to input file name. 
+In our example \Skeleton produces files \verb$example.ine.out$, \verb$example.ine.log$, 
+and \verb$example.ine.sum$.
+
+The output file contains sizes and entries of matrix $U$ (vectors of a
+basis in row-wise order) and matrix $V$ (vectors of an ossature). Also, the
+file can contain other information (it depends on options used; see the
+list of available options below). In our example we get the following file
+\verb$example.ine.out$: 
+\verbatiminput{../examples/example.ine.out}
+Thus, we get 
+$u_1 = (0, -1, -1, 1)\transpose$, 
+$v_1 = (1, -1,  1, 0)\transpose$, 
+$v_2 = (0,  0,  1, 0)\transpose$ and
+$C=\Lin(u_1) + \NonNeg(v_1, v_2)$.
+
+
+The log file contains computation hystory.
+By default, this information is also displayed on stdcrt during computation. 
+In our example we get the following file \verb$example.ine.log$:
+\verbatiminput{../examples/example.ine.log}
+
+The summary file contains computation summary.
+By default, this information are also displayed on stdcrt after computation. 
+In our example we get the following file \verb$example.ine.sum$:
+\verbatiminput{../examples/example.ine.sum}
+
+You may set different options affecting the process of computation and
+the output of information:
+\begin{verbatim}
+skeleton filename options
+\end{verbatim}
+where \verb$options$
+is a list of options. Each option is
+an abbreviation usually beginning with double hyphen. Options are separated by spaces.
+Example:
+\begin{verbatim}
+skeleton example.ine --lexmin --adjacency
+\end{verbatim}
+Complete list of all available options is in the next section.
+
+
+
+\section{Options}
+
+The following options are available (the default parameters are in braces):
+
+\params
+\{\verb$--minindex$\}, \{\verb$--maxindex$\}, \verb$--lexmin$, \verb$--lexmax$, \verb$--random$, \verb$--mincutoff$, 
+\verb$--maxcutoff$, \verb$--minpairs$, \verb$--maxpairs$ \\
+   These options
+   affect the ordering of inequalities to be added at each iteration of DDM.
+
+\params
+\verb$--prefixedorder$, \verb$--noprefixedorder$ \\
+  If options \verb$--mincutoff$, \verb$--maxcutoff$, \verb$--minpairs$, \verb$--maxpairs$ are chosen then
+  only \verb$--noprefixedorder$ is possible. 
+  In other cases both options are available; the default one is \verb$--prefixedorder$.
+
+\params \{\verb$--graphadj$\}, \verb$--nographadj$ \\
+  These affect the way of determining adjacent vectors.
+
+\params \{\verb$--plusplus$\}, \verb$--noplusplus$ \\
+  If option \verb$--plusplus$ is chosen then only the pairs of adjacent vectors 
+  that will be necessary on the future iterations are constructed. If option \verb$--noplusplus$ is chosen 
+  then all edges are constructed on each iteration.
+
+\params \{\verb$--bigint$\}, \verb$--int$, \verb$--float$ \\
+  By default, arbitrary precision integer arithmetic is used.
+  Option \verb$--int$ forces to use ordinary ($4$ bytes) integer precision arithmetic.
+  Option \verb$--float$ forces to use double floating point ($8$ bytes) arithmetic.
+  Option \verb$--rational$ forces to use rational arithmetic when exact enumerator / exact denominator pair 
+         is used to represent rational number.
+
+\params \verb$--zerotol value$ \\
+  The option affects only if option \verb$--float$ is used.
+  This is used to change a zero tolerance for floating point computation.
+  A real value is considered as zero if its absolute value is at most the tolerance. 
+  The default value for the zero tolerance is \verb$1e-8$.
+
+\params \verb$--edges$,  \{\verb$--noedges$\} \\
+  Option \verb$--edges$ forces to find edges, i.e. all pairs of adjacent vectors 
+  in the ossature.
+
+\params \verb$--adjacency$,  \{\verb$--noadjacency$\} \\
+  Option \verb$--adjacency$ forces to find the lists of ossature vectors adjacent to each one.
+  
+\params \verb$--ridges$,  \{\verb$--noridges$\} \\ 
+  Option \verb$--ridges$ forces to find ridges, i.e. all pairs of adjacent facets.
+
+\params \verb$--facetadjacency$,  \{\verb$--nofacetadjacency$\} \\
+  Option \verb$--facetadjacency$ forces to find the lists of facets adjacent to each one.
+
+\params \verb$--verifyine$,  \{\verb$--noverifyine$\} \\
+  Option \verb$--verifyine$ forces to determine implicit equations and redundand inequalities in the input system.
+
+\params \verb$--inputfile filename$ \\
+  This option defines input file name. \verb$skeleton --inputfile filename$
+  is equivalent to \verb$skeleton filename$.
+
+\params \verb$-o filename$ \verb$--outputfile filename$ \\
+  This option sets the name of output file.
+  By default, this name is obtained by adding
+  extention \verb$.out$ to input file name.
+  If input was from stdin then output file is \verb$skeleton.out$.
+ 
+\params \verb$--logfile filename$ \\
+  This option sets the name of log file.
+  By default, this name is obtained by adding
+  extention \verb$.log$ to input file name.
+  If input was from stdin then log file is \verb$skeleton.log$.
+
+\params \verb$--summaryfile filename$ \\
+  This option sets the name of summary file.
+  By default, this name is obtained by adding
+  extention \verb$.sum$ to input file name.
+  If input was from stdin then log file is \verb$skeleton.sum$.
+
+\params \verb$--inputfromstdin$, \{\verb$--noinputfromstdin$\} \\
+  \verb$--inputfromstdin$ forces to read input information fron stdin instead of file.
+ 
+\params \{\verb$--simpleformat$\}, \verb$--skeletonformat$, \verb$--avisfukudaformat$ \\
+  \verb$--skeletonformat$ indicates that input containes both inequalities and equations 
+                          (both $A$ and $B$ matrices).\\
+  \verb$--avisfukudaformat$ indicates that input is in Avis--Fukuda format (see \cite{Fukuda02});
+                            all options in the file are ignored; only matrix in \verb$begin$--\verb$end$ 
+                            parentheses is read; the number type specificator 
+                            (\verb$integer$, \verb$ration$ etc.) is ignored.
+                             
+\params \{\verb$--outputinfile$\}, \verb$--nooutputinfile$ \\
+  If \verb$--nooutputinfile$ is chosen then \Skeleton will not put results in output file. 
+
+\params \verb$--outputonstdout$, \{\verb$--nooutputonstdout$\} \\
+  If \verb$--outputonstdin$ is chosen then \Skeleton will put results on stdout. 
+
+\params \{\verb$--loginfile$\}, \verb$--nologinfile$ \\
+  If \verb$--nologinfile$ is chosen then \Skeleton will not put log information in log file. 
+
+\params \{\verb$--logonstdout$\}, \verb$--nologonstdout$ \\
+  If \verb$--nologonstdout$ is chosen then \Skeleton will not put 
+  log information on stdout. 
+
+\params \{\verb$--summaryinfile$\}, \verb$--nosummaryinfile$ \\
+  If \verb$--nosummaryinfile$ is chosen then \Skeleton will not put 
+  summary information in summary file. 
+
+\params \{\verb$--summaryonstdout$\}, \verb$--nosummaryonstdout$ \\
+  If \verb$--nosummaryonstdout$ is chosen then \Skeleton will not put 
+  summary information on stdout. 
+  
+\params \verb$--silence$ \\
+  This option is equivalent to \verb$--nooutputonstdout$, \verb$--nologonstdout$, \verb$--nosummaryonstdout$.
+
+\params \verb$--ine$, \{\verb$--noine$\} \\
+  If \verb$--ine$ is chosen then \Skeleton will put 
+  the input matrix $A$ (coefficients of linear inequalities) on stdout or/and in outputfile. 
+  This works only if option 
+  \verb$--outputinfile$ or \verb$--outputonstdout$ correspondingly turns on.
+
+\params \verb$--equ$, \{\verb$--noequ$\} \\
+  If \verb$--equ$ is chosen then \Skeleton will put 
+  the input matrix $B$ (coefficients of linear equations) on stdout or/and in outputfile. 
+  This works only if option 
+  \verb$--outputinfile$ or \verb$--outputonstdout$ correspondingly turns on.
+
+\params \{\verb$--ext$\}, \verb$--noext$ \\ 
+  If \verb$--noext$ is chosen then \Skeleton will not put 
+  the matrix $V$ (with entries of ossature vectors) on stdout and in outputfile. 
+  This works only if option 
+  \verb$--outputinfile$ or \verb$--outputonstdout$ correspondingly turns on.
+
+\params \{\verb$--bas$\}, \verb$--nobas$ \\
+  If \verb$--nobas$ is chosen then \Skeleton will not put 
+  the matrix $U$ (with entries of basis of maximal subspace contained in the cone) 
+  on stdout and in outputfile. 
+  This works only if option 
+  \verb$--outputinfile$ or \verb$--outputonstdout$ correspondingly turns on.
+
+\params \verb$--dis$, \{\verb$--nodis$\} \\
+  If \verb$--dis$ is chosen then \Skeleton will put 
+  the discrepancies matrix $VA\transpose$ on stdout or/and in outputfile. 
+  This works only if option 
+  \verb$--outputinfile$ or \verb$--outputonstdout$ correspondingly turns on.
+
+\params \verb$--extinc$, \{\verb$--noextinc$\} \\
+  If \verb$--extinc$ is chosen then for each vector in ossature
+  the program will print (on stdout or/and in outputfile)
+  iniqualities which hold as equality. 
+  This works only if option 
+  \verb$--outputinfile$ or \verb$--outputonstdout$ correspondingly turns on.
+
+\params \verb$--ineinc$, \{\verb$--noineinc$\} \\
+  If \verb$--ineinc$ is chosen then for each inequality in the initial system
+  the program will print (on stdout or/and in outputfile)
+  vectors in the ossature for which the inequality holds as equality. 
+  This works only if option 
+  \verb$--outputinfile$ or \verb$--outputonstdout$ correspondingly turns on.
+
+\params \verb$--matrices$, \verb$--nomatrices$ \\
+  \verb$--matrices$ is equivalent to 
+  \verb$--ine$, \verb$--ext$, \verb$--bas$, \verb$--inc$;
+  \verb$--nomatrices$ is equivalent to 
+  \verb$--noine$, \verb$--noext$, \verb$--nobas$, \verb$--noinc$. 
+  This works only if option 
+  \verb$--outputinfile$ or \verb$--outputonstdout$ turns on.
+ 
+\params \{\verb$--log$\}, \verb$--nolog$ \\
+  If \verb$--nolog$ is chosen no log information 
+  will not put on stdout and in log file. 
+  This works only if option 
+  \verb$--summaryinfile$ or \verb$--summaryonstdout$ turns on.
+
+\params \{\verb$--summary$\}, \verb$--nosummary$ \\
+  If \verb$--nosummary$ is chosen no summary information 
+  (input/output/log file names, sizes of matrices and option values) 
+  will not put on stdout and in summary file. 
+  This works only if option 
+  \verb$--summaryinfile$ or \verb$--summaryonstdout$ turns on.
+
+\params \verb$-h$ or \verb$--help$ \\            
+  \verb$skeleton -h$ prints the list of available options and terminates the program.
+  \verb$skeleton --help$ does the same.
+
+\params \verb$-v$ or \verb$--version$ \\      
+  \verb$skeleton -v$   prints \Skeleton version and terminates the program.\\
+  \verb$skeleton --version$ does the same.
+
+\params \verb$--copying$ \\      
+  \verb$skeleton --copying$ prints copyright info. 
+
+
+
+\section{More Examples}
+
+\subsection{Cube With a Cutted Vertex}
+
+Consider the polyhedron described by the following system:
+$$
+\left\{
+\begin{narrowarray}{rcrcrcc}
+ x_1 &   &      &   &      & \ge & 0, \\
+     &   &  x_2 &   &      & \ge & 0, \\
+     &   &      &   &  x_3 & \ge & 0, \\
+ x_1 &   &      &   &      & \le & 1, \\
+     &   &  x_2 &   &      & \le & 1, \\
+     &   &      &   &  x_3 & \le & 1, \\
+2x_1 & + & 2x_2 & + & 2x_3 & \le & 5. \\
+\end{narrowarray}
+\right.
+\tag{ex_cwcv_ine}
+$$
+It is a cube with a ``cutted'' vertex (see Fig.\,\ref{fig_cwcv}).
+
+\begin{figure}
+\centering
+\psset{xunit=.7cm,yunit=.7cm}
+  \begin{pspicture}(-2,-4)(6,6)
+    \psline[arrows=->](-1.5,-1.5)(-2.25,-2.25)
+    \psline[arrows=->](4,0)(5.5,0)
+    \psline[arrows=->](0,4)(0,5.5)
+    \rput[rt](-2.25,-2.25){$x_1$}
+    \rput[lb](5.5,0){$~x_2$}
+    \rput[rb](0,5.5){$x_3~$}
+
+    \psline[linestyle=dashed](0,0)(4,0)
+    \psline(-1.5,-1.5)(2.5,-1.5)
+    \psline(0,4)(4,4)
+    \psline(-1.5,2.5)(0.5,2.5)
+    \psline[linestyle=dashed](0,0)(-1.5,-1.5)
+    \psline(4,0)(2.5,-1.5)
+    \psline(0,4)(-1.5,2.5)
+    \psline(4,4)(3.25,3.25)
+    \psline[linestyle=dashed](0,0)(0,4)
+    \psline(4,0)(4,4)
+    \psline(-1.5,-1.5)(-1.5,2.5)
+    \psline(2.5,-1.5)(2.5,0.5)
+    % triangle:
+    \psline(0.5,2.5)(2.5,0.5)
+    \psline(2.5,0.5)(3.25,3.25)
+    \psline(3.25,3.25)(0.5,2.5)
+
+    \psline(-2.5,1.25)(-1.5,1.25)
+    \psline[arrows=->,linestyle=dashed](-1.5,1.25)(-0.75,1.25)
+    \rput[r](-2.5,1.25){$x_2\ge 0~$}
+
+    \psline(1.25,-2.3)(1.25,-1.5)
+    \psline[arrows=->,linestyle=dashed](1.25,-1.5)(1.25,-0.75)
+    \rput[t](1.25,-2.5){$x_3\ge 0~$}
+
+    \psline[arrows=->](5,1.25)(3.25,1.25)
+    \rput[l](5,1.25){$~x_2\le 1$}
+
+    \psline[arrows=->](5,2.25)(2.25,2)
+    \rput[l](5,2.25){$~2x_1+2x_2+2x_3\le 5$}
+
+    \psline[arrows=->](1,5.2)(1,3.25)
+    \rput[b](1,5.5){$~~x_3\le 1$}
+ 
+    \psline[arrows=->](-2,-.5)(0.5,0.5)
+    \rput[r](-2,-.5){$x_1\le 1~$}
+ 
+    \psline(4.7,5.2)(3.5,4)
+    \psline[arrows=->,linestyle=dashed](3.5,4)(1.75,2.25)
+    \rput[b](4.75,5.5){$~~x_1\ge 0$}
+ 
+    \rput[rb](-1.5,-1.5){$1~$}
+    \rput[rb](0,4){$1~$}
+    \rput[lb](4,0.25){$~1$}
+
+
+  \end{pspicture}
+\caption{Cube with a cutted vertex. Facet representation} \label{fig_cwcv}
+\end{figure}
+
+\begin{figure}
+\centering
+\psset{xunit=.7cm,yunit=.7cm}
+  \begin{pspicture}(-2,-2.5)(6,6)
+    \psline[arrows=->](-1.5,-1.5)(-2.25,-2.25)
+    \psline[arrows=->](4,0)(5.5,0)
+    \psline[arrows=->](0,4)(0,5.5)
+    \rput[rt](-2.25,-2.25){$x_1$}
+    \rput[lb](5.5,0){$~x_2$}
+    \rput[lb](0,5.5){$~x_3$}
+
+    \psline[linestyle=dashed](0,0)(4,0)
+    \psline(-1.5,-1.5)(2.5,-1.5)
+    \psline(0,4)(4,4)
+    \psline(-1.5,2.5)(0.5,2.5)
+    \psline[linestyle=dashed](0,0)(-1.5,-1.5)
+    \psline(4,0)(2.5,-1.5)
+    \psline(0,4)(-1.5,2.5)
+    \psline(4,4)(3.25,3.25)
+    \psline[linestyle=dashed](0,0)(0,4)
+    \psline(4,0)(4,4)
+    \psline(-1.5,-1.5)(-1.5,2.5)
+    \psline(2.5,-1.5)(2.5,0.5)
+    % triangle:
+    \psline(0.5,2.5)(2.5,0.5)
+    \psline(2.5,0.5)(3.25,3.25)
+    \psline(3.25,3.25)(0.5,2.5)
+
+    \psdots(0,0)
+    \psdots(-1.5,-1.5)
+    \psdots(0,4)
+    \psdots(-1.5,2.5)
+    \psdots(4,0)
+    \psdots(4,4)
+    \psdots(2.5,-1.5)
+    \psdots(0.5,2.5)
+    \psdots(2.5,0.5)
+    \psdots(3.25,3.25)
+
+    \rput[rb](-1.5,-1.5){$v_1~$}
+    \rput[lt](2.5,-1.5){$~v_2$}
+    \rput[l](2.5,0.5){$~v_3$}
+    \rput[rb](-1.5,2.5){$v_4~$}
+    \rput[b](0.5,2.65){$v_5~$}
+    \rput[rb](0,4){$v_6~$}
+    \rput[lb](4,4){$~v_7$}
+    \rput[rb](3.25,3.25){$v_8~$}
+    \rput[lt](4,-0.25){$v_9$}
+    \rput[rb](0,0){$v_{10}~$}
+
+
+  \end{pspicture}
+\caption{Cube with a cutted vertex. Vertex representation} \label{fig_cwcv_v}
+\end{figure}
+
+
+The corresponding cone is described by the following homogenious system:
+$$
+\left\{
+\begin{narrowarray}{rcrcrcrcl}
+  x_1 &   &     &   &     &   &      & \ge & 0, \\
+      &   & x_2 &   &     &   &      & \ge & 0, \\
+      &   &     &   & x_3 &   &      & \ge & 0, \\
+ -x_1 &   &     &   &     & + &  x_4 & \ge & 0, \\
+      & - & x_2 &   &     & + &  x_4 & \ge & 0, \\
+      &   &     & - & x_3 & + &  x_4 & \ge & 0, \\
+-2x_1 & - &2x_2 & - &2x_3 & + & 5x_4 & \ge & 0, \\
+      &   &     &   &     &   &  x_4 & \ge & 0  \\
+\end{narrowarray}
+\right.
+\tag{ex_cwcv_ine_homo}
+$$
+(setting $x_4 = 1$ we get the initial system). So, input file 
+(named \verb$cwcv.ine$) is
+\verbatiminput{../examples/cwcv.ine}
+
+Running \Skeleton with
+\begin{verbatim}
+skeleton cwcv.ine --edges --ineinc
+\end{verbatim}
+we get the following file \verb$cwcv.ine.out$:
+\verbatiminput{../examples/cwcv.ine.out}
+
+Matrix with entries of the basis is empty (it contains $0$ rows), hence
+the polyhedron does not contain any non-zero linear variety.
+Matrix with entries of the ossature has $10$ rows, hence the polyhedron
+has $10$ vertex (see Fig.\,\ref{fig_cwcv_v}). The forth coordinate 
+corresponds to the denominator in entries
+of all these vertices. They are
+$v_1=(1, 0, 0)\transpose$, 
+$v_2=(1, 1, 0)\transpose$, 
+$v_3=(1, 1, \frac{1}{2})\transpose$, 
+$v_4=(1, 0, 1)\transpose$, 
+$v_5=(1, \frac{1}{2}, 1)\transpose$, 
+$v_6=(0, 0, 1)\transpose$, 
+$v_7=(0, 1, 1)\transpose$, 
+$v_{10}=\left(\frac{1}{2}, 1, 1\right)\transpose$,
+$v_1=(0, 1, 0)\transpose$, 
+$v_1=(0, 0, 0)\transpose$.
+
+Also, we have computed all edges, i.e. pairs of adjacent vertices.
+The polyhedron has $15$ edges. They are
+$v_1$--$v_2$,
+$v_1$--$v_4$,
+$v_1$--$v_{10}$,
+$v_2$--$v_3$,
+$v_2$--$v_9$,
+$v_3$--$v_5$,
+$v_3$--$v_8$,
+$v_4$--$v_5$,
+$v_4$--$v_6$,
+$v_5$--$v_8$,
+$v_6$--$v_7$,
+$v_6$--$v_{10}$,
+$v_7$--$v_8$,
+$v_7$--$v_9$,
+$v_9$--$v_{10}$.
+
+Information concerning ``Inequalities-to-rays incidence'' tell us that $7$ facets
+are formed by vertices 
+$v_6$, $v_7$, $v_9$, $v_{10}$;
+$v_1$, $v_4$, $v_6$, $v_{10}$;
+$v_1$, $v_2$, $v_9$, $v_{10}$;
+$v_1$, $v_2$, $v_3$, $v_4$, $v_5$;
+$v_2$, $v_3$, $v_7$, $v_8$, $v_9$;
+$v_4$, $v_5$, $v_6$, $v_7$, $v_8$;
+$v_3$, $v_5$, $v_8$
+correspondingly.
+
+Now we can check our computations by ``reversing'' them.
+Form the input file (named \verb$cwcv.ext$) containing
+entries of vertices found:
+\verbatiminput{../examples/cwcv.ext}
+and evoke \Skeleton:
+\begin{verbatim}
+skeleton cwcv.ext
+\end{verbatim}
+We get the following file \verb$cwcv.ext.out$:
+\verbatiminput{../examples/cwcv.ext.out}
+Since the matrix with ``basis'' is empty the polyhedron has full dimension.
+The matrix with ``ossature'' has $7$ rows. They correspond to exactly the same
+inequalities as in \Ref{ex_cwcv_ine}, so the polyhedron has $7$ facets.
+We remark that in the list obtained there is no row corresponding to the inequality
+$x_4 \ge 0$ because in our case it is redundant in \Ref{ex_cwcv_ine_homo}.
+
+%Now consider a facet enumeration problem.
+%Suppose we have $8$ points (see Fig.\,\ref{fig_Klee_Minty}):
+%$(0,  0,   0)\transpose$,
+%$(5,  0,   0)\transpose$, 
+%$(5,  5,   0)\transpose$, 
+%$(0, 25,   0)\transpose$, 
+%$(0, 25,  25)\transpose$, 
+%$(5,  5,  65)\transpose$, 
+%$(5,  0,  85)\transpose$, 
+%$(0,  0, 125)\transpose$. 
+%Let's describe its convex hull.
+%Prepare the input file \verb$kleeminty.ext$:
+%\verbatiminput{../examples/kleeminty.ext}
+%and run \Skeleton:
+%\begin{verbatim}
+%skeleton kleeminty.ext -noinc
+%\end{verbatim}
+%
+%\begin{figure}
+%\centering
+%\psset{xunit=0.15cm,yunit=0.2cm}
+%  \begin{pspicture}(-1,-1)(34,28)
+%    \psline(0,7)(4,0)
+%    \psline(4,0)(10,0)
+%    \psline(10,0)(34,7)
+%    \psline(34,7)(34,11)
+%    \psline(34,11)(10,11)
+%    \psline(10,11)(4,14)
+%    \psline(4,14)(0,27)
+%    \psline(0,27)(0,7)
+%    \psline(4,0)(4,14)
+%    \psline(10,0)(10,11)
+%    \psline(0,27)(34,11)
+%    \psline[linestyle=dashed](0,7)(34,7)
+%    \rput[r](0,7){$(0,0,0)~~$}
+%    \rput[tr](4,0){$(5,0,0)~$}
+%    \rput[tl](10,0){$~(5,5,0)$}
+%    \rput[tl](34,7){$~(0,25,0)$}
+%    \rput[bl](34,11){$~(0,25,25)$}
+%    \rput[tl](10,10){$~(5,5,65)$}
+%    \rput[bl](4,14){$~(5,0,85)~$}
+%    \rput[r](0,27){$(0,0,125)~~$}
+%    \psdots(0,7)
+%    \psdots(4,0)
+%    \psdots(10,0)
+%    \psdots(34,7)
+%    \psdots(34,11)
+%    \psdots(10,11)
+%    \psdots(4,14)
+%    \psdots(0,27)
+%  \end{pspicture}
+%\caption{} \label{fig_Klee_Minty}
+%\end{figure}
+%
+%We'll get the following output file \verb$kleeminty.ext$:
+%\verbatiminput{../examples/kleeminty.ext.out}
+%Since the matrix with ``basis'' is empty the polyhedron has full dimension.
+%The matrix with ``ossature'' has $6$ rows, so the polyhedron has $6$ faces and can be
+%describe by the following system of linear inequalities:
+%$$
+%\left\{
+%\begin{narrowarray}{rrrcr}
+%      &       &  x_3 & \ge &   0,\\
+%-4x_1 &  -x_2 &      & \ge & -25,\\ 
+% -x_1 &       &      & \ge &  -5,\\ 
+%  x_1 &       &      & \ge &   0,\\ 
+%      &   x_2 &      & \ge &   0,\\ 
+%-8x_1 & -4x_2 & -x_3 & \ge & 125. 
+%\end{narrowarray}
+%\right.
+%$$
+
+
+\subsection{Implicit equations and redundant inequalities}
+
+\Skeleton can find implicit equations and redundant inequalities in a system.
+Let's consider the system
+$$
+\left\{
+\begin{narrowarray}{rcrcrcrcr}
+ x_1 &   &      &   &     &   &       &  \ge & 0, \\
+     &   &  x_2 &   &     &   &       &  \ge & 0, \\
+     &   &      &   & x_3 &   &       &  \ge & 0, \\
+     &   &      &   &     &   &  x_4  &  \ge & 0, \\
+ x_1 &  +& 2x_2 &   &     &  +& 3x_4  &  \ge & 0, \\
+ x_1 &  +&  x_2 &  +& x_3 &  +& 3x_4  &  \ge & 0, \\
+ x_1 &  -& 2x_2 &  +& x_3 &  +& 3x_4  &  \ge & 0, \\
+-x_1 &  +& 2x_2 &  -& x_3 &  -& 3x_4  &  \ge & 0. \\
+\end{narrowarray}
+\right.
+$$
+So, the input file (named \verb$equ.ine$) is
+\verbatiminput{../examples/equ.ine}
+
+Running \Skeleton with
+\begin{verbatim}
+skeleton equ.ine --verifyine
+\end{verbatim}
+we get the following file \verb$equ.ine.out$:
+\verbatiminput{../examples/equ.ine.out}
+
+This mean that two inequalities in the original system , the $7$th and the $8$th, are implicit equations;
+the $2$nd, $5$th and $6$th inequalities are redundant.
+
+\subsection{Skeleton ``extended'' format}
+
+\Skeleton can treat systems containing both inequalities and equations (explicitly defined):
+both $A$ and $B$ matrices. For this it is necessary to use a special format in the input file. 
+Here is an example:
+$$
+\left\{
+\begin{narrowarray}{rcrcrcrcr}
+ x_1 &  -&  x_2 &  -& x_3 &  =  & 0, \\
+ x_1 &   &      &   &     & \ge & 0, \\
+     &   &  x_2 &   &     & \ge & 0, \\
+     &   &      &   & x_3 & \ge & 0. \\
+\end{narrowarray}
+\right.
+$$
+The input file (names \verb$sf.ine$) follows. 
+\verbatiminput{../examples/sf.ine}
+Running \Skeleton with
+\begin{verbatim}
+skeleton sf.ine --skeletonformat
+\end{verbatim}
+we get the following file \verb$sf.ine.out$:
+\verbatiminput{../examples/sf.ine.out}
+
+\subsection{Avis--Fukuda format}
+
+\Skeleton partially supports Avis--Fukuda format (see \cite{Avis,Fukuda02}).
+All options (except a matrix inside \verb$begin$--\verb$end$ parentheses) in the file are ignored.
+The number type specificator (\verb$integer$, \verb$ration$ etc.) is also ignored.
+Note that the most of options in Avis--Fukuda format has equivalent ones in \Skeleton 
+but they must be indicated in command line.
+
+%Let's consider, for example, the file \verb$cyc.ine$ taken from D.\,Avis \verb$lrs$ repository:
+Let's consider, for example, the file \verb$ucube.ine$ taken from K.\,Fukuda \verb$cdd$ repository \cite{Fukuda02}:
+\verbatiminput{../examples/ucube.ine}
+Run \Skeleton:
+\begin{verbatim}
+skeleton ucube.ine --avisfukudaformat --adjacency --facetadjacency 
+                   --extinc --ineinc
+\end{verbatim}
+The output file is
+\verbatiminput{../examples/ucube.ine.out}
+The log file is
+\verbatiminput{../examples/ucube.ine.log}
+
+\subsection{Voronoi Diagram}
+
+Let $W$ be a system of $s$ points in $\RR^d$. For each $w\in W$ we can
+consider the set
+$$
+\VS(w) = \set{x\in\RR^d:~\forall v\in W \setminus\set{w}~\dist(x,p)\le\dist(x,q)},
+$$
+where $\dist$ is the Euclidean distance function.
+The set $\VS(w)$ is called a {\em Voronoi cell}. It is a polyhedron.
+Its vertices are called {\em Voronoi vertices} and extreme rays are called
+{\em Voronoi rays}. The set $\set{\VS(w):~w\in W}$ of all Voronoi cells 
+is called {\em Voronoi diagram} (see Fig.\,\ref{fig_voronoi_diag}). 
+For generating Voronoi diagram the following
+construction is widely used.
+
+\begin{figure}
+\centering
+\psset{xunit=1.1cm,yunit=1.1cm}
+  \begin{pspicture}(-3,-1)(3,4)
+    \psdots(0,0)
+    \psdots(2,0)
+    \psdots(-2,0)
+    \psdots(0,1)
+    \psdots(1,2)
+    \psdots(-1,2)
+    \psdots(0,3)
+
+    \rput[l](0,0){$~w_1$}
+    \rput[l](2,0){$~w_2$}
+    \rput[l](-2,0){$~w_3$}
+    \rput[l](0,1){$~w_4$}
+    \rput[l](1,2){$~w_5$}
+    \rput[l](-1,2){$~w_6$}
+    \rput[l](0,3){$~w_7$}
+
+
+    \psline(-1,.5)(1,.5)
+    \psline(-1,.5)(-1.1666,0.8333) 
+    \psline(1,.5)(1.1666,0.8333)
+    \psline(1.1666,0.8333)(0,2)
+    \psline(-1.1666,0.8333)(0,2)
+
+    \psline[arrows=->](-1,.5)(-1,-.5)
+    \psline[arrows=->](1,.5)(1,-.5)
+    \psline[arrows=->](1.1666,0.8333)(3.1666,1.8333)
+    \psline[arrows=->](-1.1666,0.8333)(-3.1666,1.8333)
+    \psline[arrows=->](0,2)(1,3)
+    \psline[arrows=->](0,2)(-1,3)
+
+  \end{pspicture}
+\caption{Voronoi diagram for the set of points} \label{fig_voronoi_diag}
+\end{figure}
+
+
+For each $w\in W$ consider the hyperplane tangent at $w=(w_1,\dots,w_d)\transpose$ 
+to the paraboloid 
+$\set{(x_1,\dots,x_d,x_{d+1}):~x_{d+1} = x_1^2+\dots+x_d^2}$. This hyperplane is
+represented by the following equation:
+$$
+-2w_1x_1-\dots-2w_dx_d+x_{d+1} +w_1^2+\dots+w_d^2= 0.
+$$
+Replacing the equality with inequality $\ge$ and considering these
+inequalities for each $w\in W$ we get the system of $s$ linear
+inequalities. Let $P$ be the polyhedron of all solutions to the system. It
+turns out that $P$ is a lifting of Voronoi diagram to one higher
+dimensional space; and the projection of each facet of $P$ associated with
+$w$ is exactly the Voronoi cell $\VS(w)$. The vertices and extreme rays of
+$P$ project exactly to the Voronoi vertices and rays, respectively \cite{Fukuda2004}.
+
+As an example consider the set of points 
+$(0,0)\transpose$, 
+$(2,0)\transpose$, 
+$(-2,0)\transpose$, 
+$(0,1)\transpose$, 
+$(1,2)\transpose$, 
+$(-1,2)\transpose$, 
+$(0,3)\transpose$.
+For generating their Voronoi diagram 
+consider the system
+$$
+\left\{
+\begin{narrowarray}{rcrcrcrcl}
+      &   &      & + & x_3 &   &      & \ge & 0, \\
+-4x_1 &   &      & + & x_3 & + & 4x_4 & \ge & 0, \\
+ 4x_1 &   &      & + & x_3 & + & 4x_4 & \ge & 0, \\
+      & - & 2x_2 & + & x_3 & + &  x_4 & \ge & 0, \\
+-2x_1 & - & 4x_2 & + & x_3 & + & 5x_4 & \ge & 0, \\
+ 2x_1 & - & 4x_2 & + & x_3 & + & 5x_4 & \ge & 0, \\
+      & - & 6x_2 & + & x_3 & + & 9x_4 & \ge & 0, \\
+      &   &      &   &     &   &  x_4 & \ge & 0.
+\end{narrowarray}
+\right.
+$$
+Prepare file \verb$exvoronoi.ine$:
+\verbatiminput{../examples/exvoronoi.ine}
+Now evoke \Skeleton:
+\begin{verbatim}
+skeleton exvoronoi.ine --ineinc --extinc
+\end{verbatim}
+We get the following file \verb$exvoronoi.ine.out$:
+\verbatiminput{../examples/exvoronoi.ine.out}
+ 
+\begin{figure}
+\centering
+\psset{xunit=1.1cm,yunit=1.1cm}
+  \begin{pspicture}(-3,-1)(3,4)
+    \psdots(0,0)
+    \psdots(2,0)
+    \psdots(-2,0)
+    \psdots(0,1)
+    \psdots(1,2)
+    \psdots(-1,2)
+    \psdots(0,3)
+
+
+    \psline(-1,.5)(1,.5)
+    \psline(-1,.5)(-1.1666,0.8333) 
+    \psline(1,.5)(1.1666,0.8333)
+    \psline(1.1666,0.8333)(0,2)
+    \psline(-1.1666,0.8333)(0,2)
+
+    \psline[arrows=->](-1,.5)(-1,-.5)
+    \psline[arrows=->](1,.5)(1,-.5)
+    \psline[arrows=->](1.1666,0.8333)(3.1666,1.8333)
+    \psline[arrows=->](-1.1666,0.8333)(-3.1666,1.8333)
+    \psline[arrows=->](0,2)(1,3)
+    \psline[arrows=->](0,2)(-1,3)
+
+    \rput[t](-1,-.559){$v_1$}
+    \rput[t](1,-.559){$v_1$}
+    \rput[lb](1,3){$~v_2$}
+    \rput[l](3.1666,1.8333){$~v_3$}
+    \rput[rb](-1,3){$v_4~$}
+    \rput[r](-3.1666,1.8333){$v_5~$}
+
+    \psdots[dotstyle=o](-1,.5)
+    \psdots[dotstyle=o](1,.5)
+    \psdots[dotstyle=o](1.1666,0.8333)
+    \psdots[dotstyle=o](-1.1666,0.8333)
+    \psdots[dotstyle=o](0,2)
+
+    \rput[rt](-1,.5){$v_6~$}
+    \rput[lt](1,.5){$~v_7$}
+    \rput[l](0,2){$~~v_8$}
+    \rput[l](-1.1666,0.8333){$~~v_9$}
+    \rput[r](1.1666,0.8333){$v_{10}~~$}
+
+
+
+  \end{pspicture}
+\caption{Voronoi diagram constructed with the help of \Skeleton} \label{fig_voronoi_diag_Skeleton}
+\end{figure}
+Each extreme ray with last entry equal to $0$ corresponds to a Voronoi ray. 
+Each ray whose last entry is non-zero corresponds to a Voronoi vertex. 
+So, we get $5$ Voronoi rays (ignoring the third component):
+$$     
+v_1 = (0, -1)\transpose,~      
+v_2 = (1, 1)\transpose,~    
+v_3 = (2, 1)\transpose,~    
+v_4 = (-1, 1)\transpose,~    
+v_5 = (-2, 1)\transpose.     
+$$
+and $5$ Voronoi vertices
+(dividing by the forth component and ignoring the third one):
+$$
+v_6 = \left(-1,~ \frac12\right)\transpose,\quad   
+v_7 = \left( 1,~ \frac12\right)\transpose,\quad  
+v_8 = (0,~ 2)\transpose,
+$$
+$$
+v_9 = \left(-\frac76,~ \frac56\right)\transpose,\quad 
+v_{10} = \left(\frac76,~ \frac56\right)\transpose.
+$$
+Interpreting ``Edges'' or/and ``Inequalities-to-rays incidence'' we get Fig.\,\ref{fig_voronoi_diag_Skeleton}.
+
+
+
+\subsection{Delaunay Triangulation}
+
+                                                                          
+                                                                          
+Let $W$ be a system of $s$ points in $\RR^d$ and $v$ be some Voronoi
+vertex for $W$. The convex hull of the nearest neighbor set of $v$ is
+called the {\em Delaunay cell} of $v$. The {\em Delaunay complex} (or {\em
+triangulation}) of $W$ is a partition of $\Conv W$ into the Delaunay cells
+of Voronoi vertices.
+
+The Delaunay complex is not in general a triangulation but becomes a
+triangulation when the points in $W$ are in {\em general position} (or
+{\em nondegenerate}), i.e. no $d+2$ points are cospherical or equivalently there
+is no point $c \in \RR^d$ whose nearest neighbor set has more than $d + 1$
+elements.
+
+The Delaunay complex is dual to the Voronoi diagram in the sense that there is a
+natural bijection between the two complexes which reverses the face inclusions
+(see Fig.\,\ref{fig_delaunay})
+\cite{Fukuda2004}.
+
+\begin{figure}
+\centering
+\psset{xunit=1.1cm,yunit=1.1cm}
+  \begin{pspicture}(-3,-1)(3,4)
+    \psdots(0,0)
+    \psdots(2,0)
+    \psdots(-2,0)
+    \psdots(0,1)
+    \psdots(1,2)
+    \psdots(-1,2)
+    \psdots(0,3)
+
+    \rput[t](0,-.15){$~w_1$}
+    \rput[l](2,0){$~w_2$}
+    \rput[r](-2,0){$w_3~$}
+    \rput[l](0,1){$~~w_4$}
+    \rput[l](1,2){$~w_5$}
+    \rput[r](-1,2){$w_6~$}
+    \rput[b](0,3.15){$w_7$}
+
+    \psline(0,0)(2,0)
+    \psline(0,0)(-2,0)
+    \psline(0,0)(0,1)
+    \psline(2,0)(0,1)
+    \psline(-2,0)(0,1)
+    \psline(2,0)(1,2)
+    \psline(-2,0)(-1,2)
+    \psline(0,1)(1,2)
+    \psline(0,1)(-1,2)
+    \psline(1,2)(0,3)
+    \psline(-1,2)(0,3)
+
+    \psline[linestyle=dashed](-1,.4)(1,.4)
+    \psline[linestyle=dashed](-1,.4)(-1.1666,0.8333) 
+    \psline[linestyle=dashed](1,.4)(1.1666,0.8333)
+    \psline[linestyle=dashed](1.1666,0.8333)(0,2)
+    \psline[linestyle=dashed](-1.1666,0.8333)(0,2)
+
+    \psline[arrows=->,linestyle=dashed](-1,.4)(-1,-.5)
+    \psline[arrows=->,linestyle=dashed](1,.4)(1,-.5)
+    \psline[arrows=->,linestyle=dashed](1.1666,0.8333)(3.1666,1.8333)
+    \psline[arrows=->,linestyle=dashed](-1.1666,0.8333)(-3.1666,1.8333)
+    \psline[arrows=->,linestyle=dashed](0,2)(1,3)
+    \psline[arrows=->,linestyle=dashed](0,2)(-1,3)
+
+    \psdots[dotstyle=o](-1,.4)
+    \psdots[dotstyle=o](1,.4)
+    \psdots[dotstyle=o](1.1666,0.8333)
+    \psdots[dotstyle=o](-1.1666,0.8333)
+    \psdots[dotstyle=o](0,2)
+
+  \end{pspicture}
+\caption{Delaunay triangulation is dual to Voronoi diagram} \label{fig_delaunay}
+\end{figure}
+
+
+So, to generate Delaunay triangulation we can perform the following procedure.
+For each vertex of polyhedra (we are not interesting in extreme rays) in previous section
+we determine all facets incident to the vertex.
+Interpreting information about ``Rays-to-inequalities incidence'' in \verb$exvoronoi.ine.out$
+we get that Delaunay cells in this example are formed by the following
+vertices 
+$w_1$, $w_3$, $w_4$;
+$w_1$, $w_2$, $w_4$;
+$w_2$, $w_4$, $w_5$;
+$w_3$, $w_4$, $w_6$;
+$w_4$, $w_5$, $w_6$, $w_7$ (see Fig.\,\ref{fig_delaunay}).
+
+There is a direct way to construct the Delaunay triangulation. Consider the
+same paraboloid as in the previous section: $x_{d+1} = x_1^2+\dots+x_d^2$.
+For each point $w=(w_1,\dots,w_d)\transpose$ in $W$ consider its lifting
+$(w_1,\dots,w_d,w_1^2+\dots+w_d^2)\transpose$ in $\RR^{d+1}$ and take the
+convex hull $P$ of all such lifted points. Let $v=(0,\dots,0,1)$. It turns
+out that any facet of $P+\NonNeg(v)$ which is not parallel to $v$ is a
+Delaunay cell once its last coordinate is ignored, and any Delaunay cell is
+represented this way \cite{Fukuda2004}.
+
+For our example form the file \verb$exdelaunay.ext$:
+\verbatiminput{../examples/exdelaunay.ext}
+and evoke \Skeleton:
+\begin{verbatim}
+skeleton exdelaunay.ext --extinc
+\end{verbatim}
+We get the file \verb$exdelaunay.ext.out$:
+\verbatiminput{../examples/exdelaunay.ext.out}
+Only first $5$ facets are not parallel to $v$ (because their 3rd coordinate is non-zero).
+So, we again have $5$ Delaunay cells which are formed by points
+$w_1$, $w_3$, $w_4$;
+$w_1$, $w_2$, $w_4$;
+$w_4$, $w_5$, $w_6$, $w_7$;
+$w_3$, $w_4$, $w_6$;
+$w_2$, $w_4$, $w_5$
+correspondingly  (see Fig.\,\ref{fig_delaunay}).
+
+\bibliographystyle{alpha}
+
+\bibliography{skeleton}
+
+\end{document}
+
