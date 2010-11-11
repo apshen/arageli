@@ -233,6 +233,7 @@ them.
     - Sergey S. Lyalin
     - Alexander Pshenichnikov
     - Alexey Polovinkin
+    - Anastasya A. Ryzhova
     - Nikolay Santalov
     - Ekaterina Shchukina
     - Andrey Somsikov
