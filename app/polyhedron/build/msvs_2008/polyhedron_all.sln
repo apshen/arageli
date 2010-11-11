@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "polyhedron", "polyhedron\polyhedron.vcproj", "{ADFD597F-345E-45F3-988A-E888C3663970}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B} = {D790993A-0F94-40DA-9CB5-794BECD05B9B}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "arageli", "..\..\..\..\build\msvs_2008\arageli\arageli.vcproj", "{D790993A-0F94-40DA-9CB5-794BECD05B9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Fast|Win32 = Fast|Win32
+		Fast|x64 = Fast|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+		Test|Win32 = Test|Win32
+		Test|x64 = Test|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Debug|Win32.Build.0 = Debug|Win32
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Debug|x64.ActiveCfg = Debug|x64
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Debug|x64.Build.0 = Debug|x64
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Fast|Win32.ActiveCfg = Fast|Win32
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Fast|Win32.Build.0 = Fast|Win32
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Fast|x64.ActiveCfg = Fast|x64
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Fast|x64.Build.0 = Fast|x64
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Release|Win32.ActiveCfg = Release|Win32
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Release|Win32.Build.0 = Release|Win32
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Release|x64.ActiveCfg = Release|x64
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Release|x64.Build.0 = Release|x64
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Test|Win32.ActiveCfg = Test|Win32
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Test|Win32.Build.0 = Test|Win32
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Test|x64.ActiveCfg = Test|x64
+		{ADFD597F-345E-45F3-988A-E888C3663970}.Test|x64.Build.0 = Test|x64
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Debug|Win32.Build.0 = Debug|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Debug|x64.ActiveCfg = Debug|x64
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Debug|x64.Build.0 = Debug|x64
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Fast|Win32.ActiveCfg = Fast|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Fast|Win32.Build.0 = Fast|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Fast|x64.ActiveCfg = Fast|x64
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Fast|x64.Build.0 = Fast|x64
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Release|Win32.ActiveCfg = Release|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Release|Win32.Build.0 = Release|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Release|x64.ActiveCfg = Release|x64
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Release|x64.Build.0 = Release|x64
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Test|Win32.ActiveCfg = Test|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Test|Win32.Build.0 = Test|Win32
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Test|x64.ActiveCfg = Test|x64
+		{D790993A-0F94-40DA-9CB5-794BECD05B9B}.Test|x64.Build.0 = Test|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
