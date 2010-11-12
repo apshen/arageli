@@ -108,9 +108,9 @@ void Sphere::generate (std::ostream& out, CmdArgs& cmdargs) const
                     }
                     out << '\n';
                 }
+                ++i;
             }
 
-            ++i;
         }
 
 #if HOLD_AS_MATRIX
@@ -165,6 +165,7 @@ void Sphere::generate (std::ostream& out, CmdArgs& cmdargs) const
                 std::cout << "Repulsion iteration " << i + 1 << ", maxshift = " << maxshift << ", mindist = " << mindist << '\n';
             }
 
+            #ifndef OUTPUT_VRML
             for(int i = 0; i < r; ++i)
             {
                 out << "1  ";
@@ -172,6 +173,7 @@ void Sphere::generate (std::ostream& out, CmdArgs& cmdargs) const
                     out << repulsion_matrix(i, j) << ' ';
                 out << '\n';
             }
+            #endif
 
             #ifdef OUTPUT_VRML
             {
