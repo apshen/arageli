@@ -100,7 +100,21 @@ CmdArgs::CmdArgs (TCLAP::CmdLine& cmd) :
         0,
         "positive integer number",
         cmd
-    )/*,
+    ),
+    repulsion
+    (
+        "",
+        "repulsion",
+
+        "Applied to randomly generated points. Applay several iterations of repulsion process to points making their distribution more regular in the space. "
+        "Number provided is the number of iteration of repulsion process. Value 0 means repultion turned off. Currently applicable to sphere type only.",
+
+        false,
+        0,
+        "positive integer number",
+        cmd
+    )
+    /*,
     vertices
     (
         "",

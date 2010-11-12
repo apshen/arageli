@@ -48,6 +48,7 @@ struct CmdArgs
     TCLAP::ValueArg<int> dim;
     TCLAP::ValueArg<int> number;
     TCLAP::ValueArg<int> random;
+    TCLAP::ValueArg<int> repulsion;
 };
 
 class Processor
