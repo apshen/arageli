@@ -251,7 +251,9 @@ void output_vrml (Out& out, const polyhedron<T, R, M, CFG>& p)
         "Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } }"
         "geometry IndexedFaceSet { solid TRUE coord Coordinate { point [\n";
 
-    output_aligned(out, p.template vertices<matrix<double> >(), "", ",", " ");
+    matrix<double> vertices = p.template vertices<matrix<double> >();
+
+    output_aligned(out, vertices, "", ",", " ");
 
     out << "] } coordIndex [\n";
 
@@ -260,12 +262,35 @@ void output_vrml (Out& out, const polyhedron<T, R, M, CFG>& p)
     for(typename Side_set::const_iterator i = sides.begin(); i != sides.end(); ++i)
     {
         Vertex_set vi = *i;
+        vector<typename Vertex_set::value_type> points;
         for
         (
             typename Vertex_set::const_iterator j = vi.begin();
             j != vi.end(); ++j
         )
-            out << *j << ", ";
+            //out << *j << ", ";
+            points.push_back(*j);
+
+        if(points.size() == 3)
+        {
+            vector<double> p1 = vertices.copy_row(points[1]) - vertices.copy_row(points[0]);
+            vector<double> p2 = vertices.copy_row(points[2]) - vertices.copy_row(points[0]);
+            vector<double> p3(3);
+            p3[0] = p1[1]*p2[2] - p1[2]*p2[1];
+            p3[1] = - p1[0]*p2[2] + p1[2]*p2[0];
+            p3[2] = p1[0]*p2[1] - p1[1]*p2[0];
+
+            int ineidx = i - sides.begin();
+            vector<double> facet = p.inequation_matrix().copy_row(ineidx);
+            ARAGELI_ASSERT_1(facet.size() == 4);
+            facet.erase(0);
+            if(dotprod(facet, p3) > 0)
+                points.swap_els(0, 1);
+        }
+
+        for(int j = 0; j < points.size(); ++j)
+            out << points[j] << ", ";
+
         out << "-1,\n";
     }
 
