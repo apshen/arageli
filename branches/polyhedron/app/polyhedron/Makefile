@@ -8,8 +8,7 @@
 #
 #    This file is a part of the Arageli library.
 #
-#    Copyright (C) 1999--2007 Nikolai Yu. Zolotykh
-#    Copyright (C) 2006--2007 Aleksey Bader
+#    Copyright (C) 2010 Anastasya A. Ryzhova
 #
 #    The Arageli Library is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU General Public License version 2
@@ -31,68 +30,22 @@
 #
 ##############################################################################
 
-# build arageli library
+# build polyhedron application
 
-.PHONY: arageli all check install app clean example dvi TAGS perf script HTML
+.PHONY: polyhedron all clean TAGS
 
-arageli:
-	$(MAKE) -C src/arageli
+polyhedron:
+	$(MAKE) -C src/polyhedron
 
-all: arageli check example app dvi TAGS perf script HTML
+all: polyhedron TAGS
 	
-app:
-	$(MAKE) - C app/polyhedron/src/polyhedron
-
-check:
-	$(MAKE) -C tool/ts/src/ts/
-	$(MAKE) -C test
-	$(MAKE) runtests
-
-perf:
-	$(MAKE) -C perf
-
-runtests:
-	if ls bin/test; then bin/test; else echo \*\*\* Try make check before running tests! \*\*\*; fi;
-
-example:
-	$(MAKE) -C example/
-
-# call 'make install' only with root previlegues
-install:
-
-# run script to satisfy Coding Guidelines
-script:
-	python ./tool/script/tab_finding.py ./
-	python ./tool/script/crlf_finding.py ./
-#	python ./tool/script/end_spaces_del.py ./
-#	python ./tool/script/crlf2lf.py ./
-#	python ./tool/script/tab_replacing.py ./
-
-# build documentation for arageli library
-dvi:
-	mkdir -p doc/dvi
-	$(MAKE) -C doc/src
-
-HTML:
-	$(MAKE) -C src/arageli HTML
-
-HTMLclean:
-	$(MAKE) -C src/arageli HTMLclean
 
 # update TAGS for source files
 TAGS:
 	ctags -R -h .cpp.hpp
 
 clean:
-	$(MAKE) -C src/arageli clean
+	$(MAKE) -C src/polyhedron clean
 
-cleanall: clean HTMLclean
-	$(MAKE) -C tool/ts/src/ts cleanall
-	$(MAKE) -C test cleanall
-	$(MAKE) -C doc/src cleanall
-	$(MAKE) -C example cleanall
-	$(MAKE) -C perf cleanall
-	$(MAKE) -C app cleanall
-	rm -rf doc/dvi
+cleanall: clean
 	rm -f tags
-	rm -f io_simple_binary.hpp.tmp #TODO: resolve problem with this file!!!
