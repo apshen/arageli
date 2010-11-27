@@ -31,6 +31,8 @@
 
 #include "stdafx.hpp"
 
+#if 0
+
 #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) ||    \
     defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_app_polyhedron_permute)
 
@@ -121,3 +123,6 @@ namespace polyhedron
 }
 
 #endif    // #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) || ...
+
+#else
+#endif

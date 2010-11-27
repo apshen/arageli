@@ -1,4 +1,4 @@
-// stdafx.h : include file for standard system include files,
+// stdafx.hpp : include file for standard system include files,
 // or project specific include files that are used frequently, but
 // are changed infrequently
 //
@@ -12,20 +12,19 @@
 #include <map>
 #include <iostream>
 #include <fstream>
-#include <arageli/arageli.hpp>
-#include <tclap/CmdLine.h>
 
-#include <iostream>
 #include <iomanip>
 #include <algorithm>
 #include <iterator>
 #include <set>
 #include <cmath>
-#include <arageli/arageli.hpp>
 
 #include <vector>
 #include <utility>
 #include <list>
 #include <cctype>
+
+#include <arageli/arageli.hpp>
+#include <tclap/CmdLine.h>
 
 // TODO: reference additional headers your program requires here

@@ -32,7 +32,7 @@
 #ifndef _ARAGELI_APP_POLYHEDRON_permute_hpp_
 #define _ARAGELI_APP_POLYHEDRON_permute_hpp_
 
-#include "stdafx.hpp"
+#if 0
 
 namespace Arageli
 {
@@ -54,6 +54,77 @@ void AllPermutations(std::ostream& out, std::vector<T>& val);
     #define ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_app_polyhedron_permute
     #include "permute.cpp"
     #undef  ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_app_polyhedron_permute
+#endif
+
+#else
+
+#include "permute.hpp"
+
+namespace Arageli
+{
+namespace app
+{
+namespace polyhedron
+{
+
+
+template <typename T>
+bool IsValueRepeated(std::vector<T>& val, unsigned int ind, unsigned int j)
+{
+    for (unsigned int i = 0; i < j; ++i)
+    {
+        if (val[i+ind] == val[j+ind])
+            return true;
+    }
+
+    return false;
+}
+
+template <typename T>
+void Permute(std::ostream& out, std::vector<T>& val, unsigned int m, unsigned int n, unsigned int ind)
+{
+    std::vector<T> valTemp(val);
+
+    if (n > 1)
+    {
+        Permute(out, val, m, n-1, ind+1);
+        for (unsigned int i = 1; i < n; ++i)
+        {
+            if (!IsValueRepeated(valTemp, ind, i))
+            {
+                val[ind] = valTemp[i+ind];
+                val[i+ind] = valTemp[ind];
+
+                Permute(out, val, m, n-1, ind+1);
+
+                val[ind] = valTemp[ind];
+                val[i+ind] = valTemp[i+ind];
+            }
+        }
+    }
+    else
+    {
+        out << '1';
+        for (unsigned int i = 0; i < m; ++i)
+        {
+            out << ' ' << val[i];
+        }
+        out << '\n';
+    }
+}
+
+template <typename T>
+void AllPermutations(std::ostream& out, std::vector<T>& val)
+{
+    unsigned int m = val.size();
+    Permute(out, val, m, m, 0);
+}
+
+
+}
+}
+}
+
 #endif
 
 #endif
