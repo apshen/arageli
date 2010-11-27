@@ -32,7 +32,7 @@
 #ifndef _ARAGELI_APP_POLYHEDRON_utility_hpp_
 #define _ARAGELI_APP_POLYHEDRON_utility_hpp_
 
-#include "stdafx.hpp"
+#if 0
 
 namespace Arageli
 {
@@ -66,6 +66,73 @@ M make_verts_product (const M& x, const M& y);
     #define ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_app_polyhedron_utility
     #include "utility.cpp"
     #undef  ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_app_polyhedron_utility
+#endif
+
+#else
+
+namespace Arageli
+{
+namespace app
+{
+namespace polyhedron
+{
+
+typedef matrix<big_int> Matrix;
+
+Matrix cyclic_verts (int d, int n);
+
+template <typename M>
+M make_cone (const M& x)
+{
+    M res = x;
+    res.insert_col(0, unit<typename M::value_type>());
+    return res;
+}
+
+template <typename M>
+void output_matrix (std::ostream& out, const M& x)
+{
+    out << x.nrows() << ' ' << x.ncols() << '\n';
+    output_aligned(out, x, " ", " ", " ");
+}
+
+template <typename M>
+M simplex_verts (int d)
+{
+    M res(d+1, d);
+
+    for(int i = 0; i < d; ++i)
+        res(i+1, i) = 1;
+
+    return res;
+}
+
+template <typename M>
+M make_verts_product (const M& x, const M& y)
+{
+    if(x.is_empty())return y;
+    if(y.is_empty())return x;
+
+    M res(x.nrows()*y.nrows(), x.ncols() + y.ncols());
+
+    for(int i = 0; i < x.nrows(); ++i)
+        for(int j = 0; j < y.nrows(); ++j)
+        {
+            int ij = i*y.nrows() + j;
+            for(int ki = 0; ki < x.ncols(); ++ki)
+                res(ij, ki) = x(i, ki);
+            for(int kj = 0; kj < y.ncols(); ++kj)
+                res(ij, kj + x.ncols()) = y(j, kj);
+        }
+
+    return res;
+}
+
+
+}
+}
+}
+
 #endif
 
 #endif

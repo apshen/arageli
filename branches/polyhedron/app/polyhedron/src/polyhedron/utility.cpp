@@ -31,6 +31,8 @@
 
 #include "stdafx.hpp"
 
+#if 0
+
 #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) ||    \
     defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_app_polyhedron_utility)
 
@@ -127,3 +129,33 @@ Matrix cyclic_verts (int d, int n)
 }
 
 #endif    // #if !defined(ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE) || ...
+
+#else
+
+#include "utility.hpp"
+
+namespace Arageli
+{
+namespace app
+{
+namespace polyhedron
+{
+
+
+Matrix cyclic_verts (int d, int n)
+{
+    matrix<big_int> res(n, d);
+
+    for(int in = 0; in < n; ++in)
+        for(int id = 1; id <= d; ++id)
+            res(in, id-1) = power(big_int(in + 1), id);
+
+    return res;
+}
+
+
+}
+}
+}
+
+#endif

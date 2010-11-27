@@ -30,40 +30,36 @@
 #
 ##############################################################################
 
-BIN_DIR = ../../../../bin
-ARAGELI_SOURCES_DIR = ../../../../src
+ARAGELI_DIR = ../../../..
 SOURCE_DIR = .
-INCLUDE_DIR = $(SOURCE_DIR) $(ARAGELI_SOURCES_DIR)../../../../tool/tclap/include/tclap
-ARAGELI_LIB_DIR =../../../../lib
 
-PERFCXXFLAGS += -MD -pg -DARAGELI_SOURCE -g -O3 -DARAGELI_DEBUG_LEVEL=0
-LINKFLAGS = - L"$(ARAGELI_LIB_DIR)" -lperfarageli
+CXXFLAGS += -MD -g -DARAGELI_SOURCE -O2 -DARAGELI_DEBUG_LEVEL=3 -DARAGELI_ASSERT_THROW_EXCEPTION
+LINKFLAGS = -L"$(ARAGELI_DIR)/lib/" -ltestarageli
 
-all: $(BIN_DIR)/polyhedron
+all: $(ARAGELI_DIR)/bin/polyhedron
 
-$(BIN_DIR)/polyhedron: $(ARAGELI_LIB_DIR)libperftarageli.a \
+$(ARAGELI_DIR)/bin/polyhedron: $(ARAGELI_DIR)/lib/libtestarageli.a \
 	stdafx.hpp.gch \
 	$(patsubst %.cpp,%.o, $(wildcard $(addsuffix /*.cpp,$(SOURCE_DIR))))
-	make -C $(ARAGELI_SOURCES_DIR)/arageli $(ARAGELI_LIB_DIR)/libperfarageli.a
-	$(CXX) -o $(BIN_DIR)/polyhedron $(patsubst %.cpp,%.o, $(wildcard $(addsuffix /*.cpp,$(SOURCE_DIR)))) $(LINKFLAGS)
+	make -C $(ARAGELI_DIR)/src/arageli ../../lib/libtestarageli.a
+	$(CXX) -o $(ARAGELI_DIR)/bin/polyhedron $(patsubst %.cpp,%.o, $(wildcard $(addsuffix /*.cpp,$(SOURCE_DIR)))) $(LINKFLAGS)
 
-$(INCLUDE_DIR)/stdafx.hpp.gch: $(INCLUDE_DIR)/stdafx.hpp
-	$(CC) -x c++-header $(PERFCXXFLAGS) -o $@ $< -I"$(INCLUDE_DIR)"
+stdafx.hpp.gch: stdafx.hpp
+	$(CC) -x c++-header $(CXXFLAGS) -o $@ $< -I"$(ARAGELI_DIR)/src/" -I"$(ARAGELI_DIR)/tool/tclap/include/"
 
 %.o: %.cpp
-	$(CXX) -c $(PERFCXXFLAGS) $< -o $@ -I"$(INCLUDE_DIR)"
+	$(CXX) -c $(CXXFLAGS) $< -o $@ -I"$(ARAGELI_DIR)/src/" -I"$(ARAGELI_DIR)/tool/tclap/include/"
 
-$(LIBRARY_DIR)/libperfarageli.a:
-	$(MAKE) -C $(ARAGELI_SOURCES_DIR)/arageli
+$(ARAGELI_DIR)/lib/libtestarageli.a:
+	$(MAKE) -C $(ARAGELI_DIR)/src/arageli ../../lib/libtestarageli.a
 
 TAGS:
-	ctags $(wildcard $(addsuffix /*.cpp,$(SOURCE_DIR))) $(wildcard \
-	$(addsuffix /*.hpp,$(SOURCE_DIR))) #-f TAGS
+	ctags $(wildcard $(addsuffix /*.cpp,$(SOURCE_DIR))) $(wildcard $(addsuffix /*.hpp,$(SOURCE_DIR)))
 
 clean:
-	rm -f $(BIN_DIR)/polyhedron
-	rm -f $(wildcard $(addsuffix /*.o,$(SOURCE_DIR))) $(wildcard $(addsuffix /*.d,$(SOURCE_DIR)))
-
+	rm -f $(ARAGELI_DIR)/bin/polyhedron
+	rm -f *.o *.d
+	
 cleanall: clean
 	rm -f stdafx.hpp.gch
 	rm -f tags
