@@ -19,7 +19,10 @@ libtclapinclude_HEADERS = \
 			 CmdLineOutput.h \
 			 StdOutput.h \
 			 DocBookOutput.h \
+			 ZshCompletionOutput.h \
 			 OptionalUnlabeledTracker.h \
 			 Constraint.h \
-			 ValuesConstraint.h
+			 ValuesConstraint.h \
+			 ArgTraits.h \
+			 StandardTraits.h
 
