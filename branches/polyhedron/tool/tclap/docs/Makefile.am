@@ -10,7 +10,21 @@ all:
 
 endif
 
-EXTRA_DIST = index.html manual.html style.css manual.xml
+EXTRA_DIST = manual.xml
+dist_doc_DATA = index.html manual.html style.css
+docdir = ${datadir}/doc/${PACKAGE}
+
+install-data-local :
+	$(mkdir_p) $(DESTDIR)$(docdir)
+	cp -R html $(DESTDIR)$(docdir)
+
+uninstall-local :
+	chmod -R +w $(DESTDIR)$(docdir)
+	rm -rf $(DESTDIR)$(docdir)
+
+dist-hook :
+	$(mkdir_p) $(distdir)
+	cp -R html $(distdir)
 
 clean-local:
 	$(RM) -rf html
