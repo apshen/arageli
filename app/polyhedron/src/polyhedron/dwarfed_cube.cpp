@@ -44,13 +44,38 @@ namespace polyhedron
 void DwarfedCube::generate (std::ostream& out, CmdArgs& cmdargs) const
 {
     int dim = cmdargs.dim.getValue();
-    int n = cmdargs.number.getValue();
-    if(n <= 0)
-    {
-        std::cerr << "[ERROR] You should provide positive integer n.";
-    }
+	out << 2*dim+1 << ' ' << dim+1 << '\n';
+	for(int i = 0; i < dim; ++i)
+	{
+		out << "0  ";
+		for(int j = 0; j < dim; ++j)
+		{
+			if(i == j)
+				out << " 1";
+			else
+				out << " 0";
+			if(j != dim - 1)
+				out << ' ';
+		}
+		out << '\n';
 
-    output_matrix(out, make_cone(cyclic_verts(dim, n)));
+		out << "2  ";
+		for(int j = 0; j < dim; ++j)
+		{
+			if(i == j)
+				out << "-1";
+			else
+				out << " 0";
+			if(j != dim - 1)
+				out << ' ';
+		}
+		out << '\n';
+	}
+
+	out << "3 ";
+	for(int i = 0; i < dim; ++i)
+		out << " -1";
+	out << '\n';
 }
 
 

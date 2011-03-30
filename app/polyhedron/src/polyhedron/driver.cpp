@@ -51,7 +51,7 @@ CmdArgs::CmdArgs (TCLAP::CmdLine& cmd) :
         "Simplex is represented as a set of inequalities by the default.\n"
         "cube01 -- d-dimensional cube [0, 1]. Cube01 is represetnted as a set of inequalities by the default.\n"
         "cyclic -- d-dimensional cyclic polytop built with the cure (t, t^2, ..., t^d). Cyclic polytopes are represented by a set of vertices by the default.\n"
-        "dwarfedcube, dwarfcube -- d-dimensional dwarfed cube [0, 1] with the dwarfing inequality x_1 + x_2 + ... + x_d <= 3. "
+        "dwarfedcube, dwarfcube -- d-dimensional dwarfed cube [0, 2] with the dwarfing inequality x_1 + x_2 + ... + x_d <= 3. "
         "Dwarfed cubes are represented as a set of inequalities by the default.\n"
         "CC2d -- 2*d-dimensioanal sqrt(d)-fold product of (2*sqrt(d))-dimensional cyclic polytopes with n vertices each. "
         "This class of polyhedra is represented as a set of vertices by the default.\n"
