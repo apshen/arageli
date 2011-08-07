@@ -48,9 +48,9 @@ using namespace Arageli;
 
 
 template <typename T>
-bool m_mul_scalar(const char* s,T number)
+bool m_mul_scalar(const std::string &s,T number)
 {
-    matrix<T> A(s);
+    matrix<T> A(s.c_str());
     matrix<T> X=A;
 
     if((number==0) && (A.mul_scalar(number).is_null())) return false;
@@ -87,7 +87,7 @@ TEST(matrix,assign_multiplies_val,"Test assign_multiplies_val function : ")
         int rows=1+element.Rand()%5;
         int cols=1+element.Rand()%5;
 
-        std::strstream buff;
+        std::ostringstream buff;
         buff<<'(';
         for(int i=0; i<rows; i++)
         {
@@ -102,7 +102,6 @@ TEST(matrix,assign_multiplies_val,"Test assign_multiplies_val function : ")
             if(i!=rows-1) buff<<',';
         }
         buff<<')';
-        buff<<'\x0';
 
         //fail |=m_mul_scalar<rational<> >(buff.str(),element.Rand());
         //fail |=m_mul_scalar<int>(buff.str());

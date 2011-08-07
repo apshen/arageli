@@ -38,7 +38,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
-#include <strstream>    // non standard feature
 #include <ctime>
 #include <iomanip>
 #include <string>
