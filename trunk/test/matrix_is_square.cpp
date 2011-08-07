@@ -44,9 +44,9 @@ using namespace Arageli;
 
 
 template <class T>
-bool m_is_square(const char* s)
+bool m_is_square(const std::string &s)
 {
-    matrix<T> A(s);
+    matrix<T> A(s.c_str());
     bool result=false;
     if(A.ncols()==A.nrows()) result=true;
 
@@ -70,7 +70,7 @@ TEST(matrix,is_square,"Test for function is_square")
     {
         int cols=1+element.Rand()%5;
         int rows=1+element.Rand()%5;
-        std::strstream buff;
+        std::ostringstream buff;
         buff<<'(';
         for(int i=0; i<rows; i++)
         {
@@ -85,7 +85,6 @@ TEST(matrix,is_square,"Test for function is_square")
             if(i!=rows-1) buff<<',';
         }
         buff<<')';
-        buff<<'\x0';
 
         // 1: fail |=m_is_square<rational<> >(buff.str());
         // 2: fail |=m_is_square<int>(buff.str());

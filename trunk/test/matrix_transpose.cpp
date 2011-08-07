@@ -47,9 +47,9 @@ using namespace Arageli;
 
 
 template <typename T>
-bool matrix_transpose(const char* s)
+bool matrix_transpose(const std::string &s)
 {
-    matrix<T> A(s);
+    matrix<T> A(s.c_str());
     matrix<T> X=A;
 
     A.transpose();
@@ -82,7 +82,7 @@ TEST(matrix,transpose,"Test transpose function")
         int rows=1+element.Rand()%5;
         int cols=1+element.Rand()%5;
 
-        std::strstream buff;
+        std::ostringstream buff;
 
         buff<<'(';
         for(int i=0; i<rows; i++)
@@ -98,7 +98,6 @@ TEST(matrix,transpose,"Test transpose function")
             if(i!=rows-1) buff<<',';
         }
         buff<<')';
-        buff<<'\x0';
 
         // 1: fail |=matrix_transpose<rational<> >(buff.str());
         // 2: fail |=matrix_transpose<int>(buff.str());

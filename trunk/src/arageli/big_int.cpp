@@ -87,6 +87,57 @@ template <> struct Unsigned<signed char> { typedef unsigned char Type; };
 
 
 template <typename T>
+void big_int::from_native_int_helper (const T &x, true_type)
+{
+    typedef std::numeric_limits<T> Nl;
+    _Internal::digit* mem = big_int::get_mem_for_data(1);
+    try
+    {
+        mem[0] = _Internal::digit(x);
+        free_mem_and_alloc_number(1, mem, 1);
+    }
+    catch(...)
+    {
+        free_data(mem);
+        throw;
+    }
+}
+
+template <typename T>
+void big_int::from_native_int_helper (const T &x, false_type)
+{
+    typedef std::numeric_limits<T> Nl;
+    std::size_t n =
+        Nl::digits / _Internal::bits_per_digit +
+        bool(Nl::digits % _Internal::bits_per_digit);
+
+    _Internal::digit* mem = get_mem_for_data(n);
+
+    try
+    {
+        T xx = x;
+
+        for(std::size_t i = 0; i < n; ++i, xx >>= _Internal::bits_per_digit)
+            mem[i] = xx & _Internal::max_digit;
+
+        ARAGELI_ASSERT_1(Arageli::is_null(xx));
+
+        std::size_t newlen;
+        mem = optimize(newlen, mem, n);
+        ARAGELI_ASSERT_1(newlen);
+        free_mem_and_alloc_number(1, mem, newlen);
+    }
+    catch(...)
+    {
+        free_data(mem);
+        throw;
+    }
+
+    number->sign = +1;
+}
+
+
+template <typename T>
 void big_int::from_native_int (const T& x)
 {
     typedef std::numeric_limits<T> Nl;
@@ -102,50 +153,10 @@ void big_int::from_native_int (const T& x)
         from_native_int(static_cast<typename _Internal::Unsigned<T>::Type>(-x));
         number->sign = -1;
     }
-    else if(Nl::digits <= _Internal::bits_per_digit)
-    {
-        _Internal::digit* mem = big_int::get_mem_for_data(1);
-
-        try
-        {
-            mem[0] = _Internal::digit(x);
-            free_mem_and_alloc_number(1, mem, 1);
-        }
-        catch(...)
-        {
-            free_data(mem);
-            throw;
-        }
-    }
     else
     {
-        std::size_t n =
-            Nl::digits / _Internal::bits_per_digit +
-            bool(Nl::digits % _Internal::bits_per_digit);
-
-        _Internal::digit* mem = get_mem_for_data(n);
-
-        try
-        {
-            T xx = x;
-
-            for(std::size_t i = 0; i < n; ++i, xx >>= _Internal::bits_per_digit)
-                mem[i] = xx & _Internal::max_digit;
-
-            ARAGELI_ASSERT_1(Arageli::is_null(xx));
-
-            std::size_t newlen;
-            mem = optimize(newlen, mem, n);
-            ARAGELI_ASSERT_1(newlen);
-            free_mem_and_alloc_number(1, mem, newlen);
-        }
-        catch(...)
-        {
-            free_data(mem);
-            throw;
-        }
-
-        number->sign = +1;
+        typename bool_type<Nl::digits <= _Internal::bits_per_digit>::type dummy;
+        from_native_int_helper(x, dummy);
     }
 }
 

@@ -47,10 +47,10 @@ using namespace Arageli;
 
 
 template <class T>
-bool matrix_mult(const char* s,const char* m)
+bool matrix_mult(const std::string &s, const std::string &m)
 {
-    matrix<T> A(s);//the first matrix
-    matrix<T> B(m);//the second matrix
+    matrix<T> A(s.c_str());//the first matrix
+    matrix<T> B(m.c_str());//the second matrix
     matrix<T> C=A;//the copy of the first matrix
 
     C*=B;
@@ -83,7 +83,7 @@ TEST(matrix,matrix_mult,"Test matrix_mult function : ")
         int cols=1+element.Rand()%5;
         int temp=1+element.Rand()%5;
 
-        std::strstream buffA,buffB;
+        std::ostringstream buffA,buffB;
 
         //generation of matrix A
         buffA<<'(';
@@ -101,7 +101,6 @@ TEST(matrix,matrix_mult,"Test matrix_mult function : ")
             if(i!=rows-1) buffA<<',';
         }
         buffA<<')';
-        buffA<<'\x0';
 
         //generation of matrix B
         buffB<<'(';
@@ -119,7 +118,6 @@ TEST(matrix,matrix_mult,"Test matrix_mult function : ")
             if(i!=cols-1) buffB<<',';
         }
         buffB<<')';
-        buffB<<'\x0';
 
         // 1: fail |=matrix_mult<rational<> >(buffA.str(),buffB.str());
         // 2: fail |=matrix_mult<int>(buffA.str(),buffB.str());

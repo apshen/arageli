@@ -82,6 +82,30 @@ namespace Arageli
 namespace _Internal
 {
 
+//forward declarations
+template <typename T, typename R, typename MT, typename VT, typename VR>
+class UniCone;
+
+template <typename T, typename R, typename MT, typename VT, typename VR>
+class SimplicialCone;
+
+template <typename T, typename R, typename MT, typename VT, typename VR>
+class Cone;
+
+template <typename T, typename R, typename MT, typename VT, typename VR>
+class Polytope;
+
+template <typename T, typename R, typename MT, typename VT, typename VR>
+std::ostream& operator<< (std::ostream& out, const UniCone<T, R, MT, VT, VR> &c);
+
+template <typename T, typename R, typename MT, typename VT, typename VR>
+std::ostream& operator<< (std::ostream& out, const SimplicialCone<T, R, MT, VT, VR> &c);
+
+template <typename T, typename R, typename MT, typename VT, typename VR>
+std::ostream& operator<< (std::ostream& out, const Cone<T, R, MT, VT, VR> &c);
+
+template <typename T, typename R, typename MT, typename VT, typename VR>
+std::ostream& operator<< (std::ostream& out, const Polytope<T, R, MT, VT, VR> &p);
 
 // +++++++ Original declaration part ++++++++
 
@@ -100,7 +124,7 @@ public:
     R GetValue(const T& min_num);
     void GetRationalFuncInDVariables(std::ofstream& out);
     void GetRationalFuncInOneVariable(std::ofstream& out);
-    friend std::ostream& operator<< (std::ostream&,UniCone);
+    friend std::ostream& operator<< <T, R, MT, VT, VR> (std::ostream&, const UniCone &);
 private:
     MT generators;
     VR vertex;
@@ -118,7 +142,7 @@ public:
     bool Decompose(std::list<UniCone<T, R, MT, VT, VR>*>& UniCones); //true - разложили, false - индекс не уменьшился
     void Dual();
     T GetIndex();
-    friend std::ostream& operator<< (std::ostream&, SimplicialCone);
+    friend std::ostream& operator<< <T, R, MT, VT, VR> (std::ostream&, const SimplicialCone &);
 private:
     MT generators;
     T Index;
@@ -134,7 +158,7 @@ public:
     Cone(const MT& a, VR& v);
     void Dual();
     void Delone(std::list<SimplicialCone<T, R, MT, VT, VR>*>& Simplicial);
-    friend std::ostream& operator<< (std::ostream&,Cone);
+    friend std::ostream& operator<< <T, R, MT, VT, VR> (std::ostream&, const Cone &);
 private:
     MT generators;
     VR vertex;
@@ -148,7 +172,7 @@ public:
     Polytope(const MT& a);
     R barvinok_algorithm(bool points = false);
     int GetSupportCones(std::list<Cone<T, R, MT, VT, VR>*>& SupportCones);
-    friend std::ostream& operator<< (std::ostream&,Polytope);
+    friend std::ostream& operator<< <T, R, MT, VT, VR> (std::ostream&, const Polytope &);
 private:
     MT a, f, q, e;
 };
@@ -295,7 +319,7 @@ void UniCone<T, R, MT, VT, VR>::Dual()
 }
 
 template <typename T, typename R, typename MT, typename VT, typename VR>
-std::ostream& operator<< (std::ostream& out, UniCone<T, R, MT, VT, VR> c)
+std::ostream& operator<< (std::ostream& out, const UniCone<T, R, MT, VT, VR> &c)
 {
     out << "unimodular cone: " << std::endl
         << "vertex = " << c.vertex << std::endl
@@ -530,7 +554,7 @@ void SimplicialCone<T, R, MT, VT, VR>::Dual()
 }
 
 template <typename T, typename R, typename MT, typename VT, typename VR>
-std::ostream& operator<< (std::ostream& out, SimplicialCone<T, R, MT, VT, VR> c)
+std::ostream& operator<< (std::ostream& out, const SimplicialCone<T, R, MT, VT, VR> &c)
 {
     out
         << "simplicial cone: " << std::endl
@@ -723,7 +747,7 @@ void Cone<T, R, MT, VT, VR>::Dual()
 }
 
 template <typename T, typename R, typename MT, typename VT, typename VR>
-std::ostream& operator<< (std::ostream& out, Cone<T, R, MT, VT, VR> c)
+std::ostream& operator<< (std::ostream& out, const Cone<T, R, MT, VT, VR> &c)
 {
     out << std::endl;
     out
@@ -842,7 +866,7 @@ Polytope<T, R, MT, VT, VR>::Polytope(const MT& a) :
 {}
 
 template <typename T, typename R, typename MT, typename VT, typename VR>
-std::ostream& operator<< (std::ostream& out, Polytope<T, R, MT, VT, VR> p)
+std::ostream& operator<< (std::ostream& out, const Polytope<T, R, MT, VT, VR> &p)
 {
     out << "polytope: (Ax <= b) as (b|-A)" << std::endl;
     output_aligned(out, p.a);
