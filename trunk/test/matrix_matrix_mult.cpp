@@ -72,7 +72,7 @@ bool matrix_mult(const std::string &s, const std::string &m)
     return false;
 }
 
-TEST(matrix,matrix_mult,"Test matrix_mult function : ")
+TEST(matrix,matrix_mult,"Test matrix_mult function")
 {
     bool fail=false;
     RNG element(2,16);
