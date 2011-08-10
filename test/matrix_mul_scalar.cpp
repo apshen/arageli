@@ -76,7 +76,7 @@ bool m_mul_scalar(const std::string &s,T number)
     return false;
 }
 
-TEST(matrix,assign_multiplies_val,"Test assign_multiplies_val function : ")
+TEST(matrix,assign_multiplies_val,"Test assign_multiplies_val function")
 {
 
     bool fail=false;

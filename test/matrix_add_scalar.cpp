@@ -65,7 +65,7 @@ bool m_add_scalar(const std::string &s,T number)
     return false;
 }
 
-TEST(matrix,assign_plus_val,"Test assign_plus_val function : ")
+TEST(matrix,assign_plus_val,"Test assign_plus_val function")
 {
 
     bool fail=false;
