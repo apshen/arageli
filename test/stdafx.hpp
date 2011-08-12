@@ -31,7 +31,8 @@
 // are changed infrequently
 //
 
-#pragma once
+#ifndef _ARAGELI_TEST_stdafx_hpp
+#define _ARAGELI_TEST_stdafx_hpp
 
 #include <arageli/config.hpp>
 
@@ -94,3 +95,5 @@
 
 #pragma warning(disable : 4018)
 #pragma warning(disable : 4800)
+
+#endif
