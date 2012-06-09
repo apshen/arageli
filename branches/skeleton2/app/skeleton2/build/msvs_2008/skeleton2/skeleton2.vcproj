@@ -4,7 +4,7 @@
 	Version="9,00"
 	Name="skeleton"
 	ProjectGUID="{462EF465-FDFE-4676-86D7-92EF55B8FCF0}"
-	RootNamespace="skeleton"
+	RootNamespace="skeleton2"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -21,7 +21,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\bin"
+			OutputDirectory="..\..\..\..\..\bin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\tools\arageli\src"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;ARAGELI_DEBUG_LEVEL=3"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -94,7 +94,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="..\bin"
+			OutputDirectory="..\..\..\..\..\bin"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\tools\arageli\src"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="WIN64;_DEBUG;_CONSOLE;ARAGELI_DEBUG_LEVEL=3"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -161,7 +161,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\bin"
+			OutputDirectory="..\..\..\..\..\bin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -186,7 +186,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="false"
-				AdditionalIncludeDirectories="..\tools\arageli\src"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;ARAGELI_DEBUG_LEVEL=1;ARAGELI_ASSERT_THROW_EXCEPTION"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -237,7 +237,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="..\bin"
+			OutputDirectory="..\..\..\..\..\bin"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
@@ -260,7 +260,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\tools\arageli\src"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="WIN64;NDEBUG;_CONSOLE;ARAGELI_DEBUG_LEVEL=1;ARAGELI_ASSERT_THROW_EXCEPTION"
 				RuntimeLibrary="2"
 			/>
@@ -303,7 +303,7 @@
 		</Configuration>
 		<Configuration
 			Name="Fast|Win32"
-			OutputDirectory="..\bin"
+			OutputDirectory="..\..\..\..\..\bin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -331,7 +331,7 @@
 				EnableIntrinsicFunctions="true"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\tools\arageli\src"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0;ARAGELI_DEBUG_LEVEL=0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -383,7 +383,7 @@
 		</Configuration>
 		<Configuration
 			Name="Fast|x64"
-			OutputDirectory="..\bin"
+			OutputDirectory="..\..\..\..\..\bin"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
@@ -409,7 +409,7 @@
 				EnableIntrinsicFunctions="true"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\tools\arageli\src"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="WIN64;NDEBUG;_CONSOLE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0;ARAGELI_DEBUG_LEVEL=0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -453,7 +453,7 @@
 		</Configuration>
 		<Configuration
 			Name="Test|Win32"
-			OutputDirectory="..\bin"
+			OutputDirectory="..\..\..\..\..\bin"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -476,7 +476,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="..\tools\arageli\src"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;ARAGELI_DEBUG_LEVEL=3;ARAGELI_ASSERT_THROW_EXCEPTION"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
@@ -526,7 +526,7 @@
 		</Configuration>
 		<Configuration
 			Name="Test|x64"
-			OutputDirectory="..\bin"
+			OutputDirectory="..\..\..\..\..\bin"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			>
@@ -550,7 +550,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="..\tools\arageli\src"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="WIN64;NDEBUG;_CONSOLE;ARAGELI_DEBUG_LEVEL=3;ARAGELI_ASSERT_THROW_EXCEPTION"
 				RuntimeLibrary="2"
 			/>
@@ -600,7 +600,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\skeleton.cpp"
+				RelativePath="..\..\..\src\skeleton2\skeleton.cpp"
 				>
 			</File>
 		</Filter>
@@ -610,11 +610,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\src\ddm.hpp"
+				RelativePath="..\..\..\src\skeleton2\ddm.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\ddmio.hpp"
+				RelativePath="..\..\..\src\skeleton2\ddmio.hpp"
 				>
 			</File>
 		</Filter>
