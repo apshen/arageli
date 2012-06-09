@@ -301,6 +301,8 @@ T gcd (const vector<T, REFCNT>& v, const T_factory& tfctr)
         --j;
     }
 
+    if(is_negative(d))
+        opposite(&d);
     return is_null(d) ? tfctr.unit() : d;
 }
 
@@ -322,6 +324,8 @@ T lcm (const vector<T, REFCNT>& v, const T_factory& tfctr)
         --j;
     }
 
+    if(is_negative(d))
+        opposite(&d);
     return is_null(d) ? tfctr.unit() : d;
 }
 
