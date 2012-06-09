@@ -1,12 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "skeleton", "skeleton.vcproj", "{462EF465-FDFE-4676-86D7-92EF55B8FCF0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "skeleton2", "skeleton2\skeleton2.vcproj", "{462EF465-FDFE-4676-86D7-92EF55B8FCF0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D790993A-0F94-40DA-9CB5-794BECD05B9B} = {D790993A-0F94-40DA-9CB5-794BECD05B9B}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "arageli", "..\tools\arageli\build\msvs_2008\arageli\arageli.vcproj", "{D790993A-0F94-40DA-9CB5-794BECD05B9B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "arageli", "..\..\..\..\build\msvs_2008\arageli\arageli.vcproj", "{D790993A-0F94-40DA-9CB5-794BECD05B9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
