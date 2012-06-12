@@ -768,6 +768,12 @@ private:
     void from_native_int (const T& x);
 
     template <typename T>
+    void from_native_int_helper (const T& x, true_type);
+
+    template <typename T>
+    void from_native_int_helper (const T& x, false_type);
+
+    template <typename T>
     void from_native_float (const T& x);
 
     template <typename T>

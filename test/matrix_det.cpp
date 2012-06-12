@@ -51,9 +51,9 @@ using namespace Arageli;
 
 
 template<typename T>
-bool matrix_det(const char* s)
+bool matrix_det(const std::string &s)
 {
-    matrix<T> B(s);
+    matrix<T> B(s.c_str());
     matrix<T> C=B;
 
     //adduction the matrix to the stepping view
@@ -120,7 +120,7 @@ TEST(matrix,det,"Test det function")
     for(int k=0;k<20;k++)
     {
         int size=1+element.Rand()%5;
-        std::strstream buff;
+        std::ostringstream buff;
         buff<<'(';
         for(int i=0; i<size; i++)
         {
@@ -135,7 +135,6 @@ TEST(matrix,det,"Test det function")
             if(i!=size-1) buff<<',';
         }
         buff<<')';
-        buff<<'\x0';
 
         // 1: fail |=matrix_det<rational<> >(buff.str());
         // 2: fail |=matrix_det<rational<int> >(buff.str());

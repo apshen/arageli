@@ -47,9 +47,9 @@
 using namespace Arageli;
 
 template <typename T>
-bool m_addmul_rows(const char* s, T coef1, T coef2, int a, int m)
+bool m_addmul_rows(const std::string &s, T coef1, T coef2, int a, int m)
 {
-    matrix<T> A(s);
+    matrix<T> A(s.c_str());
     matrix<T> B = A;
 
     int add = a%A.nrows();//index of the first row
@@ -101,7 +101,7 @@ TEST(matrix,addmult_rows,"Test addmult_rows function")
         int rows = 2+element.Rand()%5;
         int cols = 1+element.Rand()%5;
 
-        std::strstream buff;
+        std::ostringstream buff;
         buff<<'(';
         for(int i=0; i<rows; i++)
         {
@@ -130,7 +130,6 @@ TEST(matrix,addmult_rows,"Test addmult_rows function")
         }
 
         buff << ')';
-        buff << '\x0';
 
         // 1: fail |=m_addmul_rows<rational<> >(buff.str(),element.Rand(),element.Rand(),element.Rand(),element.Rand());
         // 2: fail |=m_addmul_rows<int>(buff.str(),element.Rand(),element.Rand(),element.Rand(),element.Rand());

@@ -53,9 +53,9 @@ using namespace Arageli;
 
 
 template <typename T>
-bool inverse_matrix(const char* s)
+bool inverse_matrix(const std::string &s)
 {
-    matrix<T> A(s);
+    matrix<T> A(s.c_str());
     matrix<T> X;
 
     if(A.is_square()&& rank(A)==A.nrows())
@@ -80,7 +80,7 @@ TEST(matrix,inverse,"Test inverse function")
     for(int k=0;k<10;k++)
     {
         int size=1+element.Rand()%5;
-        std::strstream buff;
+        std::ostringstream buff;
         buff<<'(';
         for(int i=0; i<size; i++)
         {
@@ -95,7 +95,6 @@ TEST(matrix,inverse,"Test inverse function")
             if(i!=size-1) buff<<',';
         }
         buff<<')';
-        buff<<'\x0';
 
         // 1: fail |=inverse_matrix<rational<> >(buff.str());
         // 2: fail |=inverse_matrix<rational<int> >(buff.str());
