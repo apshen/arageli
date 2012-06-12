@@ -49,7 +49,7 @@ bool matrix_is_unit()
 
     int size=1+element.Rand()%6;
 
-    std::strstream buff;
+    std::ostringstream buff;
     buff<<'(';
 
     switch(s)
@@ -92,9 +92,8 @@ bool matrix_is_unit()
     }
 
     buff<<')';
-    buff<<'\x0';
 
-    matrix<T> A(buff.str());//matrix constructor from string
+    matrix<T> A(buff.str().c_str());//matrix constructor from string
     matrix<T> B=A;
 
     A.opposite();

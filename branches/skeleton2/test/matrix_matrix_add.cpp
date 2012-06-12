@@ -49,7 +49,7 @@
 using namespace Arageli;
 
 template <typename T>
-bool matrix_add(const char* s,const char* m)
+bool matrix_add(const std::string &s, const std::string &m)
 {
     matrix<T> A(s);
     matrix<T> B(m);
@@ -79,7 +79,7 @@ TEST(matrix,matrix_add,"Test operator+= function")
         int cols=1+element.Rand()%5;
         int rows=1+element.Rand()%5;
 
-        std::strstream buffA,buffB;
+        std::ostringstream buffA,buffB;
 
         //generation of matrix A
         buffA<<'(';
@@ -98,7 +98,6 @@ TEST(matrix,matrix_add,"Test operator+= function")
             if(i!=rows-1) buffA<<',';
         }
         buffA<<')';
-        buffA<<'\x0';
 
         //generation of matrix B
         buffB<<'(';
@@ -117,7 +116,6 @@ TEST(matrix,matrix_add,"Test operator+= function")
             if(i!=rows-1) buffB<<',';
         }
         buffB<<')';
-        buffB<<'\x0';
 
         // 1: fail |=matrix_add<rational<> >(buffA.str(),buffB.str());
         // 2: fail |=matrix_add<double>(buffA.str(),buffB.str());

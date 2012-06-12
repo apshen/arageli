@@ -45,9 +45,9 @@
 using namespace Arageli;
 
 template <typename T>
-bool matrix_is_null(const char* s)
+bool matrix_is_null(const std::string &s)
 {
-    matrix<T> A(s);
+    matrix<T> A(s.c_str());
     bool temp_null=A.is_null();
     bool temp_use=true;
 
@@ -76,7 +76,7 @@ TEST(matrix,is_null,"Test is_null function")
         int rows=1+element.Rand()%5;
         int cols=1+element.Rand()%5;
 
-        std::strstream buff;
+        std::ostringstream buff;
 
         buff<<'(';
         for(int i=0; i<rows; i++)
@@ -92,7 +92,6 @@ TEST(matrix,is_null,"Test is_null function")
             if(i!=rows-1) buff<<',';
         }
         buff<<')';
-        buff<<'\x0';
 
         // 1: fail |=matrix_is_null<rational<> >(buff.str());
         // 2: fail |=matrix_is_null<double>(buff.str());

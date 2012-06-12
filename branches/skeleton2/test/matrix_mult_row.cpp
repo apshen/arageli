@@ -47,10 +47,10 @@ using namespace Arageli;
 
 
 template <class T>
-bool m_mult_row(const char* s,T val)
+bool m_mult_row(const std::string &s,T val)
 {
     if(!val) return false;
-    matrix<T> A(s);
+    matrix<T> A(s.c_str());
     matrix<T> X=A;
 
     for(int i=0;i<A.nrows();i++)
@@ -80,7 +80,7 @@ TEST(matrix,mult_row,"Tets for mult_row function")
     {
         int cols=1+element.Rand()%5;
         int rows=1+element.Rand()%5;
-        std::strstream buff;
+        std::ostringstream buff;
         buff<<'(';
         for(int i=0; i<rows; i++)
         {
@@ -95,7 +95,6 @@ TEST(matrix,mult_row,"Tets for mult_row function")
             if(i!=rows-1) buff<<',';
         }
         buff<<')';
-        buff<<'\x0';
 
         //fail |=m_mult_row<rational<> >(buff.str(),element.Rand());
         //fail |=m_mult_row<int>(buff.str(),element.Rand());

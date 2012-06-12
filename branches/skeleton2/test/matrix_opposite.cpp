@@ -44,9 +44,9 @@ using namespace Arageli;
 
 
 template <class T>
-bool m_opposite(const char* s)
+bool m_opposite(const std::string &s)
 {
-    matrix<T> A(s);
+    matrix<T> A(s.c_str());
     matrix<T> O=A;
     O.opposite();
 
@@ -70,7 +70,7 @@ TEST(matrix,opposite,"Test for function opposite")
     {
         int cols=1+element.Rand()%5;
         int rows=1+element.Rand()%5;
-        std::strstream buff;
+        std::ostringstream buff;
         buff<<'(';
         for(int i=0; i<rows; i++)
         {
@@ -85,7 +85,6 @@ TEST(matrix,opposite,"Test for function opposite")
             if(i!=rows-1) buff<<',';
         }
         buff<<')';
-        buff<<'\x0';
 
         //fail |=m_opposite<rational>(buff.str());
         //fail |=m_opposite<int>(buff.str());

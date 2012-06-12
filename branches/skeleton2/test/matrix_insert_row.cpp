@@ -46,9 +46,9 @@ using namespace Arageli;
 
 
 template <class T>
-bool m_insert_col(const char* s)
+bool m_insert_col(const std::string &s)
 {
-    matrix<T> A(s);
+    matrix<T> A(s.c_str());
     int rows=A.nrows();
     int cols=A.ncols();
 
@@ -97,7 +97,7 @@ TEST(matrix,insert_row,"Test for function insert_row")
     {
         int cols=1+element.Rand()%5;
         int rows=1+element.Rand()%5;
-        std::strstream buff;
+        std::ostringstream buff;
         buff<<'(';
         for(int i=0; i<rows; i++)
         {
@@ -112,7 +112,6 @@ TEST(matrix,insert_row,"Test for function insert_row")
             if(i!=rows-1) buff<<',';
         }
         buff<<')';
-        buff<<'\x0';
 
         // 1: fail |=m_insert_col<rational<> >(buff.str());
         // 2: fail |=m_insert_col<int>(buff.str());
