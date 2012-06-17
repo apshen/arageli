@@ -780,6 +780,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\polyhedron\transport.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\polyhedron\TT2d.cpp"
 				>
 			</File>
@@ -859,6 +863,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\polyhedron\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\polyhedron\transport.hpp"
 				>
 			</File>
 			<File
