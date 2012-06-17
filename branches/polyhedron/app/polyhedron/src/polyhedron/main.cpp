@@ -46,6 +46,7 @@
 #include "simplex.hpp"
 #include "sphere.hpp"
 #include "TT2d.hpp"
+#include "transport.hpp"
 
 using namespace Arageli::app::polyhedron;
 
@@ -74,6 +75,7 @@ int main (int argc, char** argv)
         types["hexacosichoron"] = new Hexacosichoron;
         types["ball"] = new Ball;
         types["sphere"] = new Sphere;
+        types["transport"] = new Transport;
 
         TCLAP::CmdLine cmd
             (

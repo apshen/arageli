@@ -56,11 +56,12 @@ CmdArgs::CmdArgs (TCLAP::CmdLine& cmd) :
         "CC2d -- 2*d-dimensioanal sqrt(d)-fold product of (2*sqrt(d))-dimensional cyclic polytopes with n vertices each. "
         "This class of polyhedra is represented as a set of vertices by the default.\n"
         "DPP2d -- 2*d-dimensional dwarfed product of polygons. Polytopes from this class are represeted as a set of inequalities by the default.\n"
-        "TT2d -- 2*d-dimensional product of two d-dimensional simplices. This class of polyhedra is represented as a set of vertices by the default.",
+        "TT2d -- 2*d-dimensional product of two d-dimensional simplices. This class of polyhedra is represented as a set of vertices by the default.\n"
+        "transport -- polyhedron of consistency of muti-index transportation problem. Number of point at each level are passed through --vecnumber key.",
 
         true,
         "",
-        "tetrahedron, simplex, cube01, cube, octahedron, dodecahedron, icosahedron, icositetrachoron, hecatonicosachoron, hexacosichoron, ball, sphere, cyclic, dwarfedcube, dwarfcube, CC2d, DPP2d, TT2d",
+        "tetrahedron, simplex, cube01, cube, octahedron, dodecahedron, icosahedron, icositetrachoron, hecatonicosachoron, hexacosichoron, ball, sphere, cyclic, dwarfedcube, dwarfcube, CC2d, DPP2d, TT2d, transport",
         cmd
     ),
     dim
@@ -85,6 +86,18 @@ CmdArgs::CmdArgs (TCLAP::CmdLine& cmd) :
         false,
         0,
         "integer number",
+        cmd
+    ),
+    vecnumber
+    (
+        "",
+        "vecnumber",
+
+        "Parameters (n1, n2,... nk) that is specific for each polyhedra class.",
+
+        false,
+        Arageli::vector<int>(),
+        "vector of integer numbers",
         cmd
     ),
     random

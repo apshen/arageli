@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-    driver.hpp
+    transport.hpp
 
     This file is a part of Polyhedron Software, a generator of various classes
     of polyhedra.
@@ -29,22 +29,10 @@
 
 *****************************************************************************/
 
-#ifndef _ARAGELI_APP_POLYHEDRON_driver_hpp_
-#define _ARAGELI_APP_POLYHEDRON_driver_hpp_
+#ifndef _ARAGELI_APP_POLYHEDRON_transport_hpp_
+#define _ARAGELI_APP_POLYHEDRON_transport_hpp_
 
-#include "stdafx.hpp"
-
-
-namespace TCLAP
-{
-
-template<typename T, bool REFCNT>
-struct ArgTraits<Arageli::vector<T, REFCNT> >
-{
-    typedef ValueLike ValueCategory;
-};
-
-};
+#include "driver.hpp"
 
 namespace Arageli
 {
@@ -54,31 +42,9 @@ namespace polyhedron
 {
 
 
-struct CmdArgs
+class Transport : public Processor
 {
-    CmdArgs (TCLAP::CmdLine& cmd);
-
-    TCLAP::ValueArg<std::string> type;
-    TCLAP::ValueArg<int> dim;
-    TCLAP::ValueArg<int> number;
-    TCLAP::ValueArg<Arageli::vector<int> > vecnumber;
-    TCLAP::ValueArg<int> random;
-    TCLAP::ValueArg<int> repulsion;
-};
-
-class Processor
-{
-public:
-    virtual ~Processor ()
-    {
-    }
-
-    enum Output_type { OT_VERTICES, OT_FACETS };
-
-    //Output_type (CmdArgs& cmdargs)
-
-    virtual void generate (std::ostream& out, CmdArgs& cmdargs) const = 0;
-    //virtual Output_type ot_default () const = 0;
+    virtual void generate (std::ostream& out, CmdArgs& cmdargs) const;
 };
 
 
