@@ -446,6 +446,8 @@ public:
 
     //@}
 
+    /// Conversion to std::string
+    operator std::string () const;
 
     /// Returns true if the number is zero and false otherwise.
     bool operator! () const

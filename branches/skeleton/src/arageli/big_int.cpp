@@ -554,6 +554,14 @@ void big_arith_error(const char *s)
 }
 
 
+big_int::operator std::string () const
+{
+    std::ostringstream buf;
+    buf << *this;
+    return buf.str();
+}
+
+
 #ifndef ARAGELI_GMP
 
 /***************************/
