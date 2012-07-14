@@ -456,6 +456,22 @@ bool are_comparable_oooo (const interval<T1>& a, const interval<T2>& b)
 }
 
 
+class undefined_sign : public exception {};
+
+
+template <typename T>
+int sign (const interval<T>& x)
+{
+    if(sign(x.left()) > 0)
+        return 1;
+    else if(sign(x.right() < 0))
+        return -1;
+    else if(is_null(x.left()) && is_null(x.right()))
+        return 0;
+    else throw undefined_sign();
+}
+
+
 /// Semi-lexicographical comparision between two intervals.
 /** An empty interval less than all others. */
 template <typename T1, typename T2>
