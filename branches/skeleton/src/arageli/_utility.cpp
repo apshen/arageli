@@ -124,7 +124,7 @@ bool read_literal (std::istream& in, const char* s)
     do
     {
         ch = in.get();
-    }while(in && std::isspace(ch) && ch != '\n');
+    }while(in && std::isspace(ch)/* && ch != '\n'*/);
 
     if(!in)
         return false;
