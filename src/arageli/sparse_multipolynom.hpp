@@ -1624,8 +1624,17 @@ public:
     {
         if(rep().empty())
             return;
+#if 0   // WARNING! Disabled due to bug #3031069 "sparse_multipolynom::normalize doesn't work"
         unique();
         config_m.normalize(rep().begin(), rep().end(), rep());
+#else
+        // Workaround.
+
+        sparse_multipolynom new_this;
+        for(monom_iterator i = this->monoms_begin(); i != this->monoms_end(); ++i)
+            new_this += sparse_multipolynom(*i);
+        swap(new_this, *this);
+#endif
     }
 
     /// Flips the sign for each monom. Returns *this.
