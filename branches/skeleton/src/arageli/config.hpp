@@ -153,6 +153,7 @@
     GMP include directory so, that <gmp.h> will be correct
     reference to the GMP header file. */
 //#define ARAGELI_GMP
+#define ARAGELI_MPIR
 
 
 /// The number of iterations in is_prime_small_primes_division function.

@@ -55,7 +55,11 @@
 
 #ifdef ARAGELI_GMP
 
+#ifdef ARAGELI_MPIR
+#include <mpir.h>
+#else
 #include <gmp.h>
+#endif
 
 #else
 
