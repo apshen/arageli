@@ -158,3 +158,38 @@ TEST_FUNCTION(rref_gauss_bareiss_for_mp, "Gauss-Bareiss for multipolynomials.")
         throw;
     }
 }
+
+
+TEST_FUNCTION
+(
+    bug_3031060_incorrect_string_convert_sparse_polynom,
+    "Test case for bug 3031060: incorrect string->sparse_polynom conversion"
+)
+{
+    using namespace Arageli;
+    using Arageli::exception;
+
+    try
+    {
+        const char
+            *poly1 = "x+2*x^2",
+            *poly1wos = "x + 2*x^2";
+
+        sparse_polynom<rational<> > p1 = poly1;
+        sparse_polynom<rational<> > p1wos = poly1wos;
+
+        if(poly1 == poly1wos)
+            return resOK;
+        else
+            return resFAIL;
+    }
+    catch(const exception& e)
+    {
+        tout << "Exception!\n" << e;
+        throw;
+    }
+    catch(...)
+    {
+        throw;
+    }
+}
