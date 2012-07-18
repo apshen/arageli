@@ -147,7 +147,7 @@ void Transport::generate (std::ostream& out, CmdArgs& cmdargs) const
         }
     }
 
-    std::cout << vn << "\n";
+    //std::cout << vn << "\n";
 
     output_matrix(out, transpose(form_matrix(vn)));
 }
