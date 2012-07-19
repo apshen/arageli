@@ -24,6 +24,10 @@ struct node
 	T split_val;
 };
 
+struct cannot_find_split_dim : public Arageli::exception
+{
+};
+
 template<typename T>
 bool find_split(node<T>* resnode, const Arageli::vector<Arageli::vector<T>>& matrix_min, const Arageli::vector<Arageli::vector<T>>& matrix_max, const Arageli::vector<size_t>& prohibited_dim)
 {
@@ -63,6 +67,7 @@ bool find_split(node<T>* resnode, const Arageli::vector<Arageli::vector<T>>& mat
 
 		if ( !is_start_splitdim )
 		{
+#if 0
 			for ( size_t i = 0; i < nrows; ++i )
 			{
 				for ( size_t j = 0; j < ncolumns; ++j )
@@ -80,7 +85,8 @@ bool find_split(node<T>* resnode, const Arageli::vector<Arageli::vector<T>>& mat
 				std::cout << "\n\n";
 
 			}
-			throw "Can't find split dim.\n";
+#endif
+			throw cannot_find_split_dim();
 		}
 	}
 	else
@@ -267,12 +273,13 @@ node<T>* build(const Arageli::vector<Arageli::vector<T>>& matrix_min, const Arag
 {
 	assert(matrix_min.size() == matrix_max.size());
 	size_t rows = matrix_min.size();
-	size_t ncolumns = matrix_min[0].size();
 
 	if ( rows == 0 )
 	{
 		return 0;
 	}
+
+	size_t ncolumns = matrix_min[0].size();
 
 	node<T>* res = new node<T>;
 
