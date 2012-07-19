@@ -106,6 +106,10 @@ int main (int argc, char** argv)
         std::cerr << "[ ERROR ] " << msg << '\n';
         return 2;
     }
+    catch(const cannot_find_split_dim&)
+    {
+        std::cerr << "[ ERROR ] Cannot find split; the first input matrix is ill-formed.\n";
+    }
     catch(...)
     {
         std::cerr

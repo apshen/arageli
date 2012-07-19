@@ -113,11 +113,12 @@ void reduce_common_factor_field(Arageli::vector<Arageli::vector<T>>& matrix)
 	int dim = matrix[0].size();
 	for ( int i = 0; i < nrows; ++i )
 	{
+#if 0
 		for ( int j = 0; j < dim; ++j )
 		{
 			if ( matrix[i][j] != 0 )
 			{
-				T factor = matrix[i][j];
+				T factor = abs(matrix[i][j]);
 				for ( int k = j; k < dim; ++k )
 				{
 					matrix[i][k] /= factor;
@@ -125,6 +126,13 @@ void reduce_common_factor_field(Arageli::vector<Arageli::vector<T>>& matrix)
 				break;
 			}
 		}
+#else
+
+        Arageli::vector<T> row = abs(matrix[i]);
+        T factor = *std::max_element(row.begin(), row.end());
+        matrix[i] /= factor;
+
+#endif
 	}
 }
 
@@ -191,6 +199,7 @@ bool traverse_matrix(node<T>* tree,  const Arageli::vector<Arageli::vector<T>>& 
 		}
 		else
 		{
+            std::cout << "[ ERROR ] Cannot find a companion for " << matrix_min[i] << " - " << matrix_max[i] << "\n";
 			return false;
 		}
 	}

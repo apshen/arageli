@@ -65,6 +65,15 @@ CmdArgs::CmdArgs (TCLAP::CmdLine& cmd) :
         0,
         "positive float number",
         cmd
+    ),
+    epsilon_adjust
+    (
+        "a",
+        "epsilon_adjust",
+
+        "Turns automatic adjustment of epsilon on.",
+
+        cmd
     )
 	{
     }

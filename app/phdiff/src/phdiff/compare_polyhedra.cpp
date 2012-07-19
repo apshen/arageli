@@ -106,11 +106,28 @@ bool compare_polyhedra(std::ifstream& pol1, std::ifstream& pol2, CmdArgs& cmdarg
 		reduce_common_factor_field(matrix1);
 		
 		Arageli::vector<Arageli::vector<double>> matrix_min1, matrix_max1;
-		transform_matrix_to_aabb(matrix1, matrix_min1, matrix_max1, threshold);
-
 		node<double>* matrix_tree1;
-		matrix_tree1 = build(matrix_min1, matrix_max1);
 
+        for(;;)
+        {
+            try
+            {
+		        transform_matrix_to_aabb(matrix1, matrix_min1, matrix_max1, threshold);
+		        matrix_tree1 = build(matrix_min1, matrix_max1);
+                break;
+            }
+            catch(const cannot_find_split_dim&)
+            {
+                double new_threshold = threshold/2;
+                if(!cmdargs.epsilon_adjust.getValue() || new_threshold == threshold)
+                    throw;
+                std::cout
+                    << "Cannot find split dim with current epsilon = " << threshold
+                    << "; continue with new epsilon = " << new_threshold << "\n";
+                threshold = new_threshold;
+            }
+        }
+        
 		std::cout << "Tree building is completed!\n";
 
 		Arageli::vector<Arageli::vector<double>> matrix2;
