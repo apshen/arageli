@@ -375,10 +375,14 @@ node<T>* traverse(node<T>* tree, Arageli::vector<T> vector_min, Arageli::vector<
 			node<T>* node_left = traverse(tree->right, vector_min, vector_max);
 			node<T>* node_right = traverse(tree->left, vector_min, vector_max);
 
-			if ( node_left == node_right )
+			if ( node_left == node_right || node_right == 0)
 			{
 				return node_left;
 			}
+            else if(node_left == 0)
+            {
+                return node_right;
+            }
 			else
 			{
 				throw("Bad matrix!\n");
