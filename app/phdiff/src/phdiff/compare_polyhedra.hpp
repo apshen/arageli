@@ -157,7 +157,7 @@ void reduce_common_factor_integer(Arageli::vector<Arageli::vector<T>>& matrix)
 
 
 template <typename T>
-void transform_matrix_to_aabb(const Arageli::vector<Arageli::vector<T>>& matrix, Arageli::vector<Arageli::vector<T>>& matrix_min, Arageli::vector<Arageli::vector<T>>& matrix_max, double epsilon)
+void transform_matrix_to_aabb(const Arageli::vector<Arageli::vector<T>>& matrix, Arageli::vector<Arageli::vector<T>>& matrix_min, Arageli::vector<Arageli::vector<T>>& matrix_max, double epsilon, bool absolute = false)
 {
 	size_t nrows = matrix.size();
 	size_t ncolumns = matrix[0].size();
@@ -170,9 +170,9 @@ void transform_matrix_to_aabb(const Arageli::vector<Arageli::vector<T>>& matrix,
 		for ( size_t j = 0; j < ncolumns; ++j )
 		{
 			T delta;
-			delta = abs(matrix_min[i][j]*epsilon);
+            delta = absolute ? epsilon : abs(matrix_min[i][j]*epsilon);
 			matrix_min[i][j] = matrix_min[i][j] - delta;
-			delta = abs(matrix_max[i][j]*epsilon);
+			delta = absolute ? epsilon : abs(matrix_max[i][j]*epsilon);
 			matrix_max[i][j] = matrix_max[i][j] + delta;
 		}
 	}
