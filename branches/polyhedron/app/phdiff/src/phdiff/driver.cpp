@@ -74,6 +74,15 @@ CmdArgs::CmdArgs (TCLAP::CmdLine& cmd) :
         "Turns automatic adjustment of epsilon on.",
 
         cmd
+    ),
+    absolute
+    (
+        "",
+        "absolute",
+
+        "Treat epsilon value as an absolute error instead of relative error which is default.",
+
+        cmd
     )
 	{
     }

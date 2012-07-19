@@ -45,6 +45,7 @@ struct CmdArgs
     TCLAP::ValueArg<std::string> type;
     TCLAP::ValueArg<double> epsilon;
     TCLAP::SwitchArg epsilon_adjust;
+    TCLAP::SwitchArg absolute;
 };
 
 #if 0

@@ -112,7 +112,7 @@ bool compare_polyhedra(std::ifstream& pol1, std::ifstream& pol2, CmdArgs& cmdarg
         {
             try
             {
-		        transform_matrix_to_aabb(matrix1, matrix_min1, matrix_max1, threshold);
+		        transform_matrix_to_aabb(matrix1, matrix_min1, matrix_max1, threshold, cmdargs.absolute.getValue());
 		        matrix_tree1 = build(matrix_min1, matrix_max1);
                 break;
             }
@@ -135,7 +135,7 @@ bool compare_polyhedra(std::ifstream& pol1, std::ifstream& pol2, CmdArgs& cmdarg
 		reduce_common_factor_field(matrix2);
 
 		Arageli::vector<Arageli::vector<double>> matrix_min2, matrix_max2;
-		transform_matrix_to_aabb(matrix2, matrix_min2, matrix_max2, threshold);
+		transform_matrix_to_aabb(matrix2, matrix_min2, matrix_max2, threshold, cmdargs.absolute.getValue());
 
 		return traverse_matrix(matrix_tree1, matrix_min2, matrix_max2);
 
