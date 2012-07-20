@@ -38,8 +38,6 @@
 
 #include "stdafx.hpp"
 
-//#include <time.h>
-//#include <strstream>
 
 using namespace Arageli;
 

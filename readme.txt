@@ -214,11 +214,11 @@ and which you can monitor at http://sourceforge.net.
 Besides these bugs please note that different components in this
 release do not have consistent and solid interface because they all
 are in different stages of development. Several functions have
-warning records (find WARNING! in sources) about various aspects of
-their implementation. Some functions marked as incorrect (you will
-permanently have a run-time error if call them). A lot of algorithm
-implementations is naive, so do not expect superb performance from
-them.
+warning records (search for "WARNING!" in sources) about various
+negative aspects of their implementation. Some functions marked as
+incorrect (you will permanently have a run-time error if call them).
+A lot of algorithm implementations is naive, so do not expect superb
+performance from them.
 
 ********************************************************************
 

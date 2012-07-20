@@ -51,7 +51,7 @@ bool m_swap_col()
     int cols=2+element.Rand()%5;
     int rows=1+element.Rand()%5;
 
-    std::strstream buff;
+    std::ostringstream buff;
     buff<<'(';
 
     switch(s)
@@ -93,9 +93,8 @@ bool m_swap_col()
         break;
     }
     buff<<')';
-    buff<<'\x0';
 
-    matrix<T> A(buff.str());//matrix constructor from string
+    matrix<T> A(buff.str().c_str());//matrix constructor from string
     matrix<T> X=A, Y=A;// copy of testing matrix
 
 
