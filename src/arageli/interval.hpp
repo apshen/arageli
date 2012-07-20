@@ -409,6 +409,27 @@ Out& operator<< (Out& out, const interval<T>& x)
 template <typename In, typename T>
 In& operator>> (In& in, interval<T>& x)
 {
+    char ch = 0;
+    in >> ch;
+    if(!in)return in;
+
+    if(ch != '(')
+    {
+        in.putback(ch);     // WARNING! CAN FAIL FOR SOME STREAMS IF THERE WERE SPACES BEFORE CH
+        in.clear();
+        
+        T buf;
+        in >> buf;
+        if(!in)return in;
+        x.first() = buf;
+        x.second() = buf;
+        return in;
+    }
+
+    // ch == '(' and we put it back to read as a vector next
+    in.putback(ch);     // WARNING! CAN FAIL FOR SOME STREAMS IF THERE WERE SPACES BEFORE CH
+    in.clear();
+
     vector<T, false> buf;    // WARNING! TEMPORARY!
     in >> buf;
     if(!in && !in.eof() || buf.size() != 2)
