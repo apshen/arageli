@@ -49,9 +49,9 @@ using namespace Arageli;
 
 
 template <class T>
-bool m_add_scalar(const char* s,T number)
+bool m_add_scalar(const std::string &s,T number)
 {
-    matrix<T> A(s);
+    matrix<T> A(s.c_str());
     matrix<T> X=A;
 
     A.add_scalar(number).sub_scalar(number);
@@ -65,7 +65,7 @@ bool m_add_scalar(const char* s,T number)
     return false;
 }
 
-TEST(matrix,assign_plus_val,"Test assign_plus_val function : ")
+TEST(matrix,assign_plus_val,"Test assign_plus_val function")
 {
 
     bool fail=false;
@@ -76,7 +76,7 @@ TEST(matrix,assign_plus_val,"Test assign_plus_val function : ")
         int rows=1+element.Rand()%5;
         int cols=1+element.Rand()%5;
 
-        std::strstream buff;
+        std::ostringstream buff;
         buff<<'(';
         for(int i=0; i<rows; i++)
         {
@@ -91,7 +91,6 @@ TEST(matrix,assign_plus_val,"Test assign_plus_val function : ")
             if(i!=rows-1) buff<<',';
         }
         buff<<')';
-        buff<<'\x0';
 
         // 1: fail |=m_add_scalar<rational<> >(buff.str(),element.Rand());
         // 2: fail |=m_add_scalar<int>(buff.str(),element.Rand());

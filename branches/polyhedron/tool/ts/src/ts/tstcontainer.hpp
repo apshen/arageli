@@ -15,7 +15,7 @@
 #include <list>
 #include <string>
 
-typedef enum TestResult
+enum TestResult
 {
     resOK,
     resFAIL,

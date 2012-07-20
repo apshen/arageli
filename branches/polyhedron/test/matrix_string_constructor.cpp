@@ -46,10 +46,10 @@ bool m_string_constructor()
 {
     RNG element(2,16);
 
-        int cols=1+element.Rand()%5;
+    int cols=1+element.Rand()%5;
     int rows=1+element.Rand()%5;
 
-    std::strstream buff;
+    std::ostringstream buff;
     buff<<'(';
 
     switch(s)
@@ -79,7 +79,7 @@ bool m_string_constructor()
         break;
 
         case 'b':
-                    for(int i=0; i<rows; i++)
+            for(int i=0; i<rows; i++)
             {
                 buff<<'(';
                 for(int j=0; j<cols-1; j++)
@@ -91,9 +91,8 @@ bool m_string_constructor()
         break;
     }
     buff<<')';
-    buff<<'\x0';
 
-    matrix<T> A(buff.str());//matrix constructor from string
+    matrix<T> A(buff.str().c_str());//matrix constructor from string
 
     std::string array=buff.str();
     for(int i=0;i<rows+1;i++)

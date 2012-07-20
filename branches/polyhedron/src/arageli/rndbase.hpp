@@ -103,6 +103,25 @@ namespace rnd
     #pragma warning (disable : 4724)
 #endif
 
+template <class Int, Int M, bool Z>
+struct modulo
+{
+    Int operator () (Int x)
+    {
+          return x % M;
+    }
+};
+
+template <class Int, Int M>
+struct modulo <Int, M, true>
+{
+    Int operator () (Int x)
+    {
+        return x;
+    }
+};
+
+
 /// Линейная конгруентная последовательность.
 /** Коэффициенты задаются статически (параметры шаблона).
     Если M == 0, то модуль реализуется через отсечение при целочисленном
@@ -136,11 +155,8 @@ public:
 
     value_type operator() () const
     {
-        // 'if' works in compile time
-        if(M)
-            return (x = (A*x+C)%M);
-        else
-            return (x = A*x+C);
+        x = modulo<Int, M, bool_type <M == 0>::type::value> ()(A*x+C);
+        return x;	
     }
 
     /// коэффициент a процесса
