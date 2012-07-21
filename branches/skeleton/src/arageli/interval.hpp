@@ -5,7 +5,7 @@
     This file is a part of the Arageli library.
 
     Copyright (C) 1999--2006 Nikolai Yu. Zolotykh
-    Copyright (C) 2006--2007 Sergey S. Lyalin
+    Copyright (C) 2006--2012 Sergey S. Lyalin
 
     The Arageli Library is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License version 2
@@ -101,7 +101,18 @@ public:
     template <typename T1, typename T2>
     interval (const T1& first_a, const T2& second_a) :
         lims(first_a, second_a)
-    {}
+    {
+        ARAGELI_DEBUG_EXEC_2
+        (
+            static T max_size = 0;
+            T cur_size = second_a - first_a;
+            if(cur_size > max_size)
+            {
+                max_size = cur_size;
+                std::cout << "[ DEBUG ] New interval::max_size = " << max_size << "\n";
+            }
+        );
+    }
 
     /// Interval as a copy of another interval.
     template <typename T1>
@@ -293,21 +304,136 @@ public:
 };
 
 
+// WARNING! TEMPORARY IT DOESN'T DEPEND ON CONFIGURATOR, THIS IS FOR EXPERIMENTS ONLY! NOT FOR A COMMIT TO REPOSITORY!
+
+template <typename T>
+inline T adjustl_interval_precision (const T& a, const T& b, const T& res)
+{
+    return res;
+}
+
+template <typename T>
+inline T adjusth_interval_precision (const T& a, const T& b, const T& res)
+{
+    return res;
+}
+
+
+template <typename Out, typename In>
+inline Out reinterpret_as (const In& in)
+{
+    ARAGELI_ASSERT_1(sizeof(In) == sizeof(Out));
+    return *reinterpret_cast<const Out*>(&in);
+}
+
+
+template <typename T>
+inline const T& non_zero (const T& x)
+{
+    ARAGELI_ASSERT_1(!is_null(x));
+    return x;
+}
+
+
+inline float adjustl_interval_precision (float a, float b, float res)
+{
+    if(0 == a || 0 == b)
+        return res;
+    
+    // WARNING! NO COMPARISON TO INFINITY OR NANS OR MINIMUM VALUE
+    ARAGELI_ASSERT_1(std::numeric_limits<float>::infinity() != res);
+    ARAGELI_ASSERT_1(-std::numeric_limits<float>::infinity() != res);
+    ARAGELI_ASSERT_1(std::numeric_limits<float>::max() != res);
+    ARAGELI_ASSERT_1(-std::numeric_limits<float>::max() != res);
+    
+    if(res > -std::numeric_limits<float>::min() && res < std::numeric_limits<float>::min())
+        return -std::numeric_limits<float>::min();
+    else if(res == std::numeric_limits<float>::min())
+        return 0;   // WARNING! IS IT CORRECT?
+    else
+        return non_zero(reinterpret_as<float>(reinterpret_as<unsigned int>(res) - 1u));
+}
+
+
+inline double adjustl_interval_precision (double a, double b, double res)
+{
+    if(0 == a || 0 == b)
+        return res;
+    
+    // WARNING! NO COMPARISON TO INFINITY OR NANS OR MINIMUM VALUE
+    ARAGELI_ASSERT_1(std::numeric_limits<double>::infinity() != res);
+    ARAGELI_ASSERT_1(-std::numeric_limits<double>::infinity() != res);
+    ARAGELI_ASSERT_1(std::numeric_limits<double>::max() != res);
+    ARAGELI_ASSERT_1(-std::numeric_limits<double>::max() != res);
+    
+    if(res > -std::numeric_limits<double>::min() && res < std::numeric_limits<double>::min())
+        return -std::numeric_limits<double>::min();
+    else if(res == std::numeric_limits<double>::min())
+        return 0;   // WARNING! IS IT CORRECT?
+    else
+        return non_zero(reinterpret_as<double>(reinterpret_as<unsigned long long>(res) - 1ull));
+}
+
+
+inline float adjusth_interval_precision (float a, float b, float res)
+{
+    if(0 == a || 0 == b)
+        return res;
+    
+    // WARNING! NO COMPARISON TO INFINITY OR NANS OR MINIMUM VALUE
+    ARAGELI_ASSERT_1(std::numeric_limits<float>::infinity() != res);
+    ARAGELI_ASSERT_1(-std::numeric_limits<float>::infinity() != res);
+    ARAGELI_ASSERT_1(std::numeric_limits<float>::max() != res);
+    ARAGELI_ASSERT_1(-std::numeric_limits<float>::max() != res);
+    
+    if(res > -std::numeric_limits<float>::min() && res < std::numeric_limits<float>::min())
+        return std::numeric_limits<float>::min();
+    else if(res == -std::numeric_limits<float>::min())
+        return 0;   // WARNING! IS IT CORRECT?
+    else
+        return non_zero(reinterpret_as<float>(reinterpret_as<unsigned int>(res) + 1u));
+}
+
+
+inline double adjusth_interval_precision (double a, double b, double res)
+{
+    if(0 == a || 0 == b)
+        return res;
+    
+    // WARNING! NO COMPARISON TO INFINITY OR NANS OR MINIMUM VALUE
+    ARAGELI_ASSERT_1(std::numeric_limits<double>::infinity() != res);
+    ARAGELI_ASSERT_1(-std::numeric_limits<double>::infinity() != res);
+    ARAGELI_ASSERT_1(std::numeric_limits<double>::max() != res);
+    ARAGELI_ASSERT_1(-std::numeric_limits<double>::max() != res);
+    
+    if(res > -std::numeric_limits<double>::min() && res < std::numeric_limits<double>::min())
+        return std::numeric_limits<double>::min();
+    else if(res == -std::numeric_limits<double>::min())
+        return 0;   // WARNING! IS IT CORRECT?
+    else
+        return non_zero(reinterpret_as<double>(reinterpret_as<unsigned long long>(res) + 1ull));
+}
+
+
 template <typename T>
 interval<T> operator+ (const interval<T>& a, const interval<T>& b)
 {
     // WARNING! There is simpler way for reals.
 
     T
-        p1 = a.first() + b.first(),
-        p2 = a.first() + b.second(),
-        p3 = a.second() + b.first(),
-        p4 = a.second() + b.second();
+        p1l = adjustl_interval_precision(a.first(), b.first(), a.first() + b.first()),
+        p2l = adjustl_interval_precision(a.first(), b.second(), a.first() + b.second()),
+        p3l = adjustl_interval_precision(a.second(), b.first(), a.second() + b.first()),
+        p4l = adjustl_interval_precision(a.second(), b.second(), a.second() + b.second()),
+        p1h = adjusth_interval_precision(a.first(), b.first(), a.first() + b.first()),
+        p2h = adjusth_interval_precision(a.first(), b.second(), a.first() + b.second()),
+        p3h = adjusth_interval_precision(a.second(), b.first(), a.second() + b.first()),
+        p4h = adjusth_interval_precision(a.second(), b.second(), a.second() + b.second());
 
     return interval<T>
     (
-        std::min(std::min(p1, p2), std::min(p3, p4)),
-        std::max(std::max(p1, p2), std::max(p3, p4))
+        std::min(std::min(p1l, p2l), std::min(p3l, p4l)),
+        std::max(std::max(p1h, p2h), std::max(p3h, p4h))
     );
 }
 
@@ -317,15 +443,19 @@ interval<T> operator- (const interval<T>& a, const interval<T>& b)
     // WARNING! There is simpler way for reals.
 
     T
-        p1 = a.first() - b.first(),
-        p2 = a.first() - b.second(),
-        p3 = a.second() - b.first(),
-        p4 = a.second() - b.second();
+        p1l = adjustl_interval_precision(a.first(), b.first(), a.first() - b.first()),
+        p2l = adjustl_interval_precision(a.first(), b.second(), a.first() - b.second()),
+        p3l = adjustl_interval_precision(a.second(), b.first(), a.second() - b.first()),
+        p4l = adjustl_interval_precision(a.second(), b.second(), a.second() - b.second()),
+        p1h = adjusth_interval_precision(a.first(), b.first(), a.first() - b.first()),
+        p2h = adjusth_interval_precision(a.first(), b.second(), a.first() - b.second()),
+        p3h = adjusth_interval_precision(a.second(), b.first(), a.second() - b.first()),
+        p4h = adjusth_interval_precision(a.second(), b.second(), a.second() - b.second());
 
     return interval<T>
     (
-        std::min(std::min(p1, p2), std::min(p3, p4)),
-        std::max(std::max(p1, p2), std::max(p3, p4))
+        std::min(std::min(p1l, p2l), std::min(p3l, p4l)),
+        std::max(std::max(p1h, p2h), std::max(p3h, p4h))
     );
 }
 
@@ -335,15 +465,19 @@ interval<T> operator* (const interval<T>& a, const interval<T>& b)
     // WARNING! There is simpler way for reals.
 
     T
-        p1 = a.first() * b.first(),
-        p2 = a.first() * b.second(),
-        p3 = a.second() * b.first(),
-        p4 = a.second() * b.second();
+        p1l = adjustl_interval_precision(a.first(), b.first(), a.first() * b.first()),
+        p2l = adjustl_interval_precision(a.first(), b.second(), a.first() * b.second()),
+        p3l = adjustl_interval_precision(a.second(), b.first(), a.second() * b.first()),
+        p4l = adjustl_interval_precision(a.second(), b.second(), a.second() * b.second()),
+        p1h = adjusth_interval_precision(a.first(), b.first(), a.first() * b.first()),
+        p2h = adjusth_interval_precision(a.first(), b.second(), a.first() * b.second()),
+        p3h = adjusth_interval_precision(a.second(), b.first(), a.second() * b.first()),
+        p4h = adjusth_interval_precision(a.second(), b.second(), a.second() * b.second());
 
     return interval<T>
     (
-        std::min(std::min(p1, p2), std::min(p3, p4)),
-        std::max(std::max(p1, p2), std::max(p3, p4))
+        std::min(std::min(p1l, p2l), std::min(p3l, p4l)),
+        std::max(std::max(p1h, p2h), std::max(p3h, p4h))
     );
 }
 
@@ -354,15 +488,19 @@ interval<T> operator/ (const interval<T>& a, const interval<T>& b)
     ARAGELI_ASSERT_0(sign(b.first())*sign(b.second()) > 0);
 
     T
-        p1 = a.first() / b.first(),
-        p2 = a.first() / b.second(),
-        p3 = a.second() / b.first(),
-        p4 = a.second() / b.second();
+        p1l = adjustl_interval_precision(a.first(), b.first(), a.first() / b.first()),
+        p2l = adjustl_interval_precision(a.first(), b.second(), a.first() / b.second()),
+        p3l = adjustl_interval_precision(a.second(), b.first(), a.second() / b.first()),
+        p4l = adjustl_interval_precision(a.second(), b.second(), a.second() / b.second()),
+        p1h = adjusth_interval_precision(a.first(), b.first(), a.first() / b.first()),
+        p2h = adjusth_interval_precision(a.first(), b.second(), a.first() / b.second()),
+        p3h = adjusth_interval_precision(a.second(), b.first(), a.second() / b.first()),
+        p4h = adjusth_interval_precision(a.second(), b.second(), a.second() / b.second());
 
     return interval<T>
     (
-        std::min(std::min(p1, p2), std::min(p3, p4)),
-        std::max(std::max(p1, p2), std::max(p3, p4))
+        std::min(std::min(p1l, p2l), std::min(p3l, p4l)),
+        std::max(std::max(p1h, p2h), std::max(p3h, p4h))
     );
 }
 
@@ -477,7 +615,22 @@ bool are_comparable_oooo (const interval<T1>& a, const interval<T2>& b)
 }
 
 
-class undefined_sign : public exception {};
+class undefined_sign : public exception
+{
+public:
+
+    undefined_sign ()
+    {
+    }
+
+    template <typename T>
+    undefined_sign (const T& x)
+    {
+        std::ostringstream buf;
+        buf << "Cannot determine sign for interval: " << std::setprecision(std::numeric_limits<T>::digits10) << x;
+        add_description(buf.str());
+    }
+};
 
 
 template <typename T>
@@ -489,7 +642,7 @@ int sign (const interval<T>& x)
         return -1;
     else if(is_null(x.left()) && is_null(x.right()))
         return 0;
-    else throw undefined_sign();
+    else throw undefined_sign(x);
 }
 
 
