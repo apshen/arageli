@@ -47,6 +47,9 @@
 #include <sstream>
 #include <utility>
 
+#include <float.h>
+#pragma fenv_access (on)
+
 #include "frwrddecl.hpp"
 #include "function_traits.hpp"
 #include "factory.hpp"
@@ -335,6 +338,48 @@ inline const T& non_zero (const T& x)
 }
 
 
+template <typename T1, typename T2, typename T3>
+T3 get_third_arg (const T1&, const T2&, const T3 x)
+{
+    if(x > -std::numeric_limits<T3>::min() && x < std::numeric_limits<T3>::min())
+        return null<T3>();
+    else
+    {
+        //std::cout << x << " ";
+        ARAGELI_ASSERT_1(std::numeric_limits<T3>::quiet_NaN() != x);
+        ARAGELI_ASSERT_1(std::numeric_limits<T3>::signaling_NaN() != x);
+        ARAGELI_ASSERT_1(std::numeric_limits<T3>::infinity() != x);
+        ARAGELI_ASSERT_1(-std::numeric_limits<T3>::infinity() != x);
+        return x;
+    }
+}
+
+
+inline void set_rounding_up ()
+{
+    unsigned int control_word;
+    int err;
+
+    // Show original FP control word and do calculation.
+    err = _controlfp_s(&control_word, _RC_UP, _MCW_RC);
+    ARAGELI_ASSERT_0(!err);
+    err = _controlfp_s(&control_word, _DN_FLUSH, _MCW_DN);
+    ARAGELI_ASSERT_0(!err);
+}
+
+inline void set_rounding_down ()
+{
+    unsigned int control_word;
+    int err;
+
+    // Show original FP control word and do calculation.
+    err = _controlfp_s(&control_word, _RC_DOWN, _MCW_RC);
+    ARAGELI_ASSERT_0(!err);
+    err = _controlfp_s(&control_word, _DN_FLUSH, _MCW_DN);
+    ARAGELI_ASSERT_0(!err);
+}
+
+
 inline float adjustl_interval_precision (float a, float b, float res)
 {
     if(0 == a || 0 == b)
@@ -420,6 +465,7 @@ interval<T> operator+ (const interval<T>& a, const interval<T>& b)
 {
     // WARNING! There is simpler way for reals.
 
+#if 0
     T
         p1l = adjustl_interval_precision(a.first(), b.first(), a.first() + b.first()),
         p2l = adjustl_interval_precision(a.first(), b.second(), a.first() + b.second()),
@@ -429,6 +475,21 @@ interval<T> operator+ (const interval<T>& a, const interval<T>& b)
         p2h = adjusth_interval_precision(a.first(), b.second(), a.first() + b.second()),
         p3h = adjusth_interval_precision(a.second(), b.first(), a.second() + b.first()),
         p4h = adjusth_interval_precision(a.second(), b.second(), a.second() + b.second());
+#else
+    
+    set_rounding_down();
+    T
+        p1l = get_third_arg(a.first(), b.first(), a.first() + b.first()),
+        p2l = get_third_arg(a.first(), b.second(), a.first() + b.second()),
+        p3l = get_third_arg(a.second(), b.first(), a.second() + b.first()),
+        p4l = get_third_arg(a.second(), b.second(), a.second() + b.second());
+    set_rounding_up();
+    T
+        p1h = get_third_arg(a.first(), b.first(), a.first() + b.first()),
+        p2h = get_third_arg(a.first(), b.second(), a.first() + b.second()),
+        p3h = get_third_arg(a.second(), b.first(), a.second() + b.first()),
+        p4h = get_third_arg(a.second(), b.second(), a.second() + b.second());
+#endif
 
     return interval<T>
     (
@@ -442,6 +503,7 @@ interval<T> operator- (const interval<T>& a, const interval<T>& b)
 {
     // WARNING! There is simpler way for reals.
 
+#if 0
     T
         p1l = adjustl_interval_precision(a.first(), b.first(), a.first() - b.first()),
         p2l = adjustl_interval_precision(a.first(), b.second(), a.first() - b.second()),
@@ -451,6 +513,20 @@ interval<T> operator- (const interval<T>& a, const interval<T>& b)
         p2h = adjusth_interval_precision(a.first(), b.second(), a.first() - b.second()),
         p3h = adjusth_interval_precision(a.second(), b.first(), a.second() - b.first()),
         p4h = adjusth_interval_precision(a.second(), b.second(), a.second() - b.second());
+#else
+    set_rounding_down();
+    T
+        p1l = get_third_arg(a.first(), b.first(), a.first() - b.first()),
+        p2l = get_third_arg(a.first(), b.second(), a.first() - b.second()),
+        p3l = get_third_arg(a.second(), b.first(), a.second() - b.first()),
+        p4l = get_third_arg(a.second(), b.second(), a.second() - b.second());
+    set_rounding_up();
+    T
+        p1h = get_third_arg(a.first(), b.first(), a.first() - b.first()),
+        p2h = get_third_arg(a.first(), b.second(), a.first() - b.second()),
+        p3h = get_third_arg(a.second(), b.first(), a.second() - b.first()),
+        p4h = get_third_arg(a.second(), b.second(), a.second() - b.second());
+#endif
 
     return interval<T>
     (
@@ -464,6 +540,7 @@ interval<T> operator* (const interval<T>& a, const interval<T>& b)
 {
     // WARNING! There is simpler way for reals.
 
+#if 0
     T
         p1l = adjustl_interval_precision(a.first(), b.first(), a.first() * b.first()),
         p2l = adjustl_interval_precision(a.first(), b.second(), a.first() * b.second()),
@@ -473,6 +550,20 @@ interval<T> operator* (const interval<T>& a, const interval<T>& b)
         p2h = adjusth_interval_precision(a.first(), b.second(), a.first() * b.second()),
         p3h = adjusth_interval_precision(a.second(), b.first(), a.second() * b.first()),
         p4h = adjusth_interval_precision(a.second(), b.second(), a.second() * b.second());
+#else
+    set_rounding_down();
+    T
+        p1l = get_third_arg(a.first(), b.first(), a.first() * b.first()),
+        p2l = get_third_arg(a.first(), b.second(), a.first() * b.second()),
+        p3l = get_third_arg(a.second(), b.first(), a.second() * b.first()),
+        p4l = get_third_arg(a.second(), b.second(), a.second() * b.second());
+    set_rounding_up();
+    T
+        p1h = get_third_arg(a.first(), b.first(), a.first() * b.first()),
+        p2h = get_third_arg(a.first(), b.second(), a.first() * b.second()),
+        p3h = get_third_arg(a.second(), b.first(), a.second() * b.first()),
+        p4h = get_third_arg(a.second(), b.second(), a.second() * b.second());
+#endif
 
     return interval<T>
     (
@@ -487,6 +578,7 @@ interval<T> operator/ (const interval<T>& a, const interval<T>& b)
     // WARNING! There is simpler way for reals.
     ARAGELI_ASSERT_0(sign(b.first())*sign(b.second()) > 0);
 
+#if 0
     T
         p1l = adjustl_interval_precision(a.first(), b.first(), a.first() / b.first()),
         p2l = adjustl_interval_precision(a.first(), b.second(), a.first() / b.second()),
@@ -496,6 +588,21 @@ interval<T> operator/ (const interval<T>& a, const interval<T>& b)
         p2h = adjusth_interval_precision(a.first(), b.second(), a.first() / b.second()),
         p3h = adjusth_interval_precision(a.second(), b.first(), a.second() / b.first()),
         p4h = adjusth_interval_precision(a.second(), b.second(), a.second() / b.second());
+#else
+    set_rounding_down();
+    T
+        p1l = get_third_arg(a.first(), b.first(), a.first() / b.first()),
+        p2l = get_third_arg(a.first(), b.second(), a.first() / b.second()),
+        p3l = get_third_arg(a.second(), b.first(), a.second() / b.first()),
+        p4l = get_third_arg(a.second(), b.second(), a.second() / b.second());
+    set_rounding_up();
+    T
+        p1h = get_third_arg(a.first(), b.first(), a.first() / b.first()),
+        p2h = get_third_arg(a.first(), b.second(), a.first() / b.second()),
+        p3h = get_third_arg(a.second(), b.first(), a.second() / b.first()),
+        p4h = get_third_arg(a.second(), b.second(), a.second() / b.second());
+#endif
+
 
     return interval<T>
     (
