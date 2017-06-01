@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Fast|Win32">
+      <Configuration>Fast</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Test|Win32">
+      <Configuration>Test</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D790993A-0F94-40DA-9CB5-794BECD05B9B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../../lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../../lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">../../../lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">$(OutDir)$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">../../../lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">$(OutDir)$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ARAGELI_SOURCE;ARAGELI_DEBUG_LEVEL=3;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)arageli32d.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;ARAGELI_SOURCE;ARAGELI_DEBUG_LEVEL=1;ARAGELI_ASSERT_THROW_EXCEPTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)arageli32r.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;ARAGELI_SOURCE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0;ARAGELI_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)arageli32f.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;ARAGELI_SOURCE;ARAGELI_DEBUG_LEVEL=3;ARAGELI_ASSERT_THROW_EXCEPTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)arageli32t.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\arageli\_utility.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\advsimplmeth.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\algebraic.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\algebrslt.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\bareiss.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\berlekamp_hensel.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\big_const.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\big_float.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\big_int.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\bigar.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\cantor_zassenhaus.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\cone.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\exception.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\gauss.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\gcd.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\generic.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\gram_schmidt.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\groebner_basis.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\hermite.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\intalg.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\intconvex.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\intcount_barvinok.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\io.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\karatsuba.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\linopt.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\lll.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\logarithm.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\matrix.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\motzkin_burger.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\orthogonal.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\pollard_mult.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\polyhedron.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\polyhedron_relation.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\polynom.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\powerest.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\prime.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\rational.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\resultant.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\sideset.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\smith.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\smithpoly.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\solve_linsys.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\sparse_multipolynom.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\sparse_polynom.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\sturm.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\tex_cartesian2d.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\texout.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\timer.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\triangulation.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\type_opers.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\type_traits.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\vecalg.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\vector.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\winograd.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\smith\classic.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\arageli\smith\near_optimal.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\smith\storjohann.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\arageli\hermite\classic.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\hermite\domich.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\hermite\hafner.cpp" />
+    <ClCompile Include="..\..\..\src\arageli\hermite\storjohann.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="..\..\..\src\arageli\_utility.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\advsimplmeth.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\algebraic.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\algebrslt.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\arageli.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\auto_link.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\bareiss.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\basefuncs.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\berlekamp_hensel.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\big_const.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\big_float.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\big_int.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\bigar.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\cantor_zassenhaus.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\cmp.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\cone.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\config.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\ctrl_latexlog.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\ctrl_slog.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\exception.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\factory.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\fft.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\frwrddecl.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\function_traits.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\functional.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\gauss.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\gcd.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\generic.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\gram_schmidt.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\groebner_basis.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\hermite.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\intalg.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\intconvex.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\intcount_barvinok.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\interval.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\io.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\iomanip.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\iteradapt.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\karatsuba.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\linopt.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\lll.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\logarithm.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\matrix.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\misc.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\mixcomp.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\motzkin_burger.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\orthogonal.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\pollard_mult.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\polyalg.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\polyhedron.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\polyhedron_relation.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\polynom.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\powerest.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\prime.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\random.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\rational.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\refcntr.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\residue.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\resultant.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\rndbase.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\setenumrnd.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\sideset.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\simplex_method.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\skeleton.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\smith.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\smithpoly.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\solve_linsys.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\sparse_multipolynom.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\sparse_polynom.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\sqrfree.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\std_import.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\sturm.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\tex_cartesian2d.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\texout.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\timer.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\triangulation.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\type_opers.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\type_pair_traits.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\type_traits.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\vecalg.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\vector.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\winograd.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\subvector\indexed.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\submatrix\hpair.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\submatrix\indexed.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\smith\classic.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\smith\near_optimal.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\smith\storjohann.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\hermite\classic.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\hermite\domich.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\hermite\hafner.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\hermite\storjohann.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\setenumrnd\grid.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\setenumrnd\integer.hpp" />
+    <CustomBuildStep Include="..\..\..\src\arageli\setenumrnd\vector.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

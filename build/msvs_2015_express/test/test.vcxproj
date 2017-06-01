@@ -1,0 +1,355 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Fast|Win32">
+      <Configuration>Fast</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Test|Win32">
+      <Configuration>Test</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{52B9B4E9-8CBF-4E9F-AE56-C84267CA9DAF}</ProjectGuid>
+    <RootNamespace>test</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../../bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../../bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">../../../bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">$(OutDir)$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">../../../bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">$(OutDir)$(ProjectName)_$(Configuration)_$(Platform)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../../tool/ts/src;../../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;ARAGELI_DEBUG_LEVEL=3;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.hpp</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>arageli32d.lib;ts32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)test.exe</OutputFile>
+      <AdditionalLibraryDirectories>../../../lib;../../../tool/ts/bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)test.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../../../tool/ts/src;../../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;ARAGELI_DEBUG_LEVEL=1;ARAGELI_ASSERT_THROW_EXCEPTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.hpp</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>arageli32r.lib;ts32r.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)test.exe</OutputFile>
+      <AdditionalLibraryDirectories>../../../lib;../../../tool/ts/bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <OmitFramePointers>true</OmitFramePointers>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../../../tool/ts/src;../../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0;ARAGELI_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.hpp</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>arageli32f.lib;ts32f.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)test.exe</OutputFile>
+      <AdditionalLibraryDirectories>../../../lib;../../../tool/ts/bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <OmitFramePointers>false</OmitFramePointers>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>../../../tool/ts/src;../../../src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;ARAGELI_DEBUG_LEVEL=3;ARAGELI_ASSERT_THROW_EXCEPTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.hpp</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>arageli32t.lib;ts32r.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)test.exe</OutputFile>
+      <AdditionalLibraryDirectories>../../../lib;../../../tool/ts/bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\test\algebraic_rref.cpp" />
+    <ClCompile Include="..\..\..\test\berlekamp.cpp" />
+    <ClCompile Include="..\..\..\test\berlekamp_hensel.cpp" />
+    <ClCompile Include="..\..\..\test\big_int_io_binary.cpp" />
+    <ClCompile Include="..\..\..\test\bigint_construct.cpp" />
+    <ClCompile Include="..\..\..\test\bigint_double_plus_double_minus.cpp" />
+    <ClCompile Include="..\..\..\test\bigint_even_odd.cpp" />
+    <ClCompile Include="..\..\..\test\bigint_multiply_divide.cpp" />
+    <ClCompile Include="..\..\..\test\bigint_null_unit.cpp" />
+    <ClCompile Include="..\..\..\test\bigint_plus_minus.cpp" />
+    <ClCompile Include="..\..\..\test\bigint_swap.cpp" />
+    <ClCompile Include="..\..\..\test\brent.cpp" />
+    <ClCompile Include="..\..\..\test\bug_1971908_lll_infinite_loop.cpp" />
+    <ClCompile Include="..\..\..\test\bug_2574442_berlekamp_crash_1.cpp" />
+    <ClCompile Include="..\..\..\test\bug_2574442_berlekamp_crash_2.cpp" />
+    <ClCompile Include="..\..\..\test\cone.cpp" />
+    <ClCompile Include="..\..\..\test\dense_sparse_polynom.cpp" />
+    <ClCompile Include="..\..\..\test\fft_multiplication.cpp" />
+    <ClCompile Include="..\..\..\test\find_small_primes.cpp" />
+    <ClCompile Include="..\..\..\test\gcd.cpp" />
+    <ClCompile Include="..\..\..\test\intcount_barvinok.cpp" />
+    <ClCompile Include="..\..\..\test\integer_divide.cpp" />
+    <ClCompile Include="..\..\..\test\integer_size.cpp" />
+    <ClCompile Include="..\..\..\test\karatsuba.cpp" />
+    <ClCompile Include="..\..\..\test\lll_reduction.cpp" />
+    <ClCompile Include="..\..\..\test\mandatory_object_functions.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_add_scalar.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_addmul_cols.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_addmul_rows.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_det.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_det_int.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_insert_col.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_insert_row.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_inverse.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_io_binary.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_is_null.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_is_square.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_is_unit.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_matrix_add.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_matrix_mult.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_mul_scalar.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_mult_col.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_mult_row.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_opposite.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_ops.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_string_constructor.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_swap_col.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_swap_row.cpp" />
+    <ClCompile Include="..\..\..\test\matrix_transpose.cpp" />
+    <ClCompile Include="..\..\..\test\minkowski_diff.cpp" />
+    <ClCompile Include="..\..\..\test\orthogonalization_generic_gram_schmidt.cpp" />
+    <ClCompile Include="..\..\..\test\pollard_pm1.cpp" />
+    <ClCompile Include="..\..\..\test\polyhedron_distance.cpp" />
+    <ClCompile Include="..\..\..\test\polynom_init_convert.cpp" />
+    <ClCompile Include="..\..\..\test\polynom_io_binary.cpp" />
+    <ClCompile Include="..\..\..\test\prime_miller_rabin.cpp" />
+    <ClCompile Include="..\..\..\test\rand.cpp" />
+    <ClCompile Include="..\..\..\test\rational.cpp" />
+    <ClCompile Include="..\..\..\test\rational_compares.cpp" />
+    <ClCompile Include="..\..\..\test\rational_constructor.cpp" />
+    <ClCompile Include="..\..\..\test\rational_ifloor_iceil_frac_abs.cpp" />
+    <ClCompile Include="..\..\..\test\rational_inverse.cpp" />
+    <ClCompile Include="..\..\..\test\rational_io_binary.cpp" />
+    <ClCompile Include="..\..\..\test\rational_is_integer.cpp" />
+    <ClCompile Include="..\..\..\test\rational_is_normal.cpp" />
+    <ClCompile Include="..\..\..\test\rational_is_null.cpp" />
+    <ClCompile Include="..\..\..\test\rational_is_unit.cpp" />
+    <ClCompile Include="..\..\..\test\rational_mul_div.cpp" />
+    <ClCompile Include="..\..\..\test\rational_numer_denom.cpp" />
+    <ClCompile Include="..\..\..\test\rational_opposite.cpp" />
+    <ClCompile Include="..\..\..\test\rational_plus_minus.cpp" />
+    <ClCompile Include="..\..\..\test\rational_sign.cpp" />
+    <ClCompile Include="..\..\..\test\rational_swap.cpp" />
+    <ClCompile Include="..\..\..\test\residue.cpp" />
+    <ClCompile Include="..\..\..\test\residue_factory.cpp" />
+    <ClCompile Include="..\..\..\test\rho_pollard_function.cpp" />
+    <ClCompile Include="..\..\..\test\skeleton_motzkin_burger.cpp" />
+    <ClCompile Include="..\..\..\test\smith_integer.cpp" />
+    <ClCompile Include="..\..\..\test\sparse_polynom_cmp.cpp" />
+    <ClCompile Include="..\..\..\test\sparse_polynom_multiply_divide_monom.cpp" />
+    <ClCompile Include="..\..\..\test\sparse_polynom_multiply_divide_polynom.cpp" />
+    <ClCompile Include="..\..\..\test\sparse_polynom_multiply_divide_scalar.cpp" />
+    <ClCompile Include="..\..\..\test\sparse_polynom_plus_minus_monom.cpp" />
+    <ClCompile Include="..\..\..\test\sparse_polynom_plus_minus_polynom.cpp" />
+    <ClCompile Include="..\..\..\test\sparse_polynom_plus_minus_scalar.cpp" />
+    <ClCompile Include="..\..\..\test\test1part1.cpp" />
+    <ClCompile Include="..\..\..\test\test1part2.cpp" />
+    <ClCompile Include="..\..\..\test\test1part3.cpp" />
+    <ClCompile Include="..\..\..\test\test1part4.cpp" />
+    <ClCompile Include="..\..\..\test\test2.cpp" />
+    <ClCompile Include="..\..\..\test\test3.cpp" />
+    <ClCompile Include="..\..\..\test\test4part1.cpp" />
+    <ClCompile Include="..\..\..\test\test4part2.cpp" />
+    <ClCompile Include="..\..\..\test\test4part3.cpp" />
+    <ClCompile Include="..\..\..\test\test4part4.cpp" />
+    <ClCompile Include="..\..\..\test\test4part5.cpp" />
+    <ClCompile Include="..\..\..\test\test4part6.cpp" />
+    <ClCompile Include="..\..\..\test\test4part7.cpp" />
+    <ClCompile Include="..\..\..\test\test4part8.cpp" />
+    <ClCompile Include="..\..\..\test\test5.cpp" />
+    <ClCompile Include="..\..\..\test\timer_resolution.cpp" />
+    <ClCompile Include="..\..\..\test\triangulate.cpp" />
+    <ClCompile Include="..\..\..\test\type_pair_traits_for_bn.cpp" />
+    <ClCompile Include="..\..\..\test\type_pair_traits_is_convertible.cpp" />
+    <ClCompile Include="..\..\..\test\vector.cpp" />
+    <ClCompile Include="..\..\..\test\vector_access.cpp" />
+    <ClCompile Include="..\..\..\test\vector_compares.cpp" />
+    <ClCompile Include="..\..\..\test\vector_constructor.cpp" />
+    <ClCompile Include="..\..\..\test\vector_inverse.cpp" />
+    <ClCompile Include="..\..\..\test\vector_io_binary.cpp" />
+    <ClCompile Include="..\..\..\test\vector_is_null.cpp" />
+    <ClCompile Include="..\..\..\test\vector_is_unit.cpp" />
+    <ClCompile Include="..\..\..\test\vector_matrix_init.cpp" />
+    <ClCompile Include="..\..\..\test\vector_mix_comp.cpp" />
+    <ClCompile Include="..\..\..\test\vector_mul_div.cpp" />
+    <ClCompile Include="..\..\..\test\vector_opposite.cpp" />
+    <ClCompile Include="..\..\..\test\vector_plus_minus.cpp" />
+    <ClCompile Include="..\..\..\test\vector_swap.cpp" />
+    <ClCompile Include="..\..\..\test\vector_take_subvector.cpp" />
+    <ClCompile Include="..\..\..\test\winograd.cpp" />
+    <ClCompile Include="..\..\..\test\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Fast|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\test\io_simple_binary.hpp" />
+    <CustomBuildStep Include="..\..\..\test\matrix_ops.hpp" />
+    <CustomBuildStep Include="..\..\..\test\rand.hpp" />
+    <CustomBuildStep Include="..\..\..\test\rational.hpp" />
+    <CustomBuildStep Include="..\..\..\test\ring.hpp" />
+    <CustomBuildStep Include="..\..\..\test\test1.hpp" />
+    <CustomBuildStep Include="..\..\..\test\universal.hpp" />
+    <CustomBuildStep Include="..\..\..\test\vector.hpp" />
+    <ClInclude Include="..\..\..\test\stdafx.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\tool\ts\build\msvs_2008\ts\ts.vcxproj">
+      <Project>{fffe8db7-5d5e-4651-9ba3-37669e8a5ad8}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\arageli\arageli.vcxproj">
+      <Project>{d790993a-0f94-40da-9cb5-794becd05b9b}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
