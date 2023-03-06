@@ -35,6 +35,7 @@ CXXFLAGS += -MD -g -O2
 all: ../../bin/libts.a
 
 ../../bin/libts.a: $(patsubst %.cpp,%.o, $(wildcard *.cpp))
+	mkdir ../../bin
 	$(AR) -r $@ $(patsubst %.cpp,%.o, $(wildcard *.cpp))
 
 %.o:%.cpp

@@ -278,7 +278,7 @@ bool gbasis<poly_class>::add (poly_class& p)
                 id_iter = i->first;
                 poly_class q = i->second, r;
                 //cerr << "-";
-                erase(i);
+                this->erase(i);
                 tid.erase(q.leading_multidegree());
 
                 divide(q, p, r, q);
@@ -369,7 +369,7 @@ bool gbasis<poly_class>::addreduce (poly_class& p)
                 id_iter = i->first;
                 poly_class q = i->second, r;
                 //cerr << "-";
-                erase(i);
+                this->erase(i);
                 tid.erase(q.leading_multidegree());
 
                 divide(q, p, r, q);

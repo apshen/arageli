@@ -40,6 +40,7 @@ all: ../bin/$(tests_name)
 ../bin/$(tests_name): ../tool/ts/bin/libts.a ../lib/libtestarageli.a stdafx.hpp.gch $(patsubst %.cpp,%.o, $(wildcard $(addsuffix \
                 /*.cpp,$(test_dirs))))
 	make -C ../src/arageli ../../lib/libtestarageli.a
+	mkdir -p ../bin
 	$(CXX) -o ../bin/$(tests_name) $(patsubst %.cpp,%.o, $(wildcard \
     $(addsuffix /*.cpp,$(test_dirs)))) $(LINKFLAGS)
 

@@ -38,15 +38,19 @@ obj_dirs = . hermite smith
 all: ../../lib/libarageli.a
 
 ../../lib/libarageli.a: $(patsubst %.cpp,%.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+	mkdir -p ../../lib
 	$(AR) -r $@ $(patsubst %.cpp,%.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
 
 ../../lib/libtestarageli.a: $(patsubst %.cpp,%t.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+	mkdir -p ../../lib
 	$(AR) -r $@ $(patsubst %.cpp,%t.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
 
 ../../lib/libperfarageli.a: $(patsubst %.cpp,%p.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+	mkdir -p ../../lib
 	$(AR) -r $@ $(patsubst %.cpp,%p.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
 
 ../../lib/libfastarageli.a: $(patsubst %.cpp,%f.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
+	mkdir -p ../../lib
 	$(AR) -r $@ $(patsubst %.cpp,%f.o, $(wildcard $(addsuffix /*.cpp,$(obj_dirs))))
 
 arageli.hpp.gch:arageli.hpp

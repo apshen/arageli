@@ -95,28 +95,6 @@ vector<sparse_polynom<T> > residue_to_int_sparse_polynom_vector
     return res;
 }
 
-
-template <class T>
-void wrapper_my_rref_mod
-(
-    const matrix<residue<T> >& A_mod,
-    matrix<residue<T> >& rref_A,
-    vector<std::size_t>& basis
-)
-{
-    ARAGELI_TM_PRINT("wrapper_my_rref_mod(..) started. Time="<<time(0)-stbh);
-    matrix<T> A(A_mod.ncols(), A_mod.nrows(), fromsize);
-    for (std::size_t i = 0; i < A_mod.nrows(); i++)
-        for (std::size_t j = 0; j < A_mod.ncols(); j++)
-            A(i, j) = A_mod(i, j).value();
-
-    my_rref_mod(A, basis, A_mod(0, 0).module());
-    rref_A = A;
-    ARAGELI_TM_PRINT("wrapper_my_rref_mod(..) finished. Time="<<time(0)-stbh);
-}
-
-
-
 template <class T>
 void my_rref_mod
 (
@@ -174,6 +152,157 @@ void my_rref_mod
     ARAGELI_TM_PRINT("my_rref_mod(..) finished. Time="<<time(0)-stbh);
 }
 
+
+template <class T>
+void wrapper_my_rref_mod
+(
+    const matrix<residue<T> >& A_mod,
+    matrix<residue<T> >& rref_A,
+    vector<std::size_t>& basis
+)
+{
+    ARAGELI_TM_PRINT("wrapper_my_rref_mod(..) started. Time="<<time(0)-stbh);
+    matrix<T> A(A_mod.ncols(), A_mod.nrows(), fromsize);
+    for (std::size_t i = 0; i < A_mod.nrows(); i++)
+        for (std::size_t j = 0; j < A_mod.ncols(); j++)
+            A(i, j) = A_mod(i, j).value();
+
+    my_rref_mod(A, basis, A_mod(0, 0).module());
+    rref_A = A;
+    ARAGELI_TM_PRINT("wrapper_my_rref_mod(..) finished. Time="<<time(0)-stbh);
+}
+
+
+
+template <typename T> void form_matrix_Q_minus_I (const sparse_polynom<T>& f,matrix<T>& Q)
+{
+    ARAGELI_ASSERT_1(Q.is_square()&&Q.ncols()>0);
+    typedef typename T::module_type module_type;
+    typedef typename T::value_type value_type;
+    typedef typename sparse_polynom<T>::degree_type degree_type;
+    module_type module=f.leading_coef().module();
+    T one=factory<T>::unit();//T one = 1;
+    one.module() = module;
+    degree_type f_degree=f.degree();
+    //one.normalize();//what for? module > 1 !
+
+    sparse_polynom<T> h(one);//h=1(mod p)*x^0
+
+    //matrix<T> Q(f.degree(), f.degree(), fromsize);
+    //Q.assign_fromsize(f_degree);//square matrix, which size is degree x degree
+
+    for (degree_type k = 0; k < f_degree; k++)
+    {
+        typedef typename sparse_polynom<T>::monom_const_iterator monoms;
+        for(monoms mi = h.monoms_begin(), mj = h.monoms_end(); mi != mj ; ++mi)
+            Q(mi->degree(), k) = mi->coef();
+
+        //h = h*(1(mod p)*x^p)
+        typedef typename sparse_polynom<T>::monom_iterator monoms_i;
+        for(monoms_i mi = h.monoms_begin(), mj = h.monoms_end(); mi != mj ; ++mi)
+            mi->degree()+=module;
+
+        h %= f;
+    }
+
+    value_type minus1modp=value_type(module-factory<module_type>::unit());
+    for (degree_type i = 0; i < f_degree; i++)
+        for (degree_type j = 0; j < f_degree; j++)
+        {
+            if(i!=j)
+            {
+                Q(i, j).module() = module;
+            }
+            else
+            {
+                //Q=Q-I(mod p)
+
+                Q(i, j).value() += minus1modp;
+                Q(i, j).module() = module;
+                Q(i, j).normalize();
+            }
+        }
+}
+
+template <class T>
+matrix<T> null_space_basis_into_matrix (const matrix<T>& A)
+{
+    ARAGELI_TM_PRINT("null_space_basis_into_matrix started. Time="<<time(0)-stbh);
+    matrix<T> rref_A, A_inv;
+    vector<std::size_t> basis;
+    T d;
+
+    //rref(A, rref_A, A_inv, basis, d);
+    wrapper_my_rref_mod(A, rref_A, basis);
+
+    // wrapper_my_rref_mod function doesn't seem to set
+    // correct module value for all the elements. Set them.
+    for(typename matrix<T>::iterator i = rref_A.begin(); i != rref_A.end(); ++i)
+    {
+        i->module() = A(0, 0).module();
+        i->normalize(); // is it necessary?
+    }
+
+    //output_aligned(std::cerr << "\nrref_A = \n", rref_A);
+
+    // This is for the next statment where we take one of the elements
+    // of A matrix. If A is supposed to be sometimes empty,
+    // replace this assert by an if-statement with the next statment.
+    ARAGELI_ASSERT_0(!A.is_empty());
+
+    matrix<T> Q(A.ncols(), A.ncols() - basis.length(), null(A(0, 0)));
+
+    for (std::size_t j = 0, bj = 0, nbj = 0; j < rref_A.ncols(); j++)
+    {
+        if (bj < basis.length() && j == basis[bj])
+        {
+            bj++;
+        }
+        else
+        {
+            vector<T> q(rref_A.ncols());
+
+            q[j] = 1;
+            for (std::size_t i = 0; i < q.length(); i++) // It's ugly
+            {
+                q[i].module() = A(0, 0).module();
+                q[i].normalize();
+            }
+
+            for (std::size_t i = 0; i < basis.length(); i++)
+                q[basis[i]] = -rref_A(i, j);
+
+            for (std::size_t i = 0; i < Q.nrows(); i++)
+                Q(i, nbj) = q[i];
+
+            nbj++;
+        }
+    }
+    ARAGELI_TM_PRINT("null_space_basis_into_matrix finished. Time="<<time(0)-stbh);
+    return Q;
+}
+
+
+template <class T>
+vector<sparse_polynom<T> > null_space_basis (const matrix<T>& A)
+{
+    ARAGELI_TM_PRINT("null_space_basis(..) started. Time="<<time(0)-stbh);
+    matrix<T> Q = null_space_basis_into_matrix(A);
+    //output_aligned(std::cerr << "\ninternal =\n", Q);
+
+    vector< sparse_polynom<T> > v(Q.ncols());
+
+    for (std::size_t j = 0; j < Q.ncols(); j++)
+    {
+        for (std::size_t i = 0; i < Q.nrows(); i++)
+        {
+            if (Q(i, j) != 0)
+                v[j] += monom<T>(Q(i, j), i);
+        }
+    }
+    ARAGELI_TM_PRINT("null_space_basis(..) finished. Time="<<time(0)-stbh);
+    return v;
+}
 
 /** @param f monic square-free polynomial(Z<sub>p</sub>[x])*/
 template <typename T>//T
@@ -298,138 +427,6 @@ vector<P> pre_berlekamp (const P& p)
 }
 
 
-template <typename T> void form_matrix_Q_minus_I (const sparse_polynom<T>& f,matrix<T>& Q)
-{
-    ARAGELI_ASSERT_1(Q.is_square()&&Q.ncols()>0);
-    typedef typename T::module_type module_type;
-    typedef typename T::value_type value_type;
-    typedef typename sparse_polynom<T>::degree_type degree_type;
-    module_type module=f.leading_coef().module();
-    T one=factory<T>::unit();//T one = 1;
-    one.module() = module;
-    degree_type f_degree=f.degree();
-    //one.normalize();//what for? module > 1 !
-
-    sparse_polynom<T> h(one);//h=1(mod p)*x^0
-
-    //matrix<T> Q(f.degree(), f.degree(), fromsize);
-    //Q.assign_fromsize(f_degree);//square matrix, which size is degree x degree
-
-    for (degree_type k = 0; k < f_degree; k++)
-    {
-        typedef typename sparse_polynom<T>::monom_const_iterator monoms;
-        for(monoms mi = h.monoms_begin(), mj = h.monoms_end(); mi != mj ; ++mi)
-            Q(mi->degree(), k) = mi->coef();
-
-        //h = h*(1(mod p)*x^p)
-        typedef typename sparse_polynom<T>::monom_iterator monoms_i;
-        for(monoms_i mi = h.monoms_begin(), mj = h.monoms_end(); mi != mj ; ++mi)
-            mi->degree()+=module;
-
-        h %= f;
-    }
-
-    value_type minus1modp=value_type(module-factory<module_type>::unit());
-    for (degree_type i = 0; i < f_degree; i++)
-        for (degree_type j = 0; j < f_degree; j++)
-        {
-            if(i!=j)
-            {
-                Q(i, j).module() = module;
-            }
-            else
-            {
-                //Q=Q-I(mod p)
-
-                Q(i, j).value() += minus1modp;
-                Q(i, j).module() = module;
-                Q(i, j).normalize();
-            }
-        }
-}
-
-
-template <class T>
-matrix<T> null_space_basis_into_matrix (const matrix<T>& A)
-{
-    ARAGELI_TM_PRINT("null_space_basis_into_matrix started. Time="<<time(0)-stbh);
-    matrix<T> rref_A, A_inv;
-    vector<std::size_t> basis;
-    T d;
-
-    //rref(A, rref_A, A_inv, basis, d);
-    wrapper_my_rref_mod(A, rref_A, basis);
-
-    // wrapper_my_rref_mod function doesn't seem to set
-    // correct module value for all the elements. Set them.
-    for(typename matrix<T>::iterator i = rref_A.begin(); i != rref_A.end(); ++i)
-    {
-        i->module() = A(0, 0).module();
-        i->normalize(); // is it necessary?
-    }
-
-    //output_aligned(std::cerr << "\nrref_A = \n", rref_A);
-
-    // This is for the next statment where we take one of the elements
-    // of A matrix. If A is supposed to be sometimes empty,
-    // replace this assert by an if-statement with the next statment.
-    ARAGELI_ASSERT_0(!A.is_empty());
-
-    matrix<T> Q(A.ncols(), A.ncols() - basis.length(), null(A(0, 0)));
-
-    for (std::size_t j = 0, bj = 0, nbj = 0; j < rref_A.ncols(); j++)
-    {
-        if (bj < basis.length() && j == basis[bj])
-        {
-            bj++;
-        }
-        else
-        {
-            vector<T> q(rref_A.ncols());
-
-            q[j] = 1;
-            for (std::size_t i = 0; i < q.length(); i++) // It's ugly
-            {
-                q[i].module() = A(0, 0).module();
-                q[i].normalize();
-            }
-
-            for (std::size_t i = 0; i < basis.length(); i++)
-                q[basis[i]] = -rref_A(i, j);
-
-            for (std::size_t i = 0; i < Q.nrows(); i++)
-                Q(i, nbj) = q[i];
-
-            nbj++;
-        }
-    }
-    ARAGELI_TM_PRINT("null_space_basis_into_matrix finished. Time="<<time(0)-stbh);
-    return Q;
-}
-
-
-template <class T>
-vector<sparse_polynom<T> > null_space_basis (const matrix<T>& A)
-{
-    ARAGELI_TM_PRINT("null_space_basis(..) started. Time="<<time(0)-stbh);
-    matrix<T> Q = null_space_basis_into_matrix(A);
-    //output_aligned(std::cerr << "\ninternal =\n", Q);
-
-    vector< sparse_polynom<T> > v(Q.ncols());
-
-    for (std::size_t j = 0; j < Q.ncols(); j++)
-    {
-        for (std::size_t i = 0; i < Q.nrows(); i++)
-        {
-            if (Q(i, j) != 0)
-                v[j] += monom<T>(Q(i, j), i);
-        }
-    }
-    ARAGELI_TM_PRINT("null_space_basis(..) finished. Time="<<time(0)-stbh);
-    return v;
-}
-
-
 template <class T>
 void new_module (sparse_polynom<residue<T> >& f, const T& q)
 {
@@ -515,6 +512,97 @@ void make_degrees_in_bezout_coeff_less
     return;
 
 }
+
+
+template <class T>
+sparse_polynom<T> add_mod
+(
+    const sparse_polynom<T>& f,
+    const sparse_polynom<T>& g,
+    T mod
+)
+{
+    sparse_polynom<residue<T> > f_mod = f;
+    sparse_polynom<residue<T> > g_mod = g;
+
+    new_module(f_mod, mod);
+    new_module(g_mod, mod);
+
+    return residue_to_int_sparse_polynom(f_mod + g_mod);
+}
+
+
+template <class T>
+sparse_polynom<T> sub_mod
+(
+    const sparse_polynom<T>& f,
+    const sparse_polynom<T>& g,
+    T mod
+)
+{
+    sparse_polynom<residue<T> > f_mod = f;
+    sparse_polynom<residue<T> > g_mod = g;
+
+    new_module(f_mod, mod);
+    new_module(g_mod, mod);
+
+    return residue_to_int_sparse_polynom(f_mod - g_mod);
+}
+
+
+template <class T>
+sparse_polynom<T> mul_mod
+(
+    const sparse_polynom<T>& f,
+    const sparse_polynom<T>& g,
+    T mod
+)
+{
+    sparse_polynom<residue<T> > f_mod = f;
+    sparse_polynom<residue<T> > g_mod = g;
+
+    new_module(f_mod, mod);
+    new_module(g_mod, mod);
+
+    return residue_to_int_sparse_polynom(f_mod * g_mod);
+}
+
+
+template <class T>
+sparse_polynom<T> div_mod
+(
+    const sparse_polynom<T>& f,
+    const sparse_polynom<T>& g,
+    T mod
+)
+{
+    sparse_polynom<residue<T> > f_mod = f;
+    sparse_polynom<residue<T> > g_mod = g;
+
+    new_module(f_mod, mod);
+    new_module(g_mod, mod);
+
+    return residue_to_int_sparse_polynom(f_mod / g_mod);
+}
+
+
+template <class T>
+sparse_polynom<T> res_mod
+(
+    const sparse_polynom<T>& f,
+    const sparse_polynom<T>& g,
+    T mod
+)
+{
+    sparse_polynom<residue<T> > f_mod = f;
+    sparse_polynom<residue<T> > g_mod = g;
+
+    new_module(f_mod, mod);
+    new_module(g_mod, mod);
+
+    return residue_to_int_sparse_polynom(f_mod % g_mod);
+}
+
 
 
 template <class T>
@@ -721,97 +809,6 @@ T cont (sparse_polynom<T>& f)
     }
 
 }
-
-
-template <class T>
-sparse_polynom<T> add_mod
-(
-    const sparse_polynom<T>& f,
-    const sparse_polynom<T>& g,
-    T mod
-)
-{
-    sparse_polynom<residue<T> > f_mod = f;
-    sparse_polynom<residue<T> > g_mod = g;
-
-    new_module(f_mod, mod);
-    new_module(g_mod, mod);
-
-    return residue_to_int_sparse_polynom(f_mod + g_mod);
-}
-
-
-template <class T>
-sparse_polynom<T> sub_mod
-(
-    const sparse_polynom<T>& f,
-    const sparse_polynom<T>& g,
-    T mod
-)
-{
-    sparse_polynom<residue<T> > f_mod = f;
-    sparse_polynom<residue<T> > g_mod = g;
-
-    new_module(f_mod, mod);
-    new_module(g_mod, mod);
-
-    return residue_to_int_sparse_polynom(f_mod - g_mod);
-}
-
-
-template <class T>
-sparse_polynom<T> mul_mod
-(
-    const sparse_polynom<T>& f,
-    const sparse_polynom<T>& g,
-    T mod
-)
-{
-    sparse_polynom<residue<T> > f_mod = f;
-    sparse_polynom<residue<T> > g_mod = g;
-
-    new_module(f_mod, mod);
-    new_module(g_mod, mod);
-
-    return residue_to_int_sparse_polynom(f_mod * g_mod);
-}
-
-
-template <class T>
-sparse_polynom<T> div_mod
-(
-    const sparse_polynom<T>& f,
-    const sparse_polynom<T>& g,
-    T mod
-)
-{
-    sparse_polynom<residue<T> > f_mod = f;
-    sparse_polynom<residue<T> > g_mod = g;
-
-    new_module(f_mod, mod);
-    new_module(g_mod, mod);
-
-    return residue_to_int_sparse_polynom(f_mod / g_mod);
-}
-
-
-template <class T>
-sparse_polynom<T> res_mod
-(
-    const sparse_polynom<T>& f,
-    const sparse_polynom<T>& g,
-    T mod
-)
-{
-    sparse_polynom<residue<T> > f_mod = f;
-    sparse_polynom<residue<T> > g_mod = g;
-
-    new_module(f_mod, mod);
-    new_module(g_mod, mod);
-
-    return residue_to_int_sparse_polynom(f_mod % g_mod);
-}
-
 
 
 template <class T>

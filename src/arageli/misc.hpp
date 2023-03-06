@@ -37,6 +37,7 @@
 #define _ARAGELI_misc_hpp_
 
 #include "config.hpp"
+#include "factory.hpp"
 
 
 namespace Arageli

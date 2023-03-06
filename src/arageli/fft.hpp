@@ -573,8 +573,8 @@ public:
         /* make images */
         //FFT_h(F_Copy,Result_Length, Hat_F);
         //FFT_h(G_Copy,Result_Length, Hat_G);
-        FFT(F_Copy,Result_Length, Hat_F);
-        FFT(G_Copy,Result_Length, Hat_G);
+        this->FFT(F_Copy,Result_Length, Hat_F);
+        this->FFT(G_Copy,Result_Length, Hat_G);
 
         /* make image of result*/
         for (i=0; i<Result_Length;i++)
@@ -589,7 +589,7 @@ public:
         }
 
         /* make result from image */
-        FFT_inverse(Result,Result_Length,Result_Out);
+        this->FFT_inverse(Result,Result_Length,Result_Out);
     };
 };
 

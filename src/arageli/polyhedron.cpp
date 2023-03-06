@@ -129,7 +129,7 @@ polyhedron<T, M, C, CFG>& polyhedron<T, M, C, CFG>::minkowski_diff
     ARAGELI_ASSERT_0(space_dim() == x.space_dim());
     typedef matrix<rational<> > Vertices;
     Vertices g1 = vertices<Vertices>();
-    Vertices g2 = x.vertices<Vertices>();
+    Vertices g2 = x.template vertices<Vertices>();
     ARAGELI_ASSERT_1(g1.ncols() == g2.ncols());
     Vertices g(g1.nrows()*g2.nrows(), g1.ncols(), fromsize);
 

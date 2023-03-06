@@ -275,53 +275,6 @@ inline bool operator!= (const module_2pm1<D1, T1>& a, const module_2pm1<D2, T2>&
     return !(a == b);
 }
 
-
-template <typename In, typename Val>
-Val content (In begin, In end, const Val*)
-{
-    typedef typename std::iterator_traits<In>::value_type T;
-    T res = null<T>();
-    for(; begin != end; ++begin)
-        res = gcd(res, *begin);
-    return res;
-}
-
-template <typename In>
-typename std::iterator_traits<In>::value_type content_float (In begin, In end)
-{
-    typedef typename std::iterator_traits<In>::value_type Val;
-    return
-        begin == end ?
-        null<Val>() :
-        unit<Val>();
-}
-
-template <typename In>
-float content (In begin, In end, const float*)
-{
-    return content_float(begin, end);
-}
-
-template <typename In>
-double content (In begin, In end, const double*)
-{
-    return content_float(begin, end);
-}
-
-template <typename In>
-long double content (In begin, In end, const long double*)
-{
-    return content_float(begin, end);
-}
-
-/// Returns content of a number sequence.
-template <typename In>
-typename std::iterator_traits<In>::value_type content (In begin, In end)
-{
-    return content(begin, end, begin.operator->());  // WARNING! operator-> isn't always return necessary type
-}
-
-
 /// Imbue new locale object for an input stream to avoid problem with comma.
 /** The problem has been firstly discovered in MSVC++ 2005.
     Discussion on the topic is availible at
