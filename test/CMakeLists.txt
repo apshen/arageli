@@ -121,7 +121,7 @@ set(arageli_test_sources
     winograd.cpp
 )
 
-add_executable(arageli_test ${arageli_test_sources})
+add_executable(arageli_test EXCLUDE_FROM_ALL ${arageli_test_sources})
 
 target_compile_definitions(arageli_test PRIVATE
     ARAGELI_SOURCE

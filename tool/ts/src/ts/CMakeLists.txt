@@ -3,4 +3,4 @@ set(arageli_ts_sources
     tstcontainer.cpp
 )
 
-add_library(ts STATIC ${arageli_ts_sources})
+add_library(ts STATIC EXCLUDE_FROM_ALL ${arageli_ts_sources})

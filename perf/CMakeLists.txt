@@ -2,7 +2,7 @@ set(arageli_karatsuba_vs_classic_sources
     karatsuba_vs_classic.cpp
 )
 
-add_executable(karatsuba_vs_classic ${arageli_karatsuba_vs_classic_sources})
+add_executable(karatsuba_vs_classic EXCLUDE_FROM_ALL ${arageli_karatsuba_vs_classic_sources})
 
 target_compile_definitions(karatsuba_vs_classic PRIVATE
     ARAGELI_SOURCE
