@@ -53,7 +53,7 @@ class TreeReplacer:
         try:
             names = os.listdir(dir)
 #            print "%s is being processed." % dir
-        except os.error, err:
+        except os.error as err:
             sys.stderr.write("Can't list %s: %s\n" % (file, err))
             return
         names.sort()
@@ -64,7 +64,11 @@ class TreeReplacer:
                 continue # Skip project files
             if name.endswith("tags"):
                 continue # Skip tags
-            if name.endswith("Makefile"):
+            if name.startswith("Makefile"):
+                continue # Skip Makefiles
+            if name.startswith("CMakeOutput"):
+                continue # Skip Makefiles
+            if name.endswith(".make"):
                 continue # Skip Makefiles
             if name.endswith(".sln"):
                 continue # Skip solution files
@@ -83,14 +87,14 @@ class TreeReplacer:
         head, base = os.path.split(file)
         try:
             data = open(file, "rb").read()
-            if '\0' in data:
+            if b'\0' in data:
 #                print file, "Binary!"
                 return
-            if '\t' in data:
-                print file, "Tabulation!"
+            if b'\t' in data:
+                print (file, "Tabulation!")
                 return
 
-        except IOError, err:
+        except IOError as err:
             sys.stderr.write("Can't open %s: %s\n" % (file, err))
             return
 

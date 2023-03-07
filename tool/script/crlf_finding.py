@@ -55,7 +55,7 @@ class TreeReplacer:
         try:
             names = os.listdir(dir)
 #            print "%s is being processed." % dir
-        except os.error, err:
+        except os.error as err:
             sys.stderr.write("Can't list %s: %s\n" % (file, err))
             return
         names.sort()
@@ -91,14 +91,14 @@ class TreeReplacer:
         head, base = os.path.split(file)
         try:
             data = open(file, "rb").read()
-            if '\0' in data:
+            if b'\0' in data:
 #                print file, "Binary!"
                 return
-            if "\r\n" in data:
-                print file, "Windows line end!"
+            if b"\r\n" in data:
+                print (file, "Windows line end!")
                 return
 
-        except IOError, err:
+        except IOError as err:
             sys.stderr.write("Can't open %s: %s\n" % (file, err))
             return
 
