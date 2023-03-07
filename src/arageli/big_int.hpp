@@ -50,7 +50,6 @@
 #include "factory.hpp"
 #include "io.hpp"
 #include "powerest.hpp"
-#include "intalg.hpp"
 #include "bigar.hpp"
 #include "gcd.hpp"
 
