@@ -237,7 +237,7 @@ int main ()
         delete [] b_u_digits;
         delete [] w_u_digits;
         delete [] t_digits;
-    } while ((upper_bound - lower_bound) > tolerance);
+    } while ((upper_bound - lower_bound) > tolerance && lower_bound <= upper_bound);
     std::cout << "Threshold value = " << (upper_bound + lower_bound) / 2 << " or " << (upper_bound + lower_bound) / 64 << " digits" << std::endl;
     return (upper_bound + lower_bound) / 2;
 }
