@@ -131,12 +131,6 @@ inline bool is_bad_input (In& in)
 }
 
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4800)
-#endif
-
-
 /// Implements functionality of std::auto_ptr for arrays.
 template <typename T> class auto_array
 {
@@ -205,11 +199,6 @@ private:
 
     T* pointer;
 };
-
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 
 template <typename A, typename B, typename Store_A, typename Store_B>

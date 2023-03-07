@@ -177,11 +177,6 @@ inline bool is_null (const T& x)
 }
 
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4146)
-#endif
-
 /// Opposite element. Mathematically returns (-x).
 template <typename T>
 inline T opposite (const T& x)
@@ -223,10 +218,6 @@ inline T& opposite (T* x)
 
     return *x = -*x;
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 /// Inverse element. Mathematically returns 1/x.
 template <typename T>

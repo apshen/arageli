@@ -213,11 +213,6 @@ void apply2_wores_val_by_vec (Val& a, Vec& b, BinOp f)
         f(a, *bi);
 }
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4244)
-#endif
-
 template <typename Vec1, typename Vec2, typename VecRes, typename Func2>
 VecRes& apply2_vec_by_vec
 (const Vec1& a, const Vec2& b, VecRes& res, Func2 f)
@@ -236,10 +231,6 @@ VecRes& apply2_vec_by_vec
 
     return res;
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 template <typename Vec1, typename Vec2, typename Func2>
 inline Vec1 apply2_vec_by_vec

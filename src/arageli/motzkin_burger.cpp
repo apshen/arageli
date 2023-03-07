@@ -53,11 +53,6 @@ const int mm_no_modification  = 0;
 const int mm_min_modification = 1;
 const int mm_max_modification = 2;
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4715)
-#endif
-
 template
 <
     typename A,
@@ -135,10 +130,6 @@ private:
     index n, m, r, current_ost, current_column;
 };
 
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 /*    Finds diagonal shape of matrix a through elementary elementary transformation,
     strores in q, after call q = f*transpose(a). */

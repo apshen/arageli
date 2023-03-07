@@ -146,11 +146,6 @@ void cartesian2d_chart_select_grid
 
 } // namespace _Internal
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4288)
-#endif
-
 template <typename Out, typename Lines>
 void output_pstricks_cartesian2d
 (
@@ -418,11 +413,6 @@ void output_pstricks_cartesian2d
         out << "\n";
     }
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
-
 
 }
 

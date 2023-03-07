@@ -129,12 +129,6 @@ typename SS::size_type sturm_sign_changes (const SS& ss, const T& x, int signpx)
     return changes;
 }
 
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4715)
-#endif
-
 template <typename SS, typename Seg>
 typename SS::size_type sturm_number_roots (const SS& ss, const Seg& seg)
 {
@@ -163,10 +157,6 @@ typename SS::size_type sturm_number_roots (const SS& ss, const Seg& seg)
     }
 }
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
-
 template <typename SS, typename SegT, bool SegREFCNT>
 vector<typename SS::size_type> sturm_number_roots
 (
@@ -179,12 +169,6 @@ vector<typename SS::size_type> sturm_number_roots
         res[i] = sturm_number_roots(ss, lims[i]);
     return res;
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4018)
-    #pragma warning (disable : 4288)
-#endif
 
 template <typename T, typename P, typename LIMS, typename SegBound>
 void sturm (const P& p, LIMS& lims, SegBound bs)
@@ -395,10 +379,6 @@ void sturm (const P& p, LIMS& lims, SegBound bs)
 
     ARAGELI_ASSERT_2(is_unit(sturm_number_roots(ss, lims)));
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 template <typename P, typename Lims>
 bool interval_root_dichotomy (const P& p, int lsign, Lims& lims)

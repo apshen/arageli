@@ -572,11 +572,6 @@ struct Comppars
 
 } // namespace _Internal
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4715)
-#endif
-
 /// Generates natural number x <= max with equiprobable outcome.
 /** Set cannot be empty. If the cardinality of the base generator is less
     than the target cardinality, current implementation cannot guarantee that
@@ -733,16 +728,6 @@ private:
             relation = BASE_LESS;
     }
 };
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
-
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4715)
-#endif
 
 /// Generates integer number 0 <= x <= max with equiprobable outcome.
 /** Set cannot be empty. If the cardinality of the base generator is less
@@ -904,10 +889,6 @@ private:
     }
 };
 
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 /// Generates integer number 0 <= x <= max with equiprobable outcome.
 /** Parameters of the set from which the numbers are generated are set

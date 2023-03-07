@@ -98,11 +98,6 @@ namespace Arageli
 namespace rnd
 {
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4724)
-#endif
-
 template <class Int, Int M, bool Z>
 struct modulo
 {
@@ -190,10 +185,6 @@ private:
 
     mutable Int x;
 };
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 // ---------------------------------------------------------------------------
 

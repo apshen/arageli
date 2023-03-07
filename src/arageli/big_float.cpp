@@ -166,11 +166,6 @@ namespace Arageli
 {
 
 
-// here: conversion from long double to size_t,
-// possible loss of data
-#pragma warning(disable : 4244)
-
-
 //a-la bigarith
 void big_float_warning ( const char *s )
 {

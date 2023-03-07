@@ -72,11 +72,6 @@ void generate_range_helper (T1& t1, const T2& t2, Outiter outiter)
     *outiter = t1;
 }
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4804)
-#endif
-
 template <typename T1, typename T2, typename T3, typename Outiter>
 void generate_range_helper (T1& t1, const T2& t2, const T3& t3, Outiter outiter)
 {
@@ -101,10 +96,6 @@ void generate_range_helper_wo_inc (T1& t1, const T2& t2, Outiter outiter)
     *outiter = t1;
 }
 
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 template <typename Outiter>
 inline void generate_range_helper (bool& t1, bool t2, Outiter outiter)

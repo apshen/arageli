@@ -59,8 +59,6 @@
 
 #undef NAN
 
-#pragma warning ( disable : 4018 )
-
 namespace Arageli
 {
 

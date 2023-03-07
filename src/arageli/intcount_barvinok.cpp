@@ -181,11 +181,6 @@ private:
 // +++++++ Original implementation part ++++++++
 
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4018)
-#endif
-
 template <typename VT, typename T>
 bool add_one (VT& koeff, T max)
 {
@@ -232,10 +227,6 @@ bool add_one (VT& koeff, T max)
     return true;
 }
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
-
 template <typename T, typename R, typename VT, typename VR, typename MR>
 bool enumeration_step(VR &lyambda,const MR& a)
 {
@@ -274,11 +265,6 @@ bool enumeration_step(VR &lyambda,const MR& a)
     return false;
 }
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4018)
-#endif
-
 template <typename T1, typename T2>
 T1 C_n_k(const T1 n, const T2 k)
 {
@@ -297,10 +283,6 @@ T1 C_n_k(const T1 n, const T2 k)
         return num/den;
     }
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 template <typename T, typename R, typename MT, typename VT, typename VR>
 UniCone<T, R, MT, VT, VR>::UniCone(const MT& a,VR& v, int s) :
@@ -958,11 +940,6 @@ int Polytope<T, R, MT, VT, VR>::GetSupportCones(std::list<Cone<T, R, MT, VT, VR>
 }
 
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4288)
-#endif
-
 //return count lattice points in bodily polyhedron
 template <typename T, typename R, typename MT, typename VT, typename VR>
 R Polytope<T, R, MT, VT, VR>::barvinok_algorithm(bool points)
@@ -1170,10 +1147,6 @@ R Polytope<T, R, MT, VT, VR>::barvinok_algorithm(bool points)
 
     return value;
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 }
 

@@ -146,11 +146,6 @@ void vector<T, REFCNT>::do_pack ()
 }
 
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4018)
-#endif
-
 template <typename T, bool REFCNT>
 template <typename SV, typename V>
 V& vector<T, REFCNT>::copy_subvector (const SV& sv, V& res) const
@@ -173,10 +168,6 @@ V& vector<T, REFCNT>::copy_subvector (const SV& sv, V& res) const
 
     return res;
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 template <typename T, bool REFCNT>
 template <typename SV>

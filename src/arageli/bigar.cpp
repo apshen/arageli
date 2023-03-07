@@ -134,12 +134,6 @@ std::size_t do_bdn_to_big_int (digit* a, digit* b, std::size_t n, digit bdn_radi
 }
 
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4244)
-#endif
-
-
 std::size_t do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
 {
     // m - length of p1
@@ -180,11 +174,6 @@ std::size_t do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
     else
         return m;
 }
-
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 
 int do_sub (digit* p1, const digit* p2, std::size_t m, std::size_t n)

@@ -43,11 +43,6 @@
 
 using namespace Arageli;
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4244)
-#endif
-
 bool vector_swap_test(int param, int count)
 {
     bool fail=false;
@@ -142,10 +137,6 @@ bool vector_swap_test(int param, int count)
     }
     return false;
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 TEST(vector,swap,"Test swap functions.")
 {

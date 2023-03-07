@@ -52,11 +52,6 @@ const _Internal::digit p1_inv = 2454267021ul;
 const _Internal::digit p2_inv = 429496727ul;
 const _Internal::digit p3_inv = 1527099480ul;
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4244)
-#endif
-
 // Barrett reduction function return reduction of x modulo p
 // here n = 4^{k+1}, where k --- number of bits for p number representation
 template<_Internal::digit p, _Internal::digit p_inv, int n>
@@ -68,10 +63,6 @@ unsigned long barrett_reduction(unsigned long long x)
     while(res >= p) res -= p;
     return res;
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 // TODO: old code --- should be deleted!
 #ifdef TEMPL
@@ -139,11 +130,6 @@ private:
 
     typedef typename doubled_type<ET>::d_value doubled_value;
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4244)
-#endif
-
     /// Find primitive root of 2^k_Max power.
     void alpha_determination(const MT p, const MT root)
     {
@@ -180,10 +166,6 @@ private:
         }
         */
     };
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
     /// Compute need powers of alpha.
     void alpha_power_computation(const MT p)

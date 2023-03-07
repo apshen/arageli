@@ -692,11 +692,6 @@ public:
     }
 
 
-    #ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-        #pragma warning (push)
-        #pragma warning (disable : 4800)
-    #endif
-
     /// Returns true if odd, false if even
     bool is_odd () const
     {
@@ -705,11 +700,6 @@ public:
         else
             return operator[](0);
     }
-
-    #ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-        #pragma warning (pop)
-    #endif
-
 
     /// Swaps two numbers.
     void swap (big_int& x)
@@ -1117,13 +1107,6 @@ _ARAGELI_big_int_COMBINED_OPER(%)
     _ARAGELI_big_int_MIXED_BOPER1(long double, BOPER)
 
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4804)
-    #pragma warning (disable : 4800)
-#endif
-
-
 _ARAGELI_big_int_MIXED_INT_AOPER2(+=)
 _ARAGELI_big_int_MIXED_INT_AOPER2(-=)
 _ARAGELI_big_int_MIXED_INT_AOPER2(*=)
@@ -1138,10 +1121,6 @@ _ARAGELI_big_int_MIXED_INT_AOPER2(%=)
 
 //_ARAGELI_big_int_MIXED_INT_AOPER2(<<=)
 //_ARAGELI_big_int_MIXED_INT_AOPER2(>>=)
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 _ARAGELI_big_int_MIXED_INT_BOPER2(+)
 _ARAGELI_big_int_MIXED_INT_BOPER2(-)

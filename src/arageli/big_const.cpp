@@ -40,10 +40,6 @@
 #include "big_const.hpp"
 
 
-#pragma warning(disable : 4244)     // here: conversion from long double to size_t,
-                                    // possible loss of data
-
-
 namespace Arageli
 {
 

@@ -74,18 +74,6 @@ template <> struct Unsigned<signed char> { typedef unsigned char Type; };
 }
 
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4146)
-    #pragma warning (disable : 4244)
-    #pragma warning (disable : 4804)
-    #pragma warning (disable : 4800)
-    #pragma warning (disable : 4806)
-    #pragma warning (disable : 4305)
-    #pragma warning (disable : 4293)
-#endif
-
-
 template <typename T>
 void big_int::from_native_int_helper (const T &x, true_type)
 {
@@ -346,11 +334,6 @@ T big_int::to_native_float () const
         return res;
     }
 }
-
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 
 template <typename Stream>
@@ -964,11 +947,6 @@ int cmp (const big_int & a, const big_int & b)
 /*                         */
 /***************************/
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4800)
-#endif
-
 digit random_digit ()
 {
     if(_Internal::max_digit <= RAND_MAX)return std::rand();
@@ -984,11 +962,6 @@ digit random_digit ()
                                             // placed to higher bits of the result.
     return res;
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
-
 
 big_int big_int::random_in_range (const big_int& max)
 {
@@ -1448,23 +1421,12 @@ std::size_t big_int::length () const
 }
 
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4800)
-#endif
-
 bool big_int::operator[] (std::size_t k) const
 {
     ARAGELI_ASSERT_0(k < length());
     return (number->data[k / _Internal::bits_per_digit] >>
         (k % _Internal::bits_per_digit)) % 2;
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
-
-
 
 big_int operator<< (const big_int& a, std::size_t n)
 {

@@ -48,11 +48,6 @@
 namespace Arageli
 {
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4018)
-#endif
-
 template
 <
     typename Q,
@@ -173,10 +168,6 @@ void triangulate_simple_1
 
     ctrler.conclusion(q, tr);
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 }
 

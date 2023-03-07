@@ -210,14 +210,4 @@
     #include "auto_link.hpp"
 #endif
 
-
-// Be careful! The next pragmas disables some warnings for the whole library
-// and for all code that uses the library.
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (disable : 4996)
-    #pragma warning (disable : 4800)
-    #pragma warning (disable : 4244)
-#endif
-
-
 #endif  //  #ifndef _ARAGELI_config_hpp_

@@ -1144,11 +1144,6 @@ M& matrix<T, REFCNT>::copy_rows (const SV& sv, M& res) const
 }
 
 
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (push)
-    #pragma warning (disable : 4018)
-#endif
-
 template <typename T, bool REFCNT>
 template <typename SV>
 void matrix<T, REFCNT>::erase_rows (const SV& sv)
@@ -1208,10 +1203,6 @@ void matrix<T, REFCNT>::erase_rows (const SV& sv)
     ARAGELI_ASSERT_1(mem().size()%nc == 0);
     rep().rows = mem().size()/nc;
 }
-
-#ifdef ARAGELI_DISABLE_PARTICULAR_COMPILER_WARNINGS
-    #pragma warning (pop)
-#endif
 
 template <typename T, bool REFCNT>
 template <typename SV, typename M>
