@@ -36,7 +36,9 @@
 */
 
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "io_simple_binary.hpp"
 
 using namespace Arageli;
 

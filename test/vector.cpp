@@ -35,9 +35,15 @@
 // Description : Test of all member functions of class rational.
 //        Be used: all functions from vector.hpp and universal.hpp.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "universal.hpp"
+#include "vector.hpp"
 
 typedef void* (*Generate)(int arg);
+
+using namespace Arageli;
 
 #define VECTOR_CASE_COUNT 14
 

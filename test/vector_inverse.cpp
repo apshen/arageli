@@ -35,7 +35,11 @@
 // Description : Test of inverse().
 //        Be used: inverse, vector_bitwise_not, vector_logical_not.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "universal.hpp"
+#include "vector.hpp"
 
 using namespace Arageli;
 

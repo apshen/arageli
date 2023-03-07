@@ -38,9 +38,6 @@
 #define __ta_matrix_ops_hpp__
 
 
-#include "stdafx.hpp"
-
-
 using namespace Arageli;
 
 /// Create matrix in \f$T^{n \times m}\f$ with random elements not grater than max

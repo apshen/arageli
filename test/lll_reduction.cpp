@@ -27,10 +27,9 @@
 
 *****************************************************************************/
 
-//#include "matrix_ops.cpp"
-#include "stdafx.hpp"
-
-#pragma warning(disable : 4244)
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "matrix_ops.hpp"
 
 
 using namespace Arageli;

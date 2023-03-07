@@ -35,7 +35,10 @@
 // Description : Test of is_null().
 //        Be used: vector_is_null, vector_is_empty, vector_size.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "vector.hpp"
 
 using namespace Arageli;
 

@@ -35,7 +35,11 @@
 // Description : Test of +, - operations(unary and binary).
 //        Be used: rational_plus_minus, plus_minus.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "universal.hpp"
+#include "rational.hpp"
 
 using namespace Arageli;
 

@@ -34,7 +34,9 @@
 // Testing date: 12.02.2006
 // Description :
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
 
 using namespace Arageli;
 

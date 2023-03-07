@@ -39,7 +39,8 @@
 #ifndef _ARAGELI_TEST__pattern_hpp_
 #define _ARAGELI_TEST__pattern_hpp_
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 
 // PLACE ALL DECLARATIONS AND INLINE IMPLEMENTATIONS HERE

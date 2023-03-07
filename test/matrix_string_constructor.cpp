@@ -36,7 +36,9 @@
 // Description : Test for function matrix(const char* m)
 // Using functions :
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
 
 using namespace Arageli;
 

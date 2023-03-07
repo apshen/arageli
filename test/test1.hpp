@@ -30,8 +30,6 @@
 #ifndef _ARAGELI_test1_hpp_
 #define _ARAGELI_test1_hpp_
 
-#include "stdafx.hpp"
-
 //****************************************************************************
 
 int test3 ();    // see test3.cpp

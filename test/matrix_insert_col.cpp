@@ -41,7 +41,8 @@
 // Using functions : insert_col(),erase_col(),copy_col(),ncols()
 // Errors : test shows no errors
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 using namespace Arageli;
 

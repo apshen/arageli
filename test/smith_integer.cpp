@@ -36,8 +36,8 @@
 */
 
 
-#include "stdafx.hpp"
-#include "matrix_ops.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 using namespace Arageli;
 

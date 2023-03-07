@@ -26,9 +26,9 @@
 
 *****************************************************************************/
 
-#include "stdafx.hpp"
-
-#pragma warning (disable : 4503)
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "test1.hpp"
 
 
 using namespace Arageli;

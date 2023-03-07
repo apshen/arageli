@@ -36,7 +36,10 @@
 */
 
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include <arageli/random.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
 
 
 using namespace Arageli;

@@ -28,7 +28,8 @@
 
 *****************************************************************************/
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 
 TEST_FUNCTION(rho_pollard, "Test rho_pollard function")

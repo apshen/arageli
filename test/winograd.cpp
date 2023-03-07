@@ -35,8 +35,10 @@
 */
 
 
-#include "stdafx.hpp"
-#include "arageli/winograd.hpp"
+#include <arageli/arageli.hpp>
+#include <arageli/winograd.hpp>
+#include "test_common.hpp"
+
 using namespace Arageli;
 
 

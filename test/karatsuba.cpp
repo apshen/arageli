@@ -35,7 +35,8 @@
     by karatsuba method and compare result with trivial algorithm.
 */
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 using namespace Arageli;
 

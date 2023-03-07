@@ -35,9 +35,11 @@
 // Description : Test compare functions: >, <, ==, !=, >=, <=, cmp.
 //        Be used: compares.
 
-//#include "universal.hpp"
-//#include "rational.hpp"
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "universal.hpp"
+#include "rational.hpp"
 
 using namespace Arageli;
 

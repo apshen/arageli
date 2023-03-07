@@ -27,7 +27,8 @@
 
 *****************************************************************************/
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 TEST_FUNCTION(find_small_primes, "Test find_small_primes fuction.")
 {

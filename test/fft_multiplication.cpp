@@ -32,9 +32,8 @@
     \brief Test for FFT multiplication.
 */
 
-#include "stdafx.hpp"
-//#define PRINT_OUTPUTS
-//#define CHECK_TIME
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 using namespace Arageli;
 

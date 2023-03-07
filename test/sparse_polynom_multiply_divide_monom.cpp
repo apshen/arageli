@@ -38,7 +38,9 @@
 //1)Неизвестный символ D1
 //--Падение теста адекватно
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
 
 using namespace Arageli;
 

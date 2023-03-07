@@ -41,7 +41,9 @@
 // of template testing function
 // Errors : tets shows no errors
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
 
 using namespace Arageli;
 

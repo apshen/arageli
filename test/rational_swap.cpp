@@ -35,7 +35,11 @@
 // Description : Test of swap(...).
 //        Be used: rational_swap.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "universal.hpp"
+#include "rational.hpp"
+#include "rand.hpp"
 
 using namespace Arageli;
 

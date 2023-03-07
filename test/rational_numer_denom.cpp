@@ -35,7 +35,10 @@
 // Description : Test of numerator(), denominator().
 //        Be used: rational_numerator_denominator.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "rational.hpp"
 
 using namespace Arageli;
 

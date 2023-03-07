@@ -36,7 +36,8 @@
 */
 
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 using namespace Arageli;
 

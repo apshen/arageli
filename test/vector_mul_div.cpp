@@ -35,7 +35,11 @@
 // Description : Test of *, / operations.
 //        Be used: mul_div, vector_scalar_mul_div, vector_shlr.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "universal.hpp"
+#include "vector.hpp"
 
 using namespace Arageli;
 

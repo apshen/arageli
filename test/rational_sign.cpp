@@ -35,7 +35,10 @@
 // Description : Test of sign().
 //        Be used: sign.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "universal.hpp"
 
 using namespace Arageli;
 

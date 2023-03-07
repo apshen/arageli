@@ -43,9 +43,8 @@
 // of template testing function
 
 
-#include "stdafx.hpp"
-//#include "arageli/arageli.hpp"
-//#include "ts/ts.h"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 using namespace Arageli;
 

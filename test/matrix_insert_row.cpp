@@ -40,7 +40,9 @@
 // Using functions : insert_row(),erase_row(),copy_row(),nrows()
 // Errors :
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
 
 using namespace Arageli;
 

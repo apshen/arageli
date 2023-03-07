@@ -36,7 +36,10 @@
 //        Be used: rational_ifloor_iceil_frac.
 
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "rational.hpp"
 
 using namespace Arageli;
 

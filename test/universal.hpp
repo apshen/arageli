@@ -37,7 +37,7 @@
 #ifndef universalH
 #define universalH
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
 
 using namespace Arageli;
 

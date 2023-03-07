@@ -36,7 +36,11 @@
 //        Be used: rational_zero_constructor, copy_constructor, rational_constructor,
 //                 copy, rational_copy, rational_operator_double_bool.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "universal.hpp"
+#include "rational.hpp"
 
 using namespace Arageli;
 

@@ -26,7 +26,8 @@
 
 *****************************************************************************/
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 // WARNING! THIS FILE TEMPORARY IS TURNED OFF FROM THE COMPILATION DUE
 // TO TOO MANY ERRORS WITH UNINVESTIGATED CAUSE.

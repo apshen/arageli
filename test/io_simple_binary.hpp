@@ -38,7 +38,7 @@
 #ifndef _ARAGELI_TEST_io_simple_binary_hpp_
 #define _ARAGELI_TEST_io_simple_binary_hpp_
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
 
 
 template <typename T>

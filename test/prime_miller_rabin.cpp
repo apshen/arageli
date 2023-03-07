@@ -27,7 +27,8 @@
 
 *****************************************************************************/
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 
 TEST_FUNCTION(is_pseudoprime_miller_rabin, "Test is_pseudoprime_miller_rabin function")

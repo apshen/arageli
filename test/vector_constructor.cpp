@@ -35,7 +35,11 @@
 // Description : Test of constructors, operator=, type cast.
 //        Be used: copy_constructor, copy, vector_resize.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "universal.hpp"
+#include "vector.hpp"
 
 using namespace Arageli;
 

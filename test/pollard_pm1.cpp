@@ -28,7 +28,8 @@
 
 *****************************************************************************/
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
 
 
 TEST_FUNCTION(pollard_pm1, "Test pollard_pm1 algorithm.")

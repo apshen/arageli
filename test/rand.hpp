@@ -37,8 +37,6 @@
 #ifndef RandH
 #define RandH
 
-#include "stdafx.hpp"
-
 #define ARAGELI_TESTSYS_RAND_COUNT 100
 #define ARAGELI_TESTSYS_RAND_A 8193//5
 #define ARAGELI_TESTSYS_RAND_C 4097//49

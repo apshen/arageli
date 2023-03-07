@@ -35,7 +35,10 @@
 // Description : Test of is_unit.
 //        Be used: vector_is_unit.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "vector.hpp"
 
 using namespace Arageli;
 

@@ -39,8 +39,6 @@
 #ifndef _ARAGELI_tests_ta_ring_hpp_
 #define _ARAGELI_tests_ta_ring_hpp_
 
-#include "stdafx.hpp"
-
 using namespace Arageli;
 
 

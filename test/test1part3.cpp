@@ -26,7 +26,9 @@
 
 *****************************************************************************/
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "test1.hpp"
 
 #define _ARAGELI_TEST_VECTOR_SWAP_BUG
 

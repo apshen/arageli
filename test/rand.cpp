@@ -34,7 +34,7 @@
 // Testing date:
 // Description : Code of random number generation class.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
 #include "rand.hpp"
 
 int RNG::ShortRand()

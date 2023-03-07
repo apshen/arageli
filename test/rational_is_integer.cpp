@@ -35,7 +35,10 @@
 // Description : Test of is_integer().
 //        Be used: rational_is_integer.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "rational.hpp"
 
 using namespace Arageli;
 

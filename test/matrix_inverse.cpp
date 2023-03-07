@@ -47,7 +47,9 @@
 // Attention : first uncomment the need strings of generation examples and specification
 // of template testing function
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
 
 using namespace Arageli;
 

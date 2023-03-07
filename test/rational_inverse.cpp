@@ -35,7 +35,10 @@
 // Description : Test of inverse().
 //        Be used: inverse.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "universal.hpp"
 
 using namespace Arageli;
 

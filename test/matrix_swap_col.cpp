@@ -38,7 +38,9 @@
 // Midified : Sergey S. Lyalin, 27.02.2006
 
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
 
 using namespace Arageli;
 

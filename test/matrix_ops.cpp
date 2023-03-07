@@ -28,7 +28,7 @@
 
 *****************************************************************************/
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
 
 
 /* End of file matrix_ops.cpp */

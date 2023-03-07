@@ -35,7 +35,12 @@
 // Description : Test of +, - operations(unary and binary).
 //        Be used: plus_minus, vector_plus_minus, vector_scalar_plus_minus.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "universal.hpp"
+#include "vector.hpp"
+
 
 using namespace Arageli;
 

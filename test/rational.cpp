@@ -35,7 +35,13 @@
 // Description : Test of all member functions of class rational.
 //        Be used: all functions from rational.hpp and universal.hpp.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "rational.hpp"
+#include "universal.hpp"
+#include "test_common.hpp"
+#include "rand.hpp"
+
+using Arageli::big_int;
 
 typedef void* (*Generate)(big_int arg);
 

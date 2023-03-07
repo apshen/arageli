@@ -37,7 +37,7 @@
 #ifndef vectorH
 #define vectorH
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
 
 using namespace Arageli;
 

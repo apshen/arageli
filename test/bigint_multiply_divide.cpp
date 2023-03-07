@@ -42,7 +42,9 @@
 
 // Sergey S. Lyalin: I think it's not a test, it's a piss poor.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
 
 
 using namespace Arageli;

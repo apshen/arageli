@@ -36,7 +36,9 @@
 // Using functions : swap_rows(),copy_row(),insert_row(),erase_row(),nrows()
 
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
 
 using namespace Arageli;
 

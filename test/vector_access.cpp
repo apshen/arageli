@@ -35,7 +35,10 @@
 // Description : Test of [], (...), el, at, insert, push, erase functions.
 //        Be used: vector_access, vector_set_get.
 
-#include "stdafx.hpp"
+#include <arageli/arageli.hpp>
+#include "test_common.hpp"
+#include "rand.hpp"
+#include "vector.hpp"
 
 using namespace Arageli;
 
