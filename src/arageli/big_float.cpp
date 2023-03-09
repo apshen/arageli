@@ -47,6 +47,7 @@
 
 #include <cmath>
 #include "big_float.hpp"
+#include "intalg.hpp"
 #include "_utility.hpp"
 
 
@@ -1387,7 +1388,7 @@ big_float fsqrt(const big_float & bf, long prec, int mode)
         res.s = res.s << (-l) + 2;
         res.e = res.e + l - 2;
     }
-    res.s = sqrt ( res.s );
+    res.s = intsqrt ( res.s );
     res.e = res.e >> 1;
     res.normalize_1 ( prec, mode );//error may be if mode == TO_INF
 
