@@ -327,8 +327,8 @@ In& input_list
     _Internal::turn_off_comma_as_separator<In> _tocas(in);
     if
     (
-        separator && separator[0] == ',' ||    // WARNING! Explicit ','
-        second_bracket && second_bracket[0] == ','    // WARNING! Explicit ','
+        (separator && separator[0] == ',') ||    // WARNING! Explicit ','
+        (second_bracket && second_bracket[0] == ',')    // WARNING! Explicit ','
     )
         _tocas.activate();
 

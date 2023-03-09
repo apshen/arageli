@@ -61,8 +61,8 @@ public:
         const value_type& value_a,
         const counter_type& refs_a = counter_type(1)
     ) :
-        value_m(value_a),
-        refs_m(refs_a)
+        refs_m(refs_a),
+        value_m(value_a)
     {}
 
     value_type& value ()

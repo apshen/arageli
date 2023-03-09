@@ -40,9 +40,9 @@ namespace Arageli
 
 
 timer::timer (bool turn_on) :
-    turn_on_m(false),
     duration(0),
-    absprec(0)
+    absprec(0),
+    turn_on_m(false)
 {
     first_calibrate();
     if(turn_on)

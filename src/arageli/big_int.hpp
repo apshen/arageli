@@ -1054,6 +1054,19 @@ _ARAGELI_big_int_COMBINED_OPER(%)
     _ARAGELI_big_int_MIXED_AOPER1(unsigned __int64, AOPER)    \
     _ARAGELI_big_int_MIXED_AOPER1(bool, AOPER)
 
+#define _ARAGELI_big_int_MIXED_INT_AOPER2(AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(char, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(signed char, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(unsigned char, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(signed short, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(unsigned short, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(signed int, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(unsigned int, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(signed long, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(unsigned long, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(signed __int64, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(unsigned __int64, AOPER)
+
 #define _ARAGELI_big_int_MIXED_INT_BOPER2(BOPER)    \
     _ARAGELI_big_int_MIXED_BOPER1(char, BOPER)    \
     _ARAGELI_big_int_MIXED_BOPER1(signed char, BOPER)    \
@@ -1082,6 +1095,17 @@ _ARAGELI_big_int_COMBINED_OPER(%)
     _ARAGELI_big_int_MIXED_AOPER1(unsigned long, AOPER)    \
     _ARAGELI_big_int_MIXED_AOPER1(bool, AOPER)
 
+#define _ARAGELI_big_int_MIXED_INT_AOPER2_WO_BOOL(AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(char, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(signed char, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(unsigned char, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(signed short, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(unsigned short, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(signed int, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(unsigned int, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(signed long, AOPER)    \
+    _ARAGELI_big_int_MIXED_AOPER1(unsigned long, AOPER)
+
 #define _ARAGELI_big_int_MIXED_INT_BOPER2(BOPER)    \
     _ARAGELI_big_int_MIXED_BOPER1(char, BOPER)    \
     _ARAGELI_big_int_MIXED_BOPER1(signed char, BOPER)    \
@@ -1109,7 +1133,7 @@ _ARAGELI_big_int_COMBINED_OPER(%)
 
 _ARAGELI_big_int_MIXED_INT_AOPER2(+=)
 _ARAGELI_big_int_MIXED_INT_AOPER2(-=)
-_ARAGELI_big_int_MIXED_INT_AOPER2(*=)
+_ARAGELI_big_int_MIXED_INT_AOPER2_WO_BOOL(*=)
 _ARAGELI_big_int_MIXED_INT_AOPER2(/=)
 
 _ARAGELI_big_int_MIXED_FLOAT_AOPER2(+=)

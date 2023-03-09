@@ -1415,7 +1415,7 @@ std::istream& input_list
 
     typedef std::list<vector<T, true> > Buf;    // temporary buffer for rows
     Buf buf;
-    std::size_t cols;
+    std::size_t cols = 0;
 
     do
     {

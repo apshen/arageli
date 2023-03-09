@@ -105,7 +105,7 @@ big_int frac ( const big_int &de, std::size_t kbits)
 
     if ( L < 0 )
         L = L + pow2<big_int> ( len + kbits + 1 - SPARE ) - 2;
-    L = L >> len - SPARE + 4;
+    L = L >> (len - SPARE + 4);
 
     //assumption that k>=56
     kbits -= 3 ;
@@ -123,7 +123,7 @@ big_int frac ( const big_int &de, std::size_t kbits)
         s = s + a;
         counter++;
     }
-    return ( s >> n + 1 ) + 1;
+    return ( s >> (n + 1) ) + 1;
 }
 
 /// Returns  lg (b)
@@ -178,11 +178,11 @@ big_int entier_1 ( const big_int &be )
     {
         L = ( L << ( kbits * 2 + 2) ) / (( three << kbits )+ log2_10_o ( kbits - 1 )) ;
         kbits += SPARE;
-    } while ( ( ( L + 2 ) >>  kbits + 1 )  != ( L >>  kbits + 1 ) );
+    } while ( ( ( L + 2 ) >>  (kbits + 1) )  != ( L >>  (kbits + 1) ) );
 
     if ( s )
-        return - ( L >>  kbits - SPARE + 2 ) - 1;
-    return L >> kbits - SPARE + 2;
+        return - ( L >>  (kbits - SPARE + 2) ) - 1;
+    return L >> (kbits - SPARE + 2);
 }
 
 /// Returns 10 ^ {de/log2_10} with kbits - 1  precision
@@ -198,7 +198,7 @@ big_int frac_1 ( const big_int &de, std::size_t kbits)
     do
     {
         L = de * lg_2_u( l );       // L ~ de * lg2 with prec + 1 precision de * lg2  = L / 2 ^ (l + 1)
-        L = L - ( (L >> l + 1) << l + 1); //{ de * lg2 } ~ L / 2 ^ ( l + 1 )
+        L = L - ( (L >> (l + 1)) << (l + 1)); //{ de * lg2 } ~ L / 2 ^ ( l + 1 )
         if ( L < 0 ) L = L + pow2<big_int> ( l + 1 ) - 2 ; //{ -x } = 1 - { x }
         l += SPARE;
     } while ( (L +  pow2<big_int> ( de.length() + 1 ) ).length() > l);

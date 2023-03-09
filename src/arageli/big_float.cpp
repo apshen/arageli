@@ -144,7 +144,7 @@ T big_float::to_native_float () const
     ARAGELI_ASSERT_0(p && "the heap overflow");
 
     std::memmove( p, temp.number->data, digits_need * sizeof (_Internal::digit));
-    p [digits_need - 1] /*&= ~(_Internal::digit(1) << tlen %_Internal::bits_per_digit - 1)*/;
+    /* p [digits_need - 1] &= ~(_Internal::digit(1) << tlen %_Internal::bits_per_digit - 1)*/;
     T ret = s.sign() * ldexp (*((T*)p), e + (shift + Nl::max_exponent + Nl::digits - 3));
     delete [] p;
     return ret;
@@ -303,7 +303,7 @@ big_float & big_float::operator = ( const big_int &b )
 }
 
 // Normalization for big_float number
-void big_float::normalize_1 ( long prec, long mode )
+void big_float::normalize_1 ( unsigned int prec, unsigned int mode )
 {
     this->prec = prec;
     this->mode = mode;
@@ -315,7 +315,7 @@ void big_float::normalize_1 ( long prec, long mode )
 
     int s_len = s.length() - prec;
 
-    if ( mode == EXACT && s.length() <= PREC_MAX ||  (!s_len)  )
+    if ( (mode == EXACT && s.length() <= PREC_MAX) ||  (!s_len)  )
         return;// do nothing - mantissa has apropriate length
     if ( s_len < 0  )
     {
@@ -338,8 +338,8 @@ void big_float::normalize_1 ( long prec, long mode )
     */
 
     int is_digit = 0; // needs then rounds to +-infinity
-    is_digit = ( (s >> s_len - 1) << s_len - 1 != s );
-    s = s >> s_len - 1;
+    is_digit = ( (s >> (s_len - 1)) << (s_len - 1) != s );
+    s = s >> (s_len - 1);
     e = e + s_len - 1;
 
     switch (mode)
@@ -365,7 +365,7 @@ void big_float::normalize_1 ( long prec, long mode )
                             if ( is_digit )
                                 s = ( s >> 1) + 1;
                             else
-                                s = s + 1 >> 1;
+                                s = (s + 1) >> 1;
                         }
                         e = e + 1;
 
@@ -383,7 +383,7 @@ void big_float::normalize_1 ( long prec, long mode )
                             if ( is_digit )
                                 s = ( s >> 1) - 1;
                             else
-                                s = s - 1 >> 1;
+                                s = (s - 1) >> 1;
                         }
                         e = e + 1;
 
@@ -1115,7 +1115,7 @@ void big_float :: out ( std::ostream & os, char c  ) const
                             os.fill ( '0' );
                             os << "0";
                         }
-                        if (temp_str.length() <= os.precision() + position )
+                        if (temp_str.length() <= size_t(os.precision() + position))
                             position--, os << "0";
                     }
 
@@ -1492,8 +1492,8 @@ std::istream & operator >> ( std::istream &is, big_float::special_numbers &sn )
 }
 #endif
 
-long big_float::global_prec = 350; //bits precision
-long big_float::global_mode = TO_NEAREST; //rounding mode
+unsigned big_float::global_prec = 350; //bits precision
+unsigned big_float::global_mode = TO_NEAREST; //rounding mode
 
 }
 #endif

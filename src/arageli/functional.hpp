@@ -56,28 +56,6 @@
 namespace Arageli
 {
 
-//#define _ARAGELI_RIGHT_ASSIGN(MNEM, OPER)    \
-//    template <typename T1, typename T2>    \
-//    inline T2& left_assign_##MNEM (const T1& x, T2& y)    \
-//    { return y = x OPER y; }
-//
-///// @name Operation with assignment to the right argument.
-//// @{
-//
-//_ARAGELI_RIGHT_ASSIGN(plus, +);
-//_ARAGELI_RIGHT_ASSIGN(minus, -);
-//_ARAGELI_RIGHT_ASSIGN(multiplies, *);
-//_ARAGELI_RIGHT_ASSIGN(divides, /);
-//_ARAGELI_RIGHT_ASSIGN(modulus, %);
-//_ARAGELI_RIGHT_ASSIGN(bitwise_or, |);
-//_ARAGELI_RIGHT_ASSIGN(bitwise_and, &);
-//_ARAGELI_RIGHT_ASSIGN(bitwise_xor, ^);
-//_ARAGELI_RIGHT_ASSIGN(shift_left, <<);
-//_ARAGELI_RIGHT_ASSIGN(shift_right, >>);
-//
-//// @}
-
-
 ///// @name Standard operators with one additional argument as result reference.
 //// @{
 //

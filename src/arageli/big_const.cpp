@@ -99,7 +99,7 @@ big_int ln2 ( std::size_t kbits )//calculate ln(2)
         counter++;
     }
 
-    return (s >> pos - 1) + 1 ;//don't forget to multiply by two
+    return (s >> (pos - 1)) + 1 ;//don't forget to multiply by two
 }
 
 big_int ln2_u ( std::size_t kbits )//calculate ln(2) with underflow
@@ -222,7 +222,7 @@ big_int exp_2 ( big_int arg, std::size_t kbits, int factor)
         s = s + a;
         counter++;
     }
-    return (s >> n + 1)  +  1;
+    return (s >> (n + 1))  +  1;
 }
 
 

@@ -148,10 +148,13 @@ T euclid (T a, T b, const T_factory& tfctr)
         opposite(&b);
 
     if(is_null(a))
+    {
         if(is_null(b))
             return tfctr.unit(a);
         else
             return _Internal::euclid_norm(b);
+    }
+
     if(is_null(b))
         return _Internal::euclid_norm(a);
 
@@ -172,10 +175,13 @@ T euclid_binary (T a, T b, const T_factory& tfctr)
         opposite(&b);
 
     if(is_null(a))
+    {
         if(is_null(b))
             return tfctr.unit(a);
         else
             return _Internal::euclid_norm(b);
+    }
+
     if(is_null(b))
         return _Internal::euclid_norm(a);
 

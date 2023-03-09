@@ -550,10 +550,12 @@ sparse_multipolynom<F, D, MD, Config> euclid
         opposite(&b);
 
     if(is_null(a))
+    {
         if(is_null(b))
             return tfctr.unit(a);
         else
             return _Internal::euclid_norm(b);
+    }
     if(is_null(b))
         return _Internal::euclid_norm(a);
 

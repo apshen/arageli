@@ -77,7 +77,6 @@ template <> struct Unsigned<signed char> { typedef unsigned char Type; };
 template <typename T>
 void big_int::from_native_int_helper (const T &x, true_type)
 {
-    typedef std::numeric_limits<T> Nl;
     _Internal::digit* mem = big_int::get_mem_for_data(1);
     try
     {
@@ -233,11 +232,10 @@ void big_int::from_native_float (const T& x)
 template <typename T>
 T big_int::to_native_int () const
 {
-    typedef std::numeric_limits<T> Nl;
-    ARAGELI_ASSERT_1(Nl::is_specialized);
-    ARAGELI_ASSERT_1(Nl::is_integer);
+    ARAGELI_ASSERT_1(std::numeric_limits<T>::is_specialized);
+    ARAGELI_ASSERT_1(std::numeric_limits<T>::is_integer);
 
-    ARAGELI_ASSERT_0(big_int(Nl::min()) <= *this && *this <= big_int(Nl::max()));
+    ARAGELI_ASSERT_0(big_int(std::numeric_limits<T>::min()) <= *this && *this <= big_int(std::numeric_limits<T>::max()));
 
     if(is_null())return factory<T>::null();
     else if(sign() < 0)
@@ -254,10 +252,9 @@ T big_int::to_native_int () const
 template <typename T>
 T big_int::to_native_int_without_sign () const
 {
-    typedef std::numeric_limits<T> Nl;
-    ARAGELI_ASSERT_1(Nl::is_specialized);
-    ARAGELI_ASSERT_1(Nl::is_integer);
-    ARAGELI_ASSERT_1(*this <= big_int(Nl::max()));
+    ARAGELI_ASSERT_1(std::numeric_limits<T>::is_specialized);
+    ARAGELI_ASSERT_1(std::numeric_limits<T>::is_integer);
+    ARAGELI_ASSERT_1(*this <= big_int(std::numeric_limits<T>::max()));
     ARAGELI_ASSERT_1(!is_null());
 
     T res = number->data[0];
@@ -552,6 +549,7 @@ digit* big_int::optimize (std::size_t& new_len, digit * p, std::size_t len)
     new_len = _Internal::do_optimize(p, len);
 
     if(new_len != len)
+    {
         if(new_len)
         {
             digit* new_p = get_mem_for_data(new_len);
@@ -564,6 +562,7 @@ digit* big_int::optimize (std::size_t& new_len, digit * p, std::size_t len)
             free_data(p);
             p = 0;
         }
+    }
 
     return p;
 }
@@ -1333,9 +1332,9 @@ std::istream& operator>> (std::istream& s, big_int& x)
     {
         if
         (
-            radix == 10 && isdigit(ch) ||
-            radix == 16 && isxdigit(ch) ||
-            radix == 8  && isdigit(ch) && ch < '8'
+            (radix == 10 && isdigit(ch)) ||
+            (radix == 16 && isxdigit(ch)) ||
+            (radix == 8  && isdigit(ch) && ch < '8')
         )
             buffer += ch;
         else

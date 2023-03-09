@@ -340,8 +340,8 @@ public:
         (!(NL1::is_signed && !NL2::is_signed)) &&
         (!(!NL1::is_integer && NL2::is_integer)) &&
         (
-            NL1::is_bounded && NL2::is_bounded && (NL1::digits <= NL2::digits) ||
-            NL1::is_bounded && !NL2::is_bounded
+            (NL1::is_bounded && NL2::is_bounded && NL1::digits <= NL2::digits) ||
+            (NL1::is_bounded && !NL2::is_bounded)
         );
 
     static const bool is_assignable = is_convertible;

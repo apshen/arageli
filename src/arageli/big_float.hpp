@@ -78,9 +78,9 @@ const int TO_M_INF = 6; ///< Rounds towards -infinity
 const int TO_INF = 7;   ///< Rounds outwards zero
 //@}
 
-const int PREC_MIN = 2;
-const unsigned long PREC_MAX = _Internal::max_digit;
-const unsigned long D_PREC_MAX =
+const long int PREC_MIN = 2;
+const long int PREC_MAX = _Internal::max_digit;
+const long int D_PREC_MAX =
     ( long ) (_Internal::max_digit * log ( 2.0l ) / log ( 10.0l ));
 
 
@@ -732,7 +732,7 @@ public:
 
 private:
 
-    void normalize_1 ( long prec = big_float::global_prec, long mode = big_float::global_mode );
+    void normalize_1 ( unsigned int prec = big_float::global_prec, unsigned int mode = big_float::global_mode );
 
     // the following type is used inside the big_float unit and implements
     // the storage for a Big Float Number
@@ -742,11 +742,11 @@ private:
     big_int e; ///< exponent
     big_int s; //< significant
 
-    long prec; ///< bits precision for this big_float number
-    long mode; ///< big_float rounding mode for this number
+    unsigned int prec; ///< bits precision for this big_float number
+    unsigned int mode; ///< big_float rounding mode for this number
 
-    static long global_prec; ///< Global bits precision for big_float numbers
-    static long global_mode; ///< Global big_float rounding mode
+    static unsigned int global_prec; ///< Global bits precision for big_float numbers
+    static unsigned int global_mode; ///< Global big_float rounding mode
 
 private:
 
