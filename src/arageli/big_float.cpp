@@ -189,18 +189,22 @@ void big_float_fatal_error(const char *s)
 */
 //default constructor
 big_float::big_float(void) :
+    special( FINITE ),
     prec( big_float::global_prec ),
     mode ( big_float::global_mode )
+
 {}
 
 //Sets prec to prec and mode to mode
 big_float::big_float ( long prec, long mode ) :
+    special( FINITE ),
     prec ( prec ),
     mode ( mode )
 {}
 
 //copy constructor
 big_float::big_float ( const big_float &b ) :
+    special( FINITE ),
     e(b.e),
     s(b.s),
     prec(b.prec),
@@ -209,6 +213,7 @@ big_float::big_float ( const big_float &b ) :
 
 //constructor (from string to big_float)
 big_float::big_float ( const char *str, long p ) :
+    special( FINITE ),
     prec (p),
     mode ( big_float::global_mode )
 {
@@ -219,6 +224,7 @@ big_float::big_float ( const char *str, long p ) :
 
 //constructor (from string to big_float)
 big_float::big_float ( const char *str ) :
+    special( FINITE ),
     mode ( big_float::global_mode )
 {
     //first evaluate significant digits (mantissa) and set appropriate precision
@@ -252,6 +258,7 @@ big_float::big_float ( const char *str ) :
 
 //constructor  ( from two big_int to big_float )
 big_float::big_float ( const big_int &s, const big_int &e, long mode ) :
+    special( FINITE ),
     e ( e ),
     s (s),
     mode ( mode )
@@ -262,7 +269,8 @@ big_float::big_float ( const big_int &s, const big_int &e, long mode ) :
 }
 
 //constructor from big_int
-big_float::big_float (const big_int& i)
+big_float::big_float (const big_int& i) :
+    special( FINITE )
 {
     s = big_int(i);
     ARAGELI_ASSERT_1(is_converted_to<long>(s.length()));
