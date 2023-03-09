@@ -51,8 +51,8 @@ int main()
 ```
 
 ```
-$ g++ -O2 hello_arageli.cpp -o hello_arageli -larageli
-$ ./hello_arageli.cpp
+g++ -O2 hello_arageli.cpp -o hello_arageli -larageli
+./hello_arageli
 ```
     
 
