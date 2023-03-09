@@ -71,7 +71,7 @@ target_compile_definitions(arageli PRIVATE
 )
 target_compile_options(arageli PRIVATE
     -O2
-    #-Wall
+    -Wall
 )
 
 # testarageli lib
@@ -83,7 +83,7 @@ target_compile_definitions(testarageli PRIVATE
 )
 target_compile_options(testarageli PRIVATE
     -g
-    #-Wall
+    -Wall
 )
 
 # perfarageli lib
@@ -97,7 +97,7 @@ target_compile_options(perfarageli PRIVATE
     -O3
     -pg
     -g
-    #-Wall
+    -Wall
 )
 
 # Doxygen
