@@ -55,13 +55,23 @@ class TreeReplacer:
         try:
             names = os.listdir(dir)
 #            print "%s is being processed." % dir
-        except os.error, err:
+        except os.error as err:
             sys.stderr.write("Can't list %s: %s\n" % (file, err))
             return
         names.sort()
         for name in names:
-            if name.startswith("tools"):
-                continue # Skip tools directory. Rewrite this condition.
+            if name.startswith("readme.txt"):
+                continue # Skip readme.txt as it is for Windows
+            if name.startswith("Doxyfile"):
+                continue
+            if name.startswith("Doxyfile_pattern"):
+                continue
+#            if name.startswith("tools"):
+#                continue # Skip tools directory. Rewrite this condition.
+            if name.endswith(".bat"):
+                continue # Skip Windows bat-files
+            if name.endswith(".in.txt"):
+                continue # Skip input text files for examples
             if name.endswith(".vcproj"):
                 continue # Skip project files
             if name.endswith(".sln"):
@@ -81,17 +91,17 @@ class TreeReplacer:
         head, base = os.path.split(file)
         try:
             data = open(file, "rb").read()
-            if '\0' in data:
+            if b'\0' in data:
 #                print file, "Binary!"
                 return
-            newdata = re.sub("\r\n", "\n", data)
+            newdata = re.sub(b"\r\n", b"\n", data)
             if newdata != data:
-                print file
+                print(file)
                 f = open(file, "wb")
                 f.write(newdata)
                 f.close()
 
-        except IOError, err:
+        except IOError as err:
             sys.stderr.write("Can't open %s: %s\n" % (file, err))
             return
 
