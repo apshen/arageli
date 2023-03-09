@@ -7,6 +7,7 @@ add_subdirectory(tool/ts/src/ts)
 add_subdirectory(perf)
 add_subdirectory(test)
 add_subdirectory(doc/src)
+add_subdirectory(example)
 
 # run script to satisfy Coding Guidelines
 add_custom_target(script
@@ -28,8 +29,3 @@ add_custom_target(runtests
     DEPENDS arageli_test
     COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test/arageli_test
 )
-
-# TODO migrate examples to cmake
-#example:
-#	$(MAKE) -C example/
-#
