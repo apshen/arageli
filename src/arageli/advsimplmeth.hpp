@@ -315,7 +315,7 @@ public:
         m_Ctrler(ctrler)
     {}
 
-    int LoadTaskFromFile(char *filename);    // Sergey Lyalin: Отделить от основного кода! Пусть будет отдельная функция в отдельном файле.
+    int LoadTaskFromFile(const char *filename);    // Sergey Lyalin: Отделить от основного кода! Пусть будет отдельная функция в отдельном файле.
 
     solvingResult SimplexDriver();
     vector<T> GetSolution();

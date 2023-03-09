@@ -182,6 +182,8 @@ solvingResult adv_simplex_method_alg<T, Ctrler>::SolveProblem()
         case IRES_OPTIMAL_FOUND:
             return RES_OPTIMAL_FOUND;
     }
+
+    return RES_NO_FEASIBLE_EXISTS; // WARNING! The function must return a value!
 }
 
 
@@ -760,7 +762,7 @@ solvingResult adv_simplex_method_alg<T, Ctrler>::SimplexDriver()
         return RES_SOLUTION_NOT_BOUNDED;
     }
 
-    // WARNING! The function must return a value!
+    return RES_NO_FEASIBLE_EXISTS; // WARNING! The function must return a value!
 }
 
 
@@ -832,7 +834,7 @@ vector<T> adv_simplex_method_alg<T, Ctrler>::GetSolution()
 
 
 template <typename T, typename Ctrler>
-int adv_simplex_method_alg<T, Ctrler>::LoadTaskFromFile(char* filename)
+int adv_simplex_method_alg<T, Ctrler>::LoadTaskFromFile(const char* filename)
 {
     // TODO: Make lines shorter where they are greater than 80 characters.
     // TODO: Attempt to divide this whole function into smaller ones.
