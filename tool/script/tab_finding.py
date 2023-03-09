@@ -62,6 +62,8 @@ class TreeReplacer:
                 continue # Skip tools directory. Rewrite this condition.
             if name.endswith(".vcproj"):
                 continue # Skip project files
+            if name.startswith(".git"):
+                continue # Skip project files
             if name.endswith("tags"):
                 continue # Skip tags
             if name.startswith("Makefile"):

@@ -13,6 +13,7 @@ add_subdirectory(example)
 add_custom_target(script
 	COMMAND python ${CMAKE_SOURCE_DIR}/tool/script/tab_finding.py ${${CMAKE_SOURCE_DIR}}
 	COMMAND python ${CMAKE_SOURCE_DIR}/tool/script/crlf_finding.py ${${CMAKE_SOURCE_DIR}}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     #COMMAND python ${CMAKE_SOURCE_DIR}/tool/script/end_spaces_del.py ${${CMAKE_SOURCE_DIR}}
     #COMMAND python ${CMAKE_SOURCE_DIR}./tool/script/crlf2lf.py ${${CMAKE_SOURCE_DIR}}
     #COMMAND python ${CMAKE_SOURCE_DIR}/tool/script/tab_replacing.py ${${CMAKE_SOURCE_DIR}}
