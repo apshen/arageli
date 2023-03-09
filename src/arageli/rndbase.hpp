@@ -151,7 +151,7 @@ public:
     value_type operator() () const
     {
         x = modulo<Int, M, bool_type <M == 0>::type::value> ()(A*x+C);
-        return x;	
+        return x;
     }
 
     /// коэффициент a процесса

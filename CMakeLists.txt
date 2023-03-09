@@ -11,8 +11,8 @@ add_subdirectory(example)
 
 # run script to satisfy Coding Guidelines
 add_custom_target(script
-	COMMAND python ${CMAKE_SOURCE_DIR}/tool/script/tab_finding.py ${${CMAKE_SOURCE_DIR}}
-	COMMAND python ${CMAKE_SOURCE_DIR}/tool/script/crlf_finding.py ${${CMAKE_SOURCE_DIR}}
+    COMMAND python ${CMAKE_SOURCE_DIR}/tool/script/tab_finding.py ${${CMAKE_SOURCE_DIR}}
+    COMMAND python ${CMAKE_SOURCE_DIR}/tool/script/crlf_finding.py ${${CMAKE_SOURCE_DIR}}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     #COMMAND python ${CMAKE_SOURCE_DIR}/tool/script/end_spaces_del.py ${${CMAKE_SOURCE_DIR}}
     #COMMAND python ${CMAKE_SOURCE_DIR}./tool/script/crlf2lf.py ${${CMAKE_SOURCE_DIR}}
@@ -21,7 +21,7 @@ add_custom_target(script
 
 # update TAGS for source files
 add_custom_target(TAGS
-	COMMAND ctags -R -h .cpp.hpp
+    COMMAND ctags -R -h .cpp.hpp
     WORKING_DIRECTORY  ${CMAKE_SOURCE_DIR}
 )
 
