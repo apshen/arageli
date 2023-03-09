@@ -482,16 +482,20 @@ int jacobi (T n, T p, const T_factory& tfctr)
         return 1;
 
     if (a < 0)
+    {
         if ((b-1)/2 % 2 == 0)
             return jacobi(-a,b);
         else
             return -jacobi(-a,b);
+    }
 
     if (a % 2 == 0)
+    {
         if (((b*b - 1)/8) % 2 == 0)
             return +jacobi(a/2,b);
         else
             return -jacobi(a/2,b);
+    }
 
     g = gcd(a, b);
     //if (!(a % 2)) return 2;
