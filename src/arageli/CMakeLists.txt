@@ -74,6 +74,14 @@ target_compile_options(arageli PRIVATE
     -Wall
 )
 
+install(TARGETS arageli)
+install(DIRECTORY .
+    DESTINATION include/arageli
+    FILES_MATCHING
+        PATTERN "*.hpp"
+        PATTERN "*.cpp"
+)
+
 # testarageli lib
 add_library(testarageli STATIC EXCLUDE_FROM_ALL ${arageli_lib_sources})
 target_compile_definitions(testarageli PRIVATE
