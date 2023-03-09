@@ -2,6 +2,8 @@
 
 This is a fork of [Arageli project](http://www.arageli.org) imported from SourceForge SVN.
 
+Arageli is C++ library for computations in **ar**ithmetic, **a**lgebra, **ge**ometry, **l**inear and **i**nteger linear programming. Arageli provides routines supporting precise, i.e. symbolic or algebraic, computations. It contains definitions of basic algebraic structures such as integer numbers with arbitrary precision, rational numbers, vectors, matrices, polynomials etc.
+
 See project description in original [README](/README)
 
 ## Building with cmake (Linux)
