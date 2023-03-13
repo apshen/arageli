@@ -62,6 +62,9 @@ set(arageli_lib_sources
     winograd.cpp
 )
 
+# config.hpp
+configure_file(config.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp)
+
 # arageli lib
 add_library(arageli STATIC ${arageli_lib_sources})
 target_compile_definitions(arageli PRIVATE
