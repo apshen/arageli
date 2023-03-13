@@ -61,40 +61,48 @@ namespace Arageli { namespace _Internal
     // Sizes, types and masks can faile on some platforms.
     // This is a temporary implementation.
 
-#if defined(_MSC_VER) && defined (_WIN32) || 0 && defined(__BORLANDC__) && defined(__WIN32__)
-    // The following works well for Ms C (Win32)
-    // Also you can use these for Borland C 5.5 compiler.
-    // but surprisingly the code will be more slower than for settings by default (see below)
-    // For Microsoft Visual C++ use /O2 optimizing option
-    typedef unsigned long digit;
-    typedef unsigned __int64 doubledigit;
-    typedef unsigned __int64 extendeddigit;
-    typedef unsigned short int bit;
-    const digit max_digit = 0xFFFFFFFF;
-    const extendeddigit BASE = 0x100000000ull;
-    const int bits_per_digit = 32;
-#elif defined ARAGELI_LONG_LONG_SUPPORT
-    typedef unsigned int digit;
-    typedef unsigned long long doubledigit;
-    typedef unsigned long long extendeddigit;
-    typedef unsigned short int bit;
-    const digit max_digit = 0xFFFFFFFF;
-    const extendeddigit BASE = 0x100000000ull;
-    const int bits_per_digit = 32;
-#else
-    // For others compilers we can also TRY this
-    // These setting works well for a lot of compilers (Microsoft, Borland, gcc)
-    // For Borlan C++ use -O2 optimizing option
-    // For gcc use /O3 optimizing option
-    typedef unsigned short digit;
-    typedef unsigned long doubledigit;
-    typedef unsigned long extendeddigit;
-    typedef unsigned short bit;
-    const digit max_digit = 0xFFFF;
-    const extendeddigit BASE = 0x10000l;
-    const int bits_per_digit = 16;
-#endif
+template<
+    unsigned I,
+    typename std::enable_if<
+        std::numeric_limits<unsigned long long int>::digits == I,
+        bool>::type = true
+>
+unsigned long long int digit_type_detector_helper();
 
+template<
+    unsigned I,
+    typename std::enable_if<
+        std::numeric_limits<unsigned long int>::digits == I &&
+        std::numeric_limits<unsigned long int>::digits < std::numeric_limits<unsigned long long int>::digits,
+        bool>::type = true
+>
+unsigned long int digit_type_detector_helper();
+
+template<
+    unsigned I,
+    typename std::enable_if<
+        std::numeric_limits<unsigned int>::digits == I &&
+        std::numeric_limits<unsigned int>::digits < std::numeric_limits<unsigned long int>::digits,
+        bool>::type = true
+>
+unsigned int digit_type_detector_helper();
+
+template<
+    unsigned I,
+    typename std::enable_if<
+        std::numeric_limits<unsigned short int>::digits == I &&
+        std::numeric_limits<unsigned short int>::digits < std::numeric_limits<unsigned int>::digits,
+        bool>::type = true
+>
+unsigned short int digit_type_detector_helper();
+
+typedef decltype(digit_type_detector_helper<32>()) digit;
+typedef decltype(digit_type_detector_helper<64>()) doubledigit;
+typedef doubledigit extendeddigit;
+typedef unsigned short int bit;
+constexpr digit max_digit = digit(-1);
+constexpr int bits_per_digit = std::numeric_limits<digit>::digits;
+constexpr extendeddigit BASE = extendeddigit(1) << bits_per_digit;
 
 std::size_t do_big_int_to_bdn
 (
