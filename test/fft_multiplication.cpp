@@ -37,6 +37,7 @@
 
 using namespace Arageli;
 
+#ifdef ARAGELI_ENABLE_POLLARD_MULT
 TEST_FUNCTION(do_mult_fft, "Test FFT based multiplication.")
 {
     bool is_ok = true;
@@ -89,3 +90,4 @@ TEST_FUNCTION(do_mult_fft, "Test FFT based multiplication.")
 
     return is_ok ? resOK : resFAIL;
 }
+#endif // ifdef  ARAGELI_ENABLE_POLLARD_MULT
