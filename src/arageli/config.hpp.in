@@ -204,6 +204,7 @@
     #undef ARAGELI_USE_AUTOLINK
 #endif
 
+#cmakedefine ARAGELI_HAS_UINT128_SUPPORT
 
 #ifdef ARAGELI_USE_AUTOLINK
     #define ARAGELI_LIB_NAME arageli

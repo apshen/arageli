@@ -96,8 +96,14 @@ template<
 >
 unsigned short int digit_type_detector_helper();
 
+#ifdef ARAGELI_HAS_UINT128_SUPPORT
+typedef decltype(digit_type_detector_helper<64>()) digit;
+typedef __uint128_t doubledigit;
+#else
 typedef decltype(digit_type_detector_helper<32>()) digit;
 typedef decltype(digit_type_detector_helper<64>()) doubledigit;
+#endif
+
 typedef doubledigit extendeddigit;
 typedef unsigned short int bit;
 constexpr digit max_digit = digit(-1);

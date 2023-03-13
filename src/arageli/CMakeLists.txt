@@ -62,6 +62,23 @@ set(arageli_lib_sources
     winograd.cpp
 )
 
+# detect uint128_t
+include(CheckTypeSize)
+
+check_type_size(
+    "__uint128_t"
+    UINT128_T
+    BUILTIN_TYPES_ONLY
+    LANGUAGE CXX
+)
+
+if(HAVE_UINT128_T)
+    message(STATUS "Detected __uint128_t support")
+    set(ARAGELI_HAS_UINT128_SUPPORT 1)
+else()
+    message(STATUS "uint128_t is not supported")
+endif()
+
 # config.hpp
 configure_file(config.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp)
 
