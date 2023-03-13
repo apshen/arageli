@@ -148,10 +148,8 @@ ARAGELI_TEXOUT_NUMBER(big_int)
     ARAGELI_TEXOUT_NUMBER(unsigned __int64)
 #endif
 
-#ifdef ARAGELI_LONG_LONG_SUPPORT
-    ARAGELI_TEXOUT_NUMBER(signed long long)
-    ARAGELI_TEXOUT_NUMBER(unsigned long long)
-#endif
+ARAGELI_TEXOUT_NUMBER(signed long long)
+ARAGELI_TEXOUT_NUMBER(unsigned long long)
 
 //@}
 

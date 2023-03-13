@@ -181,7 +181,6 @@ inline void mm_winograd
 
 #endif
 
-#ifdef ARAGELI_LONG_LONG_SUPPORT
 template <typename T1,typename T2,bool REFCNT3>
 inline void mm_winograd
 (
@@ -203,8 +202,6 @@ inline void mm_winograd
 {
     mm_winograd_fund (G,H,R);
 }
-
-#endif
 
 template <typename T1,typename T2,bool REFCNT3>
 inline void mm_winograd

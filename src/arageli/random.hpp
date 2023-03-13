@@ -69,10 +69,8 @@ namespace _Internal
     template<> struct IS_TYPE_BASE<unsigned int> {enum{ret = true};};
     template<> struct IS_TYPE_BASE<signed long> {enum{ret = true};};
     template<> struct IS_TYPE_BASE<unsigned long> {enum{ret = true};};
-    #if defined(ARAGELI_LONG_LONG_SUPPORT)
     template<> struct IS_TYPE_BASE<signed long long> {enum{ret = true};};
     template<> struct IS_TYPE_BASE<unsigned long long> {enum{ret = true};};
-    #endif // ARAGELI_LONG_LONG_SUPPORT
     #if defined(ARAGELI_INT64_SUPPORT)
     template<> struct IS_TYPE_BASE<signed __int64> {enum{ret = true};};
     template<> struct IS_TYPE_BASE<unsigned __int64> {enum{ret = true};};
@@ -127,10 +125,8 @@ namespace _Internal
     SPECIALIZE_RAND(unsigned short,(RAND % Conf::integer_max),(min + RAND % (max - min)));
     SPECIALIZE_RAND(signed long,(Conf::integer_min + RAND % (Conf::integer_max - Conf::integer_min)),(min + RAND % (max - min)));
     SPECIALIZE_RAND(unsigned long,(RAND % Conf::integer_max),(min + RAND % (max - min)));
-    #if defined(ARAGELI_LONG_LONG_SUPPORT)
     SPECIALIZE_RAND(signed long long,(Conf::integer_min + RAND % (Conf::integer_max - Conf::integer_min)),(min + RAND % (max - min)));
     SPECIALIZE_RAND(unsigned long long,(RAND % Conf::integer_max),(min + RAND % (max - min)));
-    #endif // ARAGELI_LONG_LONG_SUPPORT
     #if defined(ARAGELI_INT64_SUPPORT)
     SPECIALIZE_RAND(signed __int64,(Conf::integer_min + RAND % (Conf::integer_max - Conf::integer_min)),(min + RAND % (max - min)));
     SPECIALIZE_RAND(unsigned __int64,(RAND % Conf::integer_max),(min + RAND % (max - min)));

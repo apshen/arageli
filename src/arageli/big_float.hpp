@@ -204,17 +204,15 @@ public:
         }
     #endif
 
-    #ifdef ARAGELI_LONG_LONG_SUPPORT
-        big_float (signed long long i)
-        {
-            from_native_int(i);
-        }
+    big_float (signed long long i)
+    {
+        from_native_int(i);
+    }
 
-        big_float (unsigned long long i)
-        {
-            from_native_int(i);
-        }
-    #endif
+    big_float (unsigned long long i)
+    {
+        from_native_int(i);
+    }
 
     big_float (float f)
     {
@@ -336,19 +334,17 @@ public:
         }
     #endif
 
-    #ifdef ARAGELI_LONG_LONG_SUPPORT
-        big_float& operator= (signed long long i)
-        {
-            from_native_int(i);
-            return *this;
-        }
+    big_float& operator= (signed long long i)
+    {
+        from_native_int(i);
+        return *this;
+    }
 
-        big_float& operator= (unsigned long long i)
-        {
-            from_native_int(i);
-            return *this;
-        }
-    #endif
+    big_float& operator= (unsigned long long i)
+    {
+        from_native_int(i);
+        return *this;
+    }
 
     big_float& operator= (float f)
     {
@@ -436,34 +432,30 @@ public:
 
     #endif
 
-    #ifdef ARAGELI_LONG_LONG_SUPPORT
+    operator signed long long () const
+    {
+        return to_native_int<signed long long>();
+    }
 
-        operator signed long long () const
-        {
-            return to_native_int<signed long long>();
-        }
+    operator unsigned long long () const
+    {
+        return to_native_int<unsigned long long>();
+    }
 
-        operator unsigned long long () const
-        {
-            return to_native_int<unsigned long long>();
-        }
+    operator float () const
+    {
+        return to_native_float<float>();
+    }
 
-    #endif
+    operator double () const
+    {
+        return to_native_float<double>();
+    }
 
-        operator float () const
-        {
-            return to_native_float<float>();
-        }
-
-        operator double () const
-        {
-            return to_native_float<double>();
-        }
-
-        operator long double () const
-        {
-            return to_native_float<long double>();
-        }
+    operator long double () const
+    {
+        return to_native_float<long double>();
+    }
 
     //@}
 

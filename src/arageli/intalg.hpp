@@ -442,8 +442,6 @@ inline signed long sqrt (signed long a)
 
 #endif
 
-#ifdef ARAGELI_LONG_LONG_SUPPORT
-
     inline unsigned long long sqrt (unsigned long long a)
     {
         return Arageli::intsqrt(a);
@@ -453,8 +451,6 @@ inline signed long sqrt (signed long a)
     {
         return Arageli::intsqrt(a);
     }
-
-#endif
 
 //@}
 

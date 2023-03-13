@@ -273,21 +273,17 @@ public:
 
     #endif
 
-    #ifdef ARAGELI_LONG_LONG_SUPPORT
+    big_int (signed long long x)
+    {
+        alloc_zero();
+        from_native_int(x);
+    }
 
-        big_int (signed long long x)
-        {
-            alloc_zero();
-            from_native_int(x);
-        }
-
-        big_int (unsigned long long x)
-        {
-            alloc_zero();
-            from_native_int(x);
-        }
-
-    #endif
+    big_int (unsigned long long x)
+    {
+        alloc_zero();
+        from_native_int(x);
+    }
 
     big_int (float x)
     {
@@ -377,19 +373,15 @@ public:
 
     #endif
 
-    #ifdef ARAGELI_LONG_LONG_SUPPORT
+    operator signed long long () const
+    {
+        return to_native_int<signed long long>();
+    }
 
-        operator signed long long () const
-        {
-            return to_native_int<signed long long>();
-        }
-
-        operator unsigned long long () const
-        {
-            return to_native_int<unsigned long long>();
-        }
-
-    #endif
+    operator unsigned long long () const
+    {
+        return to_native_int<unsigned long long>();
+    }
 
     operator float () const
     {
@@ -511,21 +503,17 @@ public:
 
     #endif
 
-    #ifdef ARAGELI_LONG_LONG_SUPPORT
+    big_int& operator= (signed long long x)
+    {
+        from_native_int(x);
+        return *this;
+    }
 
-        big_int& operator= (signed long long x)
-        {
-            from_native_int(x);
-            return *this;
-        }
-
-        big_int& operator= (unsigned long long x)
-        {
-            from_native_int(x);
-            return *this;
-        }
-
-    #endif
+    big_int& operator= (unsigned long long x)
+    {
+        from_native_int(x);
+        return *this;
+    }
 
     big_int& operator= (float x)
     {

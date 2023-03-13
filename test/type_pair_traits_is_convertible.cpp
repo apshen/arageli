@@ -80,9 +80,7 @@ TEST
     ARAGELI_TESTSYS_TEST_BUITIN_PAIR6x(rational<int>, rational<signed __int64>, true);
     #endif
 
-    #ifdef ARAGELI_LONG_LONG_SUPPORT
     ARAGELI_TESTSYS_TEST_BUITIN_PAIR6x(rational<int>, rational<long long>, true);
-    #endif
 
     ARAGELI_TESTSYS_TEST_BUITIN_PAIR6x(int, big_int, true);
     ARAGELI_TESTSYS_TEST_BUITIN_PAIR6x(bool, big_int, true);

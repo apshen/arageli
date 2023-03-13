@@ -269,14 +269,10 @@ template <> struct signed_type<unsigned long>
 
 #endif
 
-#ifdef ARAGELI_LONG_LONG_SUPPORT
-
-    template <> struct signed_type<unsigned long long>
-    {
-        typedef signed long long type;
-    };
-
-#endif
+template <> struct signed_type<unsigned long long>
+{
+    typedef signed long long type;
+};
 
 /// Unsigned equivalent of type T. By the default it's the same type.
 template <typename T> struct unsigned_type
@@ -318,15 +314,10 @@ template <> struct unsigned_type<signed long>
 
 #endif
 
-#ifdef ARAGELI_LONG_LONG_SUPPORT
-
-    template <> struct unsigned_type<signed long long>
-    {
-        typedef unsigned long long type;
-    };
-
-#endif
-
+template <> struct unsigned_type<signed long long>
+{
+    typedef unsigned long long type;
+};
 
 } // namespace Arageli
 

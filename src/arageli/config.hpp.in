@@ -142,47 +142,21 @@
 #endif
 
 
-// Please check whether it is correct or not. And only after that uncomment.
-#ifdef __linux
-    #define ARAGELI_LONG_LONG_SUPPORT
-#endif
-
-
 /// Enables support of signed __int64 and unsigned __int64 types.
 //#define ARAGELI_INT64_SUPPORT_ENABLE
 
-/// Enables support of unsigned signed long long and unsigned long long.
-//#define ARAGELI_LONG_LONG_SUPPORT_ENABLE
-
 /// Disables support of signed __int64 and unsigned __int64 types.
 //#define ARAGELI_INT64_SUPPORT_DISABLE
-
-/// Disables support of unsigned signed long long and unsigned long long.
-//#define ARAGELI_LONG_LONG_SUPPORT_DISABLE
 
 #if defined(ARAGELI_INT64_SUPPORT_ENABLE) && defined(ARAGELI_INT64_SUPPORT_DISABLE)
     #error Both macros ARAGELI_INT64_SUPPORT_DISABLE and    \
         ARAGELI_INT64_SUPPORT_ENABLE are defined.
 #endif
 
-
-#if defined(ARAGELI_LONG_LONG_SUPPORT_ENABLE) && defined(ARAGELI_LONG_LONG_SUPPORT_DISABLE)
-    #error Both macros ARAGELI_LONG_LONG_SUPPORT_DISABLE and    \
-        ARAGELI_LONG_LONG_SUPPORT_ENABLE are defined.
-#endif
-
-
 #ifdef ARAGELI_INT64_SUPPORT_ENABLE
     #define ARAGELI_INT64_SUPPORT
 #elif defined(ARAGELI_INT64_SUPPORT_DISABLE) && defined(ARAGELI_INT64_SUPPORT)
     #undef ARAGELI_INT64_SUPPORT
-#endif
-
-
-#ifdef ARAGELI_LONG_LONG_SUPPORT_ENABLE
-    #define ARAGELI_LONG_LONG_SUPPORT
-#elif defined(ARAGELI_LONG_LONG_SUPPORT_DISABLE) && defined(ARAGELI_LONG_LONG_SUPPORT)
-    #undef ARAGELI_LONG_LONG_SUPPORT
 #endif
 
 

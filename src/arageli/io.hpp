@@ -581,12 +581,8 @@ ARAGELI_IO_BINARY_DEFINE_RAW(unsigned long)
 
 #endif
 
-#ifdef ARAGELI_LONG_LONG_SUPPORT
-
-    ARAGELI_IO_BINARY_DEFINE_RAW(signed long long)
-    ARAGELI_IO_BINARY_DEFINE_RAW(unsigned long long)
-
-#endif
+ARAGELI_IO_BINARY_DEFINE_RAW(signed long long)
+ARAGELI_IO_BINARY_DEFINE_RAW(unsigned long long)
 
 ARAGELI_IO_BINARY_DEFINE_RAW(float)
 ARAGELI_IO_BINARY_DEFINE_RAW(double)
