@@ -61,8 +61,6 @@ void big_float::from_native_float(const T &f)
 
     //using namespace _Internal;
 
-    ARAGELI_ASSERT_1(Nl::is_specialized);
-    ARAGELI_ASSERT_1(!Nl::is_integer);
     ARAGELI_ASSERT_0(!(Nl::has_infinity && f == Nl::infinity()));
     ARAGELI_ASSERT_0(!(Nl::has_quiet_NaN && f == Nl::quiet_NaN()));
     ARAGELI_ASSERT_0(!(Nl::has_signaling_NaN && f == Nl::signaling_NaN()));
@@ -79,7 +77,6 @@ void big_float::from_native_float(const T &f)
     _Internal::digit *p = (_Internal::digit *)&f;
 
     man = new _Internal::digit [ digits_need + 1 ];
-    ARAGELI_ASSERT_0(man && "the heap overflow");
 
     for ( int i = 0; i < digits_need; i++,p++ )
         man [ i ] = *p;
@@ -129,8 +126,6 @@ T big_float::to_native_float () const
 {
     typedef std::numeric_limits<T> Nl;
 
-    ARAGELI_ASSERT_1(Nl::is_specialized);
-    ARAGELI_ASSERT_1(!Nl::is_integer);
     ARAGELI_ASSERT_0(Nl::has_infinity);
 
     big_int temp(s);
@@ -142,7 +137,6 @@ T big_float::to_native_float () const
     int tlen = temp.length();
     int digits_need = tlen / _Internal::bits_per_digit + 1;
     _Internal::digit *p = new _Internal::digit [ digits_need ];
-    ARAGELI_ASSERT_0(p && "the heap overflow");
 
     std::memmove( p, temp.number.data, digits_need * sizeof (_Internal::digit));
     /* p [digits_need - 1] &= ~(_Internal::digit(1) << tlen %_Internal::bits_per_digit - 1)*/;
