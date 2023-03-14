@@ -184,6 +184,13 @@ public:
         }
     }
 
+    /// Move constructor
+    big_int (big_int&& b)
+    {
+        ARAGELI_ASSERT_0(this != &b);
+        number = b.number;
+        b.alloc_zero();
+    }
 
     /// Additional constructor.  For GCC compatibility only!!!
     /** I do not really know why this is needed for GCC, but... it is needed!!!
@@ -257,11 +264,18 @@ public:
     }
 
     /// Copy assignment
-    /** This assignment operator
+    /** This is assignment operator
      *
      *   @param b a new value
     */
     big_int& operator= (const big_int & b);
+
+    /// Move assignment
+    /** This is move-assignment operator
+     *
+     *   @param b a new value
+    */
+    big_int& operator= (big_int && b);
 
     big_int& operator= (const char* s)
     {

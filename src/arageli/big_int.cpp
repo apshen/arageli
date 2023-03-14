@@ -610,6 +610,17 @@ big_int& big_int::operator= (const big_int & b)
     return *this;
 }
 
+big_int& big_int::operator= (big_int && b)
+{
+    ARAGELI_ASSERT_1(b.number.sign == -1 || b.number.sign == 0 || b.number.sign == 1);
+
+    free_number();
+    number = b.number;
+    b.alloc_zero();
+
+    return *this;
+}
+
 
 /***************************/
 /*                         */
