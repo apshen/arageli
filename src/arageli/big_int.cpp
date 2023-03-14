@@ -120,7 +120,7 @@ void big_int::from_native_int_helper (const T &x, false_type)
         throw;
     }
 
-    number->sign = +1;
+    number.sign = +1;
 }
 
 
@@ -138,7 +138,7 @@ void big_int::from_native_int (const T& x)
     {
         // WARNING. The following expression is not portable.
         from_native_int(static_cast<typename _Internal::Unsigned<T>::Type>(-x));
-        number->sign = -1;
+        number.sign = -1;
     }
     else
     {
@@ -167,7 +167,7 @@ void big_int::from_native_float (const T& x)
     else if(is_negative(x))
     {
         from_native_float(-x);
-        number->sign = -1;
+        number.sign = -1;
     }
     else
     {
@@ -219,7 +219,7 @@ void big_int::from_native_float (const T& x)
             throw;
         }
 
-        number->sign = +1;
+        number.sign = +1;
 
         if(expon > 0)
             *this <<= expon;
@@ -257,10 +257,10 @@ T big_int::to_native_int_without_sign () const
     ARAGELI_ASSERT_1(*this <= big_int(std::numeric_limits<T>::max()));
     ARAGELI_ASSERT_1(!is_null());
 
-    T res = number->data[0];
+    T res = number.data[0];
 
-    for(std::size_t i = 1; i < number->len; ++i)
-        res |= number->data[i] << (i * _Internal::bits_per_digit);
+    for(std::size_t i = 1; i < number.len; ++i)
+        res |= number.data[i] << (i * _Internal::bits_per_digit);
 
     return res;
 }
@@ -307,9 +307,9 @@ T big_int::to_native_float () const
         module += unit(module);
         T curscale = unit(module);
 
-        for(std::size_t i = 0; i < t.number->len; ++i)
+        for(std::size_t i = 0; i < t.number.len; ++i)
         {
-            res += t.number->data[i]*curscale;
+            res += t.number.data[i]*curscale;
             curscale *= module;
         }
 
@@ -336,13 +336,13 @@ T big_int::to_native_float () const
 template <typename Stream>
 Stream& io_binary<big_int>::output_stream (Stream& out, const big_int& x)
 {
-    int sign = x.number->sign;
+    int sign = x.number.sign;
     output_binary_stream(out, sign);
     if(sign)
     {
-        std::size_t len = x.number->len;    // length in limbs
+        std::size_t len = x.number.len;    // length in limbs
         output_binary_stream(out, len);
-        output_binary_stream(out, x.number->data, len);
+        output_binary_stream(out, x.number.data, len);
     }
 
     return out;
@@ -368,17 +368,17 @@ Stream& io_binary<big_int>::input_stream (Stream& in, big_int& x)
             return in;
         ARAGELI_ASSERT_ALWAYS(len > 0);
 
-        if(x.number->refs == 1 && x.number->len == len)
-            x.number->sign = sign;
+        if(x.number.len == len)
+            x.number.sign = sign;
         else
             x.free_mem_and_alloc_number(sign, x.get_mem_for_data(len), len);
 
         // Load DIGITS.
-        if(!input_binary_stream(in, x.number->data, len))
+        if(!input_binary_stream(in, x.number.data, len))
         {
             // A new value load fails and an old value is lost.
             // Make sure that x object is in correct state.
-            x.number->data[len - 1] = 1;    // kills all leading zeros
+            x.number.data[len - 1] = 1;    // kills all leading zeros
         }
     }
     else
@@ -481,22 +481,14 @@ void big_int::alloc_number
 {
     ARAGELI_ASSERT_1(new_sign == -1 || new_sign == 0 || new_sign == 1);
 
-    number = new big_struct;
-
-    number->sign = new_sign;
-    number->data = new_data;
-    number->len = new_len;
-    number->refs = 1;
+    number.sign = new_sign;
+    number.data = new_data;
+    number.len = new_len;
 }
 
 void big_int::free_number()
 {
-    if(!number)return;
-    number->refs--;
-    if(number->refs)return;
-    free_data(number->data);
-    delete number;
-    number = 0;
+    free_data(number.data);
 }
 
 void big_int::free_mem_and_alloc_number
@@ -603,14 +595,18 @@ big_int::big_int (const char* str)
 
 big_int& big_int::operator= (const big_int & b)
 {
-    ARAGELI_ASSERT_1(b.number->sign == -1 || b.number->sign == 0 || b.number->sign == 1);
+    ARAGELI_ASSERT_1(b.number.sign == -1 || b.number.sign == 0 || b.number.sign == 1);
 
-    // make a copy of a number, just increments the reference count
-    if(number == b.number)
-        return *this;
-    free_number();
-    b.number->refs++;
-    number = b.number;
+    if(b.number.sign == 0)
+    {
+        free_mem_and_alloc_zero();
+    }
+    else
+    {
+        free_mem_and_alloc_number(b.number.sign, get_mem_for_data(b.number.len), b.number.len);
+        copy_data(number.data, b.number.data, b.number.len);
+    }
+
     return *this;
 }
 
@@ -628,15 +624,15 @@ big_int big_int::operator- () const    // unary minus
     digit *result;
     std::size_t blen;
 
-    blen = number->len;
+    blen = number.len;
 
-    if(number->sign == 0)
+    if(number.sign == 0)
         a.free_mem_and_alloc_zero();
     else
     {
         result = get_mem_for_data(blen);
-        copy_data(result, number->data, blen);      // copy data
-        a.free_mem_and_alloc_number(-number->sign, result, blen);
+        copy_data(result, number.data, blen);      // copy data
+        a.free_mem_and_alloc_number(-number.sign, result, blen);
     }
 
     return a;
@@ -650,20 +646,20 @@ big_int big_int::operator- () const    // unary minus
 
 big_int operator+ (const big_int& b, const big_int& c)
 {
-    ARAGELI_ASSERT_1(b.number->sign == -1 || b.number->sign == 0 || b.number->sign == 1);
-    ARAGELI_ASSERT_1(c.number->sign == -1 || c.number->sign == 0 || c.number->sign == 1);
+    ARAGELI_ASSERT_1(b.number.sign == -1 || b.number.sign == 0 || b.number.sign == 1);
+    ARAGELI_ASSERT_1(c.number.sign == -1 || c.number.sign == 0 || c.number.sign == 1);
 
     digit *sum;
     std::size_t sumlen;
     big_int a;
-    int bsign = b.number->sign;
-    int csign = c.number->sign;
+    int bsign = b.number.sign;
+    int csign = c.number.sign;
     int sumsign;
-    std::size_t blen = b.number->len;
-    std::size_t clen = c.number->len;
-    digit *bdata = b.number->data;
-    digit *cdata = c.number->data;
-    big_int::big_struct *u, *v;
+    std::size_t blen = b.number.len;
+    std::size_t clen = c.number.len;
+    digit *bdata = b.number.data;
+    digit *cdata = c.number.data;
+    const big_int::big_struct *u, *v;
 
     if(bsign == 0)
         a = c;
@@ -676,13 +672,13 @@ big_int operator+ (const big_int& b, const big_int& c)
             sumsign = bsign;
             if (blen >= clen)
             {
-                u = b.number;
-                v = c.number;
+                u = &b.number;
+                v = &c.number;
             }
             else
             {
-                u = c.number;
-                v = b.number;
+                u = &c.number;
+                v = &b.number;
             }
             sum = big_int::get_mem_for_data(u->len + 1);
             big_int::copy_data(sum, u->data, u->len);
@@ -742,18 +738,18 @@ big_int operator- (const big_int& b, const big_int& c)
 
 big_int operator* (const big_int& b, const big_int& c)
 {
-    ARAGELI_ASSERT_1(b.number->sign == -1 || b.number->sign == 0 || b.number->sign == 1);
-    ARAGELI_ASSERT_1(c.number->sign == -1 || c.number->sign == 0 || c.number->sign == 1);
+    ARAGELI_ASSERT_1(b.number.sign == -1 || b.number.sign == 0 || b.number.sign == 1);
+    ARAGELI_ASSERT_1(c.number.sign == -1 || c.number.sign == 0 || c.number.sign == 1);
 
     digit *result;
     std::size_t blen, clen, resultlen;
     int bsign, csign;
     big_int a;
 
-    blen = b.number->len;
-    clen = c.number->len;
-    bsign = b.number->sign;
-    csign = c.number->sign;
+    blen = b.number.len;
+    clen = c.number.len;
+    bsign = b.number.sign;
+    csign = c.number.sign;
 
     if((bsign == 0) || (csign == 0))
         a.free_mem_and_alloc_zero();
@@ -763,8 +759,8 @@ big_int operator* (const big_int& b, const big_int& c)
         result = big_int::get_mem_for_data(resultlen);
         resultlen = _Internal::do_mult
         (
-            b.number->data,
-            c.number->data,
+            b.number.data,
+            c.number.data,
             result,
             blen,
             clen
@@ -792,10 +788,10 @@ void _Internal::xdivide (big_int& a, const big_int& b, const big_int& c, big_int
     digit runint;
     int bsign, csign;
 
-    blen = b.number->len;
-    clen = c.number->len;
-    bsign = b.number->sign;
-    csign = c.number->sign;
+    blen = b.number.len;
+    clen = c.number.len;
+    bsign = b.number.sign;
+    csign = c.number.sign;
 
     if(!csign)
         big_arith_error("divide by zero");
@@ -815,10 +811,10 @@ void _Internal::xdivide (big_int& a, const big_int& b, const big_int& c, big_int
         runint =
             _Internal::do_divide_by_digit
             (
-                b.number->data,
+                b.number.data,
                 q,
                 blen,
-                c.number->data[0]
+                c.number.data[0]
             );
 
         if(q[blen - 1])
@@ -849,8 +845,8 @@ void _Internal::xdivide (big_int& a, const big_int& b, const big_int& c, big_int
         u = big_int::get_mem_for_data(blen + 1);
         v = big_int::get_mem_for_data(clen);
         q = big_int::get_mem_for_data(blen - clen + 1);
-        big_int::copy_data(u, b.number->data, blen);
-        big_int::copy_data(v, c.number->data, clen);
+        big_int::copy_data(u, b.number.data, blen);
+        big_int::copy_data(v, c.number.data, clen);
 
         rlen = _Internal::do_divide(u, v, q, blen, clen);
         if(q[blen - clen])
@@ -915,10 +911,10 @@ int cmp (const big_int & a, const big_int & b)
     std::size_t alen, blen;
     big_int c;
 
-    asign = a.number->sign;
-    bsign = b.number->sign;
-    alen = a.number->len;
-    blen = b.number->len;
+    asign = a.number.sign;
+    bsign = b.number.sign;
+    alen = a.number.len;
+    blen = b.number.len;
 
     if(asign < bsign)
         result = -1;
@@ -933,7 +929,7 @@ int cmp (const big_int & a, const big_int & b)
     else
     { // asign == bsign != 0, alen == blen
         c = a - b;
-        result = c.number->sign;
+        result = c.number.sign;
     }
 
     return result;
@@ -1036,23 +1032,23 @@ std::ostream& operator<< (std::ostream& s, const big_int& x)
     if(s.flags() & std::ios_base::showpos && x.sign() > 0)
         s << '+';
 
-    if(!x.number->sign)return s << "0";
+    if(!x.number.sign)return s << "0";
 
     digit bdn_radix;
     std::size_t chars_per_block;
     calc_bdn_radix(stream_radix(s), bdn_radix, chars_per_block);
 
-    std::size_t bdnlen = x.number->len;
+    std::size_t bdnlen = x.number.len;
     digit *bdn = big_int::get_mem_for_data(2 * bdnlen); //bdnlen + bdnlen/chars_per_block
 
     try
     {
-        digit *numberdata = big_int::get_mem_for_data(x.number->len);
+        digit *numberdata = big_int::get_mem_for_data(x.number.len);
 
         try
         {
-            big_int::copy_data(numberdata, x.number->data, x.number->len);
-            bdnlen = _Internal::do_big_int_to_bdn(numberdata, bdn, x.number->len, bdn_radix);
+            big_int::copy_data(numberdata, x.number.data, x.number.len);
+            bdnlen = _Internal::do_big_int_to_bdn(numberdata, bdn, x.number.len, bdn_radix);
         }
         catch(...)
         {
@@ -1064,7 +1060,7 @@ std::ostream& operator<< (std::ostream& s, const big_int& x)
 
         _Internal::auto_stream_state _ass(s, s.flags() & ~std::iostream::showpos);
 
-        if(x.number->sign == -1)
+        if(x.number.sign == -1)
             s << '-';
         s << bdn[bdnlen - 1];
 
@@ -1410,10 +1406,10 @@ std::istream& operator>> (std::istream& s, big_int& x)
 
 std::size_t big_int::length () const
 {
-    if(!number->len)
+    if(!number.len)
         return 0;
-    std::size_t l = (number->len - 1) * _Internal::bits_per_digit;
-    digit highest = number->data[number->len - 1];
+    std::size_t l = (number.len - 1) * _Internal::bits_per_digit;
+    digit highest = number.data[number.len - 1];
     while(highest >>= 1)
         l++;
     return l + 1;
@@ -1423,13 +1419,13 @@ std::size_t big_int::length () const
 bool big_int::operator[] (std::size_t k) const
 {
     ARAGELI_ASSERT_0(k < length());
-    return (number->data[k / _Internal::bits_per_digit] >>
+    return (number.data[k / _Internal::bits_per_digit] >>
         (k % _Internal::bits_per_digit)) % 2;
 }
 
 big_int operator<< (const big_int& a, std::size_t n)
 {
-    std::size_t a_len = a.number->len;
+    std::size_t a_len = a.number.len;
     if(!n || !a_len)
         return a;
     std::size_t l = a.length() + n;
@@ -1441,7 +1437,7 @@ big_int operator<< (const big_int& a, std::size_t n)
     digit t = 0;
     std::size_t k = _Internal::bits_per_digit - n;
     digit* res_data = big_int::get_mem_for_data(res_len);
-    const digit* data = a.number->data;
+    const digit* data = a.number.data;
 
     //  memset(res_data, 0, m * sizeof(digit));
     std::fill_n(res_data, m, digit(0));
@@ -1462,14 +1458,14 @@ big_int operator<< (const big_int& a, std::size_t n)
     }
 
     big_int res;
-    res.free_mem_and_alloc_number(a.number->sign, res_data, res_len);
+    res.free_mem_and_alloc_number(a.number.sign, res_data, res_len);
     return res;
 }
 
 
 big_int operator>> (const big_int& a, std::size_t n)
 {
-    std::size_t a_len = a.number->len;
+    std::size_t a_len = a.number.len;
     if (!n || !a_len)
         return a;
     std::size_t l = a.length();
@@ -1484,7 +1480,7 @@ big_int operator>> (const big_int& a, std::size_t n)
     std::size_t k = _Internal::bits_per_digit - n;
     digit t = 0;
     digit* res_data = big_int::get_mem_for_data(res_len);
-    const digit* data = a.number->data;
+    const digit* data = a.number.data;
 
     if(n)
     {
@@ -1502,14 +1498,14 @@ big_int operator>> (const big_int& a, std::size_t n)
     }
 
     big_int res;
-    res.free_mem_and_alloc_number(a.number->sign, res_data, res_len);
+    res.free_mem_and_alloc_number(a.number.sign, res_data, res_len);
     return res;
 }
 
 
 big_int operator& (const big_int& a, const big_int& b)
 {
-    std::size_t reslen = std::min(a.number->len, b.number->len);
+    std::size_t reslen = std::min(a.number.len, b.number.len);
     if(reslen == 0)
         return big_int();
     digit *res = big_int::get_mem_for_data(reslen);
@@ -1519,7 +1515,7 @@ big_int operator& (const big_int& a, const big_int& b)
 
     for(std::size_t i = 0; i < reslen; ++i)
     {
-        res[i] = a.number->data[i] & b.number->data[i];
+        res[i] = a.number.data[i] & b.number.data[i];
         if(res[i])
             lastnz = i+1;
     }
@@ -1559,11 +1555,11 @@ std::size_t ndigits (big_int x, std::size_t r)
 
 std::size_t io_binary<big_int>::calc (const big_int& x)
 {
-    if(x.number->sign)
+    if(x.number.sign)
         return
             sizeof(int) +
             sizeof(std::size_t) +
-            x.number->len * sizeof(big_int::digit);
+            x.number.len * sizeof(big_int::digit);
     else
         return sizeof(int);
 }

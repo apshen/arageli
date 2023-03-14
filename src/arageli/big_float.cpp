@@ -144,7 +144,7 @@ T big_float::to_native_float () const
     _Internal::digit *p = new _Internal::digit [ digits_need ];
     ARAGELI_ASSERT_0(p && "the heap overflow");
 
-    std::memmove( p, temp.number->data, digits_need * sizeof (_Internal::digit));
+    std::memmove( p, temp.number.data, digits_need * sizeof (_Internal::digit));
     /* p [digits_need - 1] &= ~(_Internal::digit(1) << tlen %_Internal::bits_per_digit - 1)*/;
     T ret = s.sign() * ldexp (*((T*)p), e + (shift + Nl::max_exponent + Nl::digits - 3));
     delete [] p;

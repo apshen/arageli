@@ -169,15 +169,19 @@ public:
         @param str a string for initialization */
     big_int (const char* str);
 
-    /// Just a copy constructor (note: there is a link counter).
-    /** Copy constructor actually does not make a copy of number representation.
-        This solution is based on link counter. This constructor just increment
-        link counter and store in this object a pointer to number representation. */
+    /// Copy constructor
     big_int (const big_int& b)
     {
         ARAGELI_ASSERT_0(this != &b);
-        b.number->refs++;
-        number = b.number;
+        if(b.number.sign == 0)
+        {
+            alloc_zero();
+        }
+        else
+        {
+            alloc_number(b.number.sign, get_mem_for_data(b.number.len), b.number.len);
+            copy_data(number.data, b.number.data, b.number.len);
+        }
     }
 
 
@@ -412,14 +416,11 @@ public:
         free_number();
     }
 
-    /// Just an assignment (note: there is a link counter).
-    /** This assignment operator actually does not make a copy of
-        a number representation. This solution is based on link counter.
-        This operator just decrement a link counter for current representation
-        and increments link counter for a representation of b and store in
-        this object a pointer to number representation of b. Returns a
-        reference on this object.
-        @param b a new value */
+    /// Copy assignment
+    /** This assignment operator
+     *
+     *   @param b a new value
+    */
     big_int& operator= (const big_int & b);
 
     big_int& operator= (const char* s)
@@ -555,7 +556,7 @@ public:
         -  +1    if x > 0. */
     int sign () const
     {
-        return number->sign;
+        return number.sign;
     }
 
     /// Return true if this number is zero.
@@ -673,7 +674,7 @@ public:
     /// Returns true if even, false if odd
     bool is_even () const
     {
-        if(number->len == 0)
+        if(number.len == 0)
             return true;
         else
             return !(operator[](0));
@@ -683,7 +684,7 @@ public:
     /// Returns true if odd, false if even
     bool is_odd () const
     {
-        if(!number->len)
+        if(!number.len)
             return false;
         else
             return operator[](0);
@@ -697,7 +698,7 @@ public:
 
     const digit* _digits () const
     {
-        return number->data;
+        return number.data;
     }
 
 private:
@@ -712,8 +713,7 @@ private:
         int sign;           // the sign: 0, 1 or -1
         digit *data;        // the storage for digits
         std::size_t len;    // the number of digits
-        int refs;           // the number of points to this number
-    } *number;
+    } number;
 
     // number allocation routines
     void alloc_number (int new_sign, digit* new_mem, std::size_t new_len);
@@ -896,17 +896,9 @@ inline big_int& operator<<= (big_int& a, const T& b)
 
 inline big_int& operator>>= (big_int& a, std::size_t b)
 {
-    if(a.number->len == 1)
+    if(a.number.len == 1)
     {
-        if(a.number->refs > 1)
-        {
-            a.number->refs--;
-            big_int::digit* newdata = big_int::get_mem_for_data(1);
-            *newdata = *a.number->data;
-            a.alloc_number(a.number->sign, newdata, 1);
-        }
-
-        if(b >= _Internal::bits_per_digit || !(*a.number->data >>= b))
+        if(b >= _Internal::bits_per_digit || !(*a.number.data >>= b))
             a.free_mem_and_alloc_zero();
     }
     else
@@ -1188,23 +1180,23 @@ _ARAGELI_big_int_MIXED_COMPARE3(long double)
 
 inline bool big_int::is_null () const
 {
-    return number->sign == 0;
+    return number.sign == 0;
 }
 
 inline bool big_int::is_unit () const
 {
     return
-        number->len == 1 &&
-        number->sign == +1 &&
-        *number->data == 1;
+        number.len == 1 &&
+        number.sign == +1 &&
+        *number.data == 1;
 }
 
 inline bool big_int::is_opposite_unit () const
 {
     return
-        number->len == 1 &&
-        number->sign == -1 &&
-        *number->data == 1;
+        number.len == 1 &&
+        number.sign == -1 &&
+        *number.data == 1;
 }
 
 
@@ -1351,12 +1343,12 @@ inline big_int log2 (const big_int& x)
 template <typename T_factory>
 inline big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr)
 {
-    if(a.number->len == 1 && b.number->len == 1)
+    if(a.number.len == 1 && b.number.len == 1)
     {
         // As this is Euclid's algorithm for two integers
         // we ignore the signs of the numbers.
 
-        return euclid(a.number->data[0], b.number->data[0]);
+        return euclid(a.number.data[0], b.number.data[0]);
     }
     else
         return euclid(a, b, tfctr);
@@ -1384,7 +1376,7 @@ std::size_t ndigits (big_int x, std::size_t r);
 */
 inline std::size_t magnitude (const big_int& x)
 {
-    return x.number->len;
+    return x.number.len;
 }
 
 }
