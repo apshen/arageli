@@ -201,107 +201,17 @@ public:
     /**    @name Initializations from built-in types. */
     //@{
 
-    big_int (char x)
+    template<typename I,
+             typename std::enable_if<std::is_integral<I>::value, bool>::type = true>
+    big_int (I x)
     {
         alloc_zero();
         from_native_int(x);
     }
 
-    big_int (signed char x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    big_int (unsigned char x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    big_int (signed short x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    big_int (unsigned short x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    big_int (signed int x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    big_int (unsigned int x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    big_int (signed long int x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    big_int (unsigned long int x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    big_int (bool x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    #ifdef ARAGELI_INT64_SUPPORT
-
-        big_int (signed __int64 x)
-        {
-            alloc_zero();
-            from_native_int(x);
-        }
-
-        big_int (unsigned __int64 x)
-        {
-            alloc_zero();
-            from_native_int(x);
-        }
-
-    #endif
-
-    big_int (signed long long x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    big_int (unsigned long long x)
-    {
-        alloc_zero();
-        from_native_int(x);
-    }
-
-    big_int (float x)
-    {
-        alloc_zero();
-        from_native_float(x);
-    }
-
-    big_int (double x)
-    {
-        alloc_zero();
-        from_native_float(x);
-    }
-
-    big_int (long double x)
+    template<typename F,
+             typename std::enable_if<std::is_floating_point<F>::value, bool>::type = true>
+    big_int (F x)
     {
         alloc_zero();
         from_native_float(x);
@@ -313,49 +223,11 @@ public:
     /**    @name Convertions to built-in types. */
     //@{
 
-    operator char () const
+    template<typename I,
+             typename std::enable_if<std::is_integral<I>::value, bool>::type = true>
+    operator I () const
     {
-        return to_native_int<char>();
-    }
-
-    operator signed char () const
-    {
-        return to_native_int<signed char>();
-    }
-
-    operator unsigned char () const
-    {
-        return to_native_int<unsigned char>();
-    }
-
-    operator signed short () const
-    {
-        return to_native_int<signed short>();
-    }
-
-    operator unsigned short () const
-    {
-        return to_native_int<unsigned short>();
-    }
-
-    operator signed int () const
-    {
-        return to_native_int<signed int>();
-    }
-
-    operator unsigned int () const
-    {
-        return to_native_int<unsigned int>();
-    }
-
-    operator signed long int () const
-    {
-        return to_native_int<signed long>();
-    }
-
-    operator unsigned long int () const
-    {
-        return to_native_int<unsigned long>();
+        return to_native_int<I>();
     }
 
     operator bool () const
@@ -363,43 +235,11 @@ public:
         return !is_null();
     }
 
-    #ifdef ARAGELI_INT64_SUPPORT
-
-        operator signed __int64 () const
-        {
-            return to_native_int<signed __int64>();
-        }
-
-        operator unsigned __int64 () const
-        {
-            return to_native_int<unsigned __int64>();
-        }
-
-    #endif
-
-    operator signed long long () const
+    template<typename F,
+             typename std::enable_if<std::is_floating_point<F>::value, bool>::type = true>
+    operator F () const
     {
-        return to_native_int<signed long long>();
-    }
-
-    operator unsigned long long () const
-    {
-        return to_native_int<unsigned long long>();
-    }
-
-    operator float () const
-    {
-        return to_native_float<float>();
-    }
-
-    operator double () const
-    {
-        return to_native_float<double>();
-    }
-
-    operator long double () const
-    {
-        return to_native_float<long double>();
+        return to_native_float<F>();
     }
 
     //@}
@@ -428,107 +268,17 @@ public:
         return *this = big_int(s);
     }
 
-    big_int& operator= (char x)
+    template<typename I,
+             typename std::enable_if<std::is_integral<I>::value, bool>::type = true>
+    big_int& operator= (I x)
     {
         from_native_int(x);
         return *this;
     }
 
-    big_int& operator= (signed char x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    big_int& operator= (unsigned char x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    big_int& operator= (signed short x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    big_int& operator= (unsigned short x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    big_int& operator= (signed int x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    big_int& operator= (unsigned int x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    big_int& operator= (signed long int x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    big_int& operator= (unsigned long int x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    big_int& operator= (bool x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    #ifdef ARAGELI_INT64_SUPPORT
-
-        big_int& operator= (signed __int64 x)
-        {
-            from_native_int(x);
-            return *this;
-        }
-
-        big_int& operator= (unsigned __int64 x)
-        {
-            from_native_int(x);
-            return *this;
-        }
-
-    #endif
-
-    big_int& operator= (signed long long x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    big_int& operator= (unsigned long long x)
-    {
-        from_native_int(x);
-        return *this;
-    }
-
-    big_int& operator= (float x)
-    {
-        from_native_float(x);
-        return *this;
-    }
-
-    big_int& operator= (double x)
-    {
-        from_native_float(x);
-        return *this;
-    }
-
-    big_int& operator= (long double x)
+    template<typename F,
+             typename std::enable_if<std::is_floating_point<F>::value, bool>::type = true>
+    big_int& operator= (F x)
     {
         from_native_float(x);
         return *this;
