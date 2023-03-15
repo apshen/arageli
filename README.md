@@ -29,7 +29,7 @@ Optionaly override default compiler
 
 ```
 export CC=/usr/bin/clang-15
-export CXX=/usr/bin/clang++
+export CXX=/usr/bin/clang++-15
 ```
 
 Prepare makefiles 
