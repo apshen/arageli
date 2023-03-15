@@ -324,6 +324,7 @@ void sturm (const P& p, LIMS& lims, SegBound bs)
                 ++next;
                 ARAGELI_ASSERT_1(next != lsseg.end());
                 if(next->lims.first() == lssegi->lims.second())
+                {
                     if(next->changes.is_point())
                         lsseg.erase(next);
                     else
@@ -337,6 +338,7 @@ void sturm (const P& p, LIMS& lims, SegBound bs)
                                 next->changes.first() = next->changes.second();
                         }while(next->lims.first() == lssegi->lims.second());
                     }
+                }
             }
             else
             {
@@ -344,6 +346,7 @@ void sturm (const P& p, LIMS& lims, SegBound bs)
                 ++next;
                 ARAGELI_ASSERT_1(next != lsseg.end());
                 if(next->lims.first() == lssegi->lims.second())
+                {
                     if(is_null(p.subs(lssegi->lims.second())))
                     {
                         ARAGELI_ASSERT_1(next->changes.is_point());
@@ -362,6 +365,7 @@ void sturm (const P& p, LIMS& lims, SegBound bs)
                                 lssegi->changes.first() = lssegi->changes.second();
                         }while(next->lims.first() == lssegi->lims.second());
                     }
+                }
             }
 
             ++lssegi;

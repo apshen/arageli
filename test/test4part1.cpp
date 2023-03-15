@@ -115,11 +115,11 @@ struct the_second_test_Shevchenko_ctrl_idler
 };
 
 
-// Решается задача целочисленного линейного программирования
-// и двойственная к ней симплек методом с отсечением Гомори.
-// Ограничения на исходную задачу: в векторе b не должно быть
-// отрицательных компонент; и прямая, и двойственная задачи
-// должные иметь целочисленное решение.
+// Р РµС€Р°РµС‚СЃСЏ Р·Р°РґР°С‡Р° С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРіРѕ Р»РёРЅРµР№РЅРѕРіРѕ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ
+// Рё РґРІРѕР№СЃС‚РІРµРЅРЅР°СЏ Рє РЅРµР№ СЃРёРјРїР»РµРє РјРµС‚РѕРґРѕРј СЃ РѕС‚СЃРµС‡РµРЅРёРµРј Р“РѕРјРѕСЂРё.
+// РћРіСЂР°РЅРёС‡РµРЅРёСЏ РЅР° РёСЃС…РѕРґРЅСѓСЋ Р·Р°РґР°С‡Сѓ: РІ РІРµРєС‚РѕСЂРµ b РЅРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ
+// РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹С… РєРѕРјРїРѕРЅРµРЅС‚; Рё РїСЂСЏРјР°СЏ, Рё РґРІРѕР№СЃС‚РІРµРЅРЅР°СЏ Р·Р°РґР°С‡Рё
+// РґРѕР»Р¶РЅС‹Рµ РёРјРµС‚СЊ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРµ СЂРµС€РµРЅРёРµ.
 template
 <
     typename T1, bool REFCNT1,
@@ -150,9 +150,9 @@ void the_second_test_Shevchenko
     //Matrix bsuba;
     //fill_submatrix_col(a, basis-1, bsuba);
     //fill_subvector(c, basis-1, bsubc);
-    Basis first_basis = basis;    // сохраняем на будущее
+    Basis first_basis = basis;    // СЃРѕС…СЂР°РЅСЏРµРј РЅР° Р±СѓРґСѓС‰РµРµ
 
-    // Решаем прямую задачу прямым строчечным симплекс методом.
+    // Р РµС€Р°РµРј РїСЂСЏРјСѓСЋ Р·Р°РґР°С‡Сѓ РїСЂСЏРјС‹Рј СЃС‚СЂРѕС‡РµС‡РЅС‹Рј СЃРёРјРїР»РµРєСЃ РјРµС‚РѕРґРѕРј.
 
     row_table_place_c(c, q);
     row_table_pivot_basis_c(q, basis);
@@ -163,7 +163,7 @@ void the_second_test_Shevchenko
     row_table_extract_solution(q, basis, x_opt);
     ctrler.primal_opt(q(0, 0), x_opt);
 
-    // Находим решение прямой задачи в целых числах.
+    // РќР°С…РѕРґРёРј СЂРµС€РµРЅРёРµ РїСЂСЏРјРѕР№ Р·Р°РґР°С‡Рё РІ С†РµР»С‹С… С‡РёСЃР»Р°С….
 
     Matrix t;
     Basis nonbasis;
@@ -174,7 +174,7 @@ void the_second_test_Shevchenko
     col_table_extract_solution(t, a.ncols(), x_opt_int);
     ctrler.primal_opt_int(t(0, 0), x_opt_int);
 
-    // Строим двойственную задачу.
+    // РЎС‚СЂРѕРёРј РґРІРѕР№СЃС‚РІРµРЅРЅСѓСЋ Р·Р°РґР°С‡Сѓ.
 
     Matrix bsuba, da;
     Vector bsubc, db, dc;
@@ -184,7 +184,7 @@ void the_second_test_Shevchenko
     cout << "***** " << det(bsuba) << " *******";
     ctrler.dual(da, db, dc, primal_res_offset, bsuba, bsubc);
 
-    // Решаем двойственную задачу столбцовым двойственным симплекс методом.
+    // Р РµС€Р°РµРј РґРІРѕР№СЃС‚РІРµРЅРЅСѓСЋ Р·Р°РґР°С‡Сѓ СЃС‚РѕР»Р±С†РѕРІС‹Рј РґРІРѕР№СЃС‚РІРµРЅРЅС‹Рј СЃРёРјРїР»РµРєСЃ РјРµС‚РѕРґРѕРј.
 
     col_table_create_by_standard(da, db, dc, t, nonbasis);
     t(0, 0) = primal_res_offset;
@@ -199,7 +199,7 @@ void the_second_test_Shevchenko
     Vector u_opt = (y_opt + bsubc)*inverse(bsuba);
     ctrler.y_to_u_opt(invbsuba, bsubc, y_opt, u_opt);
 
-    // Решаем двойственную задачу в целых числах.
+    // Р РµС€Р°РµРј РґРІРѕР№СЃС‚РІРµРЅРЅСѓСЋ Р·Р°РґР°С‡Сѓ РІ С†РµР»С‹С… С‡РёСЃР»Р°С….
 
     gomory1_iters
         (t, nonbasis, ctrler.ctrl_for_dual_task_gomory1_iters());
@@ -229,19 +229,19 @@ struct the_second_test_Shevchenko_ctrl_latexlog
     template <typename A, typename B, typename C>
     void preamble (const A& a, const B& b, const C& c) const
     {
-        stream << "Дана задача линейного программирования:\n$$\\max cx$$\n"
+        stream << "Р”Р°РЅР° Р·Р°РґР°С‡Р° Р»РёРЅРµР№РЅРѕРіРѕ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ:\n$$\\max cx$$\n"
             "$$\\left\\{ \\begin{tabular}{l}$Ax = b,$\\\\ $x \\ge 0,$ \\end{tabular}\\right.$$"
-            "\nгде\n";
+            "\nРіРґРµ\n";
         stream << "$$A = ";
         output_latex(stream, a, true);
         stream << ",$$\n$$b = ";
         output_latex(stream, b, true);
         stream << "^T,$$\n$$c = ";
         output_latex(stream, c, true);
-        stream << ".$$\nТребуется решить эту задачу при $x \\in R^{" << a.ncols()
-            << "}$ и для $x \\in Z^{" << a.ncols() << "}$."
-            " Построить двойственную и также "
-            "решить для этих двух случаев.\\par";
+        stream << ".$$\nРўСЂРµР±СѓРµС‚СЃСЏ СЂРµС€РёС‚СЊ СЌС‚Сѓ Р·Р°РґР°С‡Сѓ РїСЂРё $x \\in R^{" << a.ncols()
+            << "}$ Рё РґР»СЏ $x \\in Z^{" << a.ncols() << "}$."
+            " РџРѕСЃС‚СЂРѕРёС‚СЊ РґРІРѕР№СЃС‚РІРµРЅРЅСѓСЋ Рё С‚Р°РєР¶Рµ "
+            "СЂРµС€РёС‚СЊ РґР»СЏ СЌС‚РёС… РґРІСѓС… СЃР»СѓС‡Р°РµРІ.\\par";
         stream << endl;
     }
 
@@ -255,8 +255,8 @@ struct the_second_test_Shevchenko_ctrl_latexlog
     void primal_opt (const T& res, const X& x_opt) const
     {
         stream
-            << "Итак, оптимальный вектор для прямой задачи $x = " << x_opt
-            << "^T$, значение функции $" << res << "$.\n";
+            << "РС‚Р°Рє, РѕРїС‚РёРјР°Р»СЊРЅС‹Р№ РІРµРєС‚РѕСЂ РґР»СЏ РїСЂСЏРјРѕР№ Р·Р°РґР°С‡Рё $x = " << x_opt
+            << "^T$, Р·РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё $" << res << "$.\n";
     }
 
     gomory1_iters_latexlog<ostream> ctrl_for_primal_task_gomory1_iters () const
@@ -272,8 +272,8 @@ struct the_second_test_Shevchenko_ctrl_latexlog
     void primal_opt_int (const T& res, const X& x_opt_int) const
     {
         stream
-            << "Оптимальный вектор для прямой задачи в целых числах $x = " << x_opt_int
-            << "^T$, значение функции $" << res << "$.\n";
+            << "РћРїС‚РёРјР°Р»СЊРЅС‹Р№ РІРµРєС‚РѕСЂ РґР»СЏ РїСЂСЏРјРѕР№ Р·Р°РґР°С‡Рё РІ С†РµР»С‹С… С‡РёСЃР»Р°С… $x = " << x_opt_int
+            << "^T$, Р·РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё $" << res << "$.\n";
     }
 
     template
@@ -289,40 +289,39 @@ struct the_second_test_Shevchenko_ctrl_latexlog
     ) const
     {
         stream
-            << "Двойственная задача:\n$$\\min ub$$\n"
+            << "Р”РІРѕР№СЃС‚РІРµРЅРЅР°СЏ Р·Р°РґР°С‡Р°:\n$$\\min ub$$\n"
             "$$uA \\ge c,$$\n";
-        stream << "где $u = (u_1";
+        stream << "РіРґРµ $u = (u_1";
         for(size_t i = 2; i <= db.size(); ++i)
             stream << ", u_{" << i << "}";
-        stream << ")$. Требуется решить эту задачу при $u \\in R^{" << da.nrows()
-            << "}$ и для $x \\in Z^{" << da.nrows() << "}$."
-            " Введём переменные незязки $y = uB - c_B \\ge 0$, где\n$$B = ";
+        stream << ")$. РўСЂРµР±СѓРµС‚СЃСЏ СЂРµС€РёС‚СЊ СЌС‚Сѓ Р·Р°РґР°С‡Сѓ РїСЂРё $u \\in R^{" << da.nrows()
+            << "}$ Рё РґР»СЏ $x \\in Z^{" << da.nrows() << "}$."
+            " Р’РІРµРґС‘Рј РїРµСЂРµРјРµРЅРЅС‹Рµ РЅРµР·СЏР·РєРё $y = uB - c_B \\ge 0$, РіРґРµ\n$$B = ";
         output_latex(stream, bsuba, true);
         stream << ",$$\n$$c_B = ";
         output_latex(stream, bsubc, true);
-        stream << " $$ \nТогда исходную двойственную задачу можно переписать в новых"
-            " переменных так:\n$$\\min c'x$$\n"
+        stream << " $$ \nРўРѕРіРґР° РёСЃС…РѕРґРЅСѓСЋ РґРІРѕР№СЃС‚РІРµРЅРЅСѓСЋ Р·Р°РґР°С‡Сѓ РјРѕР¶РЅРѕ РїРµСЂРµРїРёСЃР°С‚СЊ РІ РЅРѕРІС‹С…"
+            " РїРµСЂРµРјРµРЅРЅС‹С… С‚Р°Рє:\n$$\\min c'x$$\n"
             "$$\\left\\{ \\begin{tabular}{l}$A'y^T \\le b',$\\\\ $y \\ge 0,$ \\end{tabular}\\right.$$"
-            "\nгде\n";
+            "\nРіРґРµ\n";
         stream << "$$A' = ";
         output_latex(stream, da, true);
         stream << ",$$\n$$b' = ";
         output_latex(stream, db, true);
         stream << "^T,$$\n$$c' = ";
         output_latex(stream, dc, true);
-        stream << "$$Довесок к целевой функции $" << res_offset << "$. Введением"
-            " слабых переменных приведём задачу к каноническому виду.";
+        stream << "$$Р”РѕРІРµСЃРѕРє Рє С†РµР»РµРІРѕР№ С„СѓРЅРєС†РёРё $" << res_offset << "$. Р’РІРµРґРµРЅРёРµРј"
+            " СЃР»Р°Р±С‹С… РїРµСЂРµРјРµРЅРЅС‹С… РїСЂРёРІРµРґС‘Рј Р·Р°РґР°С‡Сѓ Рє РєР°РЅРѕРЅРёС‡РµСЃРєРѕРјСѓ РІРёРґСѓ.";
     }
 
     template <typename T, typename Y>
     void dual_y_opt (const T& res, const Y& y_opt) const
     {
         stream
-            << "Таким образом, найден оптимальный вектор"
-            " для двойственной задачи $y = " << y_opt
-            << "^T$, значение функции $" << res << "$.\n";
+            << "РўР°РєРёРј РѕР±СЂР°Р·РѕРј, РЅР°Р№РґРµРЅ РѕРїС‚РёРјР°Р»СЊРЅС‹Р№ РІРµРєС‚РѕСЂ"
+            " РґР»СЏ РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рё $y = " << y_opt
+            << "^T$, Р·РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё $" << res << "$.\n";
     }
-
     template
     <
         typename Invbsuba, typename Bsubc,
@@ -335,7 +334,7 @@ struct the_second_test_Shevchenko_ctrl_latexlog
     ) const
     {
         stream <<
-            "Восстановим значения оригинальных переменных $u$:\n"
+            "Р’РѕСЃСЃС‚Р°РЅРѕРІРёРј Р·РЅР°С‡РµРЅРёСЏ РѕСЂРёРіРёРЅР°Р»СЊРЅС‹С… РїРµСЂРµРјРµРЅРЅС‹С… $u$:\n"
             "$$u = (y + c_B)B^{-1} = \\left(y + ";
         output_latex(stream, bsubc, true);
         stream << "^T\\right)";
@@ -349,9 +348,9 @@ struct the_second_test_Shevchenko_ctrl_latexlog
     void dual_y_opt_int (const T& res, const Y& y_opt) const
     {
         stream
-            << "Таким образом, найден оптимальный целочисленный вектор"
-            " для двойственной задачи $y = " << y_opt
-            << "^T$, значение функции $" << res << "$.\n";
+            << "РўР°РєРёРј РѕР±СЂР°Р·РѕРј, РЅР°Р№РґРµРЅ РѕРїС‚РёРјР°Р»СЊРЅС‹Р№ С†РµР»РѕС‡РёСЃР»РµРЅРЅС‹Р№ РІРµРєС‚РѕСЂ"
+            " РґР»СЏ РґРІРѕР№СЃС‚РІРµРЅРЅРѕР№ Р·Р°РґР°С‡Рё $y = " << y_opt
+            << "^T$, Р·РЅР°С‡РµРЅРёРµ С„СѓРЅРєС†РёРё $" << res << "$.\n";
     }
 
     template
@@ -366,7 +365,7 @@ struct the_second_test_Shevchenko_ctrl_latexlog
     ) const
     {
         stream <<
-            "Восстановим значения оригинальных переменных $u$:\n"
+            "Р’РѕСЃСЃС‚Р°РЅРѕРІРёРј Р·РЅР°С‡РµРЅРёСЏ РѕСЂРёРіРёРЅР°Р»СЊРЅС‹С… РїРµСЂРµРјРµРЅРЅС‹С… $u$:\n"
             "$$u = (y + c_B)B^{-1} = \\left(y + ";
         output_latex(stream, bsubc, true);
         stream << "^T\\right)";
@@ -476,7 +475,7 @@ void create_vector_order (const A1& a1, A2& a2, size_t n)
 
 void test4_2 ()
 {
-    // Применение алгоритма Моцкина-Бургера для области нашей задачи ЗЛП.
+    // РџСЂРёРјРµРЅРµРЅРёРµ Р°Р»РіРѕСЂРёС‚РјР° РњРѕС†РєРёРЅР°-Р‘СѓСЂРіРµСЂР° РґР»СЏ РѕР±Р»Р°СЃС‚Рё РЅР°С€РµР№ Р·Р°РґР°С‡Рё Р—Р›Рџ.
 
     typedef big_int T;
     typedef matrix<T, false> Matrix;
@@ -637,7 +636,7 @@ void find_in_bounding_box
         }
         else if(rsimplex(i, 0) == 0)
         {
-            // рецессивное направление:
+            // СЂРµС†РµСЃСЃРёРІРЅРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ:
 
             for(size_t j = 0; j < up.size(); ++j)
             {
@@ -710,7 +709,7 @@ void picking_coefs
     Arageli::vector<big_int> ups = det/col_0;
     if(is_null(col_0_orig))
     {
-        cout << "ОШИБКА: одни рецессивные направления.#########################################";
+        cout << "РћРЁРР‘РљРђ: РѕРґРЅРё СЂРµС†РµСЃСЃРёРІРЅС‹Рµ РЅР°РїСЂР°РІР»РµРЅРёСЏ.#########################################";
         row_coefs.resize(0);
         return;
     }
@@ -761,7 +760,7 @@ void picking_coefs
             !is_null(row_coefs.copy_subvector(nonintegers))
         )
         {
-            // Проверяем систему сравнений.
+            // РџСЂРѕРІРµСЂСЏРµРј СЃРёСЃС‚РµРјСѓ СЃСЂР°РІРЅРµРЅРёР№.
             res.assign(simplex.ncols(), 0);
             for(size_t i = 0; i < simplex.nrows(); ++i)
                 res += simplex.copy_row(i)*row_coefs[i];
@@ -789,7 +788,7 @@ void solve_mod_2 (vector<big_int> cureq, big_int curb, big_int curmodule, matrix
 {
     ARAGELI_ASSERT_0(cureq.size() == 2);
     big_int first = cureq[0], alpha = cureq[1], gamma = curb;
-    cout << "\nДвухмерная задача: ";
+    cout << "\nР”РІСѓС…РјРµСЂРЅР°СЏ Р·Р°РґР°С‡Р°: ";
     for(;;)
     {
         cout << "\n(" << first << ", " << alpha << ") = " << gamma << " (mod " << curmodule << ")" << std::flush;
@@ -799,10 +798,10 @@ void solve_mod_2 (vector<big_int> cureq, big_int curb, big_int curmodule, matrix
         //alpha -= curmodule/2;
         if(first != 1)
         {
-            // нормировка по первой переменной:
+            // РЅРѕСЂРјРёСЂРѕРІРєР° РїРѕ РїРµСЂРІРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№:
             big_int invfirst = inverse_mod(first, curmodule);
             cout
-                << "\nНормируем по первой переменной: (" << first << "^(-1) = "
+                << "\nРќРѕСЂРјРёСЂСѓРµРј РїРѕ РїРµСЂРІРѕР№ РїРµСЂРµРјРµРЅРЅРѕР№: (" << first << "^(-1) = "
                 << invfirst << "(mod " << curmodule << "))" << std::flush;
             first = first*invfirst%curmodule;
             alpha = alpha*invfirst%curmodule;

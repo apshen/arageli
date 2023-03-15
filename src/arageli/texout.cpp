@@ -130,6 +130,7 @@ void output_latex
     out << "\\left" << first_bracket;
 
     if(!x.is_empty())
+    {
         if(hor)
         {
             output_latex(out, x[0], true);
@@ -146,6 +147,7 @@ void output_latex
 
             out << "\\end{tabular}";
         }
+    }
 
     out << "\\right" << second_bracket;
 

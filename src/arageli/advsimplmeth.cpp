@@ -181,9 +181,9 @@ solvingResult adv_simplex_method_alg<T, Ctrler>::SolveProblem()
             return RES_SOLUTION_NOT_BOUNDED;
         case IRES_OPTIMAL_FOUND:
             return RES_OPTIMAL_FOUND;
+        default:
+            return RES_NO_FEASIBLE_EXISTS; // WARNING! The function must return a value!
     }
-
-    return RES_NO_FEASIBLE_EXISTS; // WARNING! The function must return a value!
 }
 
 

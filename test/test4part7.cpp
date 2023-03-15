@@ -380,7 +380,7 @@ void test4_56 ()
     cartesian2d_chart chart
     (
         16, 20, 1, 1.5,
-        "промежуток", "Время, сек."
+        "interval", "Time, sec."
     );
 
     output_pstricks_cartesian2d(file, 0, 0, chart, lines);

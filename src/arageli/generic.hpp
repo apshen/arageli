@@ -296,7 +296,7 @@ public:
     virtual generic_big_int* clone () const;
     virtual std::string type () const;
     virtual bool operator_bool () const;
-    virtual generic_internal* abs () const;
+    virtual generic_big_int* abs () const;
     virtual generic_big_int* logical_not () const;
     virtual generic_big_int* unary_plus () const;
     virtual generic_big_int* unary_minus () const;

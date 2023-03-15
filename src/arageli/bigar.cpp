@@ -72,8 +72,6 @@ std::size_t do_big_int_to_bdn (digit* a, digit* b, std::size_t n, digit bdn_radi
     // returns m
     // a[n-1],...,a[0] are not const
 
-    ARAGELI_ASSERT_1(BASE > bdn_radix);
-
     std::size_t m = 0;
 
     while (n > 0)
@@ -107,8 +105,6 @@ std::size_t do_bdn_to_big_int (digit* a, digit* b, std::size_t n, digit bdn_radi
     // output: b[m-1],...,b[0], m
     // returns m
     // a[n-1],...,a[0] are not const
-
-    ARAGELI_ASSERT_1(BASE > bdn_radix);
 
     std::size_t m = 0;
     for(std::size_t i = n; i > 0; i--)

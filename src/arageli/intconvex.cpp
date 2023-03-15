@@ -823,7 +823,7 @@ void near_extreme_2_3_mod
     {
         Delta bound = pow(double(delta), 1.0/3) - 1;
         typedef typename A::size_type size_type;
-        ctrler.stream() << "\nСуществует i, v[i] <= " << bound << " <= " << pow(double(delta), 1.0/3) - 1;
+        ctrler.stream() << "\nThere exists i, v[i] <= " << bound << " <= " << pow(double(delta), 1.0/3) - 1;
 
         v.resize(0, 3);
         for(size_type i = 0; i < 3; ++i)
@@ -851,7 +851,7 @@ void near_extreme_2_3_mod
         v.resize(0, v.ncols());
         for(size_t i = 0; i < vvv.size(); ++i)
             v.insert_row(v.nrows(), vvv[i]);
-        output_aligned(ctrler.stream() << "\nВсе потенциально крайние точки: \n", v);
+        output_aligned(ctrler.stream() << "\nAll potential extreme points:\n", v);
     }
 }
 
@@ -880,10 +880,10 @@ void minimize_2_3_mod
     matrix<typename A::element_type> v;
     near_extreme_2_3_mod(a, b, vd, delta, v, ctrler);
     Beta vals = v*beta;
-    output_aligned(ctrler.stream() << "\nЗначения целевой функции, соотв. точкам: \n", vals);
+    output_aligned(ctrler.stream() << "\nTarget function value corresponds to points:\n", vals);
     typename Beta::iterator i = std::min_element(vals.begin(), vals.end());
-    ctrler.stream() << "\nМинимальное значение: " << *i;
-    ctrler.stream() << "\nСоотв. точка: " << (res = v.copy_row(i - vals.begin()));
+    ctrler.stream() << "\nMinimum value: " << *i;
+    ctrler.stream() << "\nCorrespondint point: " << (res = v.copy_row(i - vals.begin()));
 }
 
 

@@ -120,7 +120,8 @@ TEST
     ARAGELI_TESTSYS_TEST_BUITIN_PAIR1(rational<short> , rational<big_int>, is_safe_assignable, true)
     ARAGELI_TESTSYS_TEST_BUITIN_PAIR1(rational<short> , rational<big_int>, is_safe_initializable, true)
 
-    bool_type<type_pair_traits<big_int, big_int>::is_convertible>::value;
+    static_assert(bool_type<type_pair_traits<big_int, big_int>::is_convertible>::value.value,
+                  "ooops, type_pair_traits<big_int, big_int>::is_convertible is false");
 
     return res;
 }

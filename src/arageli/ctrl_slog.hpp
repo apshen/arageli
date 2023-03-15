@@ -764,6 +764,8 @@ struct primal_row_iters_slog :
                     << pivot_item_name()
                     << " (" << prow << ", " << pcol << ")\n";
                 break;
+            default:
+                break;
         }
     }
 
@@ -1230,7 +1232,7 @@ struct gomory1_iter_slog :
     void after_gomory1_clip (const T& t, Prow prow, result_kind rk) const
     {
         if(rk == rk_nonoptimal)
-            stream << "Номер производящей строки " << prow << ".\n";
+            stream << "Producing row number " << prow << ".\n";
     }
 
     dual_col_iters_slog<Stream> ctrl_for_dual_col_iters () const

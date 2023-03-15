@@ -99,6 +99,11 @@ bool generic_big_int::operator_bool () const
     return bool(value);
 }
 
+generic_big_int* generic_big_int::abs () const
+{
+    return new generic_big_int(Arageli::abs(value));
+}
+
 generic_big_int* generic_big_int::logical_not () const
 {
     return new generic_big_int(!value);

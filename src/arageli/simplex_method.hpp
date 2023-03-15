@@ -3070,7 +3070,7 @@ std::basic_ostream<Ch, ChT>& output_aligned
             linear_prog_task_base::constraint_type
                 (lpt.individual().el(i) & ~linear_prog_task_base::ct_integer);
 
-        switch(ct)
+        switch(int(ct))
         {
             case 0:
                 break;

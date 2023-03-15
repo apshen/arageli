@@ -188,7 +188,7 @@ simplex_method_result maximize_simplex_method_l
     ARAGELI_ASSERT_0(c.size() == a.ncols());
     ARAGELI_ASSERT_0(a.nrows() == b.size());
 
-    std::cout << "Решаем ЗЛП, заданную в канонической форме:";
+    std::cout << "Solving ILP given in canonical form:";
     std::cout <<
         "\n$$"
         "\\max(cx)$$ $$"
@@ -196,7 +196,7 @@ simplex_method_result maximize_simplex_method_l
         "Ax=b \\\\ x\\ge 0"
         "\\end{cases}"
         "$$\n";
-    std::cout << "где\n$$";
+    std::cout << "where\n$$";
     output_list(std::cout << "c=", c);
     std::cout << "\n$$\n$$\n";
     my_output_latex(std::cout << "A=", a);
@@ -226,8 +226,8 @@ simplex_method_result maximize_simplex_method_l
     for(size_type i = 1; i <= m; ++i)
         basis[i-1] = i;
 
-    std::cout << "Строим начальную допустимую базу и начальную симплекс-таблицу методом"
-        " искусственного базиса.\\par";
+    std::cout << "Making the first allowable plan and initiaal simplex-table using"
+                 " artificial basis method.\\par";
     //std::cout << "\n$$\n";
     //output_simplex_table_latex(std::cout, st);
     //std::cout << "\n$$\n";
@@ -273,8 +273,6 @@ simplex_method_result maximize_simplex_method_l
         output_simplex_table_latex(std::cout, st, false, r, s);
         std::cout << "\n$$\n";
         output_basis_latex(std::cout, basis);
-
-        //std::cout << "Направляющий элемент: $(r = " << r << ", s = " << s << ")$.";
 
         ARAGELI_ASSERT_1(is_positive(st(r, s)));
 
@@ -349,21 +347,21 @@ simplex_method_result maximize_simplex_method_l
     m -= delrows.size();
 
 
-    std::cout << "Симплекс таблица после первой фазы:\n$$\n";
+    std::cout << "Simplex table after first phase:\n$$\n";
     output_simplex_table_latex(std::cout, st, false);
     std::cout << "\n$$\n";
 
     for(size_type i = 1; i <= n; ++i)
         st(0, i) = -c[i-1];
 
-    std::cout << "Начинаем вторую фазу симплекс метода.  Допишем вектор $c$:\n$$\n";
+    std::cout << "Starting second phase. Adding vector $c$:\n$$\n";
     output_simplex_table_latex(std::cout, st, false);
     std::cout << "\n$$\n";
 
     for(size_type i = 1; i <= m; ++i)
         st.addmult_rows(0, i, -st(0, basis[i - 1]));
 
-    std::cout << "Вторая фаза.\n";
+    std::cout << "Phase two.\n";
     //output_simplex_table_latex(std::cout, st);
     //std::cout << "\n$$\n";
     //output_basis_latex(std::cout, basis);
@@ -436,9 +434,9 @@ simplex_method_result maximize_simplex_method_l
     for(size_type i = 0; i < m; ++i)
         x[basis[i]-1] = st(i+1, 0);
 
-    output_list(std::cout << "\n\n{\\bf Ответ:} оптимальный вектор $x=", x);
+    output_list(std::cout << "\n\n{\\bf Solution:} optimal vector $x=", x);
     std::cout << "^T $, ";
-    std::cout << "оптимальное значение:~$" << res << "$.";
+    std::cout << "Optimal value:~$" << res << "$.";
 
     return SMR_OK;
 }
@@ -793,14 +791,6 @@ void test1_75 ()
     std::cout << factorize_division(big_int("92233719531022718101"));
     //std::cout << factorize_division(16818466434869209727u);
 }
-
-
-void test1_76 ()
-{
-    sparse_polynom<int> p;
-    p == 0;
-}
-
 
 // Tests for Arageli::vector  ////////////////////////////////////////////////
 

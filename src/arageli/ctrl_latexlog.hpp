@@ -461,6 +461,8 @@ public:
                     << pivot_item_name()
                     << " (" << prow << ", " << pcol << ")\n";
                 break;
+            default:
+                break;
         }
     }
 
@@ -473,12 +475,12 @@ protected:
 
     virtual const char* pivot_col_name () const
     {
-        return "Текущий столбец: ";
+        return "Pivot column: ";
     }
 
     virtual const char* pivot_item_name () const
     {
-        return "Текущий элемент: ";
+        return "Pivot element: ";
     }
 
 private:
@@ -580,7 +582,7 @@ protected:
 
     virtual const char* table_with_artif_name () const
     {
-        return "Таблица с искуственными переменными";
+        return "Table with artificial variables";
     }
 
 };
@@ -620,7 +622,7 @@ public:
     template <typename R, typename S>
     void pivot_item (const R& r, const S& s) const
     {
-        stream << "Текущий элемент $" << r << ", " << s << "$.\n";
+        stream << "Pivot element $" << r << ", " << s << "$.\n";
     }
 
     void found () const
@@ -721,7 +723,7 @@ public:
     void after_gomory1_clip (const T& t, Prow prow, result_kind rk) const
     {
         if(rk == rk_nonoptimal)
-            stream << "Номер производящей строки " << prow << ".\n";
+            stream << "Producing row number " << prow << ".\n";
     }
 
     dual_col_iters_latexlog<Stream> ctrl_for_dual_col_iters () const

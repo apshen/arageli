@@ -158,19 +158,23 @@ bool t_vector_plus_minus(Arageli::vector<type1> ta, Arageli::vector<type2> tb)
 
 
         if(a.size()>b.size())
+        {
             for(int i=size; i<a.size(); i++)
                 if((a+b)[i]!=a[i])
                 {
                     tout<<"Function t_rational_plus_minus failed on 2."<<i+1<<" check with args=("<<ta<<','<<tb<<")\n";
                     return true;
                 }
+        }
         else
+        {
             for(int i=size; i<b.size(); i++)
                 if((a+b)[i]!=b[i])
                 {
                     tout<<"Function t_rational_plus_minus failed on 3."<<i+1<<" check with args=("<<ta<<','<<tb<<")\n";
                     return true;
                 }
+        }
 
         return false;
     }

@@ -905,10 +905,12 @@ int Polytope<T, R, MT, VT, VR>::GetSupportCones(std::list<Cone<T, R, MT, VT, VR>
         }
 
         if(has_reces)
+        {
             if(has_posit)
                 return 2;    // unbounded polyhedron
             else
                 return 3;    // polyhedron is empty
+        }
 
         //if q(i,j) == 0, that
         //rows number i in matrix a (inequalities) corresponding
