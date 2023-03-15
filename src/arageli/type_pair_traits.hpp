@@ -175,6 +175,7 @@ public:
     static const bool is_convertible =
         type_pair_traits<T1, TE2>::is_convertible
         ||
+            (
             type_pair_traits<TE1, TE2>::is_convertible &&
             !type_pair_traits<T1, TE2>::is_convertible &&
             TT1::is_rational == TT2::is_rational &&
@@ -182,24 +183,27 @@ public:
             TT1::is_matrix == TT2::is_matrix &&
             TT1::is_complex_number == TT2::is_complex_number &&
             TT1::is_polynom == TT2::is_polynom
+            )
         ||
-        TT1::is_rational &&
-            type_pair_traits<TE1, T2>::is_convertible;
+        (TT1::is_rational && type_pair_traits<TE1, T2>::is_convertible);
 
     static const bool is_safe_convertible =
         type_pair_traits<T1, TE2>::is_safe_convertible
         ||
+            (
             type_pair_traits<TE1, TE2>::is_safe_convertible &&
             !type_pair_traits<T1, TE2>::is_safe_convertible &&
             TT1::is_rational == TT2::is_rational &&
             TT1::is_vector == TT2::is_vector &&
             TT1::is_matrix == TT2::is_matrix &&
             TT1::is_complex_number == TT2::is_complex_number &&
-            TT1::is_polynom == TT2::is_polynom;
+            TT1::is_polynom == TT2::is_polynom
+            );
 
     static const bool is_assignable =
         type_pair_traits<T1, TE2>::is_assignable
         ||
+            (
             type_pair_traits<TE1, TE2>::is_assignable &&
             !type_pair_traits<T1, TE2>::is_assignable &&
             TT1::is_rational == TT2::is_rational &&
@@ -207,24 +211,27 @@ public:
             TT1::is_matrix == TT2::is_matrix &&
             TT1::is_complex_number == TT2::is_complex_number &&
             TT1::is_polynom == TT2::is_polynom
+            )
         ||
-        TT1::is_rational &&
-            type_pair_traits<TE1, T2>::is_assignable;
+        (TT1::is_rational && type_pair_traits<TE1, T2>::is_assignable);
 
     static const bool is_safe_assignable =
         type_pair_traits<T1, TE2>::is_safe_assignable
         ||
+            (
             type_pair_traits<TE1, TE2>::is_safe_assignable &&
             !type_pair_traits<T1, TE2>::is_safe_assignable &&
             TT1::is_rational == TT2::is_rational &&
             TT1::is_vector == TT2::is_vector &&
             TT1::is_matrix == TT2::is_matrix &&
             TT1::is_complex_number == TT2::is_complex_number &&
-            TT1::is_polynom == TT2::is_polynom;
+            TT1::is_polynom == TT2::is_polynom
+            );
 
     static const bool is_initializable =
         type_pair_traits<T1, TE2>::is_initializable
         ||
+            (
             type_pair_traits<TE1, TE2>::is_initializable &&
             !type_pair_traits<T1, TE2>::is_initializable &&
             TT1::is_rational == TT2::is_rational &&
@@ -232,20 +239,22 @@ public:
             TT1::is_matrix == TT2::is_matrix &&
             TT1::is_complex_number == TT2::is_complex_number &&
             TT1::is_polynom == TT2::is_polynom
+            )
         ||
-        TT1::is_rational &&
-            type_pair_traits<TE1, T2>::is_initializable;
+        (TT1::is_rational && type_pair_traits<TE1, T2>::is_initializable);
 
     static const bool is_safe_initializable =
         type_pair_traits<T1, TE2>::is_safe_initializable
         ||
+            (
             type_pair_traits<TE1, TE2>::is_safe_initializable &&
             !type_pair_traits<T1, TE2>::is_safe_initializable &&
             TT1::is_rational == TT2::is_rational &&
             TT1::is_vector == TT2::is_vector &&
             TT1::is_matrix == TT2::is_matrix &&
             TT1::is_complex_number == TT2::is_complex_number &&
-            TT1::is_polynom == TT2::is_polynom;
+            TT1::is_polynom == TT2::is_polynom
+            );
 };
 
 
@@ -744,36 +753,47 @@ struct power_union_type :
             type_pair_traits<T2, T1>::is_specialized,
         !type_pair_traits<T2, T1>::is_safe_convertible &&    // T1 dominates
         (
-            type_pair_traits<T1, T2>::is_safe_convertible ||
-                std::numeric_limits<T1>::is_specialized &&
-                std::numeric_limits<T2>::is_specialized &&
+            (type_pair_traits<T1, T2>::is_safe_convertible ||
+                (std::numeric_limits<T1>::is_specialized &&
+                std::numeric_limits<T2>::is_specialized))
+                &&
                 (
+                    (
                     std::numeric_limits<T1>::is_integer &&
                     !std::numeric_limits<T2>::is_integer
+                    )
                     ||
+                    (
                     std::numeric_limits<T1>::is_integer &&
                     std::numeric_limits<T2>::is_integer &&
                     !std::numeric_limits<T1>::is_signed &&
                     std::numeric_limits<T2>::is_signed
+                    )
                     ||
+                    (
                     std::numeric_limits<T1>::is_integer &&
                     std::numeric_limits<T2>::is_integer &&
                     std::numeric_limits<T1>::is_signed &&
                     std::numeric_limits<T2>::is_signed &&
                     std::numeric_limits<T2>::digits >
                         std::numeric_limits<T1>::digits
+                    )
                     ||
+                    (
                     std::numeric_limits<T1>::is_integer &&
                     std::numeric_limits<T2>::is_integer &&
                     !std::numeric_limits<T1>::is_signed &&
                     !std::numeric_limits<T2>::is_signed &&
                     std::numeric_limits<T2>::digits >
                         std::numeric_limits<T1>::digits
+                    )
                     ||
+                    (
                     !std::numeric_limits<T1>::is_integer &&
                     !std::numeric_limits<T2>::is_integer &&
                     std::numeric_limits<T2>::digits >
                         std::numeric_limits<T1>::digits
+                    )
                 )
         )
     >

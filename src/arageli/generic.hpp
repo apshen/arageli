@@ -96,6 +96,11 @@ public:
         throw unsupported_operation();
     }
 
+    virtual generic_internal* abs () const
+    {
+        throw unsupported_operation();
+    }
+
     virtual generic_internal* logical_not () const
     {
         throw unsupported_operation();
@@ -291,6 +296,7 @@ public:
     virtual generic_big_int* clone () const;
     virtual std::string type () const;
     virtual bool operator_bool () const;
+    virtual generic_internal* abs () const;
     virtual generic_big_int* logical_not () const;
     virtual generic_big_int* unary_plus () const;
     virtual generic_big_int* unary_minus () const;
@@ -560,6 +566,10 @@ public:
 
 };
 
+inline generic_type abs (const generic_type& a)
+{
+    return a.value()->abs();
+}
 
 inline generic_type operator+ (const generic_type& a, const generic_type& b)
 {

@@ -186,7 +186,7 @@ void big_int::from_native_float (const T& x)
 
         try
         {
-            T module = _Internal::max_digit;
+            T module = T(_Internal::max_digit);
             module += unit(module);
 
             for(std::size_t i = 0; i < n; ++i)
@@ -299,7 +299,7 @@ T big_int::to_native_float () const
 
         T res = factory<T>::null();
 
-        T module = _Internal::max_digit;
+        T module = T(_Internal::max_digit);
         module += unit(module);
         T curscale = unit(module);
 

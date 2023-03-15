@@ -509,7 +509,7 @@ std::istream& input_polynom_internal
 {
     char ch = 0;
     in >> ch;
-    if(!in && !in.eof() || ch != '+' && ch != '-')
+    if((!in && !in.eof()) || (ch != '+' && ch != '-'))
         return in;
     vector<T, REFCNT> res;
     in >> res;

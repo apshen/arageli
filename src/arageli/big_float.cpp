@@ -1495,8 +1495,8 @@ std::istream & operator >> ( std::istream &is, big_float::special_numbers &sn )
 }
 #endif
 
-unsigned big_float::global_prec = 350; //bits precision
-unsigned big_float::global_mode = TO_NEAREST; //rounding mode
+long big_float::global_prec = 350; //bits precision
+long big_float::global_mode = TO_NEAREST; //rounding mode
 
 }
 #endif

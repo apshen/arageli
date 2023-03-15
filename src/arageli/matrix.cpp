@@ -1889,7 +1889,7 @@ std::istream& input_polynom_internal
 {
     char ch = 0;
     in >> ch;
-    if(!in && !in.eof() || ch != '+' && ch != '-')
+    if((!in && !in.eof()) || (ch != '+' && ch != '-'))
         return in;
     matrix<T, REFCNT> res;
     input_list(in, res);

@@ -640,7 +640,7 @@ inline monom<F, I>& inverse (const monom<F, I>& x, monom<F, I>* y)
 template <typename F, typename I>
 inline monom<F, I>& inverse (monom<F, I>* x)
 {
-    ARAGELI_ASSERT_0(x.is_const());
+    ARAGELI_ASSERT_0(x->is_const());
     inverse(&x->coef());
     return *x;
 }

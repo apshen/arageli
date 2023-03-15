@@ -411,7 +411,7 @@ In& operator>> (In& in, interval<T>& x)
 {
     vector<T, false> buf;    // WARNING! TEMPORARY!
     in >> buf;
-    if(!in && !in.eof() || buf.size() != 2)
+    if((!in && !in.eof()) || buf.size() != 2)
         in.clear(std::ios::badbit);
     else
     {

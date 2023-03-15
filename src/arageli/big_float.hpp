@@ -78,11 +78,9 @@ const int TO_M_INF = 6; ///< Rounds towards -infinity
 const int TO_INF = 7;   ///< Rounds outwards zero
 //@}
 
-const long int PREC_MIN = 2;
-const long int PREC_MAX = _Internal::max_digit;
-const long int D_PREC_MAX =
-    ( long ) (_Internal::max_digit * log ( 2.0l ) / log ( 10.0l ));
-
+constexpr long PREC_MIN = 2l;
+constexpr long PREC_MAX = std::numeric_limits<long>::max();
+const long D_PREC_MAX = (PREC_MAX * log(2.0l) / log( 10.0l ));
 
 class big_float;
 
@@ -734,11 +732,11 @@ private:
     big_int e; ///< exponent
     big_int s; //< significant
 
-    unsigned int prec; ///< bits precision for this big_float number
-    unsigned int mode; ///< big_float rounding mode for this number
+    long prec; ///< bits precision for this big_float number
+    long mode; ///< big_float rounding mode for this number
 
-    static unsigned int global_prec; ///< Global bits precision for big_float numbers
-    static unsigned int global_mode; ///< Global big_float rounding mode
+    static long global_prec; ///< Global bits precision for big_float numbers
+    static long global_mode; ///< Global big_float rounding mode
 
 private:
 
