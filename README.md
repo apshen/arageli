@@ -9,8 +9,8 @@ See project description in original [README](/README)
 
 ## Goals of this fork
 
-1. Compile library by recent versions of GCC and Clang  
-1. Improve perfomance of arbitrary precision computations: classes *big_int* and *big_float*   
+- Compile library by recent versions of GCC and Clang. There was no active development in original [SVN repository](https://sourceforge.net/p/arageli/code/HEAD/tree/) since the second half of 2012. Building the code from SVN fails with modern compiler versions.  
+- Improve perfomance of arbitrary precision computations: classes *big_int* and *big_float*. It should be comparable to well known arbitrary precision libraries like [GMP](https://gmplib.org) and [Boost.Multiprecision](https://github.com/boostorg/multiprecision).
 
 Supporting MSVC *is not* a goal. However, it will be great if there is a volunteer who can with MSVC.
 
@@ -25,7 +25,7 @@ mkdir mybuild
 cd mybuild
 ```
 
-Optionaly override default compiler 
+Optionally override default compiler 
 
 ```
 export CC=/usr/bin/clang-15
