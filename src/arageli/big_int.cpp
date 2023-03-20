@@ -43,6 +43,7 @@
 #include <cstdlib>  // it maybe for std::rand only
 #include <limits>
 #include <cmath>
+#include <type_traits>
 
 #include "big_int.hpp"
 #include "_utility.hpp"
@@ -51,28 +52,11 @@
 namespace Arageli
 {
 
-
 namespace _Internal
 {
-
-template <typename T> struct Unsigned { typedef T Type; };
-
-#define _ARAGELI_IMPL_UNSIGNED_SIGNED(TYPE)    \
-    template <> struct Unsigned<TYPE> { typedef unsigned TYPE Type; }
-
-_ARAGELI_IMPL_UNSIGNED_SIGNED(char);
-_ARAGELI_IMPL_UNSIGNED_SIGNED(short);
-_ARAGELI_IMPL_UNSIGNED_SIGNED(int);
-_ARAGELI_IMPL_UNSIGNED_SIGNED(long);
-
-#ifdef ARAGELI_INT64_SUPPORT
-    _ARAGELI_IMPL_UNSIGNED_SIGNED(__int64);
-#endif
-
-template <> struct Unsigned<signed char> { typedef unsigned char Type; };
-
+    template <typename T> struct Unsigned : std::make_unsigned<T> {};
+    template <> struct Unsigned<bool> { typedef bool type; };
 }
-
 
 template <typename T>
 void big_int::from_native_int_helper (const T &x, true_type)
@@ -120,7 +104,7 @@ void big_int::from_native_int (const T& x)
     else if(is_negative(x))
     {
         // WARNING. The following expression is not portable.
-        from_native_int(static_cast<typename _Internal::Unsigned<T>::Type>(-x));
+        from_native_int(static_cast<typename _Internal::Unsigned<T>::type>(-x));
         number.sign = -1;
     }
     else
@@ -211,7 +195,7 @@ T big_int::to_native_int () const
         // WARNING. The following expression is not portable.
         return
             -static_cast<T>
-            (to_native_int_without_sign<typename _Internal::Unsigned<T>::Type>());
+            (to_native_int_without_sign<typename _Internal::Unsigned<T>::type>());
     }
     else return to_native_int_without_sign<T>();
 }
