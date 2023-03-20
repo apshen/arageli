@@ -92,7 +92,8 @@ void big_float::from_native_float(const T &f)
     prec = Nl::digits;
     mode = big_float::global_mode;
 
-    s.free_mem_and_alloc_number( f > 0 ? 1 : -1, man, digits_need + 1 );
+    s.number = big_int::big_struct(f > 0 ? 1 : -1, digits_need + 1, digits_need + 1);
+    big_int::copy_data(s.number.digits(), man, digits_need + 1);
 
     int ex;
     frexp (f, &ex);
@@ -138,7 +139,7 @@ T big_float::to_native_float () const
     int digits_need = tlen / _Internal::bits_per_digit + 1;
     _Internal::digit *p = new _Internal::digit [ digits_need ];
 
-    std::memmove( p, temp.number.data, digits_need * sizeof (_Internal::digit));
+    std::memmove( p, temp.number.digits(), digits_need * sizeof (_Internal::digit));
     /* p [digits_need - 1] &= ~(_Internal::digit(1) << tlen %_Internal::bits_per_digit - 1)*/;
     T ret = s.sign() * ldexp (*((T*)p), e + (shift + Nl::max_exponent + Nl::digits - 3));
     delete [] p;

@@ -77,50 +77,31 @@ template <> struct Unsigned<signed char> { typedef unsigned char Type; };
 template <typename T>
 void big_int::from_native_int_helper (const T &x, true_type)
 {
-    _Internal::digit* mem = big_int::get_mem_for_data(1);
-    try
-    {
-        mem[0] = _Internal::digit(x);
-        free_mem_and_alloc_number(1, mem, 1);
-    }
-    catch(...)
-    {
-        free_data(mem);
-        throw;
-    }
+    number = big_struct(1, 1, 1);
+    number[0] = _Internal::digit(x);
 }
 
 template <typename T>
 void big_int::from_native_int_helper (const T &x, false_type)
 {
-    typedef std::numeric_limits<T> Nl;
-    std::size_t n =
-        Nl::digits / _Internal::bits_per_digit +
-        bool(Nl::digits % _Internal::bits_per_digit);
 
-    _Internal::digit* mem = get_mem_for_data(n);
+    T xx = x;
 
-    try
+    std::size_t n = 0;
+    while(xx)
     {
-        T xx = x;
-
-        for(std::size_t i = 0; i < n; ++i, xx >>= _Internal::bits_per_digit)
-            mem[i] = xx & _Internal::max_digit;
-
-        ARAGELI_ASSERT_1(Arageli::is_null(xx));
-
-        std::size_t newlen;
-        mem = optimize(newlen, mem, n);
-        ARAGELI_ASSERT_1(newlen);
-        free_mem_and_alloc_number(1, mem, newlen);
-    }
-    catch(...)
-    {
-        free_data(mem);
-        throw;
+        xx >>= _Internal::bits_per_digit;
+        ++n;
     }
 
-    number.sign = +1;
+    number = big_struct(1, n, n);
+
+    xx = x;
+
+    for(std::size_t i = 0; i < n; ++i, xx >>= _Internal::bits_per_digit)
+        number[i] = xx & _Internal::max_digit;
+
+    ARAGELI_ASSERT_1(Arageli::is_null(xx));
 }
 
 
@@ -130,10 +111,12 @@ void big_int::from_native_int (const T& x)
     typedef std::numeric_limits<T> Nl;
     ARAGELI_ASSERT_1(Nl::is_specialized);
     ARAGELI_ASSERT_1(Nl::is_integer);
-    free_mem_and_alloc_zero();
 
     if(Arageli::is_null(x))
+    {
+        number.set_zero();
         return;
+    }
     else if(is_negative(x))
     {
         // WARNING. The following expression is not portable.
@@ -156,10 +139,11 @@ void big_int::from_native_float (const T& x)
     ARAGELI_ASSERT_0(!(Nl::has_infinity && x == Nl::infinity()));
     ARAGELI_ASSERT_0(!(Nl::has_denorm && x == Nl::denorm_min()));
 
-    free_mem_and_alloc_zero();
-
     if(x > opposite_unit(x) && x < unit(x))
+    {
+        number.set_zero();
         return;
+    }
     else if(is_negative(x))
     {
         from_native_float(-x);
@@ -182,40 +166,28 @@ void big_int::from_native_float (const T& x)
             (Nl::digits + 1) / _Internal::bits_per_digit +
             bool((Nl::digits + 1) % _Internal::bits_per_digit);
 
-        _Internal::digit* mem = get_mem_for_data(n);
+        number = big_struct(1, n, n);
 
-        try
+        T module = T(_Internal::max_digit);
+        module += unit(module);
+
+        for(std::size_t i = 0; i < n; ++i)
         {
-            T module = T(_Internal::max_digit);
-            module += unit(module);
+            T remaind = std::fmod(xx, module);
 
-            for(std::size_t i = 0; i < n; ++i)
-            {
-                T remaind = std::fmod(xx, module);
+            ARAGELI_ASSERT_1(std::floor(remaind) == remaind);
+            ARAGELI_ASSERT_1(_Internal::digit(remaind) == remaind);
 
-                ARAGELI_ASSERT_1(std::floor(remaind) == remaind);
-                ARAGELI_ASSERT_1(_Internal::digit(remaind) == remaind);
+            number[i] = _Internal::digit(remaind);
+            xx = (xx - remaind) / module;
 
-                mem[i] = _Internal::digit(remaind);
-                xx = (xx - remaind) / module;
-
-                ARAGELI_ASSERT_1(std::floor(xx) == xx);
-            }
-
-            ARAGELI_ASSERT_1(Arageli::is_null(xx));
-
-            std::size_t newlen;
-            mem = big_int::optimize(newlen, mem, n);
-            ARAGELI_ASSERT_1(newlen);
-            free_mem_and_alloc_number(1, mem, newlen);
-        }
-        catch(...)
-        {
-            free_data(mem);
-            throw;
+            ARAGELI_ASSERT_1(std::floor(xx) == xx);
         }
 
-        number.sign = +1;
+        ARAGELI_ASSERT_1(Arageli::is_null(xx));
+
+        big_int::optimize(number);
+        ARAGELI_ASSERT_1(number.len != 0);
 
         if(expon > 0)
             *this <<= expon;
@@ -253,10 +225,10 @@ T big_int::to_native_int_without_sign () const
     ARAGELI_ASSERT_1(*this <= big_int(std::numeric_limits<T>::max()));
     ARAGELI_ASSERT_1(!is_null());
 
-    T res = number.data[0];
+    T res = number.digits()[0];
 
     for(std::size_t i = 1; i < number.len; ++i)
-        res |= number.data[i] << (i * _Internal::bits_per_digit);
+        res |= number.digits()[i] << (i * _Internal::bits_per_digit);
 
     return res;
 }
@@ -305,7 +277,7 @@ T big_int::to_native_float () const
 
         for(std::size_t i = 0; i < t.number.len; ++i)
         {
-            res += t.number.data[i]*curscale;
+            res += t.number.digits()[i]*curscale;
             curscale *= module;
         }
 
@@ -338,7 +310,7 @@ Stream& io_binary<big_int>::output_stream (Stream& out, const big_int& x)
     {
         std::size_t len = x.number.len;    // length in limbs
         output_binary_stream(out, len);
-        output_binary_stream(out, x.number.data, len);
+        output_binary_stream(out, x.number.digits(), len);
     }
 
     return out;
@@ -367,14 +339,14 @@ Stream& io_binary<big_int>::input_stream (Stream& in, big_int& x)
         if(x.number.len == len)
             x.number.sign = sign;
         else
-            x.free_mem_and_alloc_number(sign, x.get_mem_for_data(len), len);
+            x = big_int(sign, len, len);
 
         // Load DIGITS.
-        if(!input_binary_stream(in, x.number.data, len))
+        if(!input_binary_stream(in, x.number.digits(), len))
         {
             // A new value load fails and an old value is lost.
             // Make sure that x object is in correct state.
-            x.number.data[len - 1] = 1;    // kills all leading zeros
+            x.number[len - 1] = 1;    // kills all leading zeros
         }
     }
     else
@@ -425,80 +397,10 @@ void big_arith_error(const char *s)
 /*                         */
 /***************************/
 
-
-digit* big_int::get_mem_for_data (std::size_t nitems)
-{
-    digit* p = reinterpret_cast<digit*>(std::malloc(nitems * sizeof(digit)));
-    if(!p)
-        big_arith_error("the heap overflow");
-    return p;
-}
-
-
-void big_int::free_data (digit *p)
-{
-    free(p);
-}
-
-
-digit* big_int::realloc_data (digit* p, std::size_t newnitems)
-{
-    if(newnitems)
-    {
-        p = reinterpret_cast<digit*>(realloc(p, newnitems * sizeof(digit)));
-        if(!p)
-            big_arith_error("the heap overflow");
-    }
-    else
-    {
-        free_data(p);
-        p = 0;
-    }
-
-    return p;
-}
-
-
 void big_int::copy_data
 (digit* dest, const digit* source, std::size_t newnitems)
 {
     memmove(dest, source, newnitems * sizeof(digit));
-}
-
-/***************************/
-/*                         */
-/*    number allocation    */
-/*         routines        */
-/*                         */
-/***************************/
-
-void big_int::alloc_number
-(int new_sign, digit * new_data, std::size_t new_len)
-{
-    ARAGELI_ASSERT_1(new_sign == -1 || new_sign == 0 || new_sign == 1);
-
-    number.sign = new_sign;
-    number.data = new_data;
-    number.len = new_len;
-}
-
-void big_int::free_number()
-{
-    free_data(number.data);
-}
-
-void big_int::free_mem_and_alloc_number
-(int new_sign, digit* new_data, std::size_t new_len)
-{
-    free_number();
-    alloc_number(new_sign, new_data, new_len);
-}
-
-
-void big_int::free_mem_and_alloc_zero ()
-{
-    free_number();
-    alloc_zero();
 }
 
 /***************************/
@@ -530,29 +432,25 @@ void calc_bdn_radix (digit radix, digit& bdn_radix, std::size_t& chars_per_digit
 /*                         */
 /***************************/
 
-digit* big_int::optimize (std::size_t& new_len, digit * p, std::size_t len)
+void big_int::optimize (big_struct &number)
 {
     // deleting leading zeros
 
-    new_len = _Internal::do_optimize(p, len);
+    std::size_t new_len = _Internal::do_optimize(number.digits(), number.len);
 
-    if(new_len != len)
+    if(new_len != number.len)
     {
         if(new_len)
         {
-            digit* new_p = get_mem_for_data(new_len);
-            copy_data(new_p, p, new_len);
-            free_data(p);
-            p = new_p;
+            big_struct new_num(number.sign, new_len, new_len);
+            copy_data(new_num.digits(), number.digits(), new_len);
+            number = std::move(new_num);
         }
         else
         {
-            free_data(p);
-            p = 0;
+            number.set_zero();
         }
     }
-
-    return p;
 }
 
 /***************************/
@@ -569,16 +467,8 @@ big_int::big_int (const char* str)
     s >> b;
     if(!s && !s.eof())
         throw incorrect_string(str);
-    alloc_zero();
 
-    try
-    {
-        *this = b;
-    }
-    catch(...)
-    {
-        free_number(); throw;
-    }
+    *this = b;
 }
 
 
@@ -595,28 +485,16 @@ big_int& big_int::operator= (const big_int & b)
 
     if(b.number.sign == 0)
     {
-        free_mem_and_alloc_zero();
+        number.set_zero();
     }
     else
     {
-        free_mem_and_alloc_number(b.number.sign, get_mem_for_data(b.number.len), b.number.len);
-        copy_data(number.data, b.number.data, b.number.len);
+        number = big_struct(b.number.sign, b.number.len, b.number.len);
+        copy_data(number.digits(), b.number.digits(), b.number.len);
     }
 
     return *this;
 }
-
-big_int& big_int::operator= (big_int && b)
-{
-    ARAGELI_ASSERT_1(b.number.sign == -1 || b.number.sign == 0 || b.number.sign == 1);
-
-    free_number();
-    number = b.number;
-    b.alloc_zero();
-
-    return *this;
-}
-
 
 /***************************/
 /*                         */
@@ -627,22 +505,14 @@ big_int& big_int::operator= (big_int && b)
 
 big_int big_int::operator- () const    // unary minus
 {
-    big_int a;
-    digit *result;
-    std::size_t blen;
-
-    blen = number.len;
-
-    if(number.sign == 0)
-        a.free_mem_and_alloc_zero();
-    else
+    if(number.sign != 0)
     {
-        result = get_mem_for_data(blen);
-        copy_data(result, number.data, blen);      // copy data
-        a.free_mem_and_alloc_number(-number.sign, result, blen);
+        big_int a(-number.sign, number.len, number.len);
+        copy_data(a.number.digits(), number.digits(), number.len);
+        return a;
     }
 
-    return a;
+    return big_int();
 }
 
 /***************************/
@@ -656,16 +526,13 @@ big_int operator+ (const big_int& b, const big_int& c)
     ARAGELI_ASSERT_1(b.number.sign == -1 || b.number.sign == 0 || b.number.sign == 1);
     ARAGELI_ASSERT_1(c.number.sign == -1 || c.number.sign == 0 || c.number.sign == 1);
 
-    digit *sum;
-    std::size_t sumlen;
     big_int a;
     int bsign = b.number.sign;
     int csign = c.number.sign;
-    int sumsign;
     std::size_t blen = b.number.len;
     std::size_t clen = c.number.len;
-    digit *bdata = b.number.data;
-    digit *cdata = c.number.data;
+    digit *bdata = b.number.digits();
+    digit *cdata = c.number.digits();
     const big_int::big_struct *u, *v;
 
     if(bsign == 0)
@@ -676,7 +543,6 @@ big_int operator+ (const big_int& b, const big_int& c)
     {
         if(bsign == csign)
         {
-            sumsign = bsign;
             if (blen >= clen)
             {
                 u = &b.number;
@@ -687,36 +553,36 @@ big_int operator+ (const big_int& b, const big_int& c)
                 u = &c.number;
                 v = &b.number;
             }
-            sum = big_int::get_mem_for_data(u->len + 1);
-            big_int::copy_data(sum, u->data, u->len);
-            sumlen = _Internal::do_add(sum, v->data, u->len, v->len);
+            big_int::big_struct sum(bsign, u->len + 1, u->len + 1);
+            big_int::copy_data(sum.digits(), u->digits(), u->len);
+            sum.len = _Internal::do_add(sum.digits(), v->digits(), u->len, v->len);
+            a.number = std::move(sum);
         }
         else // bsign != csign
         {
             if(blen >= clen)
             {
-                sum = big_int::get_mem_for_data(blen);
-                sumsign = bsign;
-                big_int::copy_data(sum, bdata, blen);
-                if(_Internal::do_sub(sum, cdata, blen, clen))     // был заем
-                    goto c_ge_b;                // yes, it is
-                sum = big_int::optimize(sumlen, sum, blen);
+                big_int::big_struct sum(bsign, blen, blen);
+                big_int::copy_data(sum.digits(), bdata, blen);
+                bool was_borrow = _Internal::do_sub(sum.digits(), cdata, blen, clen);
+                if(was_borrow)
+                {
+                    big_int::copy_data(sum.digits(), cdata, clen);
+                    _Internal::do_sub(sum.digits(), bdata, clen, blen);
+                    sum.sign = csign;
+                }
+                big_int::optimize(sum);
+                a.number = std::move(sum);
             }
             else
             {
-                sum = big_int::get_mem_for_data(clen);
-            c_ge_b:
-                sumsign = csign;
-                big_int::copy_data(sum, cdata, clen);
-                _Internal::do_sub(sum, bdata, clen, blen);
-                sum = big_int::optimize(sumlen, sum, clen);
+                big_int::big_struct sum(csign, clen, clen);
+                big_int::copy_data(sum.digits(), cdata, clen);
+                _Internal::do_sub(sum.digits(), bdata, clen, blen);
+                big_int::optimize(sum);
+                a.number = std::move(sum);
             }
         }
-
-        if(sumlen)
-            a.free_mem_and_alloc_number(sumsign, sum, sumlen);
-        else
-            a.free_mem_and_alloc_zero();
     }
 
     return a;
@@ -748,34 +614,31 @@ big_int operator* (const big_int& b, const big_int& c)
     ARAGELI_ASSERT_1(b.number.sign == -1 || b.number.sign == 0 || b.number.sign == 1);
     ARAGELI_ASSERT_1(c.number.sign == -1 || c.number.sign == 0 || c.number.sign == 1);
 
-    digit *result;
-    std::size_t blen, clen, resultlen;
-    int bsign, csign;
-    big_int a;
+    int bsign = b.number.sign;
+    int csign = c.number.sign;
 
-    blen = b.number.len;
-    clen = c.number.len;
-    bsign = b.number.sign;
-    csign = c.number.sign;
-
-    if((bsign == 0) || (csign == 0))
-        a.free_mem_and_alloc_zero();
-    else
+    if((bsign != 0) && (csign != 0))
     {
-        resultlen = blen + clen;
-        result = big_int::get_mem_for_data(resultlen);
+        std::size_t blen = b.number.len;
+        std::size_t clen = c.number.len;
+
+        std::size_t resultlen = blen + clen;
+        big_int a(bsign * csign, resultlen, resultlen);
+
         resultlen = _Internal::do_mult
         (
-            b.number.data,
-            c.number.data,
-            result,
+            b.number.digits(),
+            c.number.digits(),
+            a.number.digits(),
             blen,
             clen
         );
-        a.free_mem_and_alloc_number(bsign * csign, result, resultlen);
-    }
 
-    return a;
+        a.number.len = resultlen;
+        return a;
+    }
+    else
+        return big_int();
 }
 
 
@@ -790,38 +653,37 @@ void _Internal::xdivide (big_int& a, const big_int& b, const big_int& c, big_int
 {
     // a = b / c; res = b % c
 
-    digit *u, *v, *q, *r;
-    std::size_t alen, blen, clen, rlen;
     digit runint;
-    int bsign, csign;
 
-    blen = b.number.len;
-    clen = c.number.len;
-    bsign = b.number.sign;
-    csign = c.number.sign;
+    std::size_t alen;
+    std::size_t rlen;
+    std::size_t blen = b.number.len;
+    std::size_t clen = c.number.len;
+    int bsign = b.number.sign;
+    int csign = c.number.sign;
 
-    if(!csign)
+    if(csign == 0)
         big_arith_error("divide by zero");
-    else if(!bsign)
+    else if(bsign == 0)
     {
-        a.free_mem_and_alloc_zero();
-        res.free_mem_and_alloc_zero();
+        a = big_int();
+        res = big_int();
     }
     else if (blen < clen)
     {
-        a.free_mem_and_alloc_zero();
+        a = big_int();
         res = b;
     }
     else if (clen == 1)
     {
-        q = big_int::get_mem_for_data(blen);
+        big_int::big_struct q(bsign * csign, blen, blen);
         runint =
             _Internal::do_divide_by_digit
             (
-                b.number.data,
-                q,
+                b.number.digits(),
+                q.digits(),
                 blen,
-                c.number.data[0]
+                c.number[0]
             );
 
         if(q[blen - 1])
@@ -830,54 +692,52 @@ void _Internal::xdivide (big_int& a, const big_int& b, const big_int& c, big_int
             alen = blen - 1;
 
         if(alen)
-            a.free_mem_and_alloc_number(bsign * csign, q, alen);
-        else
         {
-            a.free_mem_and_alloc_zero();
-            big_int::free_data(q);
+            a.number = std::move(q);
+            a.number.len = alen;
         }
+        else
+            a.number.set_zero();
 
-        if(runint == 0)
-            res.free_mem_and_alloc_zero();
-        else
+        if(runint != 0)
         {
-            u = big_int::get_mem_for_data(1);
-            u[0] = runint;
-            res.free_mem_and_alloc_number(bsign, u, 1);
+            res = big_int(bsign, 1, 1);
+            res.number[0] = runint;
         }
+        else
+            res.number.set_zero();
 
     }
     else
     {
-        u = big_int::get_mem_for_data(blen + 1);
-        v = big_int::get_mem_for_data(clen);
-        q = big_int::get_mem_for_data(blen - clen + 1);
-        big_int::copy_data(u, b.number.data, blen);
-        big_int::copy_data(v, c.number.data, clen);
+        big_int::big_struct u(1, blen + 1, blen + 1);
+        big_int::big_struct v(1, clen, clen);
+        big_int::big_struct q(bsign * csign, blen - clen + 1, blen - clen + 1);
+        big_int::copy_data(u.digits(), b.number.digits(), blen);
+        big_int::copy_data(v.digits(), c.number.digits(), clen);
 
-        rlen = _Internal::do_divide(u, v, q, blen, clen);
+        rlen = _Internal::do_divide(u.digits(), v.digits(), q.digits(), blen, clen);
         if(q[blen - clen])
             alen = blen - clen + 1;
         else
             alen = blen - clen;
 
-        big_int::free_data(v);
         if(rlen == 0)
-            res.free_mem_and_alloc_zero();
+            res.number.set_zero();
         else
         {
-            r = big_int::get_mem_for_data(rlen);
-            big_int::copy_data(r, u, rlen);
-            res.free_mem_and_alloc_number(bsign, r, rlen);
+            res = big_int(bsign, rlen, rlen);
+            big_int::copy_data(res.number.digits(), u.digits(), rlen);
         }
 
-        big_int::free_data(u);
         if(alen != 0)
-            a.free_mem_and_alloc_number(bsign * csign, q, alen);
+        {
+            a.number = std::move(q);
+            a.number.len = alen;
+        }
         else
         {
-            a.free_mem_and_alloc_zero();
-            big_int::free_data(q);
+            a.number.set_zero();
         }
     }
 
@@ -985,34 +845,21 @@ big_int big_int::random_with_length_or_less (std::size_t length) //bits
 {
     int bits_in_highest = length % _Internal::bits_per_digit;
     std::size_t len = length/_Internal::bits_per_digit + 1;
-    digit *p = big_int::get_mem_for_data(len);
 
-    try
-    {
-        for(std::size_t i = 0; i < len - 1; i++)
-            p[i] = random_digit();
+    big_int a(1, len, len);
 
-        if(bits_in_highest)
-            p[len - 1] = random_digit() >>
-                (_Internal::bits_per_digit - bits_in_highest);
-        else
-            p[len - 1] = 0;
+    for(std::size_t i = 0; i < len - 1; i++)
+        a.number[i] = random_digit();
 
-        std::size_t new_len;
+    if(bits_in_highest)
+        a.number[len - 1] = random_digit() >>
+           (_Internal::bits_per_digit - bits_in_highest);
+    else
+        a.number[len - 1] = 0;
 
-        p = big_int::optimize(new_len, p, len);
-        big_int a;
+    big_int::optimize(a.number);
 
-        if(new_len)
-            a.free_mem_and_alloc_number(1, p, new_len);
-
-        return a;
-    }
-    catch(...)
-    {
-        big_int::free_data(p);
-        throw;
-    }
+    return a;
 }
 
 /***************************/
@@ -1046,45 +893,26 @@ std::ostream& operator<< (std::ostream& s, const big_int& x)
     calc_bdn_radix(stream_radix(s), bdn_radix, chars_per_block);
 
     std::size_t bdnlen = x.number.len;
-    digit *bdn = big_int::get_mem_for_data(2 * bdnlen); //bdnlen + bdnlen/chars_per_block
+    big_int::big_struct bdn(1, 2 * bdnlen, 2 * bdnlen); //bdnlen + bdnlen/chars_per_block
 
-    try
+    big_int::big_struct numberdata(1, x.number.len, x.number.len);
+
+    big_int::copy_data(numberdata.digits(), x.number.digits(), x.number.len);
+    bdnlen = _Internal::do_big_int_to_bdn(numberdata.digits(), bdn.digits(), x.number.len, bdn_radix);
+
+    _Internal::auto_stream_state _ass(s, s.flags() & ~std::iostream::showpos);
+
+    if(x.number.sign == -1)
+        s << '-';
+    s << bdn[bdnlen - 1];
+
+    for (std::size_t i = bdnlen - 1; i > 0; i--)
     {
-        digit *numberdata = big_int::get_mem_for_data(x.number.len);
-
-        try
-        {
-            big_int::copy_data(numberdata, x.number.data, x.number.len);
-            bdnlen = _Internal::do_big_int_to_bdn(numberdata, bdn, x.number.len, bdn_radix);
-        }
-        catch(...)
-        {
-            big_int::free_data(numberdata);
-            throw;
-        }
-
-        big_int::free_data(numberdata);
-
-        _Internal::auto_stream_state _ass(s, s.flags() & ~std::iostream::showpos);
-
-        if(x.number.sign == -1)
-            s << '-';
-        s << bdn[bdnlen - 1];
-
-        for (std::size_t i = bdnlen - 1; i > 0; i--)
-        {
-            s.width(chars_per_block);
-            s.fill('0');
-            s << bdn[i - 1];
-        }
-    }
-    catch(...)
-    {
-        big_int::free_data(bdn);
-        throw;
+        s.width(chars_per_block);
+        s.fill('0');
+        s << bdn[i - 1];
     }
 
-    big_int::free_data(bdn);
     return s;
 }
 
@@ -1366,7 +1194,7 @@ std::istream& operator>> (std::istream& s, big_int& x)
 
     std::size_t length_of_str = buffer.length();
     std::size_t number_of_blocks = (length_of_str - 1)/chars_per_block + 1;
-    _Internal::auto_array<digit> bdn(big_int::get_mem_for_data(number_of_blocks));
+    big_int::big_struct bdn(1, number_of_blocks, number_of_blocks);
     std::size_t length_of_block = length_of_str % chars_per_block;
                             // for the first block
     if(!length_of_block)
@@ -1378,28 +1206,28 @@ std::istream& operator>> (std::istream& s, big_int& x)
         std::string block = buffer.substr(buffer_cur, length_of_block);
         std::istringstream stream_block(block);
         set_stream_radix(stream_block, radix);
-        stream_block >> bdn.get()[j-1];
+        stream_block >> bdn[j-1];
         buffer_cur += length_of_block;
         length_of_block = chars_per_block;  // for the last blocks
     }
 
-    _Internal::auto_array<digit> data(big_int::get_mem_for_data(number_of_blocks));
+    big_int::big_struct data(1, number_of_blocks, number_of_blocks);
 
     len = _Internal::do_bdn_to_big_int
     (
-        bdn.get(),
-        data.get(),
+        bdn.digits(),
+        data.digits(),
         number_of_blocks,
         bdn_radix
     );
 
-    big_int::free_data(bdn.release());
-    digit* d = big_int::realloc_data(data.release(), len);
-
-    if(d)
-        x.free_mem_and_alloc_number(sign, d, len);
+    if(len)
+    {
+        x = big_int(sign, len, len);
+        big_int::copy_data(x.number.digits(), data.digits(), len);
+    }
     else
-        x.free_mem_and_alloc_zero();
+        x.number.set_zero();
 
     if(brackets && !_Internal::read_literal(s, ")"))
         throw big_int::incorrect_string(std::string(1, s.peek()));
@@ -1416,7 +1244,7 @@ std::size_t big_int::length () const
     if(!number.len)
         return 0;
     std::size_t l = (number.len - 1) * _Internal::bits_per_digit;
-    digit highest = number.data[number.len - 1];
+    digit highest = number.digits()[number.len - 1];
     while(highest >>= 1)
         l++;
     return l + 1;
@@ -1426,7 +1254,7 @@ std::size_t big_int::length () const
 bool big_int::operator[] (std::size_t k) const
 {
     ARAGELI_ASSERT_0(k < length());
-    return (number.data[k / _Internal::bits_per_digit] >>
+    return (number.digits()[k / _Internal::bits_per_digit] >>
         (k % _Internal::bits_per_digit)) % 2;
 }
 
@@ -1443,29 +1271,26 @@ big_int operator<< (const big_int& a, std::size_t n)
     n %= _Internal::bits_per_digit;
     digit t = 0;
     std::size_t k = _Internal::bits_per_digit - n;
-    digit* res_data = big_int::get_mem_for_data(res_len);
-    const digit* data = a.number.data;
+    big_int res(a.number.sign, res_len, res_len);
+    const digit* data = a.number.digits();
 
-    //  memset(res_data, 0, m * sizeof(digit));
-    std::fill_n(res_data, m, digit(0));
+    std::fill_n(res.number.digits(), m, digit(0));
 
     if(n)
     {
         for(std::size_t i = 0; i < a_len; i++)
         {
-            res_data[m + i] = (data[i] << n) | t;
+            res.number[m + i] = (data[i] << n) | t;
             t = data[i] >> k;
         }
         if(t)
-            res_data[m + a_len] = t;
+            res.number[m + a_len] = t;
     }
     else
     {
-        std::copy(data, data + a_len, res_data + m);
+        std::copy(data, data + a_len, res.number.digits() + m);
     }
 
-    big_int res;
-    res.free_mem_and_alloc_number(a.number.sign, res_data, res_len);
     return res;
 }
 
@@ -1486,8 +1311,9 @@ big_int operator>> (const big_int& a, std::size_t n)
     n %= _Internal::bits_per_digit;
     std::size_t k = _Internal::bits_per_digit - n;
     digit t = 0;
-    digit* res_data = big_int::get_mem_for_data(res_len);
-    const digit* data = a.number.data;
+
+    big_int res(a.number.sign, res_len, res_len);
+    const digit* data = a.number.digits();
 
     if(n)
     {
@@ -1495,17 +1321,15 @@ big_int operator>> (const big_int& a, std::size_t n)
             t = data[a_len - 1] << k;
         for(std::size_t i = res_len; i > 0; i--)
         {
-            res_data[i - 1] = (data[i + m - 1] >> n) | t;
+            res.number[i - 1] = (data[i + m - 1] >> n) | t;
             t = data[i + m - 1] << k;
         }
     }
     else
     {
-        std::copy(data + m, data + m + res_len, res_data);
+        std::copy(data + m, data + m + res_len, res.number.digits());
     }
 
-    big_int res;
-    res.free_mem_and_alloc_number(a.number.sign, res_data, res_len);
     return res;
 }
 
@@ -1515,27 +1339,26 @@ big_int operator& (const big_int& a, const big_int& b)
     std::size_t reslen = std::min(a.number.len, b.number.len);
     if(reslen == 0)
         return big_int();
-    digit *res = big_int::get_mem_for_data(reslen);
+    big_int::big_struct res(1, reslen, reslen);
 
     // the current size of nonzero part of the number in res
     std::size_t lastnz = 0;
 
     for(std::size_t i = 0; i < reslen; ++i)
     {
-        res[i] = a.number.data[i] & b.number.data[i];
+        res[i] = a.number.digits()[i] & b.number.digits()[i];
         if(res[i])
             lastnz = i+1;
     }
 
     if(lastnz)
     {
-        big_int resbi;
-        resbi.free_mem_and_alloc_number(1, res, lastnz);
+        big_int resbi(1, lastnz, lastnz);
+        big_int::copy_data(resbi.number.digits(), res.digits(), lastnz);
         return resbi;
     }
     else
     {
-        big_int::free_data(res);
         return big_int();
     }
 }

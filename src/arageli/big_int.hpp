@@ -158,10 +158,7 @@ public:
 
     /// Constructs a zero.
     /** After this initialization call of is_null returns true. */
-    big_int ()
-    {
-        alloc_zero();
-    }
+    big_int () = default;
 
     /// Converts a string to a big_int.
     /** Conversions is based on operator>> for std::istream.
@@ -173,24 +170,16 @@ public:
     big_int (const big_int& b)
     {
         ARAGELI_ASSERT_0(this != &b);
-        if(b.number.sign == 0)
+
+        if(b.number.sign != 0)
         {
-            alloc_zero();
-        }
-        else
-        {
-            alloc_number(b.number.sign, get_mem_for_data(b.number.len), b.number.len);
-            copy_data(number.data, b.number.data, b.number.len);
+            number = big_struct(b.number.sign, b.number.len, b.number.len);
+            copy_data(number.digits(), b.number.digits(), b.number.len);
         }
     }
 
     /// Move constructor
-    big_int (big_int&& b)
-    {
-        ARAGELI_ASSERT_0(this != &b);
-        number = b.number;
-        b.alloc_zero();
-    }
+    big_int (big_int&& b) = default;
 
     /// Additional constructor.  For GCC compatibility only!!!
     /** I do not really know why this is needed for GCC, but... it is needed!!!
@@ -201,7 +190,6 @@ public:
     template <typename T>
     big_int (const rational<T>& x)
     {
-        alloc_zero();
         *this = x.numerator()/x.denominator();
     }
 
@@ -212,7 +200,6 @@ public:
              typename std::enable_if<std::is_integral<I>::value, bool>::type = true>
     big_int (I x)
     {
-        alloc_zero();
         from_native_int(x);
     }
 
@@ -220,7 +207,6 @@ public:
              typename std::enable_if<std::is_floating_point<F>::value, bool>::type = true>
     big_int (F x)
     {
-        alloc_zero();
         from_native_float(x);
     }
 
@@ -258,10 +244,7 @@ public:
         return is_null();
     }
 
-    ~big_int ()
-    {
-        free_number();
-    }
+    ~big_int () = default;
 
     /// Copy assignment
     /** This is assignment operator
@@ -275,7 +258,7 @@ public:
      *
      *   @param b a new value
     */
-    big_int& operator= (big_int && b);
+    big_int& operator= (big_int && b) = default;
 
     big_int& operator= (const char* s)
     {
@@ -462,7 +445,7 @@ public:
 
     const digit* _digits () const
     {
-        return number.data;
+        return number.digits();
     }
 
 private:
@@ -472,28 +455,98 @@ private:
     // the following type is used inside the big_int unit and implements
     // the storage for a Big Integer Number
 
-    struct big_struct
+    struct digit_storage
+    {
+        digit *mbeg;        // the storage for digits
+        digit *mend;        // the end of storage
+        std::size_t len;    // the number of used digits
+
+        digit_storage() : mbeg(nullptr), mend(nullptr), len(0)
+        {
+        }
+
+        digit_storage(std::size_t s, std::size_t l) :
+            mbeg(allocate(s)),
+            mend(mbeg + s),
+            len(l)
+        {
+            ARAGELI_ASSERT_1(s >= l);
+            ARAGELI_ASSERT_1(l > 0);
+        }
+
+        ~digit_storage()
+        {
+            deallocate(mbeg);
+        }
+
+        digit_storage(digit_storage &&x) : digit_storage()
+        {
+            swap(x);
+        }
+
+        digit_storage &operator = (digit_storage &&x)
+        {
+            swap(x);
+
+            return *this;
+        }
+
+        digit &operator[](std::size_t i) const
+        {
+            return mbeg[i];
+        }
+
+        void swap(digit_storage &x)
+        {
+            std::swap(mbeg, x.mbeg);
+            std::swap(mend, x.mend);
+            std::swap(len, x.len);
+        }
+
+    private:
+        digit *allocate(size_t s)
+        {
+            digit *p = static_cast<digit *>(std::malloc(s * sizeof(digit)));
+            if(!p)
+                big_int::exception("Big arith error: the heap overflow");
+            return p;
+        }
+
+        void deallocate(digit *m)
+        {
+            if(m)
+                std::free(m);
+        }
+
+    };
+
+    struct big_struct : public digit_storage
     {
         int sign;           // the sign: 0, 1 or -1
-        digit *data;        // the storage for digits
-        std::size_t len;    // the number of digits
+
+        big_struct() : sign(0)
+        {
+        }
+
+        big_struct(big_struct &&) = default;
+        big_struct &operator = (big_struct &&) = default;
+
+        big_struct(int s, std::size_t c, std::size_t l) :
+            digit_storage(c, l),
+            sign(s)
+        {
+        }
+
+        digit *digits() const
+        {
+            return mbeg;
+        }
+
+        void set_zero()
+        {
+            *this = big_struct();
+        }
     } number;
-
-    // number allocation routines
-    void alloc_number (int new_sign, digit* new_mem, std::size_t new_len);
-    void free_number ();
-    void free_mem_and_alloc_number (int new_sign, digit* new_data, std::size_t new_len);
-
-    void alloc_zero ()
-    {
-        alloc_number(0, 0, 0);
-    }
-
-    void free_mem_and_alloc_zero ();
-
-    static digit* get_mem_for_data (std::size_t nitems);
-    static void free_data (digit *p);
-    static digit* realloc_data (digit* p, std::size_t newnitems);
 
     static void copy_data
     (
@@ -502,8 +555,12 @@ private:
         std::size_t newnitems
     );
 
+    big_int(int s, std::size_t c, std::size_t l) : number(s, c, l)
+    {
+    }
+
     // Erases leading zeros.
-    static digit* optimize (std::size_t& new_len, digit * p, std::size_t len);
+    static void optimize (big_struct &numner);
 
     template <typename T>
     void from_native_int (const T& x);
@@ -662,8 +719,8 @@ inline big_int& operator>>= (big_int& a, std::size_t b)
 {
     if(a.number.len == 1)
     {
-        if(b >= _Internal::bits_per_digit || !(*a.number.data >>= b))
-            a.free_mem_and_alloc_zero();
+        if(b >= _Internal::bits_per_digit || !(a.number[0] >>= b))
+            a = big_int();
     }
     else
         a = a >> b;
@@ -952,7 +1009,7 @@ inline bool big_int::is_unit () const
     return
         number.len == 1 &&
         number.sign == +1 &&
-        *number.data == 1;
+        number[0] == 1;
 }
 
 inline bool big_int::is_opposite_unit () const
@@ -960,7 +1017,7 @@ inline bool big_int::is_opposite_unit () const
     return
         number.len == 1 &&
         number.sign == -1 &&
-        *number.data == 1;
+        number[0] == 1;
 }
 
 
@@ -1112,7 +1169,7 @@ inline big_int gcd (const big_int& a, const big_int& b, const T_factory& tfctr)
         // As this is Euclid's algorithm for two integers
         // we ignore the signs of the numbers.
 
-        return euclid(a.number.data[0], b.number.data[0]);
+        return euclid(a.number[0], b.number[0]);
     }
     else
         return euclid(a, b, tfctr);
