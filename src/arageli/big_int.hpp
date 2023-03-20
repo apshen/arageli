@@ -785,13 +785,40 @@ _ARAGELI_big_int_CMP1(>=)
 /**    @name Computed assignment operators. */
 //@{
 
-_ARAGELI_big_int_COMBINED_OPER(+)
-_ARAGELI_big_int_COMBINED_OPER(-)
-_ARAGELI_big_int_COMBINED_OPER(*)
-_ARAGELI_big_int_COMBINED_OPER(/)
-_ARAGELI_big_int_COMBINED_OPER(%)
-//_ARAGELI_big_int_COMBINED_OPER(>>)
-//_ARAGELI_big_int_COMBINED_OPER(<<)
+inline big_int& operator += (big_int& b, const big_int& c)
+{
+    return b = b + c;
+}
+
+inline big_int& operator -= (big_int& b, const big_int& c)
+{
+    return b = b - c;
+}
+
+inline big_int& operator *= (big_int& b, const big_int& c)
+{
+    return b = b * c;
+}
+
+inline big_int& operator /= (big_int& b, const big_int& c)
+{
+    return b = b / c;
+}
+
+inline big_int& operator %= (big_int& b, const big_int& c)
+{
+    return b = b % c;
+}
+
+//inline big_int& operator >>= (big_int& b, const big_int& c)
+//{
+//    return b = b >> c;
+//}
+//
+//inline big_int& operator << (big_int& b, const big_int& c)
+//{
+//    return b = b << c;
+//}
 
 //@}
 
