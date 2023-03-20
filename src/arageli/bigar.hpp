@@ -126,7 +126,7 @@ std::size_t do_bdn_to_big_int
     digit bdn_radix
 );
 
-std::size_t do_add
+std::size_t do_add_and_set_carry
 (
     digit* p1,
     const digit* p2,
