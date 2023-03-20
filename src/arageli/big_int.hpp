@@ -1200,7 +1200,298 @@ inline std::size_t magnitude (const big_int& x)
     return x.number.len;
 }
 
+namespace _Internal
+{
+    template <typename T> struct Unsigned : std::make_unsigned<T> {};
+    template <> struct Unsigned<bool> { typedef bool type; };
 }
+
+template <typename T>
+void big_int::from_native_int_helper (const T &x, true_type)
+{
+    number = big_struct(1, 1, 1);
+    number[0] = _Internal::digit(x);
+}
+
+template <typename T>
+void big_int::from_native_int_helper (const T &x, false_type)
+{
+
+    T xx = x;
+
+    std::size_t n = 0;
+    while(xx)
+    {
+        xx >>= _Internal::bits_per_digit;
+        ++n;
+    }
+
+    number = big_struct(1, n, n);
+
+    xx = x;
+
+    for(std::size_t i = 0; i < n; ++i, xx >>= _Internal::bits_per_digit)
+        number[i] = xx & _Internal::max_digit;
+
+    ARAGELI_ASSERT_1(Arageli::is_null(xx));
+}
+
+
+template <typename T>
+void big_int::from_native_int (const T& x)
+{
+    typedef std::numeric_limits<T> Nl;
+    ARAGELI_ASSERT_1(Nl::is_specialized);
+    ARAGELI_ASSERT_1(Nl::is_integer);
+
+    if(Arageli::is_null(x))
+    {
+        number.set_zero();
+        return;
+    }
+    else if(is_negative(x))
+    {
+        // WARNING. The following expression is not portable.
+        from_native_int(static_cast<typename _Internal::Unsigned<T>::type>(-x));
+        number.sign = -1;
+    }
+    else
+    {
+        typename bool_type<Nl::digits <= _Internal::bits_per_digit>::type dummy;
+        from_native_int_helper(x, dummy);
+    }
+}
+
+
+template <typename T>
+void big_int::from_native_float (const T& x)
+{
+    typedef std::numeric_limits<T> Nl;
+
+    ARAGELI_ASSERT_0(!(Nl::has_infinity && x == Nl::infinity()));
+    ARAGELI_ASSERT_0(!(Nl::has_denorm && x == Nl::denorm_min()));
+
+    if(x > opposite_unit(x) && x < unit(x))
+    {
+        number.set_zero();
+        return;
+    }
+    else if(is_negative(x))
+    {
+        from_native_float(-x);
+        number.sign = -1;
+    }
+    else
+    {
+        T xx = std::floor(x);
+        int expon;
+        xx = std::frexp(xx, &expon);
+
+        ARAGELI_ASSERT_1(expon > 0);
+
+        xx *= std::pow(2 * unit(x), Nl::digits + 1);
+        expon -= Nl::digits + 1;
+
+        ARAGELI_ASSERT_1(std::floor(xx) == xx);
+
+        std::size_t n =
+            (Nl::digits + 1) / _Internal::bits_per_digit +
+            bool((Nl::digits + 1) % _Internal::bits_per_digit);
+
+        number = big_struct(1, n, n);
+
+        T module = T(_Internal::max_digit);
+        module += unit(module);
+
+        for(std::size_t i = 0; i < n; ++i)
+        {
+            T remaind = std::fmod(xx, module);
+
+            ARAGELI_ASSERT_1(std::floor(remaind) == remaind);
+            ARAGELI_ASSERT_1(_Internal::digit(remaind) == remaind);
+
+            number[i] = _Internal::digit(remaind);
+            xx = (xx - remaind) / module;
+
+            ARAGELI_ASSERT_1(std::floor(xx) == xx);
+        }
+
+        ARAGELI_ASSERT_1(Arageli::is_null(xx));
+
+        big_int::optimize(number);
+        ARAGELI_ASSERT_1(number.len != 0);
+
+        if(expon > 0)
+            *this <<= expon;
+        else
+            *this >>= -expon;
+    }
+}
+
+
+template <typename T>
+T big_int::to_native_int () const
+{
+    ARAGELI_ASSERT_1(std::numeric_limits<T>::is_specialized);
+    ARAGELI_ASSERT_1(std::numeric_limits<T>::is_integer);
+
+    ARAGELI_ASSERT_0(big_int(std::numeric_limits<T>::min()) <= *this && *this <= big_int(std::numeric_limits<T>::max()));
+
+    if(is_null())return factory<T>::null();
+    else if(sign() < 0)
+    {
+        // WARNING. The following expression is not portable.
+        return
+            -static_cast<T>
+            (to_native_int_without_sign<typename _Internal::Unsigned<T>::type>());
+    }
+    else return to_native_int_without_sign<T>();
+}
+
+
+template <typename T>
+T big_int::to_native_int_without_sign () const
+{
+    ARAGELI_ASSERT_1(std::numeric_limits<T>::is_specialized);
+    ARAGELI_ASSERT_1(std::numeric_limits<T>::is_integer);
+    ARAGELI_ASSERT_1(*this <= big_int(std::numeric_limits<T>::max()));
+    ARAGELI_ASSERT_1(!is_null());
+
+    T res = number.digits()[0];
+
+    for(std::size_t i = 1; i < number.len; ++i)
+        res |= number.digits()[i] << (i * _Internal::bits_per_digit);
+
+    return res;
+}
+
+
+template <typename T>
+T big_int::to_native_float () const
+{
+    typedef std::numeric_limits<T> Nl;
+
+    ARAGELI_ASSERT_1(Nl::is_specialized);
+    ARAGELI_ASSERT_1(!Nl::is_integer);
+
+    if(is_null())
+        return factory<T>::null();
+    if(*this < big_int(-Nl::max()))
+    {
+        ARAGELI_ASSERT_0(Nl::has_infinity);
+        return -Nl::infinity();
+    }
+    else if(*this > big_int(Nl::max()))
+    {
+        ARAGELI_ASSERT_0(Nl::has_infinity);
+        return Nl::infinity();
+    }
+    else
+    {
+        big_int t = *this;
+        int expon = 0;
+        std::size_t blen = t.length();
+
+        if(blen - 1 > Nl::digits)
+        {
+            ARAGELI_ASSERT_1(size_t(int(blen - 1 - Nl::digits)) == blen - 1 - Nl::digits);
+            expon = static_cast<int>(blen - 1 - Nl::digits);
+            t >>= expon;
+        }
+
+        ARAGELI_ASSERT_1(t.length() - 1 <= Nl::digits);
+
+        T res = factory<T>::null();
+
+        T module = T(_Internal::max_digit);
+        module += unit(module);
+        T curscale = unit(module);
+
+        for(std::size_t i = 0; i < t.number.len; ++i)
+        {
+            res += t.number.digits()[i]*curscale;
+            curscale *= module;
+        }
+
+        res *= std::pow(2*unit(res), expon);
+        if(sign() < 0)opposite(&res);
+
+        ARAGELI_DEBUG_EXEC_1(big_int backres = res);
+        ARAGELI_ASSERT_1(backres.length() == length());
+
+        ARAGELI_ASSERT_1
+        (
+            (length() <= Nl::digits && backres - *this == 0)  ||
+            (
+                length() > Nl::digits &&
+                (backres - *this).length() <= length() - Nl::digits
+            )
+        );
+
+        return res;
+    }
+}
+
+
+template <typename Stream>
+Stream& io_binary<big_int>::output_stream (Stream& out, const big_int& x)
+{
+    int sign = x.number.sign;
+    output_binary_stream(out, sign);
+    if(sign)
+    {
+        std::size_t len = x.number.len;    // length in limbs
+        output_binary_stream(out, len);
+        output_binary_stream(out, x.number.digits(), len);
+    }
+
+    return out;
+}
+
+
+template <typename Stream>
+Stream& io_binary<big_int>::input_stream (Stream& in, big_int& x)
+{
+    // The following first reads of SIGN and LEN can't break x value.
+
+    int sign;
+    if(!input_binary_stream(in, sign))
+        return in;
+    ARAGELI_ASSERT_ALWAYS(sign == 0 || sign == -1 || sign == +1);
+
+    if(sign)
+    {
+        // The number isn't zero. Read LEN and DIGITS.
+
+        std::size_t len;
+        if(!input_binary_stream(in, len))
+            return in;
+        ARAGELI_ASSERT_ALWAYS(len > 0);
+
+        if(x.number.len == len)
+            x.number.sign = sign;
+        else
+            x = big_int(sign, len, len);
+
+        // Load DIGITS.
+        if(!input_binary_stream(in, x.number.digits(), len))
+        {
+            // A new value load fails and an old value is lost.
+            // Make sure that x object is in correct state.
+            x.number[len - 1] = 1;    // kills all leading zeros
+        }
+    }
+    else
+    {
+        // The number is zero.
+        x = big_int();  // WARNING! replace by big_int::assign_null()
+    }
+
+    return in;
+}
+
+
+} // namespace Arageli
 
 
 namespace std
@@ -1368,12 +1659,6 @@ struct type_pair_traits<big_int, big_int> :
 
 }
 
-
-#ifdef ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE
-    #define ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_BIG_INT
-    #include "big_int.cpp"
-    #undef  ARAGELI_INCLUDE_CPP_WITH_EXPORT_TEMPLATE_BIG_INT
-#endif
 
 
 #endif
