@@ -25,13 +25,11 @@
 #endif
 
 int CTestCollection::seed(0);
-CTestCollection::CTestFunctions *CTestCollection::testsPtr(NULL);
 
 CTestCollection::CTestFunctions& CTestCollection::getTests()
 {
-    if (NULL == testsPtr)
-        testsPtr = new CTestFunctions();
-    return *testsPtr;
+    static CTestFunctions obj;
+    return obj;
 }
 
 bool CTestCollection::registerTest
