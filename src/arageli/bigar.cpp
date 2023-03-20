@@ -130,14 +130,14 @@ std::size_t do_bdn_to_big_int (digit* a, digit* b, std::size_t n, digit bdn_radi
 }
 
 
-std::size_t do_add_and_set_carry (digit* p1, const digit* p2, std::size_t m, std::size_t n)
+digit do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
 {
     // m - length of p1
     // n - length of p2
     // m must be >= n
 
-    // actually, length of p1 must be m+1 - reserved for carry
-    // do_add_and_set_carry returns amount of main digits (m without carry or m+1 with carry)
+    // do_add returns most significant carry, 0 or 1
+    // Element p1[m + 1] is not touched
 
     ARAGELI_ASSERT_1(m >= n);
 
@@ -161,6 +161,20 @@ std::size_t do_add_and_set_carry (digit* p1, const digit* p2, std::size_t m, std
         carry = digit(tmp / BASE);
         if(carry == 0) break;
     }
+
+    return carry;
+}
+
+std::size_t do_add_and_set_carry (digit* p1, const digit* p2, std::size_t m, std::size_t n)
+{
+    // m - length of p1
+    // n - length of p2
+    // m must be >= n
+
+    // actually, length of p1 must be m+1 - reserved for carry
+    // do_add_and_set_carry returns amount of main digits (m without carry or m+1 with carry)
+
+    digit carry = do_add(p1, p2, m, n);
 
     if(carry)
     {
