@@ -62,6 +62,24 @@ inline void divide
 }
 
 
+// returns a + b + carry_in
+// set carry_out to 1, if addition above has carry
+inline digit add2_with_carry(digit a, digit b, digit carry_in, digit &carry_out)
+{
+    doubledigit tmp = doubledigit(a) + b + carry_in;
+    carry_out = digit(tmp / BASE);
+    return tmp;
+}
+
+// returns a + carry_in
+// set carry_out to 1, if addition above has carry
+inline digit add1_with_carry(digit a, digit carry_in, digit &carry_out)
+{
+    doubledigit tmp = doubledigit(a) + carry_in;
+    carry_out = digit(tmp / BASE);
+    return tmp;
+}
+
 std::size_t do_big_int_to_bdn (digit* a, digit* b, std::size_t n, digit bdn_radix)
 {
     // BASE to bdn_radix convertion
@@ -141,24 +159,20 @@ digit do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
 
     ARAGELI_ASSERT_1(m >= n);
 
-    bit carry = 0;
+    digit carry = 0;
 
     // 1. loop for 0 to n-1 - add digits of p2 to p1
 
     for(std::size_t i = 0; i < n; i++)
     {
-        doubledigit tmp = doubledigit(p1[i]) + p2[i] + carry;
-        p1[i] = digit(tmp % BASE);
-        carry = digit(tmp / BASE);
+        p1[i] = add2_with_carry(p1[i], p2[i], carry, carry);
     }
 
     // 2. loop for add carry
 
     for(std::size_t i = n; i < m; i++)
     {
-        doubledigit tmp = doubledigit(p1[i]) + carry;
-        p1[i] = digit(tmp % BASE);
-        carry = digit(tmp / BASE);
+        p1[i] = add1_with_carry(p1[i], carry, carry);
         if(carry == 0) break;
     }
 
