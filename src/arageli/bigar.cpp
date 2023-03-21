@@ -147,33 +147,40 @@ std::size_t do_bdn_to_big_int (digit* a, digit* b, std::size_t n, digit bdn_radi
     return m;
 }
 
-digit do_add_1 (digit* p1, digit a, std::size_t m)
+digit do_add_1 (digit *pr, const digit* p1, digit a, std::size_t m)
 {
     // m - length of p1
 
     // do_add_1 returns most significant carry, 0 or 1
-    // Element p1[m + 1] is not touched
+    // Element pr[m + 1] is not touched
 
     digit carry = a;
 
-    for(std::size_t i = 0; i < m; ++i)
+    std::size_t i = 0;
+    while(i < m)
     {
-        p1[i] = add1_with_carry(p1[i], carry, carry);
+        pr[i] = add1_with_carry(p1[i], carry, carry);
+        ++i;
         if(carry == 0)
             break;
+    }
+
+    for(; i < m; ++i)
+    {
+        pr[i] = p1[i];
     }
 
     return carry;
 }
 
-digit do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
+digit do_add (digit *pr, const digit* p1, const digit* p2, std::size_t m, std::size_t n)
 {
     // m - length of p1
     // n - length of p2
     // m must be >= n
 
     // do_add returns most significant carry, 0 or 1
-    // Element p1[m + 1] is not touched
+    // Element pr[m + 1] is not touched
 
     ARAGELI_ASSERT_1(m >= n);
 
@@ -183,30 +190,27 @@ digit do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
 
     for(std::size_t i = 0; i < n; i++)
     {
-        p1[i] = add2_with_carry(p1[i], p2[i], carry, carry);
+        pr[i] = add2_with_carry(p1[i], p2[i], carry, carry);
     }
 
     // 2. loop for add carry
-    if(carry)
-        return do_add_1(p1 + n, carry, m - n);
-    else
-        return 0;
+    return do_add_1(pr + n, p1 + n, carry, m - n);
 }
 
-std::size_t do_add_and_set_carry (digit* p1, const digit* p2, std::size_t m, std::size_t n)
+std::size_t do_add_and_set_carry (digit *pr, const digit* p1, const digit* p2, std::size_t m, std::size_t n)
 {
     // m - length of p1
     // n - length of p2
     // m must be >= n
 
-    // actually, length of p1 must be m+1 - reserved for carry
+    // actually, length of pr must be m+1 - reserved for carry
     // do_add_and_set_carry returns amount of main digits (m without carry or m+1 with carry)
 
-    digit carry = do_add(p1, p2, m, n);
+    digit carry = do_add(pr, p1, p2, m, n);
 
     if(carry)
     {
-        p1[m] = 1;
+        pr[m] = 1;
         return m + 1;
     }
     else
@@ -329,12 +333,12 @@ std::size_t do_mult (const digit* u, const digit* v, digit* w, std::size_t m, st
             for (std::size_t i = 1; i < m/n; ++i)
             {
                 std::size_t temp_len = do_mult_karatsuba<digit, std::size_t>(&u[i*n], v, &t[2*(n+m)], t, n, n);
-                do_add_and_set_carry(&w[i*n], &t[2*(n+m)], temp_len, temp_len);
+                do_add_and_set_carry(&w[i*n], &w[i*n], &t[2*(n+m)], temp_len, temp_len);
             }
             if (m - (m/n)*n)
             {
                 std::size_t temp_len = do_mult(v, &u[(m/n)*n], t, n, m - (m/n)*n);
-                do_add_and_set_carry(&w[(m/n)*n], t, temp_len, temp_len);
+                do_add_and_set_carry(&w[(m/n)*n], &w[(m/n)*n], t, temp_len, temp_len);
             }
             ret = (w[m + n - 1]) ?  m + n :  m + n - 1;
         }

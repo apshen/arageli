@@ -224,8 +224,7 @@ big_int operator+ (const big_int& b, const big_int& c)
                 v = &b.number;
             }
             big_int::big_struct sum(bsign, u->len + 1, u->len + 1);
-            big_int::copy_data(sum.digits(), u->digits(), u->len);
-            sum.len = _Internal::do_add_and_set_carry(sum.digits(), v->digits(), u->len, v->len);
+            sum.len = _Internal::do_add_and_set_carry(sum.digits(), u->digits(), v->digits(), u->len, v->len);
             a.number = std::move(sum);
         }
         else // bsign != csign

@@ -80,17 +80,17 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
         UV1len = do_mult_karatsuba(U1, V1, W2, t, k, k);     // mult U1*V1
 
         memcpy(C1, U0, sizeof(N)*(m-k));
-        C1len = _Internal::do_add_and_set_carry(C1, U1, m-k, k); // U0+U1
+        C1len = _Internal::do_add_and_set_carry(C1, C1, U1, m-k, k); // U0+U1
         if (n>=k2)    // V0+V1
         {
             // here n = m or n = m-1 and (n-k) = k or (n-k) = k+1
             memcpy(C2, V0, sizeof(N)*(n-k));
-            C2len = _Internal::do_add_and_set_carry(C2, V1, n-k, k);
+            C2len = _Internal::do_add_and_set_carry(C2, C2, V1, n-k, k);
         }
         else
         {
             memcpy(C2, V1, sizeof(N)*k);
-            C2len = _Internal::do_add_and_set_carry(C2, V0, k, n-k);
+            C2len = _Internal::do_add_and_set_carry(C2, C2, V0, k, n-k);
         }
 
         if (C2len > C1len)
@@ -105,7 +105,7 @@ T do_mult_karatsuba(const N *u, const N *v, N *w, N *t, T m, T n, T threshold)
         _Internal::do_sub(C, W0, Clen, UV0len);
         _Internal::do_sub(C, W2, Clen, UV1len);
 
-        _Internal::do_add_and_set_carry(W1, C, m+n-k, Clen);    // W += C
+        _Internal::do_add_and_set_carry(W1, W1, C, m+n-k, Clen);    // W += C
 
         t -= 2*m+6;
     }
