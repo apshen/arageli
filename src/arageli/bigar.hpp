@@ -126,6 +126,13 @@ std::size_t do_bdn_to_big_int
     digit bdn_radix
 );
 
+digit do_add_1
+(
+    digit* p1,
+    digit a,
+    std::size_t m
+);
+
 digit do_add
 (
     digit* p1,

@@ -147,6 +147,24 @@ std::size_t do_bdn_to_big_int (digit* a, digit* b, std::size_t n, digit bdn_radi
     return m;
 }
 
+digit do_add_1 (digit* p1, digit a, std::size_t m)
+{
+    // m - length of p1
+
+    // do_add_1 returns most significant carry, 0 or 1
+    // Element p1[m + 1] is not touched
+
+    digit carry = a;
+
+    for(std::size_t i = 0; i < m; ++i)
+    {
+        p1[i] = add1_with_carry(p1[i], carry, carry);
+        if(carry == 0)
+            break;
+    }
+
+    return carry;
+}
 
 digit do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
 {
@@ -169,14 +187,10 @@ digit do_add (digit* p1, const digit* p2, std::size_t m, std::size_t n)
     }
 
     // 2. loop for add carry
-
-    for(std::size_t i = n; i < m; i++)
-    {
-        p1[i] = add1_with_carry(p1[i], carry, carry);
-        if(carry == 0) break;
-    }
-
-    return carry;
+    if(carry)
+        return do_add_1(p1 + n, carry, m - n);
+    else
+        return 0;
 }
 
 std::size_t do_add_and_set_carry (digit* p1, const digit* p2, std::size_t m, std::size_t n)
